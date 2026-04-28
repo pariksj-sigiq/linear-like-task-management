@@ -1,0 +1,24 @@
+version = "1.0"
+
+[metadata]
+id = "linear-T06"
+name = "Cycle scope rebalance"
+author_name = "Collinear AI"
+category = "linear-clone"
+tags = ["cua", "linear", "gui-only", "tier1", "cycles", "issues", "comments"]
+difficulty = "L3"
+difficulty_explanation = "Requires moving only the two deferrable issues while preserving the rest of the cycle."
+features = ["cycles", "issues", "comments"]
+tools = ["move_issues_to_cycle", "add_comment"]
+failure_modes = ["data_dependent_reasoning", "bulk_selective_action"]
+
+[environment]
+template = "cua-eval-linear-clone"
+allow_internet = false
+cpus = 4
+memory_mb = 6144
+storage_mb = 15360
+
+[verifier]
+timeout_sec = 90
+command = "python tests/verify.py"

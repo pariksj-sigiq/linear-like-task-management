@@ -1,0 +1,71 @@
+[
+  {
+    "id": "user_001",
+    "username": "admin",
+    "password": "admin",
+    "full_name": "System Administrator",
+    "email": "admin@example.com",
+    "role": "admin"
+  },
+  {
+    "id": "user_002",
+    "username": "sarah.connor",
+    "password": "password",
+    "full_name": "Sarah Connor",
+    "email": "sarah.connor@example.com",
+    "role": "standard"
+  },
+  {
+    "id": "user_003",
+    "username": "john.smith",
+    "password": "password",
+    "full_name": "John Smith",
+    "email": "john.smith@example.com",
+    "role": "standard"
+  },
+  {
+    "id": "user_004",
+    "username": "viewer",
+    "password": "password",
+    "full_name": "Read Only",
+    "email": "viewer@example.com",
+    "role": "viewer",
+    "avatar_url": null
+  },
+  {
+    "id": "user_005",
+    "username": "maya.chen",
+    "password": "password",
+    "full_name": "Maya Chen",
+    "email": "maya.chen@example.com",
+    "role": "standard",
+    "avatar_url": null
+  },
+  {
+    "id": "user_006",
+    "username": "dev.patel",
+    "password": "password",
+    "full_name": "Dev Patel",
+    "email": "dev.patel@example.com",
+    "role": "standard",
+    "avatar_url": null
+  },
+  {
+    "id": "user_007",
+    "username": "riley.nguyen",
+    "password": "password",
+    "full_name": "Riley Nguyen",
+    "email": "riley.nguyen@example.com",
+    "role": "standard",
+    "avatar_url": null
+  },
+  {
+    "id": "user_008",
+    "username": "amina.okafor",
+    "password": "password",
+    "full_name": "Amina Okafor",
+    "email": "amina.okafor@example.com",
+    "role": "standard",
+    "avatar_url": null
+  }
+]

@@ -1,0 +1,24 @@
+version = "1.0"
+
+[metadata]
+id = "linear-T09"
+name = "Command palette reassign"
+author_name = "Collinear AI"
+category = "linear-clone"
+tags = ["cua", "linear", "gui-only", "tier1", "command-palette", "issues", "comments"]
+difficulty = "L2"
+difficulty_explanation = "Exercises the global action path instead of only direct issue detail controls."
+features = ["command-palette", "issues", "comments"]
+tools = ["command_palette_action", "add_comment"]
+failure_modes = ["deep_menu_navigation", "multi_step_stateful"]
+
+[environment]
+template = "cua-eval-linear-clone"
+allow_internet = false
+cpus = 4
+memory_mb = 6144
+storage_mb = 15360
+
+[verifier]
+timeout_sec = 90
+command = "python tests/verify.py"

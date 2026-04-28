@@ -1,0 +1,1 @@
+Hey, can you tidy the bug triage setup? Make sure the Platform team has a Regression label colored #EF4444 and a Ready for QA workflow state. Then apply Regression to LIN-180 and LIN-181 only. Please complete this through the application UI only. Do not use browser developer tools, API calls, terminal commands, scripts, or direct database edits.

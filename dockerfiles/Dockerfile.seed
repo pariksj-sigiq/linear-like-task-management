@@ -1,0 +1,12 @@
+FROM python:3.13-slim
+WORKDIR /app
+
+RUN pip install --no-cache-dir requests psycopg2-binary
+
+COPY shared/ /app/shared/
+COPY app/seed/ /app/app/seed/
+COPY app/seed_data/ /app/app/seed_data/
+
+ENV TOOL_SERVER_URL=http://clone-app:8030
+
+CMD ["python", "app/seed/seed_app.py"]

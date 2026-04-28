@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+app/**/__pycache__/
+app/frontend/node_modules/
+app/frontend/dist/
+app/frontend/release/
+dist/
+.DS_Store
+*.zip

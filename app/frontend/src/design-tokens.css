@@ -1,0 +1,46 @@
+:root {
+  --sidebar-bg: #111111;
+  --sidebar-hover: #1a1a1a;
+  --sidebar-active: #242424;
+  --sidebar-text: #c9c9c9;
+  --sidebar-muted: #747474;
+  --sidebar-width: 280px;
+
+  --topbar-bg: #171717;
+  --topbar-height: 52px;
+  --topbar-border: #2a2a2a;
+
+  --primary: #5e6ad2;
+  --primary-hover: #7179db;
+  --primary-text: #f7f7f7;
+  --accent: #f2c94c;
+
+  --content-bg: #161616;
+  --content-bg-raised: #1c1c1c;
+  --card-bg: #202020;
+  --panel-bg: #191919;
+  --popover-bg: #222222;
+
+  --text-primary: #eeeeee;
+  --text-secondary: #b5b5b5;
+  --text-muted: #7a7a7a;
+  --text-faint: #555555;
+
+  --border: #2d2d2d;
+  --border-strong: #3a3a3a;
+  --border-radius: 6px;
+
+  --success: #5fb878;
+  --warning: #d8a657;
+  --danger: #dc6b6b;
+  --info: #74a7e6;
+  --purple: #a88bfa;
+
+  --font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-size-xs: 0.78rem;
+  --font-size-sm: 0.92rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.16rem;
+  --font-size-xl: 1.38rem;
+  --font-size-2xl: 1.72rem;
+}

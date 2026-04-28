@@ -1,0 +1,24 @@
+version = "1.0"
+
+[metadata]
+id = "linear-T14"
+name = "Create linked launch issue"
+author_name = "Collinear AI"
+category = "linear-clone"
+tags = ["cua", "linear", "gui-only", "tier1", "create-issue", "sub-issues", "labels", "relations"]
+difficulty = "L3"
+difficulty_explanation = "Requires creating a new child issue, labeling it, assigning it, and linking it to another issue."
+features = ["create-issue", "sub-issues", "labels", "relations"]
+tools = ["create_issue", "create_issue_relation"]
+failure_modes = ["multi_step_stateful", "self_referential_linking"]
+
+[environment]
+template = "cua-eval-linear-clone"
+allow_internet = false
+cpus = 4
+memory_mb = 6144
+storage_mb = 15360
+
+[verifier]
+timeout_sec = 90
+command = "python tests/verify.py"

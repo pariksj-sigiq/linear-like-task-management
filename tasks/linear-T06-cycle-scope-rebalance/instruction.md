@@ -1,0 +1,1 @@
+Hey, Platform W18 is over scope. Please defer LIN-140 and LIN-141 into Platform W19 and add a comment on each saying it was moved out of W18 for scope control. Do not move LIN-142. Please complete this through the application UI only. Do not use browser developer tools, API calls, terminal commands, scripts, or direct database edits.

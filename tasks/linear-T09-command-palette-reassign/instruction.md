@@ -1,0 +1,1 @@
+Hey, please use the global action flow to move LIN-077 forward. It should end up assigned to Maya Patel, in In Review, with a comment that says it was reassigned from the command palette for review. Please complete this through the application UI only. Do not use browser developer tools, API calls, terminal commands, scripts, or direct database edits.

@@ -1,0 +1,24 @@
+version = "1.0"
+
+[metadata]
+id = "linear-T10"
+name = "Label and state hygiene"
+author_name = "Collinear AI"
+category = "linear-clone"
+tags = ["cua", "linear", "gui-only", "tier1", "labels", "workflow-states", "issues"]
+difficulty = "L2"
+difficulty_explanation = "Touches settings-like label and workflow state concepts that are easy to confuse."
+features = ["labels", "workflow-states", "issues"]
+tools = ["create_label", "create_workflow_state", "bulk_apply_labels"]
+failure_modes = ["mode_confusion", "deep_menu_navigation"]
+
+[environment]
+template = "cua-eval-linear-clone"
+allow_internet = false
+cpus = 4
+memory_mb = 6144
+storage_mb = 15360
+
+[verifier]
+timeout_sec = 90
+command = "python tests/verify.py"

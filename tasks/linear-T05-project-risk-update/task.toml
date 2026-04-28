@@ -1,0 +1,24 @@
+version = "1.0"
+
+[metadata]
+id = "linear-T05"
+name = "Project risk update"
+author_name = "Collinear AI"
+category = "linear-clone"
+tags = ["cua", "linear", "gui-only", "tier1", "projects", "project-updates"]
+difficulty = "L2"
+difficulty_explanation = "Requires changing project health and adding a project update rather than issue status."
+features = ["projects", "project-updates"]
+tools = ["update_project", "create_project_update"]
+failure_modes = ["wrong_column", "mode_confusion"]
+
+[environment]
+template = "cua-eval-linear-clone"
+allow_internet = false
+cpus = 4
+memory_mb = 6144
+storage_mb = 15360
+
+[verifier]
+timeout_sec = 90
+command = "python tests/verify.py"

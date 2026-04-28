@@ -1,0 +1,24 @@
+version = "1.0"
+
+[metadata]
+id = "linear-T07"
+name = "Saved view for API risk"
+author_name = "Collinear AI"
+category = "linear-clone"
+tags = ["cua", "linear", "gui-only", "tier1", "saved-views", "my-issues"]
+difficulty = "L2"
+difficulty_explanation = "Requires encoding a multi-filter saved view rather than a one-off search."
+features = ["saved-views", "my-issues"]
+tools = ["create_saved_view"]
+failure_modes = ["deep_menu_navigation", "data_dependent_reasoning"]
+
+[environment]
+template = "cua-eval-linear-clone"
+allow_internet = false
+cpus = 4
+memory_mb = 6144
+storage_mb = 15360
+
+[verifier]
+timeout_sec = 90
+command = "python tests/verify.py"

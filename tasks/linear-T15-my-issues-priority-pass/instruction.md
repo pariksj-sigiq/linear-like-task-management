@@ -1,0 +1,1 @@
+Hey, please do Alex's My Issues priority pass. Set LIN-180 to urgent, LIN-181 to high, and LIN-182 to medium. Add a comment on each saying Alex completed the priority pass, and mark notif-alex-myissues-001 as read. Please complete this through the application UI only. Do not use browser developer tools, API calls, terminal commands, scripts, or direct database edits.

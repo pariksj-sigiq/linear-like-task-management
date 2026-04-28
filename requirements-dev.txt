@@ -1,0 +1,5 @@
+pytest
+requests
+pytest-playwright
+playwright
+psycopg2-binary
