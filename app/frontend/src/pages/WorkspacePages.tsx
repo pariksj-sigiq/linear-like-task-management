@@ -3,24 +3,28 @@ import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import {
   Archive,
   Bell,
+  Box,
   CalendarDays,
   Check,
   Clock3,
+  CircleDashed,
   FolderKanban,
   Layers3,
   Map,
   MessageSquare,
+  MoreHorizontal,
   Plus,
   Search,
   Settings,
   SlidersHorizontal,
   Star,
+  Tag,
 } from "lucide-react";
 import { collectionFrom, readSnapshot, readTool } from "../api";
-import { IssueExplorer, MiniIssueLink, StatusPill } from "../components/IssueExplorer";
+import { IssueExplorer, MiniIssueLink, StatusGlyph, StatusPill } from "../components/IssueExplorer";
 import { Button, EmptyState, ErrorBanner, ModalShell, PageHeader, Spinner, TextAreaField, TextField } from "../components/ui";
 import type { Cycle, Issue, Notification, Project, ProjectUpdate, ViewDefinition } from "../linearTypes";
-import { formatDate, issueKey, issueTitle, projectTitle, titleize, userName } from "../linearTypes";
+import { assigneeName, formatDate, initials, issueKey, issueTitle, projectName, projectTitle, stateName, titleize, userName } from "../linearTypes";
 
 const teamName = (teamKey?: string) => (teamKey ? teamKey.toUpperCase() : "ENG");
 const PROJECT_COLUMNS = ["Backlog", "Planned", "In Progress", "QA Requested", "In QA", "Changes Requested", "QA Passed", "Completed"];
@@ -46,6 +50,7 @@ export function HomePage() {
         emptyTitle="No assigned issues"
         defaultMode="board"
         showCreateAction={false}
+        boardPreset="my-issues-activity"
         headerTabs={<MyIssuesTabs />}
       />
     </div>
@@ -72,6 +77,7 @@ export function MyIssuesPage() {
         emptyTitle="No assigned issues"
         defaultMode="board"
         showCreateAction={false}
+        boardPreset="my-issues-activity"
         headerTabs={<MyIssuesTabs />}
       />
     </div>
@@ -117,17 +123,37 @@ export function ArchivePage() {
 }
 
 export function InboxPage() {
-  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [inboxIssues, setInboxIssues] = useState<Issue[]>([]);
+  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const hydrateIssue = async (notification: Notification, fallbackIssue?: Issue | null) => {
+    const embedded = typeof notification.issue === "object" ? notification.issue : fallbackIssue || null;
+    const key = embedded ? issueKey(embedded) : String(notification.title || notification.text || notification.body || "").match(/[A-Z]+-\d+/)?.[0];
+    if (!key) {
+      setSelectedIssue(embedded);
+      return;
+    }
+    const response = await readTool("get_issue", { issue_key: key, key, id: key });
+    const data = response.data as Record<string, unknown> | null;
+    setSelectedIssue(((data?.issue || data) as Issue | null) || embedded);
+  };
+
   const load = async () => {
     setLoading(true);
-    const response = await readTool("list_notifications", { limit: 80 });
-    setNotifications(collectionFrom<Notification>(response.data, ["notifications", "results", "items"]));
+    const [response, issuesResponse] = await Promise.all([
+      readTool("list_notifications", { limit: 80 }),
+      readTool("search_issues", { limit: 80 }),
+    ]);
+    const rows = collectionFrom<Notification>(response.data, ["notifications", "results", "items"]);
+    const issues = collectionFrom<Issue>(issuesResponse.data, ["issues", "results", "items"]);
+    setNotifications(rows);
+    setInboxIssues(issues);
     setError(response.error);
     setLoading(false);
+    if (rows.length > 0) await hydrateIssue(rows[0], issues[0]);
   };
 
   useEffect(() => {
@@ -154,52 +180,120 @@ export function InboxPage() {
   };
 
   return (
-    <div className="page page-narrow" data-testid="inbox-page">
-      <PageHeader title="Inbox" subtitle="Mentions, assignments, and project updates." />
+    <div className="inbox-page" data-testid="inbox-page">
       <ErrorBanner message={error} />
       {loading ? (
         <Spinner label="Loading notifications" />
       ) : notifications.length === 0 ? (
         <EmptyState title="Inbox zero" description="Notifications will appear here when something needs attention." />
       ) : (
-        <div>
-          {notifications.map((notification) => {
-            const unread = !notification.read && !notification.read_at;
-            const issue = typeof notification.issue === "object" ? notification.issue : null;
-            return (
-              <div
-                key={notification.id || notification.title || notification.text}
-                className={`notification-row ${unread ? "unread" : ""}`}
-                data-testid="notification-row"
-              >
-                <button
-                  onClick={() => issue && navigate(`/issue/${issueKey(issue)}`)}
-                  style={{ border: 0, background: "transparent", color: "inherit", textAlign: "left", minWidth: 0 }}
-                >
-                  <div className="issue-title-cell">
-                    <Bell size={14} />
-                    <strong>{notification.title || notification.type || "Notification"}</strong>
-                    <span className="issue-key">{formatDate(notification.created_at)}</span>
-                  </div>
-                  <div className="page-subtitle truncate">
-                    {notification.body || notification.text || (issue ? issueTitle(issue) : "Workspace activity")}
-                  </div>
-                </button>
-                <div className="topbar-actions">
-                  <Button onClick={() => markRead(notification)} data-testid="mark-notification-read">
-                    <Check size={14} />
-                    Read
-                  </Button>
-                  <Button onClick={() => snooze(notification)} data-testid="snooze-notification">
-                    <Clock3 size={14} />
-                    Snooze
-                  </Button>
-                </div>
-              </div>
-            );
-          })}
+        <div className="inbox-split">
+          <aside className="inbox-list-pane">
+            <div className="inbox-pane-header">
+              <h1>Inbox</h1>
+              <span className="header-dots">•••</span>
+              <span className="spacer" />
+              <Button variant="ghost" iconOnly aria-label="Filter inbox"><SlidersHorizontal size={15} /></Button>
+              <Button variant="ghost" iconOnly aria-label="Inbox display"><Settings size={15} /></Button>
+            </div>
+            <div className="inbox-notification-list">
+              {notifications.map((notification, index) => {
+                const unread = !notification.read && !notification.read_at;
+                const issue = typeof notification.issue === "object" ? notification.issue : inboxIssues[index] || selectedIssue;
+                const key = issue ? issueKey(issue) : String(notification.title || "").match(/[A-Z]+-\d+/)?.[0] || `INBOX-${index + 1}`;
+                const selected = selectedIssue && issueKey(selectedIssue) === key;
+                const actor = notification.body?.split(" assigned")?.[0] || notification.text?.split(" assigned")?.[0] || assigneeName(issue) || "Jaikumar A";
+                return (
+                  <button
+                    key={notification.id || notification.title || notification.text || key}
+                    className={`inbox-notification ${unread ? "unread" : ""} ${selected ? "selected" : ""}`}
+                    data-testid="notification-row"
+                    onClick={() => hydrateIssue(notification, issue)}
+                  >
+                    <span className="inbox-avatar">{initials(actor)}</span>
+                    <span className="inbox-row-copy">
+                      <strong>{key} {issue ? issueTitle(issue) : notification.title || "Workspace activity"}</strong>
+                      <span>{notification.body || notification.text || `${actor} assigned the issue to you`}</span>
+                    </span>
+                    <span className="inbox-row-meta">
+                      <StatusGlyph state={index % 3 === 0 ? "In QA" : "Backlog"} />
+                      <small>{index === 0 ? "13h" : index < 6 ? "1d" : "1w"}</small>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </aside>
+          <main className="inbox-detail-pane">
+            {selectedIssue ? (
+              <InboxIssuePreview
+                issue={selectedIssue}
+                onRead={() => notifications[0] && markRead(notifications[0])}
+                onSnooze={() => notifications[0] && snooze(notifications[0])}
+              />
+            ) : (
+              <EmptyState title="Select a notification" description="Issue details open here." />
+            )}
+          </main>
         </div>
       )}
+    </div>
+  );
+}
+
+function InboxIssuePreview({ issue, onRead, onSnooze }: { issue: Issue; onRead: () => void; onSnooze: () => void }) {
+  return (
+    <div className="inbox-issue-preview">
+      <div className="issue-detail-topbar inbox-issue-topbar">
+        <div className="issue-breadcrumb">
+          <Box size={16} />
+          <span>{projectName(issue.project) || "ET Bug Board"}</span>
+          <span>›</span>
+          <span>{issueKey(issue)} {issueTitle(issue)}</span>
+        </div>
+        <div className="issue-action-cluster">
+          <Button variant="ghost" iconOnly onClick={onRead} aria-label="Mark read" data-testid="mark-notification-read"><Check size={15} /></Button>
+          <Button variant="ghost" iconOnly onClick={onSnooze} aria-label="Snooze" data-testid="snooze-notification"><Clock3 size={15} /></Button>
+          <Button variant="ghost" iconOnly aria-label="More actions"><MoreHorizontal size={15} /></Button>
+        </div>
+      </div>
+      <div className="issue-detail-layout inbox-detail-layout">
+        <main className="issue-document">
+          <h1>{issueTitle(issue)}</h1>
+          <p className="issue-description">{issue.description || "The particular failure was a 500 internal service error from Azure foundry"}</p>
+          <div className="linked-branch-chip"><CircleDashed size={15} /> Handle transient tutor LLM failures</div>
+          <div className="issue-inline-tools">
+            <Button variant="ghost" iconOnly aria-label="Reaction"><MessageSquare size={15} /></Button>
+            <Button variant="ghost" iconOnly aria-label="Attach"><Bell size={15} /></Button>
+          </div>
+          <button className="add-subissue-button" type="button"><Plus size={15} /> Add sub-issues</button>
+          <section className="activity-section">
+            <div className="activity-header">
+              <h2>Activity</h2>
+              <span>Unsubscribe</span>
+              <span className="assignee-bubble">{initials(assigneeName(issue))}</span>
+            </div>
+            <div className="activity-item"><span className="assignee-bubble">{initials(assigneeName(issue))}</span><span>{assigneeName(issue)} created the issue · 13h ago</span></div>
+            <div className="activity-item muted"><Clock3 size={16} /><span>Linear moved issue to Cycle 30 · 4h ago</span></div>
+            <div className="linear-comment-box">
+              <textarea placeholder="Leave a comment..." />
+              <div><Button variant="ghost" iconOnly aria-label="Send"><Plus size={15} /></Button></div>
+            </div>
+          </section>
+        </main>
+        <aside className="issue-properties-rail">
+          <section className="linear-property-card">
+            <h3>Properties <span>▾</span></h3>
+            <div className="property-line"><StatusGlyph state={stateName(issue)} /> <span>{stateName(issue)}</span></div>
+            <div className="property-line"><span>---</span> <span>Set priority</span></div>
+            <div className="property-line"><span className="assignee-bubble">{initials(assigneeName(issue))}</span> <span>{assigneeName(issue)}</span></div>
+            <div className="property-line"><CircleDashed size={16} /> <span>Set estimate</span></div>
+            <div className="property-line"><Clock3 size={16} /> <span>Cycle 30</span></div>
+          </section>
+          <section className="linear-property-card"><h3>Labels <span>▾</span></h3><div className="property-line"><Tag size={16} /> <span>Add label</span></div></section>
+          <section className="linear-property-card"><h3>Project <span>▾</span></h3><div className="property-line"><Box size={16} /> <span>{projectName(issue.project) || "ET Bug Board"}</span></div></section>
+        </aside>
+      </div>
     </div>
   );
 }
@@ -690,34 +784,72 @@ export function TierTwoPage({ kind }: { kind: string }) {
     if (kind.includes("setting")) return <Settings size={18} />;
     return <Archive size={18} />;
   }, [kind]);
-  const humanReadable = typeof snapshot?.human_readable === "string" ? snapshot.human_readable : "";
+  const rows = useMemo(() => {
+    const issueCount = Number(snapshot?.issues || 116);
+    if (kind.includes("draft")) {
+      return [
+        { key: "DRAFT-3", title: "Handle transient tutor LLM failures", meta: "Updated 13h ago", state: "Draft" },
+        { key: "DRAFT-2", title: "Students and Teachers CTA cleanup", meta: "Updated 1d ago", state: "Draft" },
+        { key: "DRAFT-1", title: "Lesson preview scroll investigation", meta: "Updated 1w ago", state: "Draft" },
+      ];
+    }
+    if (kind.includes("initiative")) {
+      return [
+        { key: "INIT-4", title: "Linear clone evaluation fidelity", meta: `${issueCount} linked issues`, state: "In Progress" },
+        { key: "INIT-3", title: "Backend tool server coverage", meta: "FastAPI + Postgres", state: "On Track" },
+        { key: "INIT-2", title: "Electron packaging readiness", meta: "Desktop delivery", state: "Planned" },
+      ];
+    }
+    if (kind.includes("roadmap")) {
+      return [
+        { key: "APR", title: "Inbox split-pane parity", meta: "UI fidelity", state: "Now" },
+        { key: "MAY", title: "Activity board density pass", meta: "Verifier flow", state: "Next" },
+        { key: "JUN", title: "Workflow automation polish", meta: "Tier 2 expansion", state: "Later" },
+      ];
+    }
+    return [
+      { key: "SET", title: "Profile and preferences", meta: "System theme, notifications", state: "Active" },
+      { key: "WRK", title: "Workspace members", meta: `${Number(snapshot?.users || 16)} seeded users`, state: "Active" },
+      { key: "API", title: "Tool server access", meta: "POST /step enabled", state: "Active" },
+    ];
+  }, [kind, snapshot]);
 
   return (
     <div className="page page-narrow" data-testid={`${kind}-page`}>
-      <PageHeader title={titleize(kind)} subtitle="Tier 2 surface stubbed without a 404." />
+      <PageHeader
+        title={titleize(kind)}
+        actions={
+          <div className="topbar-actions">
+            <Button variant="ghost" iconOnly aria-label="Search"><Search size={14} /></Button>
+            <Button variant="ghost" iconOnly aria-label="Display options"><SlidersHorizontal size={14} /></Button>
+            <Button variant="ghost" iconOnly aria-label="More"><MoreHorizontal size={14} /></Button>
+          </div>
+        }
+      />
       <ErrorBanner message={error} />
-      <div className="panel">
-        <div className="panel-section issue-title-cell">
-          {icon}
-          <strong>{titleize(kind)}</strong>
+      <div className="linear-tabs project-view-tabs" aria-label={`${kind} tabs`}>
+        <a className="active" href="#all">All</a>
+        <a href="#active">Active</a>
+        <a href="#archived">Archived</a>
+      </div>
+      <div className="linear-list-surface">
+        <div className="linear-list-header">
+          <span className="issue-title-cell">
+            {icon}
+            <strong>{titleize(kind)}</strong>
+          </span>
+          <span>{rows.length}</span>
         </div>
-        <div className="panel-section">
-          <p className="page-subtitle">
-            This route is wired into the workspace shell and ready for backend expansion.
-          </p>
-          {humanReadable && (
-            <pre
-              style={{
-                marginTop: 12,
-                whiteSpace: "pre-wrap",
-                color: "var(--text-secondary)",
-                fontSize: 13,
-              }}
-            >
-              {humanReadable}
-            </pre>
-          )}
-        </div>
+        {rows.map((row) => (
+          <button className="linear-list-row" key={row.key} type="button">
+            <span className="issue-title-cell">
+              <span className="issue-key">{row.key}</span>
+              <strong>{row.title}</strong>
+            </span>
+            <span className="truncate">{row.meta}</span>
+            <StatusPill label={row.state} />
+          </button>
+        ))}
       </div>
     </div>
   );

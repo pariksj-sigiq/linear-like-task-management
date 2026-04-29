@@ -96,6 +96,7 @@ export interface Issue {
   status?: string | null;
   workflow_state?: WorkflowState | string | null;
   priority?: string | number | null;
+  estimate?: string | number | null;
   assignee?: LinearUser | string | null;
   assignee_id?: string | null;
   team?: Team | string | null;
@@ -104,6 +105,7 @@ export interface Issue {
   project_id?: string | null;
   cycle?: Cycle | string | null;
   cycle_id?: string | null;
+  due_date?: string | null;
   labels?: Label[] | string[] | null;
   comments?: Comment[];
   relations?: Relation[];

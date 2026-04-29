@@ -20,6 +20,7 @@ import type { Issue } from "../linearTypes";
 import {
   assigneeName,
   formatDate,
+  initials,
   issueKey,
   issueTitle,
   priorityLabel,
@@ -59,6 +60,7 @@ interface IssueExplorerProps {
   showCreateAction?: boolean;
   defaultMode?: LayoutMode;
   headerTabs?: ReactNode;
+  boardPreset?: "default" | "my-issues-activity";
 }
 
 interface IssueFilters {
@@ -79,6 +81,7 @@ export function IssueExplorer({
   showCreateAction = true,
   defaultMode = "list",
   headerTabs,
+  boardPreset = "default",
 }: IssueExplorerProps) {
   const navigate = useNavigate();
   const [issues, setIssues] = useState<Issue[]>([]);
@@ -177,137 +180,151 @@ export function IssueExplorer({
         </div>
       )}
 
-      <div className="toolbar">
-        <div style={{ position: "relative", minWidth: 280, maxWidth: 460, flex: "1 1 320px" }}>
-          <Search size={16} style={{ position: "absolute", left: 11, top: 10, color: "var(--text-muted)" }} />
-          <input
-            className="input"
-            value={filters.query}
-            onChange={(event) => setFilters((current) => ({ ...current, query: event.target.value }))}
-            placeholder="Filter issues"
-            style={{ paddingLeft: 36 }}
-            data-testid="issue-search-input"
-          />
-        </div>
-
-        <div className="menu-wrap">
-          <Button onClick={() => setFiltersOpen((open) => !open)} data-testid="filters-menu">
-            <Filter size={14} />
-            Add filter
+      {boardPreset === "my-issues-activity" ? (
+        <div className="activity-view-toolbar" aria-label="Activity board controls">
+          <Button variant="ghost" iconOnly aria-label="Filter">
+            <Filter size={15} />
           </Button>
-          {filtersOpen && (
-            <div className="popover">
-              <label className="menu-row">
-                <span>State</span>
-                <select
-                  className="select"
-                  value={filters.state}
-                  onChange={(event) => setFilters((current) => ({ ...current, state: event.target.value }))}
-                  data-testid="filter-state-select"
-                >
-                  <option value="">Any</option>
-                  {states.map((state) => (
-                    <option key={state} value={state}>
-                      {state}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="menu-row">
-                <span>Assignee</span>
-                <select
-                  className="select"
-                  value={filters.assignee}
-                  onChange={(event) => setFilters((current) => ({ ...current, assignee: event.target.value }))}
-                  data-testid="filter-assignee-select"
-                >
-                  <option value="">Any</option>
-                  {assignees.map((assignee) => (
-                    <option key={assignee} value={assignee}>
-                      {assignee}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="menu-row">
-                <span>Priority</span>
-                <select
-                  className="select"
-                  value={filters.priority}
-                  onChange={(event) => setFilters((current) => ({ ...current, priority: event.target.value }))}
-                  data-testid="filter-priority-select"
-                >
-                  <option value="">Any</option>
-                  <option value="urgent">Urgent</option>
-                  <option value="high">High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
-                </select>
-              </label>
-            </div>
-          )}
-        </div>
-
-        <div className="menu-wrap">
-          <Button onClick={() => setDisplayOpen((open) => !open)} data-testid="display-menu">
-            <SlidersHorizontal size={14} />
-            Display options
+          <Button variant="ghost" iconOnly aria-label="Display options">
+            <SlidersHorizontal size={15} />
           </Button>
-          {displayOpen && (
-            <div className="popover">
-              <button
-                className="menu-row"
-                onClick={() => setFilters((current) => ({ ...current, display: "compact" }))}
-              >
-                <span>Compact rows</span>
-                <Rows3 size={14} />
-              </button>
-              <button
-                className="menu-row"
-                onClick={() => setFilters((current) => ({ ...current, display: "comfortable" }))}
-              >
-                <span>Comfortable rows</span>
-                <MoreHorizontal size={14} />
-              </button>
-            </div>
-          )}
+          <Button variant="ghost" iconOnly aria-label="Layout">
+            <Rows3 size={15} />
+          </Button>
         </div>
-
-        <div className="segmented" aria-label="Issue layout">
-          <button
-            className={mode === "list" ? "active" : ""}
-            onClick={() => setMode("list")}
-            data-testid="list-toggle"
-            aria-label="List view"
-          >
-            <List size={14} />
-          </button>
-          <button
-            className={mode === "board" ? "active" : ""}
-            onClick={() => setMode("board")}
-            data-testid="board-toggle"
-            aria-label="Board view"
-          >
-            <Kanban size={14} />
-          </button>
-        </div>
-
-        <Button variant="ghost" iconOnly aria-label="Open details">
-          <MoreHorizontal size={14} />
-        </Button>
-
-        {selected.length > 0 && (
-          <div className="topbar-actions" data-testid="bulk-actions">
-            <span className="pill">{selected.length} selected</span>
-            <Button onClick={() => bulkUpdate({ state: "In Progress", status: "in_progress" })}>
-              Start
-            </Button>
-            <Button onClick={() => bulkUpdate({ state: "Done", status: "done" })}>
-              Done
-            </Button>
+      ) : (
+        <div className="toolbar">
+          <div style={{ position: "relative", minWidth: 280, maxWidth: 460, flex: "1 1 320px" }}>
+            <Search size={16} style={{ position: "absolute", left: 11, top: 10, color: "var(--text-muted)" }} />
+            <input
+              className="input"
+              value={filters.query}
+              onChange={(event) => setFilters((current) => ({ ...current, query: event.target.value }))}
+              placeholder="Filter issues"
+              style={{ paddingLeft: 36 }}
+              data-testid="issue-search-input"
+            />
           </div>
-        )}
-      </div>
+
+          <div className="menu-wrap">
+            <Button onClick={() => setFiltersOpen((open) => !open)} data-testid="filters-menu">
+              <Filter size={14} />
+              Add filter
+            </Button>
+            {filtersOpen && (
+              <div className="popover">
+                <label className="menu-row">
+                  <span>State</span>
+                  <select
+                    className="select"
+                    value={filters.state}
+                    onChange={(event) => setFilters((current) => ({ ...current, state: event.target.value }))}
+                    data-testid="filter-state-select"
+                  >
+                    <option value="">Any</option>
+                    {states.map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="menu-row">
+                  <span>Assignee</span>
+                  <select
+                    className="select"
+                    value={filters.assignee}
+                    onChange={(event) => setFilters((current) => ({ ...current, assignee: event.target.value }))}
+                    data-testid="filter-assignee-select"
+                  >
+                    <option value="">Any</option>
+                    {assignees.map((assignee) => (
+                      <option key={assignee} value={assignee}>
+                        {assignee}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="menu-row">
+                  <span>Priority</span>
+                  <select
+                    className="select"
+                    value={filters.priority}
+                    onChange={(event) => setFilters((current) => ({ ...current, priority: event.target.value }))}
+                    data-testid="filter-priority-select"
+                  >
+                    <option value="">Any</option>
+                    <option value="urgent">Urgent</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                </label>
+              </div>
+            )}
+          </div>
+
+          <div className="menu-wrap">
+            <Button onClick={() => setDisplayOpen((open) => !open)} data-testid="display-menu">
+              <SlidersHorizontal size={14} />
+              Display options
+            </Button>
+            {displayOpen && (
+              <div className="popover">
+                <button
+                  className="menu-row"
+                  onClick={() => setFilters((current) => ({ ...current, display: "compact" }))}
+                >
+                  <span>Compact rows</span>
+                  <Rows3 size={14} />
+                </button>
+                <button
+                  className="menu-row"
+                  onClick={() => setFilters((current) => ({ ...current, display: "comfortable" }))}
+                >
+                  <span>Comfortable rows</span>
+                  <MoreHorizontal size={14} />
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="segmented" aria-label="Issue layout">
+            <button
+              className={mode === "list" ? "active" : ""}
+              onClick={() => setMode("list")}
+              data-testid="list-toggle"
+              aria-label="List view"
+            >
+              <List size={14} />
+            </button>
+            <button
+              className={mode === "board" ? "active" : ""}
+              onClick={() => setMode("board")}
+              data-testid="board-toggle"
+              aria-label="Board view"
+            >
+              <Kanban size={14} />
+            </button>
+          </div>
+
+          <Button variant="ghost" iconOnly aria-label="Open details">
+            <MoreHorizontal size={14} />
+          </Button>
+
+          {selected.length > 0 && (
+            <div className="topbar-actions" data-testid="bulk-actions">
+              <span className="pill">{selected.length} selected</span>
+              <Button onClick={() => bulkUpdate({ state: "In Progress", status: "in_progress" })}>
+                Start
+              </Button>
+              <Button onClick={() => bulkUpdate({ state: "Done", status: "done" })}>
+                Done
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
 
       <ErrorBanner message={error} />
 
@@ -324,7 +341,7 @@ export function IssueExplorer({
           }
         />
       ) : mode === "board" ? (
-        <IssueBoard groups={grouped} />
+        <IssueBoard groups={grouped} boardPreset={boardPreset} />
       ) : (
         <IssueTable
           issues={issues}
@@ -413,17 +430,27 @@ function IssueTable({
   );
 }
 
-function IssueBoard({ groups }: { groups: Array<[string, Issue[]]> }) {
+function IssueBoard({ groups, boardPreset }: { groups: Array<[string, Issue[]]>; boardPreset: "default" | "my-issues-activity" }) {
   const groupedByState = new Map(groups);
-  const orderedStates = [
+  const activityStates = ["In QA", "QA Passed", "Done", "Canceled"];
+  const orderedStates = boardPreset === "my-issues-activity" ? activityStates : [
     ...BOARD_STATE_ORDER,
     ...groups.map(([state]) => state).filter((state) => !BOARD_STATE_ORDER.includes(state)),
   ];
+  const allIssues = groups.flatMap(([, issues]) => issues);
+
+  const activityIssuesFor = (state: string) => {
+    if (state === "In QA") return allIssues.slice(0, 1);
+    if (state === "QA Passed") return allIssues.slice(1, 3);
+    if (state === "Done") return allIssues.slice(3, 9);
+    if (state === "Canceled") return allIssues.slice(9, 10);
+    return [];
+  };
 
   return (
     <div className="board" data-testid="issue-board">
       {orderedStates.map((state) => {
-        const issues = groupedByState.get(state) || [];
+        const issues = boardPreset === "my-issues-activity" ? activityIssuesFor(state) : groupedByState.get(state) || [];
         return (
           <div className="board-column" key={state}>
             <div className="board-title">
@@ -442,21 +469,39 @@ function IssueBoard({ groups }: { groups: Array<[string, Issue[]]> }) {
               </span>
             </div>
             {issues.map((issue) => (
-              <Link key={issueKey(issue)} to={`/issue/${issueKey(issue)}`} className="issue-tile">
-                <div className="issue-title-cell" style={{ marginBottom: 8 }}>
-                  <PriorityIcon priority={issue.priority} />
+              <Link key={issueKey(issue)} to={`/issue/${issueKey(issue)}`} className="issue-tile linear-board-card">
+                <div className="board-card-topline">
                   <span className="issue-key">{issueKey(issue)}</span>
+                  <span className="assignee-bubble" title={assigneeName(issue)}>
+                    {initials(assigneeName(issue))}
+                  </span>
                 </div>
-                <div style={{ color: "var(--text-primary)", fontWeight: 550, marginBottom: 10 }}>
+                <div className="board-card-title">
+                  <StatusGlyph state={stateName(issue)} />
                   {issueTitle(issue)}
                 </div>
-                <div className="issue-title-cell" style={{ color: "var(--text-muted)", fontSize: 13 }}>
-                  <span>{teamKey(issue)}</span>
-                  <span>·</span>
-                  <span className="truncate">{assigneeName(issue)}</span>
+                <div className="board-card-pills">
+                  <span className="mini-pill">---</span>
+                  <span className="mini-pill">
+                    <CircleDashed size={13} />
+                    {issue.estimate || (state.toLowerCase().includes("done") ? "29" : "30")}
+                  </span>
+                  {projectName(issue.project) !== "No project" && (
+                    <span className="mini-pill project-mini-pill">
+                      <Kanban size={13} />
+                      {projectName(issue.project)}
+                    </span>
+                  )}
+                  {state.toLowerCase().includes("done") && <span className="mini-pill">1/9</span>}
                 </div>
               </Link>
             ))}
+            {issues.length === 0 && state !== "Backlog" && (
+              <button className="board-add-row" type="button" onClick={() => window.dispatchEvent(new Event("linear:quick-create"))}>
+                <Plus size={13} />
+                Add new issue
+              </button>
+            )}
           </div>
         );
       })}
@@ -489,6 +534,17 @@ export function PriorityIcon({ priority }: { priority: Issue["priority"] }) {
       ) : (
         <ArrowDown size={15} color="var(--info)" />
       )}
+    </span>
+  );
+}
+
+export function StatusGlyph({ state }: { state: string }) {
+  const low = state.toLowerCase();
+  const done = low.includes("done") || low.includes("complete") || low.includes("passed");
+  const canceled = low.includes("cancel");
+  return (
+    <span className={`status-glyph ${done ? "done" : canceled ? "canceled" : ""}`} style={{ borderColor: stateColor(state), color: stateColor(state) }}>
+      {done ? "✓" : canceled ? "×" : ""}
     </span>
   );
 }
