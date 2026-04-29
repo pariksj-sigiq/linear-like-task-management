@@ -61,7 +61,7 @@ a {
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--panel-bg);
-  box-shadow: 0 18px 44px rgba(34, 31, 28, 0.08);
+  box-shadow: 0 18px 44px var(--shadow-soft);
   padding: 28px;
 }
 
@@ -113,8 +113,8 @@ a {
   width: 20px;
   height: 20px;
   border-radius: 6px;
-  background: #191817;
-  color: #ffffff;
+  background: var(--workspace-mark-bg);
+  color: var(--workspace-mark-text);
   font-size: 11px;
   font-weight: 700;
 }
@@ -148,7 +148,7 @@ a {
 .sidebar-scroll::-webkit-scrollbar-thumb {
   border: 2px solid var(--sidebar-bg);
   border-radius: 999px;
-  background: #d6d3cf;
+  background: var(--scroll-thumb);
 }
 
 .sidebar-section {
@@ -226,8 +226,8 @@ a {
   width: 18px;
   height: 18px;
   border-radius: 4px;
-  background: #e1dfdc;
-  color: #6b6762;
+  background: var(--team-key-bg);
+  color: var(--team-key-text);
   font-size: 10px;
   font-weight: 700;
 }
@@ -247,8 +247,8 @@ a {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #d8d5d0;
-  color: #47443f;
+  background: var(--avatar-bg);
+  color: var(--avatar-text);
   font-size: 12px;
   font-weight: 700;
 }
@@ -343,12 +343,12 @@ a {
 }
 
 .linear-tabs a:hover {
-  background: #f1efed;
+  background: var(--tab-hover-bg);
   color: var(--text-primary);
 }
 
 .linear-tabs a.active {
-  background: #eceae7;
+  background: var(--tab-active-bg);
   color: var(--text-primary);
 }
 
@@ -371,7 +371,7 @@ a {
   min-height: 32px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: #ffffff;
+  background: var(--button-bg);
   color: var(--text-secondary);
   padding: 0 11px;
   font-size: 12px;
@@ -381,7 +381,7 @@ a {
 
 .btn:hover {
   border-color: var(--border-strong);
-  background: #f4f3f1;
+  background: var(--button-hover-bg);
   color: var(--text-primary);
 }
 
@@ -417,7 +417,7 @@ a {
   align-items: center;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: #f2f1ef;
+  background: var(--segmented-bg);
   overflow: hidden;
 }
 
@@ -435,7 +435,7 @@ a {
 }
 
 .segmented button.active {
-  background: #ffffff;
+  background: var(--button-bg);
   color: var(--text-primary);
 }
 
@@ -445,7 +445,7 @@ a {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: #ffffff;
+  background: var(--input-bg);
   color: var(--text-primary);
   outline: none;
   min-height: 36px;
@@ -492,7 +492,7 @@ a {
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--popover-bg);
-  box-shadow: 0 18px 45px rgba(34, 31, 28, 0.14);
+  box-shadow: 0 18px 45px var(--shadow-popover);
   padding: 9px;
 }
 
@@ -508,7 +508,7 @@ a {
 }
 
 .menu-row:hover {
-  background: #f3f2f0;
+  background: var(--menu-hover-bg);
   color: var(--text-primary);
 }
 
@@ -539,7 +539,7 @@ a {
 }
 
 .issue-row:hover {
-  background: #f7f6f4;
+  background: var(--row-hover-bg);
 }
 
 .issue-title-cell {
@@ -568,7 +568,7 @@ a {
   min-height: 24px;
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: #f7f6f4;
+  background: var(--pill-bg);
   color: var(--text-secondary);
   padding: 0 9px;
   font-size: 12px;
@@ -602,13 +602,13 @@ a {
   border-top: 1px solid var(--border);
   border-left: 1px solid var(--border);
   border-radius: 8px;
-  background: #f7f6f4;
+  background: var(--board-bg);
 }
 
 .board-column {
   min-width: 0;
   border-right: 1px solid var(--border);
-  background: #f8f7f5;
+  background: var(--board-column-bg);
   padding: 0 10px 24px;
 }
 
@@ -626,8 +626,8 @@ a {
   display: block;
   border: 1px solid var(--border);
   border-radius: 7px;
-  background: #ffffff;
-  box-shadow: 0 1px 2px rgba(34, 31, 28, 0.04);
+  background: var(--tile-bg);
+  box-shadow: 0 1px 2px var(--shadow-faint);
   margin-bottom: 8px;
   padding: 10px 11px;
   transition: border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
@@ -635,8 +635,8 @@ a {
 
 .issue-tile:hover {
   border-color: var(--border-strong);
-  background: #ffffff;
-  box-shadow: 0 3px 10px rgba(34, 31, 28, 0.08);
+  background: var(--tile-bg);
+  box-shadow: 0 3px 10px var(--shadow-soft);
 }
 
 .split {
@@ -650,7 +650,7 @@ a {
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--panel-bg);
-  box-shadow: 0 1px 2px rgba(34, 31, 28, 0.04);
+  box-shadow: 0 1px 2px var(--shadow-faint);
 }
 
 .panel-section {
@@ -717,7 +717,7 @@ a {
   z-index: 70;
   display: grid;
   place-items: start center;
-  background: rgba(34, 31, 28, 0.32);
+  background: var(--overlay-bg);
   padding: 9vh 24px 24px;
 }
 
@@ -725,8 +725,8 @@ a {
   width: min(720px, 100%);
   border: 1px solid var(--border-strong);
   border-radius: 9px;
-  background: #ffffff;
-  box-shadow: 0 28px 80px rgba(34, 31, 28, 0.24);
+  background: var(--modal-bg);
+  box-shadow: 0 28px 80px var(--shadow-modal);
 }
 
 .modal-header,
@@ -769,7 +769,7 @@ a {
 }
 
 .command-item:hover {
-  background: #f3f2f0;
+  background: var(--menu-hover-bg);
   color: var(--text-primary);
 }
 

@@ -1,4 +1,6 @@
 :root {
+  color-scheme: light;
+
   --sidebar-bg: #f4f4f3;
   --sidebar-hover: #ecebea;
   --sidebar-active: #e4e3e2;
@@ -36,6 +38,34 @@
   --info: #4d7bd6;
   --purple: #6e56cf;
 
+  --workspace-mark-bg: #191817;
+  --workspace-mark-text: #ffffff;
+  --scroll-thumb: #d6d3cf;
+  --team-key-bg: #e1dfdc;
+  --team-key-text: #6b6762;
+  --avatar-bg: #d8d5d0;
+  --avatar-text: #47443f;
+  --tab-hover-bg: #f1efed;
+  --tab-active-bg: #eceae7;
+  --button-bg: #ffffff;
+  --button-hover-bg: #f4f3f1;
+  --segmented-bg: #f2f1ef;
+  --input-bg: #ffffff;
+  --menu-hover-bg: #f3f2f0;
+  --pill-bg: #f7f6f4;
+  --row-hover-bg: #f7f6f4;
+  --board-bg: #f7f6f4;
+  --board-column-bg: #f8f7f5;
+  --tile-bg: #ffffff;
+  --modal-bg: #ffffff;
+  --shadow-soft: rgba(34, 31, 28, 0.08);
+  --shadow-faint: rgba(34, 31, 28, 0.04);
+  --shadow-popover: rgba(34, 31, 28, 0.14);
+  --shadow-modal: rgba(34, 31, 28, 0.24);
+  --overlay-bg: rgba(34, 31, 28, 0.32);
+  --danger-border: rgba(207, 81, 72, 0.28);
+  --danger-bg: rgba(207, 81, 72, 0.08);
+
   --font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-size-xs: 0.78rem;
   --font-size-sm: 0.92rem;
@@ -43,4 +73,71 @@
   --font-size-lg: 1.16rem;
   --font-size-xl: 1.38rem;
   --font-size-2xl: 1.72rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --sidebar-bg: #111111;
+    --sidebar-hover: #1a1a1a;
+    --sidebar-active: #242424;
+    --sidebar-text: #c9c9c9;
+    --sidebar-muted: #747474;
+
+    --topbar-bg: #171717;
+    --topbar-border: #2a2a2a;
+
+    --primary: #5e6ad2;
+    --primary-hover: #7179db;
+    --primary-text: #f7f7f7;
+
+    --content-bg: #161616;
+    --content-bg-raised: #1c1c1c;
+    --card-bg: #202020;
+    --panel-bg: #191919;
+    --popover-bg: #222222;
+
+    --text-primary: #eeeeee;
+    --text-secondary: #b5b5b5;
+    --text-muted: #7a7a7a;
+    --text-faint: #555555;
+
+    --border: #2d2d2d;
+    --border-strong: #3a3a3a;
+
+    --success: #5fb878;
+    --warning: #d8a657;
+    --danger: #dc6b6b;
+    --info: #74a7e6;
+    --purple: #a88bfa;
+
+    --workspace-mark-bg: #f3f3f3;
+    --workspace-mark-text: #111111;
+    --scroll-thumb: #343434;
+    --team-key-bg: #2a2a2a;
+    --team-key-text: #d7d7d7;
+    --avatar-bg: #2f2f2f;
+    --avatar-text: #f0f0f0;
+    --tab-hover-bg: #222222;
+    --tab-active-bg: #2b2b2b;
+    --button-bg: #202020;
+    --button-hover-bg: #262626;
+    --segmented-bg: #171717;
+    --input-bg: #171717;
+    --menu-hover-bg: #2a2a2a;
+    --pill-bg: #202020;
+    --row-hover-bg: rgba(255, 255, 255, 0.025);
+    --board-bg: #151515;
+    --board-column-bg: #181818;
+    --tile-bg: #1d1d1d;
+    --modal-bg: #1d1d1d;
+    --shadow-soft: rgba(0, 0, 0, 0.35);
+    --shadow-faint: rgba(0, 0, 0, 0.18);
+    --shadow-popover: rgba(0, 0, 0, 0.35);
+    --shadow-modal: rgba(0, 0, 0, 0.52);
+    --overlay-bg: rgba(0, 0, 0, 0.55);
+    --danger-border: rgba(220, 107, 107, 0.35);
+    --danger-bg: rgba(220, 107, 107, 0.08);
+  }
 }
