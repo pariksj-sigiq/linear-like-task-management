@@ -1,0 +1,164 @@
+- generic [ref=e244]:
+  - complementary [ref=e245]:
+    - generic [ref=e246]:
+      - button "Workspace menu" [ref=e247] [cursor=pointer]:
+        - generic [ref=e248]: Σ
+        - generic [ref=e249]: SigiQ
+        - img [ref=e250]
+      - button "Search workspace" [ref=e252] [cursor=pointer]:
+        - img [ref=e253]
+      - button "Create issue" [ref=e256] [cursor=pointer]:
+        - img [ref=e257]
+    - generic [ref=e260]:
+      - navigation "Primary" [ref=e261]:
+        - link "Inbox 99+" [ref=e262] [cursor=pointer]:
+          - /url: /inbox
+          - img [ref=e263]
+          - generic [ref=e266]: Inbox
+          - generic [ref=e267]: 99+
+        - link "My issues" [ref=e268] [cursor=pointer]:
+          - /url: /my-issues/activity
+          - img [ref=e269]
+          - generic [ref=e273]: My issues
+        - link "Drafts 3" [ref=e274] [cursor=pointer]:
+          - /url: /drafts
+          - img [ref=e275]
+          - generic [ref=e284]: Drafts
+          - generic [ref=e285]: "3"
+      - region "Workspace" [ref=e286]:
+        - generic [ref=e287]: Workspace
+        - link "Initiatives" [ref=e288] [cursor=pointer]:
+          - /url: /initiatives
+          - img [ref=e289]
+          - generic [ref=e293]: Initiatives
+        - link "Projects" [ref=e294] [cursor=pointer]:
+          - /url: /projects/all
+          - img [ref=e295]
+          - generic [ref=e297]: Projects
+        - link "Views" [ref=e298] [cursor=pointer]:
+          - /url: /views
+          - img [ref=e299]
+          - generic [ref=e304]: Views
+        - link "More" [ref=e305] [cursor=pointer]:
+          - /url: /roadmap
+          - img [ref=e306]
+          - generic [ref=e310]: More
+      - region "Teams" [ref=e311]:
+        - generic [ref=e312]: Your teams
+        - generic [ref=e313]:
+          - link "E Engg" [ref=e314] [cursor=pointer]:
+            - /url: /team/eng/active
+            - generic [ref=e315]: E
+            - generic [ref=e316]: Engg
+            - img [ref=e317]
+          - link "Issues" [ref=e319] [cursor=pointer]:
+            - /url: /team/eng/active
+            - img [ref=e320]
+            - generic [ref=e329]: Issues
+          - link "Cycles" [ref=e330] [cursor=pointer]:
+            - /url: /team/eng/cycles
+            - img [ref=e331]
+            - generic [ref=e334]: Cycles
+          - link "Projects" [ref=e335] [cursor=pointer]:
+            - /url: /team/eng/projects
+            - img [ref=e336]
+            - generic [ref=e338]: Projects
+          - link "Views" [ref=e339] [cursor=pointer]:
+            - /url: /team/eng/views
+            - img [ref=e340]
+            - generic [ref=e345]: Views
+      - region "Favorites" [ref=e346]:
+        - generic [ref=e347]:
+          - text: Favorites
+          - img [ref=e348]
+        - link "Active Issues" [ref=e350] [cursor=pointer]:
+          - /url: /team/eng/active
+          - img [ref=e351]
+          - generic [ref=e360]: Active Issues
+        - link "Current Cycles" [ref=e361] [cursor=pointer]:
+          - /url: /team/eng/cycles
+          - img [ref=e362]
+          - generic [ref=e365]: Current Cycles
+        - link "Archive" [ref=e366] [cursor=pointer]:
+          - /url: /archive
+          - img [ref=e367]
+          - generic [ref=e370]: Archive
+    - generic [ref=e371]:
+      - generic [ref=e372]: SA
+      - generic [ref=e373]:
+        - generic [ref=e374]: System Administrator
+        - generic [ref=e375]: admin
+      - button "Sign out" [ref=e376] [cursor=pointer]:
+        - img [ref=e377]
+  - main [ref=e380]:
+    - generic [ref=e381]:
+      - generic [ref=e382]:
+        - generic [ref=e383]:
+          - generic [ref=e384]: ⌁
+          - generic [ref=e385]: Issues
+          - button "Favorite issues" [ref=e386] [cursor=pointer]:
+            - img [ref=e387]
+        - button "Notifications" [ref=e389] [cursor=pointer]:
+          - img [ref=e390]
+      - generic "Issue filters" [ref=e393]:
+        - link "All issues" [ref=e394] [cursor=pointer]:
+          - /url: /team/eng/all
+        - link "Active" [ref=e395] [cursor=pointer]:
+          - /url: /team/eng/active
+        - link "Backlog" [ref=e396] [cursor=pointer]:
+          - /url: /team/eng/backlog
+        - button "View options" [ref=e397] [cursor=pointer]:
+          - img [ref=e398]
+      - generic [ref=e402]:
+        - button "Filter" [ref=e403] [cursor=pointer]:
+          - img [ref=e404]
+        - button "Display options" [ref=e407] [cursor=pointer]:
+          - img [ref=e408]
+        - button "Layout" [ref=e409] [cursor=pointer]:
+          - img [ref=e410]
+      - region "ENG active issues" [ref=e413]:
+        - generic [ref=e414]:
+          - generic [ref=e415]: ▾
+          - generic [ref=e417]: Todo
+          - generic [ref=e418]: "4"
+          - button "Create issue" [ref=e419] [cursor=pointer]:
+            - img [ref=e420]
+        - link "--- ENG-3 Connect your tools Mar 2" [ref=e421] [cursor=pointer]:
+          - /url: /issue/ENG-3
+          - generic [ref=e422]: "---"
+          - generic [ref=e423]: ENG-3
+          - strong [ref=e425]: Connect your tools
+          - img [ref=e427]
+          - generic [ref=e436]: Mar 2
+        - link "--- ENG-4 Import your data Mar 2" [ref=e437] [cursor=pointer]:
+          - /url: /issue/ENG-4
+          - generic [ref=e438]: "---"
+          - generic [ref=e439]: ENG-4
+          - strong [ref=e441]: Import your data
+          - img [ref=e443]
+          - generic [ref=e452]: Mar 2
+        - link "--- ENG-1 Get familiar with Linear Mar 2" [ref=e453] [cursor=pointer]:
+          - /url: /issue/ENG-1
+          - generic [ref=e454]: "---"
+          - generic [ref=e455]: ENG-1
+          - strong [ref=e457]: Get familiar with Linear
+          - img [ref=e459]
+          - generic [ref=e468]: Mar 2
+        - link "--- ENG-2 Set up your teams Mar 2" [ref=e469] [cursor=pointer]:
+          - /url: /issue/ENG-2
+          - generic [ref=e470]: "---"
+          - generic [ref=e471]: ENG-2
+          - strong [ref=e473]: Set up your teams
+          - img [ref=e475]
+          - generic [ref=e484]: Mar 2
+    - generic [ref=e485]:
+      - generic [ref=e486]:
+        - button "Help" [ref=e487] [cursor=pointer]:
+          - img [ref=e488]
+        - generic [ref=e491]: Free plan
+      - generic [ref=e492]:
+        - button "Ask Linear" [ref=e493] [cursor=pointer]:
+          - img [ref=e494]
+          - text: Ask Linear
+        - button "History" [ref=e496] [cursor=pointer]:
+          - img [ref=e497]

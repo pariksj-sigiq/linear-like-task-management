@@ -1,25 +1,23 @@
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
-  Archive,
   Boxes,
   ChevronRight,
   CircleDashed,
-  Clock3,
   FolderKanban,
+  HelpCircle,
+  History,
   Inbox,
-  Layers3,
-  LogOut,
+  MessageSquare,
   MoreHorizontal,
   Plus,
   Search,
   Settings,
-  Star,
+  SquarePen,
   UserRoundCheck,
   View,
 } from "lucide-react";
 import type { LinearUser } from "../linearTypes";
-import { initials, userName } from "../linearTypes";
 import { Button, Kbd } from "./ui";
 import { QuickCreateModal } from "./QuickCreateModal";
 import { CommandPalette } from "./CommandPalette";
@@ -34,33 +32,26 @@ interface LinearShellProps {
   children: ReactNode;
 }
 
-const teams = [
-  { key: "ENG", name: "Engg" },
-];
-
 const primaryNav = [
   { label: "Inbox", path: "/inbox", icon: Inbox, testId: "nav-inbox", badge: "99+" },
   { label: "My issues", path: "/my-issues/activity", icon: UserRoundCheck, testId: "nav-my-issues" },
-  { label: "Drafts", path: "/drafts", icon: CircleDashed, testId: "nav-drafts", badge: "3" },
 ];
 
 const workspaceNav = [
-  { label: "Initiatives", path: "/initiatives", icon: Layers3, testId: "nav-initiatives" },
-  { label: "Projects", path: "/projects", icon: FolderKanban, testId: "nav-projects" },
+  { label: "Projects", path: "/projects/all", icon: FolderKanban, testId: "nav-projects" },
   { label: "Views", path: "/views", icon: View, testId: "nav-views" },
   { label: "More", path: "/roadmap", icon: MoreHorizontal, testId: "nav-roadmap" },
 ];
 
 const teamNav = [
   { label: "Issues", segment: "active", icon: CircleDashed },
-  { label: "Cycles", segment: "cycles", icon: Clock3 },
-  { label: "Current", segment: "active", nested: true },
-  { label: "Upcoming", segment: "backlog", nested: true },
   { label: "Projects", segment: "projects", icon: FolderKanban },
   { label: "Views", segment: "views", icon: View },
 ];
 
-export function LinearShell({ user, onLogout, children }: LinearShellProps) {
+const teams = [{ key: "ELT", name: "Eltsuh" }];
+
+export function LinearShell({ children }: LinearShellProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
@@ -101,21 +92,25 @@ export function LinearShell({ user, onLogout, children }: LinearShellProps) {
       .map((part) => part.toUpperCase() === part ? part : part.replace(/-/g, " "))
       .join(" / ");
   }, [location.pathname]);
+  const hideNewIssueButton =
+    location.pathname.startsWith("/team/") ||
+    location.pathname.startsWith("/my-issues") ||
+    location.pathname.startsWith("/inbox");
 
   return (
     <div className="linear-app app-layout">
       <aside className="sidebar" data-testid="linear-sidebar">
         <div className="sidebar-header">
           <button className="workspace-menu" type="button" aria-label="Workspace menu">
-            <span className="workspace-mark">C</span>
-            <span className="workspace-name truncate">Collinear</span>
+            <span className="workspace-mark">EL</span>
+            <span className="workspace-name truncate">eltsuh</span>
             <ChevronRight size={12} className="workspace-chevron" />
           </button>
           <Button variant="ghost" iconOnly onClick={() => setCommandOpen(true)} aria-label="Search workspace" data-testid="command-palette-button">
             <Search size={15} />
           </Button>
           <Button variant="ghost" iconOnly onClick={() => setQuickCreateOpen(true)} aria-label="Create issue" data-testid="quick-create-button">
-            <Plus size={15} />
+            <SquarePen size={15} />
           </Button>
         </div>
 
@@ -140,13 +135,13 @@ export function LinearShell({ user, onLogout, children }: LinearShellProps) {
                 <NavLink to={`/team/${team.key.toLowerCase()}/active`} className="nav-item team-root" data-testid={`team-${team.key.toLowerCase()}-nav`}>
                   <span className="team-key">{team.key[0]}</span>
                   <span>{team.name}</span>
-                  <ChevronRight size={13} style={{ marginLeft: "auto", color: "var(--sidebar-muted)" }} />
+                  <ChevronRight size={13} className="team-root-chevron" />
                 </NavLink>
                 {teamNav.map((item) => (
                   <NavLink
                     key={`${team.key}-${item.segment}-${item.label}`}
                     to={`/team/${team.key.toLowerCase()}/${item.segment}`}
-                    className={`nav-item nav-subitem ${item.nested ? "nav-nested" : ""}`}
+                    className="nav-item nav-subitem"
                     data-testid={`team-${team.key.toLowerCase()}-${item.segment}-nav`}
                   >
                     {item.icon && <item.icon size={14} />}
@@ -157,30 +152,15 @@ export function LinearShell({ user, onLogout, children }: LinearShellProps) {
             ))}
           </section>
 
-          <section className="sidebar-section" aria-label="Favorites">
-            <div className="sidebar-section-title">
-              Favorites
-              <Star size={12} />
-            </div>
-            <SidebarLink label="Active Issues" path="/team/eng/active" icon={CircleDashed} testId="favorite-active" />
-            <SidebarLink label="Current Cycles" path="/team/eng/cycles" icon={Clock3} testId="favorite-cycles" />
-            <SidebarLink label="Archive" path="/archive" icon={Archive} testId="favorite-archive" />
+          <section className="sidebar-section" aria-label="Try">
+            <div className="sidebar-section-title">Try</div>
+            <SidebarLink label="Import issues" path="/import" icon={Boxes} testId="try-import-issues" />
           </section>
         </div>
 
-        <div className="sidebar-footer">
-          <div className="avatar">{initials(userName(user))}</div>
-          <div className="truncate" style={{ flex: 1 }}>
-            <div className="truncate" style={{ color: "var(--text-primary)", fontWeight: 600 }}>
-              {userName(user)}
-            </div>
-            <div className="truncate" style={{ color: "var(--sidebar-muted)", fontSize: 12 }}>
-              {user?.role || "Member"}
-            </div>
-          </div>
-          <Button variant="ghost" iconOnly onClick={onLogout} aria-label="Sign out" data-testid="logout-button">
-            <LogOut size={14} />
-          </Button>
+        <div className="whats-new-card">
+          <div>What's new</div>
+          <strong>Linear Agent MCP support</strong>
         </div>
       </aside>
 
@@ -195,10 +175,12 @@ export function LinearShell({ user, onLogout, children }: LinearShellProps) {
               Search
               <Kbd>⌘K</Kbd>
             </Button>
-            <Button variant="primary" onClick={() => setQuickCreateOpen(true)} data-testid="quick-create-topbar-button">
-              <Plus size={14} />
-              New issue
-            </Button>
+            {!hideNewIssueButton && (
+              <Button variant="primary" onClick={() => setQuickCreateOpen(true)} data-testid="quick-create-topbar-button">
+                <Plus size={14} />
+                New issue
+              </Button>
+            )}
             <Button variant="ghost" iconOnly onClick={() => navigate("/inbox")} aria-label="Inbox notifications" data-testid="topbar-inbox-button">
               <Inbox size={15} />
             </Button>
@@ -208,6 +190,23 @@ export function LinearShell({ user, onLogout, children }: LinearShellProps) {
           </div>
         </header>
         {children}
+        <div className="bottom-bar">
+          <div className="bottom-bar-left">
+            <Button variant="ghost" iconOnly aria-label="Help">
+              <HelpCircle size={14} />
+            </Button>
+            <div className="plan-badge">Free plan</div>
+          </div>
+          <div className="bottom-bar-right">
+            <Button variant="ghost" className="ask-linear-button">
+              <MessageSquare size={14} />
+              Ask Linear
+            </Button>
+            <Button variant="ghost" iconOnly aria-label="History">
+              <History size={14} />
+            </Button>
+          </div>
+        </div>
       </main>
 
       <QuickCreateModal open={quickCreateOpen} onClose={() => setQuickCreateOpen(false)} />

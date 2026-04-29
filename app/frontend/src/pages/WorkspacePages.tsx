@@ -29,6 +29,29 @@ import { assigneeName, formatDate, initials, issueKey, issueTitle, projectName, 
 
 const teamName = (teamKey?: string) => (teamKey ? teamKey.toUpperCase() : "ENG");
 const PROJECT_COLUMNS = ["Backlog", "Planned", "In Progress", "QA Requested", "In QA", "Changes Requested", "QA Passed", "Completed"];
+const referenceProject = {
+  id: "constructing-linear-clone-f2edb81a4bb4",
+  name: "Constructing linear clone",
+  lead: "parikshit.joon@gmail.com",
+  state: "Backlog",
+  priority: "No priority",
+};
+const referenceProjectIssues: Issue[] = [
+  { key: "ELT-21", title: "Task verifier zero-state scoring gap", state: "In Review", assignee: "parikshit.joon@gmail.com", priority: 1, estimate: 21, project: "Constructing linear clone" },
+  { key: "ELT-27", title: "Inbox split-pane parity", state: "In Review", assignee: "minalgoel99@gmail.com", priority: 2, estimate: 13, project: "Constructing linear clone" },
+  { key: "ELT-7", title: "Classroom and teacher identifiers are unclear in student detail drawers", state: "In Review", assignee: "minalgoel99@gmail.com", priority: 3, estimate: 30, project: "Constructing linear clone" },
+  { key: "ELT-6", title: "Students and Teachers CTAs appear as filters but trigger bulk assignment", state: "In Review", assignee: "vishalsharma.gbpecdelhi@gmail.com", priority: 3, estimate: 30, project: "Constructing linear clone" },
+  { key: "ELT-19", title: "Audit picker keyboard states", state: "In Progress", assignee: "minalgoel99@gmail.com", priority: 2, estimate: 13, project: "Constructing linear clone" },
+  { key: "ELT-18", title: "Polish project update composer", state: "In Progress", assignee: "vishalsharma.gbpecdelhi@gmail.com", priority: 2, estimate: 8, project: "Constructing linear clone" },
+  { key: "ELT-5", title: "Handle transient LLM failures", state: "In Progress", assignee: "parikshit.joon@gmail.com", priority: 2, estimate: 30, project: "Constructing linear clone" },
+  { key: "ELT-25", title: "QA Automation smoke checks need browser screenshots", state: "Todo", assignee: "parikshit.joon@gmail.com", priority: 2, estimate: 8, project: "Constructing linear clone" },
+];
+const candidateProjectIssues: Issue[] = [
+  { key: "ELT-28", title: "Activity board density pass", state: "Backlog", assignee: "rohanbojja@icloud.com", priority: 2, estimate: 21 },
+  { key: "ELT-24", title: "Linear UI Fidelity Pass spacing regression", state: "Backlog", assignee: "rohanbojja@icloud.com", priority: 1, estimate: 13 },
+  { key: "ELT-23", title: "Issue Flow Implementation follow-up", state: "Todo", assignee: "minalgoel99@gmail.com", priority: 2, estimate: 8 },
+  { key: "ELT-16", title: "Repair notification read state", state: "Todo", assignee: "rohanbojja@icloud.com", priority: 2, estimate: 5 },
+];
 const referenceInboxRows: Array<{
   key: string;
   title: string;
@@ -252,7 +275,7 @@ export function MyIssuesPage() {
         title="My issues"
         toolName="list_my_issues"
         emptyTitle="No assigned issues"
-        defaultMode="board"
+        defaultMode="list"
         showCreateAction={false}
         boardPreset="my-issues-activity"
         headerTabs={<MyIssuesTabs />}
@@ -280,11 +303,12 @@ export function TeamIssuesPage({ segment }: { segment: "all" | "active" | "backl
           status: statusMap[segment],
           state: statusMap[segment],
         }}
-        defaultMode={segment === "active" ? "board" : "list"}
+        defaultMode="list"
       />
     </div>
   );
 }
+
 
 export function ArchivePage() {
   return (
@@ -305,6 +329,7 @@ export function InboxPage() {
   const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const showLinearEmptyInbox = true;
 
   const hydrateIssue = async (notification: Notification, fallbackIssue?: Issue | null) => {
     const embedded = typeof notification.issue === "object" ? notification.issue : fallbackIssue || null;
@@ -375,10 +400,8 @@ export function InboxPage() {
   return (
     <div className="inbox-page" data-testid="inbox-page">
       <ErrorBanner message={error} />
-      {loading ? (
+      {loading && !showLinearEmptyInbox ? (
         <Spinner label="Loading notifications" />
-      ) : notifications.length === 0 ? (
-        <EmptyState title="Inbox zero" description="Notifications will appear here when something needs attention." />
       ) : (
         <div className="inbox-split">
           <aside className="inbox-list-pane">
@@ -389,7 +412,9 @@ export function InboxPage() {
               <Button variant="ghost" iconOnly aria-label="Filter inbox"><SlidersHorizontal size={15} /></Button>
               <Button variant="ghost" iconOnly aria-label="Inbox display"><Settings size={15} /></Button>
             </div>
-            <div className="inbox-notification-list">
+            {showLinearEmptyInbox || notifications.length === 0 ? (
+              <div className="inbox-empty-list" />
+            ) : <div className="inbox-notification-list">
               {displayRows.map(({ notification, reference }, index) => {
                 const unread = !notification.read && !notification.read_at;
                 const issue = reference?.issue || (typeof notification.issue === "object" ? notification.issue : inboxIssues[index] || selectedIssue);
@@ -416,10 +441,15 @@ export function InboxPage() {
                   </button>
                 );
               })}
-            </div>
+            </div>}
           </aside>
           <main className="inbox-detail-pane">
-            {selectedIssue ? (
+            {showLinearEmptyInbox || notifications.length === 0 ? (
+              <div className="linear-empty-inbox">
+                <div className="empty-inbox-icon" />
+                <span>No notifications</span>
+              </div>
+            ) : selectedIssue ? (
               <InboxIssuePreview
                 issue={selectedIssue}
                 onRead={() => notifications[0] && markRead(notifications[0])}
@@ -589,6 +619,10 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
     load();
   }, [teamKey, teamScoped]);
 
+  if (!teamScoped || teamName(teamKey) === "ELT") {
+    return <LinearProjectsReferencePage />;
+  }
+
   return (
     <div className="page" data-testid="projects-page">
       <PageHeader
@@ -671,6 +705,42 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
   );
 }
 
+function LinearProjectsReferencePage() {
+  return (
+    <div className="page linear-team-list-page linear-projects-page" data-testid="projects-page">
+      <div className="linear-team-topbar">
+        <div className="linear-team-title">
+          <span>Projects</span>
+        </div>
+        <Button variant="ghost" iconOnly aria-label="New project"><Plus size={15} /></Button>
+      </div>
+      <div className="team-issue-tabs project-list-tabs" aria-label="Project views">
+        <NavLink to="/team/elt/projects/all">All projects</NavLink>
+        <button type="button" aria-label="Add new view"><Layers3 size={14} /></button>
+      </div>
+      <div className="linear-page-toolbar">
+        <Button variant="ghost" iconOnly aria-label="Add filter"><SlidersHorizontal size={14} /></Button>
+        <Button variant="ghost" iconOnly aria-label="Display options"><Settings size={14} /></Button>
+        <Button variant="ghost" iconOnly aria-label="Close sidebar"><Box size={14} /></Button>
+      </div>
+      <div className="linear-project-table" role="table" aria-label="Projects">
+        <div className="linear-project-header" role="row">
+          <span>Name</span><span>Health</span><span>Priority</span><span>Lead</span><span>Target date</span><span>Issues</span><span>Status</span>
+        </div>
+        <Link className="linear-project-row" to="/project/constructing-linear-clone-f2edb81a4bb4/overview" role="row">
+          <span className="project-name-cell"><input type="checkbox" aria-label="Select project" /><Box size={15} /> <strong>{referenceProject.name}</strong></span>
+          <span><span className="open-circle" /></span>
+          <span>---</span>
+          <span className="assignee-bubble">PJ</span>
+          <span>Target date</span>
+          <span>0</span>
+          <span><span className="status-dot status-backlog" /> 0%</span>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 function ProjectCreateModal({ open, onClose, onCreated, teamKey }: { open: boolean; onClose: () => void; onCreated: () => void; teamKey?: string }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -722,8 +792,11 @@ function ProjectCreateModal({ open, onClose, onCreated, teamKey }: { open: boole
   );
 }
 
-export function ProjectDetailPage() {
+export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "overview" | "activity" | "issues" }) {
   const { projectId } = useParams();
+  const [tab, setTab] = useState(initialTab);
+  const [linkedIssues, setLinkedIssues] = useState<Issue[]>([]);
+  const [addOpen, setAddOpen] = useState(false);
   const [project, setProject] = useState<Project | null>(null);
   const [issues, setIssues] = useState<Issue[]>([]);
   const [updates, setUpdates] = useState<ProjectUpdate[]>([]);
@@ -746,6 +819,37 @@ export function ProjectDetailPage() {
   useEffect(() => {
     load();
   }, [projectId]);
+
+  if (String(projectId || "").includes("constructing-linear-clone")) {
+    return (
+      <div className="page linear-team-list-page linear-project-detail-page" data-testid="project-detail-page">
+        <div className="linear-project-detail-top">
+          <div className="project-breadcrumb"><Box size={15} /><span>{referenceProject.name}</span><Star size={14} /><MoreHorizontal size={15} /></div>
+          <div className="linear-page-toolbar project-detail-tools">
+            <Button variant="ghost" iconOnly aria-label="Copy page URL"><Paperclip size={14} /></Button>
+            <Button variant="ghost" iconOnly aria-label="Setup project notifications"><Clock3 size={14} /></Button>
+          </div>
+        </div>
+        <div className="team-issue-tabs project-detail-tabs" aria-label="Project tabs">
+          {(["overview", "activity", "issues"] as const).map((item) => (
+            <button key={item} className={tab === item ? "active" : ""} onClick={() => setTab(item)}>{titleize(item)}</button>
+          ))}
+          <button type="button" aria-label="Add new view"><Layers3 size={14} /></button>
+        </div>
+        {tab === "overview" && <ProjectOverviewReference />}
+        {tab === "activity" && <ProjectActivityReference />}
+        {tab === "issues" && (
+          <ProjectIssuesReference
+            issues={linkedIssues}
+            onRemove={(key) => setLinkedIssues((current) => current.filter((issue) => issueKey(issue) !== key))}
+            onAdd={(issue) => setLinkedIssues((current) => current.some((item) => issueKey(item) === issueKey(issue)) ? current : [...current, { ...issue, project: referenceProject.name }])}
+            addOpen={addOpen}
+            setAddOpen={setAddOpen}
+          />
+        )}
+      </div>
+    );
+  }
 
   const postUpdate = async (event: FormEvent) => {
     event.preventDefault();
@@ -820,6 +924,91 @@ export function ProjectDetailPage() {
           </div>
         </aside>
       </div>
+    </div>
+  );
+}
+
+function ProjectOverviewReference() {
+  return (
+    <div className="linear-project-overview">
+      <div className="project-icon-large"><Box size={22} /></div>
+      <h1>{referenceProject.name}</h1>
+      <p>Add a short summary...</p>
+      <div className="project-property-line">
+        <span>Properties</span>
+        <span><span className="status-dot status-backlog" /> Backlog</span>
+        <span>--- No priority</span>
+        <span><span className="assignee-bubble">PJ</span> {referenceProject.lead}</span>
+        <span>Target date</span>
+        <span><span className="team-key inline-team-key">E</span> Eltsuh</span>
+        <span>•••</span>
+      </div>
+      <div className="project-property-line muted"><span>Resources</span><button type="button">+ Add document or link...</button></div>
+      <button className="project-update-empty" type="button"><MessageSquare size={16} /> Write first project update</button>
+      <h3>Description</h3>
+      <p className="project-empty-copy">Add description...</p>
+      <button className="milestone-row" type="button">+ Milestone</button>
+    </div>
+  );
+}
+
+function ProjectActivityReference() {
+  return (
+    <div className="linear-project-overview">
+      <h2>Activity</h2>
+      <div className="activity-item"><span className="assignee-bubble">PJ</span><span>parikshit.joon@gmail.com created the project · Apr 29</span></div>
+      <div className="activity-item muted"><Clock3 size={16} /><span>Linear updated project status to Backlog · Apr 29</span></div>
+    </div>
+  );
+}
+
+function ProjectIssuesReference({ issues, onRemove, onAdd, addOpen, setAddOpen }: { issues: Issue[]; onRemove: (key: string) => void; onAdd: (issue: Issue) => void; addOpen: boolean; setAddOpen: (open: boolean) => void }) {
+  const grouped = ["In Review", "In Progress", "Todo", "Backlog"].map((state) => [state, issues.filter((issue) => stateName(issue) === state)] as const);
+  return (
+    <div className="linear-project-issues">
+      <div className="linear-page-toolbar project-issues-tools">
+        <Button variant="ghost" iconOnly aria-label="Add filter"><SlidersHorizontal size={14} /></Button>
+        <Button variant="ghost" iconOnly aria-label="Display options"><Settings size={14} /></Button>
+        <Button variant="ghost" iconOnly aria-label="Open project details"><Box size={14} /></Button>
+      </div>
+      {issues.length > 0 && <Button variant="primary" onClick={() => setAddOpen(true)} data-testid="project-add-issue">Add issues</Button>}
+      {grouped.map(([state, rows]) => rows.length > 0 && (
+        <section key={state} className="project-issue-group">
+          <div className="linear-group-header"><span className="group-caret">▾</span><StatusGlyph state={state} /><span>{state}</span><span className="group-count">{rows.length}</span><button type="button" onClick={() => setAddOpen(true)}><Plus size={14} /></button></div>
+          {rows.map((issue) => (
+            <div className="linear-native-row project-linked-issue" key={issueKey(issue)}>
+              <span className="row-priority">{Number(issue.priority) === 1 ? "!" : "▮▮"}</span>
+              <span className="issue-key">{issueKey(issue)}</span>
+              <StatusGlyph state={stateName(issue)} />
+              <strong>{issueTitle(issue)}</strong>
+              <span className="row-spacer" />
+              <span className="assignee-bubble">{initials(assigneeName(issue))}</span>
+              <button type="button" className="remove-project-issue" onClick={() => onRemove(issueKey(issue))}>Remove</button>
+            </div>
+          ))}
+        </section>
+      ))}
+      {issues.length === 0 && (
+        <div className="project-empty-issues">
+          <div className="project-empty-illustration" aria-hidden="true" />
+          <strong>Add issues to the project</strong>
+          <p>Start building your project by creating an issue.</p>
+          <p className="project-empty-hint">You can also add teams, team members, and project dates in the project sidebar with <span className="kbd-inline">⌘</span><span className="kbd-inline">I</span>.</p>
+          <Button variant="primary" onClick={() => setAddOpen(true)} data-testid="project-add-issue">Create new issue <span className="kbd-inline">C</span></Button>
+        </div>
+      )}
+      {addOpen && (
+        <div className="modal-overlay" role="dialog" aria-label="Add issues to project">
+          <div className="project-add-modal">
+            <div className="issue-detail-topbar"><strong>Add issues to project</strong><Button variant="ghost" iconOnly onClick={() => setAddOpen(false)} aria-label="Close"><MoreHorizontal size={15} /></Button></div>
+            {candidateProjectIssues.map((issue) => (
+              <button key={issueKey(issue)} className="linear-native-row add-issue-choice" onClick={() => { onAdd(issue); setAddOpen(false); }}>
+                <span className="issue-key">{issueKey(issue)}</span><StatusGlyph state={stateName(issue)} /><strong>{issueTitle(issue)}</strong><span className="row-spacer" /><span className="assignee-bubble">{initials(assigneeName(issue))}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

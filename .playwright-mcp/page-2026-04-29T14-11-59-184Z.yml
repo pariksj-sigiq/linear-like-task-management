@@ -1,0 +1,1138 @@
+- generic [ref=e2]:
+  - region "Notifications alt+T"
+  - link "Skip to content →":
+    - /url: "#skip-nav"
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - navigation "Main" [ref=e5]:
+        - list "Site navigation" [ref=e8]:
+          - listitem [ref=e9]:
+            - link "Navigate to home" [ref=e11] [cursor=pointer]:
+              - /url: /homepage
+              - img "Linear" [ref=e12]
+          - listitem [ref=e14]:
+            - list [ref=e15]:
+              - listitem [ref=e16]:
+                - button "Product" [ref=e17] [cursor=pointer]
+              - listitem [ref=e18]:
+                - button "Resources" [ref=e19] [cursor=pointer]
+              - listitem [ref=e20]:
+                - link "Customers" [ref=e21] [cursor=pointer]:
+                  - /url: /customers
+              - listitem [ref=e22]:
+                - link "Pricing" [ref=e23] [cursor=pointer]:
+                  - /url: /pricing
+              - listitem [ref=e24]:
+                - link "Now" [ref=e25] [cursor=pointer]:
+                  - /url: /now
+              - listitem [ref=e26]:
+                - link "Contact" [ref=e27] [cursor=pointer]:
+                  - /url: /contact
+            - list [ref=e29]:
+              - listitem [ref=e30]:
+                - link "Log in" [ref=e32] [cursor=pointer]:
+                  - /url: /login
+              - listitem [ref=e33]:
+                - link "Sign up" [ref=e34] [cursor=pointer]:
+                  - /url: /signup
+    - main [ref=e35]:
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e39]:
+            - heading "The product development system for teams and agents" [level=1] [ref=e40]:
+              - generic [ref=e41]:
+                - generic [ref=e42]: The product development
+                - generic [ref=e43]: system for teams and agents
+              - generic [ref=e44]: The product development system for teams and agents
+            - generic [ref=e46]:
+              - paragraph [ref=e47]:
+                - generic [ref=e48]: Purpose-built for planning and building products. Designed for the AI era.
+              - link "Issue tracking is dead linear.app/next →" [ref=e49] [cursor=pointer]:
+                - /url: /next
+                - generic [ref=e51]:
+                  - generic [ref=e53]: Issue tracking is dead
+                  - generic [ref=e54]: linear.app/next →
+          - generic "A screenshot of the Linear app showing the issue that's currently in progress" [ref=e57]:
+            - generic [ref=e62]:
+              - navigation [ref=e64]:
+                - generic [ref=e65]:
+                  - button "Linear logo Linear" [ref=e66] [cursor=pointer]:
+                    - img "Linear logo" [ref=e68]
+                    - generic [ref=e70]: Linear
+                    - img [ref=e71]
+                  - generic [ref=e73]:
+                    - button "Search workspace" [ref=e74]:
+                      - img [ref=e75]
+                    - button "New issue" [ref=e77]:
+                      - img [ref=e78]
+                - generic [ref=e82]:
+                  - generic [ref=e83]:
+                    - button "Inbox" [ref=e84] [cursor=pointer]:
+                      - img [ref=e85]
+                      - generic [ref=e87]: Inbox
+                    - button "My issues" [ref=e88] [cursor=pointer]:
+                      - img [ref=e89]
+                      - generic [ref=e95]: My issues
+                    - button "Reviews" [ref=e96]:
+                      - img [ref=e97]
+                      - generic [ref=e102]: Reviews
+                    - button "Pulse" [ref=e103] [cursor=pointer]:
+                      - img [ref=e104]
+                      - generic [ref=e106]: Pulse
+                  - button "Workspace" [ref=e108]:
+                    - text: Workspace
+                    - img [ref=e109]
+                  - generic [ref=e111]:
+                    - button "Initiatives" [ref=e112] [cursor=pointer]:
+                      - img [ref=e113]
+                      - generic [ref=e116]: Initiatives
+                    - button "Projects" [ref=e117] [cursor=pointer]:
+                      - img [ref=e118]
+                      - generic [ref=e120]: Projects
+                    - button "More" [ref=e121]:
+                      - img [ref=e122]
+                      - generic [ref=e124]: More
+                  - button "Favorites" [ref=e126]:
+                    - text: Favorites
+                    - img [ref=e127]
+                  - generic [ref=e129]:
+                    - button "Faster app launch" [ref=e130] [cursor=pointer]:
+                      - img [ref=e131]
+                      - generic [ref=e134]: Faster app launch
+                    - button "Agent tasks" [ref=e135] [cursor=pointer]:
+                      - img [ref=e136]
+                      - generic [ref=e139]: Agent tasks
+                    - button "UI Refresh" [ref=e140] [cursor=pointer]:
+                      - img [ref=e141]
+                      - generic [ref=e143]: UI Refresh
+                    - button "Agents Insights" [ref=e144] [cursor=pointer]:
+                      - img [ref=e145]
+                      - generic [ref=e147]: Agents Insights
+              - generic [ref=e151]:
+                - generic [ref=e152]:
+                  - generic [ref=e153]:
+                    - generic [ref=e154]:
+                      - generic [ref=e155]: Faster app launch
+                      - button "Remove from favorites" [ref=e156] [cursor=pointer]:
+                        - img [ref=e157]
+                      - button [ref=e159] [cursor=pointer]:
+                        - img [ref=e160]
+                    - generic [ref=e162]:
+                      - generic [ref=e164]:
+                        - generic [ref=e165]: "02"
+                        - generic [ref=e166]: /
+                        - generic [ref=e167]: "145"
+                      - generic [ref=e168]:
+                        - button "Previous issue" [ref=e169] [cursor=pointer]:
+                          - img [ref=e170]
+                        - button "Next issue" [ref=e172] [cursor=pointer]:
+                          - img [ref=e173]
+                  - generic [ref=e175]:
+                    - heading "Faster app launch" [level=3] [ref=e176]
+                    - paragraph [ref=e178]:
+                      - text: Render UI before
+                      - code [ref=e179]: vehicle_state
+                      - text: sync when minimum required state is present, instead of blocking on full refresh during iOS startup.
+                    - heading "Activity" [level=4] [ref=e181]
+                    - generic [ref=e183]:
+                      - generic [ref=e184]:
+                        - generic [ref=e185]:
+                          - img "Avatar of Karri"
+                        - generic [ref=e186]: Linear created the issue via Slack on behalf of karri · 2min ago
+                      - generic [ref=e188]:
+                        - img [ref=e189]
+                        - generic [ref=e191]: Triage Intelligence added the label Performance and iOS · 2min ago
+                    - generic [ref=e193]:
+                      - generic [ref=e195]:
+                        - generic [ref=e196]:
+                          - img "Avatar of Karri"
+                        - generic [ref=e197]:
+                          - text: karri
+                          - generic [ref=e198]: · 4 min ago
+                      - generic [ref=e199]: Right now we show a spinner forever, which makes it look like the car disappeared...
+                      - generic [ref=e203]:
+                        - text: jori
+                        - generic [ref=e204]: · just now
+                      - generic [ref=e207]:
+                        - generic [ref=e208]:
+                          - strong [ref=e209]: "@Codex"
+                          - text: can you take a stab at this?
+                        - generic [ref=e210]:
+                          - img [ref=e211]
+                          - generic [ref=e214]: jori connected Codex · just now
+                    - generic [ref=e216]:
+                      - generic [ref=e218]: Codex
+                      - generic [ref=e219]:
+                        - generic [ref=e220]: Examining issue
+                        - text: ENG-2703
+                    - generic [ref=e223]:
+                      - img [ref=e224]
+                      - generic [ref=e227]: Codex moved from Todo to In Progress · just now
+                    - generic [ref=e228]:
+                      - generic [ref=e229]:
+                        - generic [ref=e231]: Codex
+                        - button "Close chat" [ref=e232] [cursor=pointer]:
+                          - img [ref=e233]
+                      - generic [ref=e235]:
+                        - generic [ref=e236]: On it! I've received your request.
+                        - generic [ref=e237]: Kicked off a task in kinetic/kinetic-iOS environment.
+                        - generic [ref=e238]: Searching for root AGENTS file
+                        - generic [ref=e239]: kinetic/kinetic-iOS$ /bin/bash -lc rg --files -g 'AGENTS.md' AGENTS.md
+                        - generic [ref=e240]: Locating initialization logic for vehicle_state
+                        - generic [ref=e241]:
+                          - img [ref=e242]
+                          - generic [ref=e268]:
+                            - text: Thinking
+                            - generic [ref=e269]: ...
+                      - generic [ref=e270]:
+                        - textbox "Message Codex…"
+                        - generic [ref=e271]:
+                          - button [ref=e272]:
+                            - img [ref=e273]
+                          - button [disabled] [ref=e275] [cursor=pointer]:
+                            - img [ref=e276]
+                - generic [ref=e278]:
+                  - generic [ref=e279]:
+                    - generic [ref=e280]: ENG-2703
+                    - generic [ref=e281]:
+                      - button "Copy issue URL" [ref=e282] [cursor=pointer]:
+                        - img [ref=e283]
+                      - button "Copy issue ID" [ref=e285] [cursor=pointer]:
+                        - img [ref=e286]
+                      - button "Copy git branch name" [ref=e289] [cursor=pointer]:
+                        - img [ref=e290]
+                  - generic [ref=e292]:
+                    - generic [ref=e293]:
+                      - generic [ref=e294]:
+                        - img [ref=e295]
+                        - generic [ref=e298]: In Progress
+                      - generic [ref=e299]:
+                        - img "High Priority" [ref=e300]
+                        - generic [ref=e304]: High
+                      - generic [ref=e305]:
+                        - generic [ref=e307]: jori
+                        - img [ref=e308]
+                        - generic [ref=e310]:
+                          - img "Codex" [ref=e311]
+                          - generic [ref=e312]: Codex
+                    - text: Labels
+                    - generic [ref=e315]:
+                      - button "Performance" [ref=e316]: Performance
+                      - button "iOS" [ref=e318]: iOS
+                    - text: Cycle
+                    - generic [ref=e322]:
+                      - img [ref=e323]
+                      - generic [ref=e326]: Cycle 144
+                    - text: Project
+                    - generic [ref=e329]:
+                      - img [ref=e330]
+                      - generic [ref=e332]: Core Performance
+              - region "Notifications alt+T"
+        - link [ref=e334] [cursor=pointer]:
+          - /url: /customers
+          - list [ref=e335]:
+            - listitem [ref=e336]:
+              - img [ref=e337]
+            - listitem [ref=e340]:
+              - img [ref=e341]
+            - listitem [ref=e344]:
+              - img [ref=e345]
+            - listitem [ref=e347]:
+              - img [ref=e348]
+            - listitem [ref=e350]:
+              - img [ref=e351]
+            - listitem [ref=e353]:
+              - img [ref=e354]
+            - listitem [ref=e357]:
+              - img [ref=e358]
+            - listitem [ref=e360]:
+              - img [ref=e361]
+        - heading "A new species of product tool. Purpose-built for modern teams with AI workflows at its core, Linear sets a new standard for planning and building products." [level=2] [ref=e364]:
+          - strong [ref=e365]: A new species of product tool.
+          - text: Purpose-built for modern teams with AI workflows at its core, Linear sets a new standard for planning and building products.
+        - generic [ref=e367]:
+          - generic [ref=e368]:
+            - generic [ref=e369]: FIG 0.2
+            - img [ref=e371]
+            - generic [ref=e384]:
+              - generic [ref=e385]: Built for purpose
+              - paragraph [ref=e386]: Linear is shaped by the practices and principles of world-class product teams.
+          - generic [ref=e387]:
+            - generic [ref=e388]: FIG 0.3
+            - generic [ref=e390]:
+              - img [ref=e391]
+              - img [ref=e417]
+              - img [ref=e443]
+              - img [ref=e469]
+            - generic [ref=e487]:
+              - generic [ref=e488]: Powered by AI agents
+              - paragraph [ref=e490]: Designed for workflows shared by humans and agents. From drafting PRDs to pushing PRs.
+          - generic [ref=e491]:
+            - generic [ref=e492]: FIG 0.4
+            - img [ref=e494]
+            - generic [ref=e540]:
+              - generic [ref=e541]: Designed for speed
+              - paragraph [ref=e542]: Reduces noise and restores momentum to help teams ship with high velocity and focus.
+        - generic [ref=e549]:
+          - generic [ref=e550]:
+            - heading "Make product operations self-driving" [level=2] [ref=e552]
+            - generic [ref=e553]:
+              - paragraph [ref=e554]: Turn conversations and customer feedback into actionable issues that are routed, labeled, and prioritized for the right team.
+              - link "1.0 Intake →" [ref=e556] [cursor=pointer]:
+                - /url: /intake
+                - generic [ref=e557]:
+                  - text: "1.0"
+                  - generic [ref=e558]: Intake
+                  - generic [ref=e559]: →
+          - generic [ref=e560]:
+            - generic [ref=e564]:
+              - generic [ref=e565]:
+                - generic [ref=e566]:
+                  - img [ref=e567]
+                  - generic [ref=e569]: Backlog
+                  - generic [ref=e570]: "8"
+                  - generic [ref=e571]:
+                    - button "Add issue":
+                      - img
+                    - button "Open menu":
+                      - img
+                - generic [ref=e572]:
+                  - generic [ref=e573]:
+                    - generic [ref=e574]:
+                      - generic [ref=e575]: ENG-2085
+                      - img [ref=e577]
+                    - generic [ref=e580]: Reduce UI flicker during autonomy...
+                    - generic [ref=e581]:
+                      - button "Set priority":
+                        - img
+                  - generic [ref=e582]:
+                    - generic [ref=e583]:
+                      - generic [ref=e584]: ENG-2094
+                      - img [ref=e586]
+                    - generic [ref=e589]: Add buffering for autonomy event streams
+                    - generic [ref=e590]:
+                      - button "Set priority":
+                        - img
+                  - generic [ref=e591]:
+                    - generic [ref=e592]:
+                      - generic [ref=e593]: ENG-2092
+                      - img [ref=e595]
+                    - generic [ref=e598]: Reduce startup delay caused by vehicle sync
+                    - generic [ref=e599]:
+                      - button "Set priority":
+                        - img
+                  - generic [ref=e600]:
+                    - generic [ref=e601]:
+                      - generic [ref=e602]: ENG-2200
+                      - img [ref=e604]
+                    - generic [ref=e607]: Fix delayed route updates during rerouting
+                    - generic [ref=e608]:
+                      - button "Set priority":
+                        - img
+              - generic [ref=e609]:
+                - generic [ref=e610]:
+                  - img [ref=e611]
+                  - generic [ref=e613]: Todo
+                  - generic [ref=e614]: "71"
+                  - generic [ref=e615]:
+                    - button "Add issue":
+                      - img
+                    - button "Open menu":
+                      - img
+                - generic [ref=e616]:
+                  - generic [ref=e618]:
+                    - generic [ref=e620]: ENG-926
+                    - generic [ref=e622]: Remove UI inconsistencies
+                    - generic [ref=e623]:
+                      - button "Set priority":
+                        - img
+                      - generic [ref=e624]: Bug
+                      - generic [ref=e626]: Design
+                  - generic [ref=e629]:
+                    - generic [ref=e631]: ENG-2088
+                    - generic [ref=e633]: "TypeError: Cannot read properties"
+                    - generic [ref=e634]:
+                      - button "Set priority":
+                        - img
+                      - generic [ref=e635]: Bug
+                  - generic [ref=e638]:
+                    - generic [ref=e640]: ENG-924
+                    - generic [ref=e642]: Upgrade to Claude Opus 4.5
+                    - generic [ref=e643]:
+                      - button "Set priority":
+                        - img
+                      - generic [ref=e644]: AI
+                  - generic [ref=e647]:
+                    - generic [ref=e648]:
+                      - generic [ref=e649]: ENG-1882
+                      - img [ref=e651]
+                    - generic [ref=e654]: Optimize load times
+                    - generic [ref=e655]:
+                      - button "Set priority":
+                        - img
+                      - generic [ref=e656]: Performance
+              - generic [ref=e658]:
+                - generic [ref=e659]:
+                  - img [ref=e660]
+                  - generic [ref=e664]: In Progress
+                  - generic [ref=e665]: "3"
+                  - generic [ref=e666]:
+                    - button "Add issue":
+                      - img
+                    - button "Open menu":
+                      - img
+                - generic [ref=e667]:
+                  - generic [ref=e668]:
+                    - generic [ref=e670]: ENG-1487
+                    - generic [ref=e672]: Remove contentData from GraphQL API
+                    - generic [ref=e673]:
+                      - button "Set priority":
+                        - img
+                      - generic [ref=e674]:
+                        - img [ref=e675]
+                        - text: "61039"
+                  - generic [ref=e680]:
+                    - generic [ref=e682]: MKT-1028
+                    - generic [ref=e684]: Launch page assets
+                    - generic [ref=e685]:
+                      - button "Set priority":
+                        - img
+                      - generic [ref=e686]: Design
+                  - generic [ref=e688]:
+                    - generic [ref=e690]: ENG-2187
+                    - generic [ref=e692]: Prevent duplicate ride requests on poor...
+                    - generic [ref=e693]:
+                      - button "Set priority":
+                        - img
+                      - generic [ref=e694]: Bug
+                      - generic [ref=e696]:
+                        - img [ref=e697]
+                        - text: "62048"
+              - generic [ref=e702]:
+                - generic [ref=e703]:
+                  - img [ref=e704]
+                  - generic [ref=e706]: Done
+                  - generic [ref=e707]: "53"
+                  - generic [ref=e708]:
+                    - button "Add issue":
+                      - img
+                    - button "Open menu":
+                      - img
+                - generic [ref=e709]:
+                  - generic [ref=e710]:
+                    - generic [ref=e711]:
+                      - generic [ref=e712]: ENG-2074
+                      - img [ref=e714]
+                    - generic [ref=e717]: Clean up deprecated APIs...
+                    - generic [ref=e718]:
+                      - button "Set priority":
+                        - img
+                      - generic [ref=e719]: API
+                      - generic [ref=e721]: "61002"
+                  - generic [ref=e723]:
+                    - generic [ref=e724]:
+                      - generic [ref=e725]: ENG-1912
+                      - img [ref=e727]
+                    - generic [ref=e730]: Reduce latency in autonomy st...
+                    - generic [ref=e731]:
+                      - button "Set priority":
+                        - img
+                      - generic [ref=e732]: "61005"
+                  - generic [ref=e734]:
+                    - generic [ref=e735]:
+                      - generic [ref=e736]: ENG-1951
+                      - img [ref=e738]
+                    - generic [ref=e741]: Reduce ETA fluctuations durin...
+                    - generic [ref=e742]:
+                      - button "Set priority":
+                        - img
+                      - generic [ref=e743]: "61202"
+                  - generic [ref=e745]:
+                    - generic [ref=e746]:
+                      - generic [ref=e747]: ENG-1960
+                      - img [ref=e749]
+                    - generic [ref=e752]: Improve fallback messaging
+                    - generic [ref=e753]:
+                      - button "Set priority":
+                        - img
+                      - generic [ref=e754]: UI
+                      - generic [ref=e756]: "61149"
+                  - generic [ref=e758]:
+                    - generic [ref=e759]:
+                      - generic [ref=e760]: ENG-1991
+                      - img [ref=e762]
+                    - generic [ref=e765]: Improve rider visibility into veh...
+                    - generic [ref=e766]:
+                      - button "Set priority":
+                        - img
+            - generic [ref=e768]:
+              - generic [ref=e769]:
+                - generic [ref=e770]:
+                  - img [ref=e771]
+                  - generic [ref=e776]:
+                    - generic [ref=e777]: Thread in
+                    - text: "#feedback"
+                - button:
+                  - img
+              - generic [ref=e778]:
+                - generic [ref=e779]:
+                  - img "didier" [ref=e780]
+                  - generic [ref=e781]:
+                    - generic [ref=e783]: didier
+                    - generic [ref=e785]: Has anyone been looking into the iOS startup performance issues?
+                - generic [ref=e786]:
+                  - img "lena" [ref=e787]
+                  - generic [ref=e788]:
+                    - generic [ref=e790]: lena
+                    - generic [ref=e792]: Anyone else noticing the iOS app feels slow to open if you haven't used it in a bit?
+                - generic [ref=e793]:
+                  - img "didier" [ref=e794]
+                  - generic [ref=e795]:
+                    - generic [ref=e797]: didier
+                    - generic [ref=e799]: Yea, we're still blocking initial render on a full vehicle_state sync every time...
+                - generic [ref=e800]:
+                  - img "andreas" [ref=e801]
+                  - generic [ref=e802]:
+                    - generic [ref=e804]: andreas
+                    - generic [ref=e806]: Feels like we could render sooner and load the rest in the background. Probably also worth tracking startup timing so we know how often this happens!
+              - generic [ref=e807]:
+                - generic [ref=e810]:
+                  - generic [ref=e811]: "@Linear"
+                  - generic [ref=e812]: create urgent issues and assign to me
+                - generic [ref=e814]:
+                  - button "Attach file" [ref=e815]:
+                    - img [ref=e816]
+                  - button "Hide formatting" [ref=e818]:
+                    - img [ref=e819]
+                  - button "Emoji" [ref=e821]:
+                    - img [ref=e822]
+                  - button "Mention someone" [ref=e824]:
+                    - img [ref=e825]
+                  - button "Record video clip" [ref=e828]:
+                    - img [ref=e829]
+                  - button "Record audio clip" [ref=e831]:
+                    - img [ref=e832]
+                  - button "Run shortcut" [ref=e835]:
+                    - img [ref=e836]
+                  - generic [ref=e838]:
+                    - button "Send message" [ref=e839] [cursor=pointer]:
+                      - img [ref=e840]
+                    - button "Schedule for later" [ref=e843] [cursor=pointer]:
+                      - img [ref=e844]
+          - generic [ref=e849]:
+            - button "1.1 Linear Agent +" [ref=e851] [cursor=pointer]:
+              - generic [ref=e853]:
+                - generic [ref=e854]: "1.1"
+                - generic [ref=e855]: Linear Agent +
+            - button "1.2 Triage +" [ref=e857] [cursor=pointer]:
+              - generic [ref=e859]:
+                - generic [ref=e860]: "1.2"
+                - generic [ref=e861]: Triage +
+            - button "1.3 Customer Requests +" [ref=e863] [cursor=pointer]:
+              - generic [ref=e865]:
+                - generic [ref=e866]: "1.3"
+                - generic [ref=e867]: Customer Requests +
+            - button "1.4 Linear Asks +" [ref=e869] [cursor=pointer]:
+              - generic [ref=e871]:
+                - generic [ref=e872]: "1.4"
+                - generic [ref=e873]: Linear Asks +
+        - generic [ref=e879]:
+          - generic [ref=e880]:
+            - heading "Define the product direction" [level=2] [ref=e882]
+            - generic [ref=e883]:
+              - paragraph [ref=e884]: Plan and navigate from idea to launch. Align your team with product initiatives, strategic roadmaps, and clear, up-to-date PRDs.
+              - link "2.0 Plan →" [ref=e886] [cursor=pointer]:
+                - /url: /plan
+                - generic [ref=e887]:
+                  - text: "2.0"
+                  - generic [ref=e888]: Plan
+                  - generic [ref=e889]: →
+          - generic [ref=e890]:
+            - generic [ref=e894]:
+              - generic [ref=e895]:
+                - generic [ref=e896]:
+                  - generic [ref=e898]: FEB
+                  - generic [ref=e906]: MAR
+                  - generic [ref=e915]: APR
+                  - generic [ref=e923]: MAY
+                  - generic [ref=e931]: JUN
+                  - generic [ref=e940]: JUL
+                  - generic [ref=e948]: AUG
+                  - generic [ref=e957]: SEP
+                - generic [ref=e963]:
+                  - generic [ref=e965]: "2"
+                  - generic [ref=e967]: "9"
+                  - generic [ref=e969]: "16"
+                  - generic [ref=e971]: "23"
+                  - generic [ref=e973]: "2"
+                  - generic [ref=e975]: "9"
+                  - generic [ref=e977]: "16"
+                  - generic [ref=e979]: "23"
+                  - generic [ref=e981]: "30"
+                  - generic [ref=e983]: "6"
+                  - generic [ref=e985]: "13"
+                  - generic [ref=e987]: "20"
+                  - generic [ref=e989]: "27"
+                  - generic [ref=e991]: "4"
+                  - generic [ref=e993]: "11"
+                  - generic [ref=e995]: "18"
+                  - generic [ref=e997]: "25"
+                  - generic [ref=e999]: "1"
+                  - generic [ref=e1001]: "8"
+                  - generic [ref=e1003]: "15"
+                  - generic [ref=e1005]: "22"
+                  - generic [ref=e1007]: "29"
+                  - generic [ref=e1009]: "6"
+                  - generic [ref=e1011]: "13"
+                  - generic [ref=e1013]: "20"
+                  - generic [ref=e1015]: "27"
+                  - generic [ref=e1017]: "3"
+                  - generic [ref=e1019]: "10"
+                  - generic [ref=e1021]: "17"
+                  - generic [ref=e1023]: "24"
+                  - generic [ref=e1025]: "31"
+                  - generic [ref=e1027]: "7"
+                  - generic [ref=e1029]: "14"
+                  - generic [ref=e1031]: "21"
+                  - generic [ref=e1033]: "28"
+              - generic [ref=e1035]:
+                - generic [ref=e1036]:
+                  - generic [ref=e1037]:
+                    - img [ref=e1038]
+                    - generic [ref=e1040]: UI Refresh
+                    - img [ref=e1041]
+                  - generic [ref=e1045]:
+                    - generic [ref=e1047]:
+                      - generic [ref=e1048]:
+                        - img [ref=e1049]
+                        - generic [ref=e1051]: Core screens
+                      - generic [ref=e1052]:
+                        - img [ref=e1053]
+                        - generic [ref=e1055]: Polish
+                    - generic [ref=e1056]:
+                      - img
+                - generic [ref=e1057]:
+                  - generic [ref=e1058]:
+                    - img [ref=e1059]
+                    - generic [ref=e1061]: Split fares
+                    - img [ref=e1062]
+                  - generic [ref=e1066]:
+                    - generic [ref=e1068]:
+                      - generic [ref=e1069]:
+                        - img [ref=e1070]
+                        - generic [ref=e1072]: Internal
+                      - generic [ref=e1073]:
+                        - img [ref=e1074]
+                        - generic [ref=e1076]: Public Beta
+                    - generic [ref=e1077]:
+                      - img
+                - generic [ref=e1078]:
+                  - generic [ref=e1079]:
+                    - img [ref=e1080]
+                    - generic [ref=e1082]: Autonomy status clarity
+                    - img [ref=e1083]
+                  - generic [ref=e1087]:
+                    - generic [ref=e1090]:
+                      - img [ref=e1091]
+                      - generic [ref=e1093]: Alpha
+                    - generic:
+                      - img
+                - generic [ref=e1094]:
+                  - img [ref=e1095]
+                  - generic [ref=e1098]:
+                    - img [ref=e1099]
+                    - generic [ref=e1101]: GA
+            - generic [ref=e1102]:
+              - generic [ref=e1104]: Initiatives
+              - generic [ref=e1105]:
+                - button "Core Product 99" [ref=e1106] [cursor=pointer]:
+                  - generic [ref=e1107]:
+                    - img [ref=e1109]
+                    - generic [ref=e1112]: Core Product
+                    - generic [ref=e1113]: "99"
+                - generic [ref=e1114]:
+                  - img [ref=e1115]
+                  - img [ref=e1117]
+                  - generic [ref=e1119]: Infra stability
+                  - generic [ref=e1120]: "28"
+                - generic [ref=e1121]:
+                  - img [ref=e1122]
+                  - img [ref=e1124]
+                  - generic [ref=e1127]: Autonomous systems
+                  - generic [ref=e1128]: "16"
+                - generic [ref=e1129]:
+                  - img [ref=e1130]
+                  - img [ref=e1132]
+                  - generic [ref=e1134]: Mobile apps
+                  - generic [ref=e1135]: "8"
+              - generic [ref=e1136]:
+                - button "APAC Expansion 21" [ref=e1137] [cursor=pointer]:
+                  - generic [ref=e1138]:
+                    - img [ref=e1140]
+                    - generic [ref=e1143]: APAC Expansion
+                    - generic [ref=e1144]: "21"
+                - generic [ref=e1145]:
+                  - img [ref=e1146]
+                  - img [ref=e1148]
+                  - generic [ref=e1150]: Japan Launch
+                  - generic [ref=e1151]: "12"
+                - generic [ref=e1152]:
+                  - img [ref=e1153]
+                  - img [ref=e1155]
+                  - generic [ref=e1157]: Customer-driven priorities
+                  - generic [ref=e1158]: "9"
+          - generic [ref=e1162]:
+            - button "2.1 Projects +" [ref=e1164] [cursor=pointer]:
+              - generic [ref=e1166]:
+                - generic [ref=e1167]: "2.1"
+                - generic [ref=e1168]: Projects +
+            - button "2.2 Documents +" [ref=e1170] [cursor=pointer]:
+              - generic [ref=e1172]:
+                - generic [ref=e1173]: "2.2"
+                - generic [ref=e1174]: Documents +
+            - button "2.3 Initiatives +" [ref=e1176] [cursor=pointer]:
+              - generic [ref=e1178]:
+                - generic [ref=e1179]: "2.3"
+                - generic [ref=e1180]: Initiatives +
+            - button "2.4 Visual planning +" [ref=e1182] [cursor=pointer]:
+              - generic [ref=e1184]:
+                - generic [ref=e1185]: "2.4"
+                - generic [ref=e1186]: Visual planning +
+        - generic [ref=e1192]:
+          - generic [ref=e1193]:
+            - heading "Move work forward across teams and agents" [level=2] [ref=e1195]
+            - generic [ref=e1196]:
+              - paragraph [ref=e1197]: Build and deploy AI agents that work alongside your team. Work on complex tasks together or delegate entire issues end-to-end.
+              - link "3.0 Build →" [ref=e1199] [cursor=pointer]:
+                - /url: /build
+                - generic [ref=e1200]:
+                  - text: "3.0"
+                  - generic [ref=e1201]: Build
+                  - generic [ref=e1202]: →
+          - generic [ref=e1203]:
+            - generic [ref=e1206]:
+              - generic [ref=e1207]:
+                - generic [ref=e1208]:
+                  - img "Codex" [ref=e1209]
+                  - generic [ref=e1210]: Codex
+                - img [ref=e1211]
+              - generic [ref=e1214]:
+                - generic [ref=e1215]: On it! I've received your request.
+                - generic [ref=e1217]:
+                  - generic [ref=e1218]: Kicked off a task in
+                  - generic [ref=e1219]: kinetic/kinetic-iOS environment.
+                - generic [ref=e1220]: Searching for root AGENTS file
+                - generic [ref=e1222]:
+                  - text: kinetic/kinetic-iOS$ /bin/bash -lc rg --files -g 'AGENTS.md'
+                  - text: AGENTS.md
+                - generic [ref=e1224]:
+                  - generic [ref=e1225]: Locating initialization logic for
+                  - generic [ref=e1226]: vehicle_state
+                - generic [ref=e1228]:
+                  - img [ref=e1229]
+                  - generic [ref=e1256]:
+                    - text: Thought
+                    - generic [ref=e1257]: for 5s
+            - generic [ref=e1259]:
+              - generic [ref=e1260]: Agents Command Menu
+              - combobox "Agents Command Menu" [expanded] [ref=e1262]
+              - listbox "Suggestions" [ref=e1264]:
+                - generic [ref=e1265]:
+                  - generic [ref=e1266]: No results found.
+                  - option "Codex Codex Agent" [ref=e1267] [cursor=pointer]:
+                    - img "Codex" [ref=e1268]
+                    - generic [ref=e1269]: Codex
+                    - generic [ref=e1270]: Agent
+                    - img [ref=e1271]
+                  - option "Steven Steven" [ref=e1273]:
+                    - img "Steven" [ref=e1274]
+                    - generic [ref=e1275]: Steven
+                  - option "Ema Ema" [ref=e1276]:
+                    - img "Ema" [ref=e1277]
+                    - generic [ref=e1278]: Ema
+                  - option "GitHub Copilot GitHub Copilot Agent" [ref=e1279] [cursor=pointer]:
+                    - img "GitHub Copilot" [ref=e1280]
+                    - generic [ref=e1281]: GitHub Copilot
+                    - generic [ref=e1282]: Agent
+                  - option "Cursor Cursor Agent" [ref=e1283] [cursor=pointer]:
+                    - img "Cursor" [ref=e1284]
+                    - generic [ref=e1285]: Cursor
+                    - generic [ref=e1286]: Agent
+                  - option "Meg Meg" [ref=e1287]:
+                    - img "Meg" [ref=e1288]
+                    - generic [ref=e1289]: Meg
+          - generic [ref=e1293]:
+            - button "3.1 Issues +" [ref=e1295] [cursor=pointer]:
+              - generic [ref=e1297]:
+                - generic [ref=e1298]: "3.1"
+                - generic [ref=e1299]: Issues +
+            - button "3.2 Agents +" [ref=e1301] [cursor=pointer]:
+              - generic [ref=e1303]:
+                - generic [ref=e1304]: "3.2"
+                - generic [ref=e1305]: Agents +
+            - button "3.3 Linear MCP +" [ref=e1307] [cursor=pointer]:
+              - generic [ref=e1309]:
+                - generic [ref=e1310]: "3.3"
+                - generic [ref=e1311]: Linear MCP +
+            - button "3.4 Git automations +" [ref=e1313] [cursor=pointer]:
+              - generic [ref=e1315]:
+                - generic [ref=e1316]: "3.4"
+                - generic [ref=e1317]: Git automations +
+            - button "3.5 Cycles +" [ref=e1319] [cursor=pointer]:
+              - generic [ref=e1321]:
+                - generic [ref=e1322]: "3.5"
+                - generic [ref=e1323]: Cycles +
+        - generic [ref=e1330]:
+          - generic [ref=e1331]:
+            - heading "Review PRs and agent output" [level=2] [ref=e1333]
+            - generic [ref=e1334]:
+              - paragraph [ref=e1335]: Understand code changes at a glance with structural diffs for human and agent output. Review, discuss, and merge — all within Linear.
+              - link "4.0 Diffs (Coming soon) →" [ref=e1337] [cursor=pointer]:
+                - /url: /diffs
+                - generic [ref=e1338]:
+                  - text: "4.0"
+                  - generic [ref=e1339]: Diffs (Coming soon)
+                  - generic [ref=e1340]: →
+          - generic [ref=e1343]:
+            - generic [ref=e1344]:
+              - img [ref=e1345]
+              - generic [ref=e1347]: kinetic-ios/src/screens/Home/HomeScreen.tsx
+              - generic [ref=e1348]:
+                - combobox [ref=e1349] [cursor=pointer]:
+                  - generic [ref=e1350]: Linear
+                  - img [ref=e1352]
+                - textbox [ref=e1355]: "0"
+            - group "Editable code diff — press Space to edit" [ref=e1356]:
+              - generic [ref=e1357]:
+                - code [ref=e1360]:
+                  - generic [ref=e1361]: import React from 'react'
+                  - generic [ref=e1362]: "import { View, ActivityIndicator } from 'react-native'"
+                  - generic [ref=e1363]: "import { useVehicleState } from '@hooks/useVehicleState'"
+                  - generic [ref=e1364]: "import { Dashboard } from '@components/Dashboard'"
+                  - generic [ref=e1366]: "export const HomeScreen = () => {"
+                  - generic [ref=e1367]: "const { vehicleState, isFullySynced } = useVehicleState()"
+                  - generic [ref=e1369]: "if (!isFullySynced) {"
+                  - generic [ref=e1370]: return <ActivityIndicator size="large" />
+                  - generic [ref=e1371]: "}"
+                  - generic [ref=e1373]: return (
+                  - generic [ref=e1374]: <View>
+                  - generic [ref=e1375]: "<Dashboard state={vehicleState} />"
+                  - generic [ref=e1376]: </View>
+                  - generic [ref=e1377]: )
+                  - generic [ref=e1378]: "}"
+                - code [ref=e1381]:
+                  - generic [ref=e1382]:
+                    - generic:
+                      - generic: import React from 'react'
+                      - generic: "import { View, ActivityIndicator } from 'react-native'"
+                      - generic: "import { useVehicleState, SyncStatus } from '@hooks/useVehicleState'"
+                      - generic: "import { Dashboard } from '@components/Dashboard'"
+                      - generic: "export const HomeScreen = () => {"
+                      - generic: "const { vehicleState, syncStatus } = useVehicleState()"
+                      - generic: "if (syncStatus === SyncStatus.PENDING) {"
+                      - generic: return <ActivityIndicator size="large" />
+                      - generic: "}"
+                      - generic: return (
+                      - generic: <View>
+                      - generic: "<Dashboard state={vehicleState} syncStatus={syncStatus} />"
+                      - generic: </View>
+                      - generic: )
+                      - generic: "}"
+                    - textbox "Edit code lines" [ref=e1383]: "import React from 'react' import { View, ActivityIndicator } from 'react-native' import { useVehicleState, SyncStatus } from '@hooks/useVehicleState' import { Dashboard } from '@components/Dashboard' export const HomeScreen = () => { const { vehicleState, syncStatus } = useVehicleState() if (syncStatus === SyncStatus.PENDING) { return <ActivityIndicator size=\"large\" /> } return ( <View> <Dashboard state={vehicleState} syncStatus={syncStatus} /> </View> ) }"
+            - text: "- - - + + +"
+        - generic [ref=e1389]:
+          - generic [ref=e1390]:
+            - heading "Understand progress at scale" [level=2] [ref=e1392]
+            - generic [ref=e1393]:
+              - paragraph [ref=e1394]: Take the guesswork out of product development with project updates, analytics, and dashboards that surface what needs your attention.
+              - link "5.0 Monitor →" [ref=e1396] [cursor=pointer]:
+                - /url: /monitor
+                - generic [ref=e1397]:
+                  - text: "5.0"
+                  - generic [ref=e1398]: Monitor
+                  - generic [ref=e1399]: →
+          - generic [ref=e1401]:
+            - generic [ref=e1403]:
+              - generic [ref=e1404]:
+                - generic [ref=e1405]: Issue count by created date
+                - generic [ref=e1406]:
+                  - generic [ref=e1409]: "18"
+                  - generic [ref=e1412]: "16"
+                  - generic [ref=e1415]: "14"
+                  - generic [ref=e1418]: "12"
+                  - generic [ref=e1421]: "10"
+                  - generic [ref=e1424]: "8"
+                  - generic [ref=e1427]: "6"
+                  - generic [ref=e1430]: "4"
+                  - generic [ref=e1433]: "2"
+                  - generic [ref=e1436]: "0"
+                - generic [ref=e1437]:
+                  - generic [ref=e1438]: Feb 2025
+                  - generic [ref=e1439]: May 2025
+                  - generic [ref=e1440]: Aug 2025
+                  - generic [ref=e1441]: Nov 2025
+              - generic [ref=e1442]:
+                - generic [ref=e1443]: Cycle time by agent
+                - generic [ref=e1444]:
+                  - img [ref=e1446]
+                  - img [ref=e1449]
+                  - generic [ref=e1451]:
+                    - generic [ref=e1452]:
+                      - img [ref=e1454]
+                      - generic [ref=e1580]: Cursor
+                    - generic [ref=e1581]:
+                      - img [ref=e1583]
+                      - generic [ref=e1661]: Codex
+                    - generic [ref=e1662]:
+                      - img [ref=e1664]
+                      - generic [ref=e1735]: No Agent
+            - generic [ref=e1736]:
+              - generic [ref=e1738]:
+                - generic [ref=e1739]: Weekly Pulse for Apr 29
+                - generic [ref=e1740]:
+                  - button "Listen" [ref=e1741] [cursor=pointer]:
+                    - img [ref=e1742]
+                    - text: Listen
+                  - combobox [ref=e1744] [cursor=pointer]:
+                    - generic [ref=e1745]: 1.0×
+                    - img [ref=e1747]
+                  - textbox [ref=e1750]: "1"
+              - generic [ref=e1751]:
+                - generic [ref=e1753]: Projects
+                - generic [ref=e1756]:
+                  - generic [ref=e1757]:
+                    - generic [ref=e1758]: UI refresh
+                    - generic [ref=e1759]:
+                      - img [ref=e1760]
+                      - generic [ref=e1764]: At risk
+                      - generic [ref=e1766]: By romain · 1 day ago
+                  - list [ref=e1768]:
+                    - listitem [ref=e1769]:
+                      - text: ・
+                      - paragraph [ref=e1770]: iOS implementation is mostly complete, but Android updates are still work in progress
+                    - listitem [ref=e1771]:
+                      - text: ・
+                      - paragraph [ref=e1772]: Risk of timeline slip if remaining design decisions aren’t finalized soon
+                - generic [ref=e1774]:
+                  - generic [ref=e1775]:
+                    - generic [ref=e1776]: Tokyo launch
+                    - generic [ref=e1777]:
+                      - img [ref=e1778]
+                      - generic [ref=e1782]: On track
+                      - generic [ref=e1784]: By julian · 3 hours ago
+                  - list [ref=e1786]:
+                    - listitem [ref=e1787]:
+                      - text: ・
+                      - paragraph [ref=e1788]: Localization efforts have been completed
+                    - listitem [ref=e1789]:
+                      - text: ・
+                      - paragraph [ref=e1790]: Everything else on track for launch in early September
+          - generic [ref=e1795]:
+            - button "5.1 Pulse +" [ref=e1797] [cursor=pointer]:
+              - generic [ref=e1799]:
+                - generic [ref=e1800]: "5.1"
+                - generic [ref=e1801]: Pulse +
+            - button "5.2 Insights +" [ref=e1803] [cursor=pointer]:
+              - generic [ref=e1805]:
+                - generic [ref=e1806]: "5.2"
+                - generic [ref=e1807]: Insights +
+            - button "5.3 Dashboards +" [ref=e1809] [cursor=pointer]:
+              - generic [ref=e1811]:
+                - generic [ref=e1812]: "5.3"
+                - generic [ref=e1813]: Dashboards +
+        - generic [ref=e1821]:
+          - heading "Changelog" [level=2] [ref=e1823]
+          - generic [ref=e1825]:
+            - link "Linear Agent MCP support Linear Agent can now connect to your tools via MCP, giving it access to data and actions beyond your Linear workspace. Bring external context into your workflows to investigate issues, plan projects, write specs, and draft updates grounded in your full context. Apr 23, 2026" [ref=e1829] [cursor=pointer]:
+              - /url: /changelog/2026-04-23-linear-agent-mcp-support
+              - generic [ref=e1830]:
+                - generic [ref=e1831]: Linear Agent MCP support
+                - generic [ref=e1833]: Linear Agent can now connect to your tools via MCP, giving it access to data and actions beyond your Linear workspace. Bring external context into your workflows to investigate issues, plan projects, write specs, and draft updates grounded in your full context.
+                - generic [ref=e1835]: Apr 23, 2026
+            - link "Linear for Microsoft Teams Mention @Linear in any Microsoft Teams channel to turn your conversations into actionable work. Apr 15, 2026" [ref=e1838] [cursor=pointer]:
+              - /url: /changelog/2026-04-16-linear-for-microsoft-teams
+              - generic [ref=e1839]:
+                - generic [ref=e1840]: Linear for Microsoft Teams
+                - generic [ref=e1842]: Mention @Linear in any Microsoft Teams channel to turn your conversations into actionable work.
+                - generic [ref=e1844]: Apr 15, 2026
+            - link "Multi-level sub-teams Structure your teams in Linear to match how your organization works. Apr 8, 2026" [ref=e1847] [cursor=pointer]:
+              - /url: /changelog/2026-04-09-multi-level-sub-teams
+              - generic [ref=e1848]:
+                - generic [ref=e1849]: Multi-level sub-teams
+                - generic [ref=e1851]: Structure your teams in Linear to match how your organization works.
+                - generic [ref=e1853]: Apr 8, 2026
+            - link "Web forms for Linear Asks Linear Asks allows you to capture internal requests and bring them into Linear so the appropriate team can work on them. Previously, we've enabled intake through Slack and email. Apr 1, 2026" [ref=e1856] [cursor=pointer]:
+              - /url: /changelog/2026-04-02-web-forms-for-linear-asks
+              - generic [ref=e1857]:
+                - generic [ref=e1858]: Web forms for Linear Asks
+                - generic [ref=e1860]: Linear Asks allows you to capture internal requests and bring them into Linear so the appropriate team can work on them. Previously, we've enabled intake through Slack and email.
+                - generic [ref=e1862]: Apr 1, 2026
+          - link "View all →" [ref=e1865] [cursor=pointer]:
+            - /url: /changelog
+            - generic [ref=e1866]:
+              - generic [ref=e1867]: View all
+              - generic [ref=e1868]: →
+        - generic [ref=e1870]:
+          - generic [ref=e1871]:
+            - link "You just have to use it and you will see, you will just feel it. Gabriel Peal OpenAI" [ref=e1872] [cursor=pointer]:
+              - /url: /customers/openai
+              - paragraph [ref=e1873]: You just have to use it and you will see, you will just feel it.
+              - generic:
+                - img
+              - generic [ref=e1874]:
+                - img [ref=e1876]
+                - generic [ref=e1879]:
+                  - generic [ref=e1880]: Gabriel Peal
+                  - generic [ref=e1881]: OpenAI
+            - link "Our speed is intense and Linear helps us be action biased. Nik Koblov Head of Engineering, Ramp" [ref=e1882] [cursor=pointer]:
+              - /url: /customers/ramp
+              - paragraph [ref=e1883]: Our speed is intense and Linear helps us be action biased.
+              - generic [ref=e1884]:
+                - img [ref=e1886]
+                - generic [ref=e1888]:
+                  - generic [ref=e1889]: Nik Koblov
+                  - generic [ref=e1890]: Head of Engineering, Ramp
+          - generic [ref=e1892]:
+            - paragraph [ref=e1893]:
+              - text: Linear powers over
+              - strong [ref=e1894]: 25,000
+              - text: product teams. From ambitious startups to major enterprises.
+            - link "Customer stories →" [ref=e1895] [cursor=pointer]:
+              - /url: /customers
+              - generic [ref=e1896]:
+                - generic [ref=e1897]: Customer stories
+                - generic [ref=e1898]: →
+        - generic [ref=e1899]:
+          - heading "Built for the future. Available today." [level=2] [ref=e1900]
+          - generic [ref=e1901]:
+            - link "Get started" [ref=e1902] [cursor=pointer]:
+              - /url: /signup
+            - link "Contact sales" [ref=e1903] [cursor=pointer]:
+              - /url: /contact/sales
+    - contentinfo [ref=e1904]:
+      - generic [ref=e1906]:
+        - link "Linear Logo" [ref=e1908] [cursor=pointer]:
+          - /url: /
+          - img "Linear Logo" [ref=e1909]
+        - generic [ref=e1911]:
+          - heading "Product" [level=3] [ref=e1912]
+          - list [ref=e1913]:
+            - listitem [ref=e1914]:
+              - link "Intake" [ref=e1915] [cursor=pointer]:
+                - /url: /intake
+            - listitem [ref=e1916]:
+              - link "Plan" [ref=e1917] [cursor=pointer]:
+                - /url: /plan
+            - listitem [ref=e1918]:
+              - link "Build" [ref=e1919] [cursor=pointer]:
+                - /url: /build
+            - listitem [ref=e1920]:
+              - link "Diffs" [ref=e1921] [cursor=pointer]:
+                - /url: /diffs
+            - listitem [ref=e1922]:
+              - link "Monitor" [ref=e1923] [cursor=pointer]:
+                - /url: /monitor
+            - listitem [ref=e1924]:
+              - link "Pricing" [ref=e1925] [cursor=pointer]:
+                - /url: /pricing
+            - listitem [ref=e1926]:
+              - link "Security" [ref=e1927] [cursor=pointer]:
+                - /url: /security
+        - generic [ref=e1928]:
+          - heading "Features" [level=3] [ref=e1929]
+          - list [ref=e1930]:
+            - listitem [ref=e1931]:
+              - link "Asks" [ref=e1932] [cursor=pointer]:
+                - /url: /asks
+            - listitem [ref=e1933]:
+              - link "Agents" [ref=e1934] [cursor=pointer]:
+                - /url: /agents
+            - listitem [ref=e1935]:
+              - link "Customer Requests" [ref=e1936] [cursor=pointer]:
+                - /url: /customer-requests
+            - listitem [ref=e1937]:
+              - link "Insights" [ref=e1938] [cursor=pointer]:
+                - /url: /insights
+            - listitem [ref=e1939]:
+              - link "Mobile" [ref=e1940] [cursor=pointer]:
+                - /url: /mobile
+            - listitem [ref=e1941]:
+              - link "Integrations" [ref=e1942] [cursor=pointer]:
+                - /url: /integrations
+            - listitem [ref=e1943]:
+              - link "Changelog" [ref=e1944] [cursor=pointer]:
+                - /url: /changelog
+        - generic [ref=e1945]:
+          - heading "Company" [level=3] [ref=e1946]
+          - list [ref=e1947]:
+            - listitem [ref=e1948]:
+              - link "About" [ref=e1949] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e1950]:
+              - link "Customers" [ref=e1951] [cursor=pointer]:
+                - /url: /customers
+            - listitem [ref=e1952]:
+              - link "Careers" [ref=e1953] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e1954]:
+              - link "Blog" [ref=e1955] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e1956]:
+              - link "Method" [ref=e1957] [cursor=pointer]:
+                - /url: /method
+            - listitem [ref=e1958]:
+              - link "Quality" [ref=e1959] [cursor=pointer]:
+                - /url: /quality
+            - listitem [ref=e1960]:
+              - link "Brand" [ref=e1961] [cursor=pointer]:
+                - /url: /brand
+        - generic [ref=e1962]:
+          - heading "Resources" [level=3] [ref=e1963]
+          - list [ref=e1964]:
+            - listitem [ref=e1965]:
+              - link "Switch" [ref=e1966] [cursor=pointer]:
+                - /url: /switch
+            - listitem [ref=e1967]:
+              - link "Download" [ref=e1968] [cursor=pointer]:
+                - /url: /download
+            - listitem [ref=e1969]:
+              - link "Documentation" [ref=e1970] [cursor=pointer]:
+                - /url: /docs
+                - generic [ref=e1971]: Documentation
+            - listitem [ref=e1972]:
+              - link "Developers" [ref=e1973] [cursor=pointer]:
+                - /url: /developers
+            - listitem [ref=e1974]:
+              - link "Status" [ref=e1975] [cursor=pointer]:
+                - /url: https://linearstatus.com
+            - listitem [ref=e1976]:
+              - link "Enterprise" [ref=e1977] [cursor=pointer]:
+                - /url: /enterprise
+            - listitem [ref=e1978]:
+              - link "Startups" [ref=e1979] [cursor=pointer]:
+                - /url: /startups
+        - generic [ref=e1980]:
+          - heading "Connect" [level=3] [ref=e1981]
+          - list [ref=e1982]:
+            - listitem [ref=e1983]:
+              - link "Contact us" [ref=e1984] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e1985]:
+              - link "Community" [ref=e1986] [cursor=pointer]:
+                - /url: https://linear.app/join-slack
+            - listitem [ref=e1987]:
+              - link "X (Twitter)" [ref=e1988] [cursor=pointer]:
+                - /url: https://x.com/linear
+            - listitem [ref=e1989]:
+              - link "GitHub" [ref=e1990] [cursor=pointer]:
+                - /url: https://github.com/linear
+            - listitem [ref=e1991]:
+              - link "YouTube" [ref=e1992] [cursor=pointer]:
+                - /url: https://www.youtube.com/@linear
+        - generic [ref=e1994]:
+          - link "Privacy" [ref=e1995] [cursor=pointer]:
+            - /url: /privacy
+          - link "Terms" [ref=e1996] [cursor=pointer]:
+            - /url: /terms
+          - link "DPA" [ref=e1997] [cursor=pointer]:
+            - /url: /dpa

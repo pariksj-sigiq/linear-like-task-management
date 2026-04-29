@@ -1,43 +1,65 @@
 :root {
   color-scheme: light;
 
-  --sidebar-bg: #f4f4f3;
-  --sidebar-hover: #ecebea;
-  --sidebar-active: #e4e3e2;
-  --sidebar-text: #4f4d4a;
-  --sidebar-muted: #7f7b76;
-  --sidebar-width: 244px;
+  /* Sidebar */
+  --sidebar-bg: #fafafa;
+  --sidebar-hover: #f4f4f3;
+  --sidebar-active: #f4f4f3;
+  --sidebar-text: #5a5a58;
+  --sidebar-muted: #8a8885;
+  --sidebar-width: 224px;
 
-  --topbar-bg: #fbfaf9;
-  --topbar-height: 52px;
-  --topbar-border: #eeeeec;
+  /* Topbar */
+  --topbar-bg: #ffffff;
+  --topbar-height: 46px;
+  --topbar-border: #e6e6e6;
 
+  /* Accent / Primary (Linear purple) */
   --primary: #5e6ad2;
-  --primary-hover: #4f5bc4;
+  --primary-hover: #4e5bc8;
   --primary-text: #ffffff;
-  --accent: #f2c94c;
+  --accent: #5e6ad2;
+  --accent-hover: #4e5bc8;
 
-  --content-bg: #fbfaf9;
+  /* Surfaces */
+  --content-bg: #ffffff;
   --content-bg-raised: #ffffff;
+  --surface-secondary: #f4f4f3;
   --card-bg: #ffffff;
   --panel-bg: #ffffff;
   --popover-bg: #ffffff;
 
-  --text-primary: #242321;
-  --text-secondary: #5f5c58;
-  --text-muted: #8a8580;
-  --text-faint: #b5b1ad;
+  /* Text */
+  --text-primary: #0a0a0a;
+  --text-secondary: #5a5a58;
+  --text-muted: #8a8885;
+  --text-faint: #b5b3ad;
 
-  --border: #e6e4e1;
-  --border-strong: #d6d3cf;
-  --border-radius: 6px;
+  /* Borders & radii */
+  --border: #e6e6e6;
+  --border-subtle: #ececeb;
+  --border-strong: #d9d7d4;
+  --border-radius: 4px;
+  --radius-pill: 6px;
 
-  --success: #28a06a;
-  --warning: #b8860b;
-  --danger: #cf5148;
+  /* Status colors */
+  --status-in-review: #28a745;
+  --status-in-progress: #f2a900;
+  --status-backlog-border: #8a8885;
+  --status-done: #5e6ad2;
+  --status-canceled: #95918c;
+  --status-triage: #fa5252;
+
+  --success: #28a745;
+  --warning: #f2a900;
+  --danger: #fa5252;
   --info: #4d7bd6;
-  --purple: #6e56cf;
+  --purple: #5e6ad2;
 
+  /* Sizing */
+  --row-height: 32px;
+
+  /* UI tokens */
   --workspace-mark-bg: #191817;
   --workspace-mark-text: #ffffff;
   --scroll-thumb: #d6d3cf;
@@ -45,34 +67,40 @@
   --team-key-text: #6b6762;
   --avatar-bg: #d8d5d0;
   --avatar-text: #47443f;
-  --tab-hover-bg: #f1efed;
-  --tab-active-bg: #eceae7;
+  --tab-hover-bg: #f4f4f3;
+  --tab-active-bg: #ececeb;
   --button-bg: #ffffff;
-  --button-hover-bg: #f4f3f1;
-  --segmented-bg: #f2f1ef;
+  --button-hover-bg: #f4f4f3;
+  --segmented-bg: #f4f4f3;
   --input-bg: #ffffff;
-  --menu-hover-bg: #f3f2f0;
-  --pill-bg: #f7f6f4;
-  --row-hover-bg: #f7f6f4;
-  --board-bg: #f7f6f4;
-  --board-column-bg: #f8f7f5;
+  --menu-hover-bg: #f4f4f3;
+  --pill-bg: #f4f4f3;
+  --row-hover-bg: #f4f4f3;
+  --board-bg: #ffffff;
+  --board-column-bg: #fafafa;
   --tile-bg: #ffffff;
   --modal-bg: #ffffff;
-  --shadow-soft: rgba(34, 31, 28, 0.08);
-  --shadow-faint: rgba(34, 31, 28, 0.04);
-  --shadow-popover: rgba(34, 31, 28, 0.14);
-  --shadow-modal: rgba(34, 31, 28, 0.24);
-  --overlay-bg: rgba(34, 31, 28, 0.32);
-  --danger-border: rgba(207, 81, 72, 0.28);
-  --danger-bg: rgba(207, 81, 72, 0.08);
+  --shadow-soft: rgba(10, 10, 10, 0.08);
+  --shadow-faint: rgba(10, 10, 10, 0.04);
+  --shadow-popover: rgba(10, 10, 10, 0.14);
+  --shadow-modal: rgba(10, 10, 10, 0.24);
+  --overlay-bg: rgba(10, 10, 10, 0.32);
+  --danger-border: rgba(250, 82, 82, 0.28);
+  --danger-bg: rgba(250, 82, 82, 0.08);
 
-  --font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-size-xs: 0.78rem;
-  --font-size-sm: 0.92rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.16rem;
-  --font-size-xl: 1.38rem;
-  --font-size-2xl: 1.72rem;
+  /* Typography */
+  --font-family: "Inter Variable", "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 13px;
+  --font-size-lg: 14px;
+  --font-size-xl: 16px;
+  --font-size-2xl: 20px;
+
+  /* Spacing tokens */
+  --row-padding: 6px 12px;
+  --group-header-padding: 6px 12px 6px 4px;
+  --button-padding: 4px 10px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -91,9 +119,12 @@
     --primary: #5e6ad2;
     --primary-hover: #7179db;
     --primary-text: #f7f7f7;
+    --accent: #5e6ad2;
+    --accent-hover: #7179db;
 
     --content-bg: #161616;
     --content-bg-raised: #1c1c1c;
+    --surface-secondary: #222222;
     --card-bg: #202020;
     --panel-bg: #191919;
     --popover-bg: #222222;
@@ -104,6 +135,7 @@
     --text-faint: #555555;
 
     --border: #2d2d2d;
+    --border-subtle: #252525;
     --border-strong: #3a3a3a;
 
     --success: #5fb878;

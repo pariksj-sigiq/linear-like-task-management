@@ -1,0 +1,273 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - button "Workspace menu" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: EL
+        - generic [ref=e8]: eltsuh
+        - img [ref=e9]
+      - button "Search workspace" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+      - button "Create issue" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+    - generic [ref=e19]:
+      - navigation "Primary" [ref=e20]:
+        - link "Inbox 99+" [ref=e21] [cursor=pointer]:
+          - /url: /inbox
+          - img [ref=e22]
+          - generic [ref=e25]: Inbox
+          - generic [ref=e26]: 99+
+        - link "My issues" [ref=e27] [cursor=pointer]:
+          - /url: /my-issues/activity
+          - img [ref=e28]
+          - generic [ref=e32]: My issues
+      - region "Workspace" [ref=e33]:
+        - generic [ref=e34]: Workspace
+        - link "Projects" [ref=e35] [cursor=pointer]:
+          - /url: /projects/all
+          - img [ref=e36]
+          - generic [ref=e38]: Projects
+        - link "Views" [ref=e39] [cursor=pointer]:
+          - /url: /views
+          - img [ref=e40]
+          - generic [ref=e45]: Views
+        - link "More" [ref=e46] [cursor=pointer]:
+          - /url: /roadmap
+          - img [ref=e47]
+          - generic [ref=e51]: More
+      - region "Teams" [ref=e52]:
+        - generic [ref=e53]: Your teams
+        - generic [ref=e54]:
+          - link "E Eltsuh" [ref=e55] [cursor=pointer]:
+            - /url: /team/elt/active
+            - generic [ref=e56]: E
+            - generic [ref=e57]: Eltsuh
+            - img [ref=e58]
+          - link "Issues" [ref=e60] [cursor=pointer]:
+            - /url: /team/elt/active
+            - img [ref=e61]
+            - generic [ref=e70]: Issues
+          - link "Projects" [ref=e71] [cursor=pointer]:
+            - /url: /team/elt/projects
+            - img [ref=e72]
+            - generic [ref=e74]: Projects
+          - link "Views" [ref=e75] [cursor=pointer]:
+            - /url: /team/elt/views
+            - img [ref=e76]
+            - generic [ref=e81]: Views
+      - region "Try" [ref=e82]:
+        - generic [ref=e83]: Try
+        - link "Import issues" [ref=e84] [cursor=pointer]:
+          - /url: /import
+          - img [ref=e85]
+          - generic [ref=e95]: Import issues
+    - generic [ref=e96]:
+      - generic [ref=e97]: What's new
+      - strong [ref=e98]: Linear Agent MCP support
+  - main [ref=e99]:
+    - generic [ref=e101]:
+      - generic [ref=e103]:
+        - heading "My issues" [level=1] [ref=e104]
+        - generic "My issues sections" [ref=e105]:
+          - link "Assigned" [ref=e106] [cursor=pointer]:
+            - /url: /my-issues/assigned
+          - link "Created" [ref=e107] [cursor=pointer]:
+            - /url: /my-issues/created
+          - link "Subscribed" [ref=e108] [cursor=pointer]:
+            - /url: /my-issues/subscribed
+          - link "Activity" [ref=e109] [cursor=pointer]:
+            - /url: /my-issues/activity
+      - generic "Activity board controls" [ref=e110]:
+        - button "Filter" [ref=e111] [cursor=pointer]:
+          - img [ref=e112]
+        - button "Display options" [ref=e114] [cursor=pointer]:
+          - img [ref=e115]
+        - button "Layout" [ref=e116] [cursor=pointer]:
+          - img [ref=e117]
+      - generic [ref=e122]:
+        - generic [ref=e123]:
+          - generic [ref=e124]:
+            - generic [ref=e125]: In QA
+            - generic [ref=e127]:
+              - generic [ref=e128]: "1"
+              - button "Create issue in In QA" [ref=e129] [cursor=pointer]:
+                - img [ref=e130]
+              - button "In QA menu" [ref=e131] [cursor=pointer]:
+                - img [ref=e132]
+          - link "ENGG-1847 PJ Handle transient LLM failures 30 ET Bug Board" [ref=e136] [cursor=pointer]:
+            - /url: /issue/ENGG-1847
+            - generic [ref=e137]:
+              - generic [ref=e138]: ENGG-1847
+              - generic "parikshit joon" [ref=e139]: PJ
+            - generic [ref=e140]: Handle transient LLM failures
+            - generic [ref=e142]:
+              - generic [ref=e143]:
+                - img [ref=e144]
+                - text: "30"
+              - generic [ref=e153]:
+                - img [ref=e154]
+                - text: ET Bug Board
+          - button [ref=e155] [cursor=pointer]:
+            - img [ref=e156]
+        - generic [ref=e157]:
+          - generic [ref=e158]:
+            - generic [ref=e159]: QA Passed
+            - generic [ref=e161]:
+              - generic [ref=e162]: "2"
+              - button "Create issue in QA Passed" [ref=e163] [cursor=pointer]:
+                - img [ref=e164]
+              - button "QA Passed menu" [ref=e165] [cursor=pointer]:
+                - img [ref=e166]
+          - link "ENGG-1792› QA PJ ✓ “Students” and “Teachers” CTAs appear as filters but trigger bulk... 30 Internal dashboard product feature QA audit" [ref=e170] [cursor=pointer]:
+            - /url: /issue/ENGG-1792
+            - generic [ref=e171]:
+              - generic [ref=e172]: ENGG-1792› QA
+              - generic "parikshit joon" [ref=e173]: PJ
+            - generic [ref=e174]:
+              - generic [ref=e175]: ✓
+              - text: “Students” and “Teachers” CTAs appear as filters but trigger bulk...
+            - generic [ref=e176]:
+              - generic [ref=e177]:
+                - img [ref=e178]
+                - text: "30"
+              - generic [ref=e187]:
+                - img
+                - text: Internal dashboard product feature QA audit
+          - link "ENGG-1795› QA PJ ✓ Classroom and teacher identifiers are unclear, and student details are not... 30 Internal dashboard product feature QA audit" [ref=e188] [cursor=pointer]:
+            - /url: /issue/ENGG-1795
+            - generic [ref=e189]:
+              - generic [ref=e190]: ENGG-1795› QA
+              - generic "parikshit joon" [ref=e191]: PJ
+            - generic [ref=e192]:
+              - generic [ref=e193]: ✓
+              - text: Classroom and teacher identifiers are unclear, and student details are not...
+            - generic [ref=e194]:
+              - generic [ref=e195]:
+                - img [ref=e196]
+                - text: "30"
+              - generic [ref=e205]:
+                - img
+                - text: Internal dashboard product feature QA audit
+        - generic [ref=e206]:
+          - generic [ref=e207]:
+            - generic [ref=e208]: Done
+            - generic [ref=e210]:
+              - generic [ref=e211]: "10"
+              - button "Create issue in Done" [ref=e212] [cursor=pointer]:
+                - img [ref=e213]
+              - button "Done menu" [ref=e214] [cursor=pointer]:
+                - img [ref=e215]
+          - link "ENGG-1671› QA PJ ✓ Clever read/write capabilities for LMSs 29 Clever LMS Integration (Canvas, Schoolol... 1/9" [ref=e219] [cursor=pointer]:
+            - /url: /issue/ENGG-1671
+            - generic [ref=e220]:
+              - generic [ref=e221]: ENGG-1671› QA
+              - generic "parikshit joon" [ref=e222]: PJ
+            - generic [ref=e223]:
+              - generic [ref=e224]: ✓
+              - text: Clever read/write capabilities for LMSs
+            - generic [ref=e225]:
+              - generic [ref=e226]:
+                - img [ref=e227]
+                - text: "29"
+              - generic [ref=e236]:
+                - img
+                - text: Clever LMS Integration (Canvas, Schoolol...
+              - generic [ref=e237]: 1/9
+          - 'link "ENGG-1757› QA PJ ✓ QA: validate shared-device SSO revocation flow and credential-login... 29 Invalidate Previous Sessions 1/9" [ref=e238] [cursor=pointer]':
+            - /url: /issue/ENGG-1757
+            - generic [ref=e239]:
+              - generic [ref=e240]: ENGG-1757› QA
+              - generic "parikshit joon" [ref=e241]: PJ
+            - generic [ref=e242]:
+              - generic [ref=e243]: ✓
+              - text: "QA: validate shared-device SSO revocation flow and credential-login..."
+            - generic [ref=e244]:
+              - generic [ref=e245]:
+                - img [ref=e246]
+                - text: "29"
+              - generic [ref=e255]:
+                - img [ref=e256]
+                - text: Invalidate Previous Sessions
+              - generic [ref=e257]: 1/9
+          - link "ENGG-1772› QA PJ ✓ WebSocket unauthorized errors when starting a lesson (dev + localhost) 28 API Security Audit - IDOR & Access Contr... 1/9" [ref=e258] [cursor=pointer]:
+            - /url: /issue/ENGG-1772
+            - generic [ref=e259]:
+              - generic [ref=e260]: ENGG-1772› QA
+              - generic "parikshit joon" [ref=e261]: PJ
+            - generic [ref=e262]:
+              - generic [ref=e263]: ✓
+              - text: WebSocket unauthorized errors when starting a lesson (dev + localhost)
+            - generic [ref=e264]:
+              - generic [ref=e265]:
+                - img [ref=e266]
+                - text: "28"
+              - generic [ref=e275]:
+                - img
+                - text: API Security Audit - IDOR & Access Contr...
+              - generic [ref=e276]: 1/9
+          - link "ENGG-1631› QA RB ✓ FF unable to toggle services on 27 Internal dashboard 1/9" [ref=e277] [cursor=pointer]:
+            - /url: /issue/ENGG-1631
+            - generic [ref=e278]:
+              - generic [ref=e279]: ENGG-1631› QA
+              - generic "Rohan B" [ref=e280]: RB
+            - generic [ref=e281]:
+              - generic [ref=e282]: ✓
+              - text: FF unable to toggle services on
+            - generic [ref=e283]:
+              - generic [ref=e284]:
+                - img [ref=e285]
+                - text: "27"
+              - generic [ref=e294]:
+                - img [ref=e295]
+                - text: Internal dashboard
+              - generic [ref=e296]: 1/9
+          - link "ENGG-1626› QA PJ ✓ Design Document 26 Improve prompt config assignment flow 1/9" [ref=e297] [cursor=pointer]:
+            - /url: /issue/ENGG-1626
+            - generic [ref=e298]:
+              - generic [ref=e299]: ENGG-1626› QA
+              - generic "parikshit joon" [ref=e300]: PJ
+            - generic [ref=e301]:
+              - generic [ref=e302]: ✓
+              - text: Design Document
+            - generic [ref=e303]:
+              - generic [ref=e304]:
+                - img [ref=e305]
+                - text: "26"
+              - generic [ref=e314]:
+                - img
+                - text: Improve prompt config assignment flow
+              - generic [ref=e315]: 1/9
+        - generic [ref=e316]:
+          - generic [ref=e317]:
+            - generic [ref=e318]: Canceled
+            - generic [ref=e320]:
+              - generic [ref=e321]: "1"
+              - button "Create issue in Canceled" [ref=e322] [cursor=pointer]:
+                - img [ref=e323]
+              - button "Canceled menu" [ref=e324] [cursor=pointer]:
+                - img [ref=e325]
+          - 'link "ENGG-1062› QA PJ × P2-05: Python Redis runtime per-call session reconstruction 5 Re-architecting live-tutor..." [ref=e329] [cursor=pointer]':
+            - /url: /issue/ENGG-1062
+            - generic [ref=e330]:
+              - generic [ref=e331]: ENGG-1062› QA
+              - generic "parikshit joon" [ref=e332]: PJ
+            - generic [ref=e333]:
+              - generic [ref=e334]: ×
+              - text: "P2-05: Python Redis runtime per-call session reconstruction"
+            - generic [ref=e335]:
+              - generic [ref=e336]:
+                - img [ref=e337]
+                - text: "5"
+              - generic [ref=e346]:
+                - img [ref=e347]
+                - text: Re-architecting live-tutor...
+    - generic [ref=e348]:
+      - generic [ref=e349]:
+        - button "Help" [ref=e350] [cursor=pointer]:
+          - img [ref=e351]
+        - generic [ref=e354]: Free plan
+      - generic [ref=e355]:
+        - button "Ask Linear" [ref=e356] [cursor=pointer]:
+          - img [ref=e357]
+          - text: Ask Linear
+        - button "History" [ref=e359] [cursor=pointer]:
+          - img [ref=e360]

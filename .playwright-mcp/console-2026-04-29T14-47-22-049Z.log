@@ -1,0 +1,47 @@
+[      76ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[     135ms] [ERROR] In HTML, %s cannot be a descendant of <%s>.
+This will cause a hydration error.%s <button> button 
+
+  ...
+    <ProtectedApp>
+      <LinearShell user={{id:"dev-admin", ...}} onLogout={function logout}>
+        <div className="linear-app...">
+          <aside>
+          <main className="main-shell">
+            <header>
+            <Routes>
+              <RenderedRoute match={{params:{}, ...}} routeContext={{outlet:null, ...}}>
+                <MyIssuesPage>
+                  <div className="page">
+                    <IssueExplorer title="My issues" toolName="list_my_is..." emptyTitle="No assigne..." ...>
+                      <section data-testid="issue-expl...">
+                        <div>
+                        <div>
+                        <ErrorBanner>
+                        <IssueGroupedList groups={[...]} selected={[...]} display="compact" ...>
+                          <div className="linear-iss..." data-testid="issue-grou...">
+                            <div className="issue-stat..." style={{marginBottom:4}}>
+                              <div className="linear-gro...">
+>                               <button
+>                                 onClick={function onClick}
+>                                 aria-expanded={true}
+>                                 style={{border:0,background:"transparent",padding:0,cursor:"pointer",display:"inline-flex",alignItems:"ce...", ...}}
+>                               >
+                                  <ChevronDown>
+                                  <StatusIcon>
+                                  <span>
+                                  <span>
+                                  <div style={{...}}>
+>                                   <button
+>                                     type="button"
+>                                     aria-label="Create issue in In Progress"
+>                                     onClick={function onClick}
+>                                   >
+                                    ...
+                              ...
+                            ...
+            ...
+          ...
+ @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:2153
+[     135ms] [ERROR] <%s> cannot contain a nested %s.
+See this log for the ancestor stack trace. button <button> @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:2160

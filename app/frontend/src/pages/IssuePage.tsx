@@ -140,43 +140,23 @@ export function IssuePage() {
 
   return (
     <div className="issue-detail-page" data-testid="issue-detail-page">
-      <div className="issue-detail-topbar">
-        <div className="issue-breadcrumb">
-          <Box size={16} />
-          <Link to="/projects">ET Bug Board</Link>
-          <span>›</span>
-          <span>{issueKey(issue)}</span>
-          <span>{issueTitle(issue)}</span>
-        </div>
-        <div className="issue-action-cluster">
-          <Button variant="ghost" iconOnly aria-label="Subscribe"><Bell size={15} /></Button>
-          <Button variant="ghost" iconOnly aria-label="Snooze"><Clock3 size={15} /></Button>
-          <Button variant="ghost" iconOnly aria-label="Copy link"><Link2 size={15} /></Button>
-          <Button variant="ghost" iconOnly aria-label="Copy ID"><Copy size={15} /></Button>
-          <Button variant="ghost" iconOnly aria-label="Relations"><GitFork size={15} /></Button>
-          <Button onClick={() => updateIssue({ archived: true, archived_at: new Date().toISOString() })} data-testid="archive-issue-button">
-            Archive
-          </Button>
-        </div>
-      </div>
       <ErrorBanner message={error} />
 
       <div className="issue-detail-layout">
-        <main className="issue-document">
+        <main className="issue-detail-main">
+          <div className="issue-breadcrumb">
+            <Box size={16} />
+            <Link to="/projects">ET Bug Board</Link>
+            <span>›</span>
+            <span>{issueKey(issue)}</span>
+            <span>{issueTitle(issue)}</span>
+          </div>
+
           <h1>{issueTitle(issue)}</h1>
+
           <p className="issue-description">
             {issue.description || "The particular failure was a 500 internal service error from Azure foundry"}
           </p>
-
-          <div className="linked-branch-chip">
-            <GitFork size={15} />
-            Handle transient tutor LLM failures
-          </div>
-
-          <div className="issue-inline-tools">
-            <Button variant="ghost" iconOnly aria-label="Add reaction"><MessageSquare size={15} /></Button>
-            <Button variant="ghost" iconOnly aria-label="Attach"><Link2 size={15} /></Button>
-          </div>
 
           <button className="add-subissue-button" type="button">
             <Plus size={15} />
@@ -193,10 +173,6 @@ export function IssuePage() {
             <div className="activity-header">
               <h2>Activity</h2>
               <span>Unsubscribe</span>
-              <div className="avatar-stack">
-                <span className="assignee-bubble">{initials(userName(issue.assignee))}</span>
-                <span className="assignee-bubble">{initials(assigneeName(issue))}</span>
-              </div>
             </div>
               {comments.length === 0 ? (
                 <div className="activity-item">
@@ -232,9 +208,13 @@ export function IssuePage() {
             </section>
         </main>
 
-        <aside className="issue-properties-rail">
-          <section className="linear-property-card">
-            <h3>Properties <span>▾</span></h3>
+        <aside className="issue-detail-sidebar">
+          <div className="properties-panel">
+            <div className="properties-header">
+              <span>Properties</span>
+              <span className="properties-chevron">▾</span>
+            </div>
+
             <PropertyPicker
               label=""
               icon={<StatusGlyph state={stateName(issue)} />}
@@ -244,9 +224,25 @@ export function IssuePage() {
               fallback={[stateName(issue), "Backlog", "In QA", "QA Passed", "Done"]}
               testId="issue-status-picker"
             />
-            <div className="property-line"><PriorityIcon priority={issue.priority} /> <span>Set priority</span></div>
+
             <PropertyPicker
-              label=""
+              label="Priority"
+              icon={<PriorityIcon priority={issue.priority} />}
+              value={issue.priority ? `${issue.priority}` : "No priority"}
+              onChange={(value) => updateIssue({ priority: parseInt(value) || 0 })}
+              options={[
+                { value: "0", label: "No priority" },
+                { value: "1", label: "Urgent" },
+                { value: "2", label: "High" },
+                { value: "3", label: "Medium" },
+                { value: "4", label: "Low" }
+              ]}
+              fallback={["No priority"]}
+              testId="issue-priority-picker"
+            />
+
+            <PropertyPicker
+              label="Assignee"
               icon={<span className="assignee-bubble">{initials(assigneeName(issue))}</span>}
               value={assigneeName(issue)}
               onChange={(value) => updateIssue({ assignee_id: value, assignee: value })}
@@ -254,14 +250,9 @@ export function IssuePage() {
               fallback={[assigneeName(issue)]}
               testId="issue-assignee-picker"
             />
-            <div className="property-line"><TriangleAlert size={16} /> <span>Set estimate</span></div>
-            <div className="property-line"><Clock3 size={16} /> <span>{cycle}</span></div>
-          </section>
 
-          <section className="linear-property-card">
-            <h3>Labels <span>▾</span></h3>
             <PropertyPicker
-              label=""
+              label="Labels"
               icon={<Tag size={16} />}
               value={(issue.labels || [])[0] ? "Add label" : "Add label"}
               onChange={(value) => updateIssue({ label_id: value, labels: [value] })}
@@ -269,12 +260,16 @@ export function IssuePage() {
               fallback={["bug", "feature", "design"]}
               testId="issue-label-picker"
             />
-          </section>
 
-          <section className="linear-property-card">
-            <h3>Project <span>▾</span></h3>
+            <div className="property-row">
+              <span className="issue-title-cell">
+                <TriangleAlert size={16} />
+              </span>
+              <span>Set estimate</span>
+            </div>
+
             <PropertyPicker
-              label=""
+              label="Project"
               icon={<Box size={16} />}
               value={projectName(issue.project)}
               onChange={(value) => updateIssue({ project_id: value, project: value })}
@@ -282,32 +277,48 @@ export function IssuePage() {
               fallback={[projectName(issue.project)]}
               testId="issue-project-picker"
             />
-          </section>
 
-          {relations.length > 0 && (
-            <section className="linear-property-card">
-              <h3>Relations</h3>
-              {relations.map((relation) => {
-                const related = relation.issue || relation.target_issue;
-                return related ? <MiniIssueLink key={relation.id || relation.target_issue_key || relation.related_issue_key} issue={related} /> : null;
-              })}
-            </section>
-          )}
+            <div className="property-row">
+              <span className="issue-title-cell">
+                <Clock3 size={16} />
+              </span>
+              <span>{cycle}</span>
+            </div>
 
-          <section className="linear-property-card compact-card">
-            <form onSubmit={addRelation} className="issue-title-cell">
+            {relations.length > 0 && (
+              <div className="relations-section">
+                <div className="property-label">Relations</div>
+                {relations.map((relation) => {
+                  const related = relation.issue || relation.target_issue;
+                  return related ? <MiniIssueLink key={relation.id || relation.target_issue_key || relation.related_issue_key} issue={related} /> : null;
+                })}
+              </div>
+            )}
+
+            <form onSubmit={addRelation} className="relation-add-form">
               <input
                 className="input"
                 value={relationKey}
                 onChange={(event) => setRelationKey(event.target.value)}
-                placeholder="ENG-123"
+                placeholder="Add relation (e.g., ENG-123)"
                 data-testid="issue-relation-input"
               />
               <Button type="submit" iconOnly aria-label="Add relation" data-testid="issue-relation-submit">
                 <Plus size={14} />
               </Button>
             </form>
-          </section>
+          </div>
+
+          <div className="issue-actions-panel">
+            <Button variant="ghost" iconOnly aria-label="Subscribe"><Bell size={15} /></Button>
+            <Button variant="ghost" iconOnly aria-label="Snooze"><Clock3 size={15} /></Button>
+            <Button variant="ghost" iconOnly aria-label="Copy link"><Link2 size={15} /></Button>
+            <Button variant="ghost" iconOnly aria-label="Copy ID"><Copy size={15} /></Button>
+            <Button variant="ghost" iconOnly aria-label="Relations"><GitFork size={15} /></Button>
+            <Button onClick={() => updateIssue({ archived: true, archived_at: new Date().toISOString() })} data-testid="archive-issue-button">
+              Archive
+            </Button>
+          </div>
         </aside>
       </div>
     </div>

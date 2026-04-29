@@ -1,0 +1,68 @@
+[      68ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[  390206ms] [ERROR] [vite] ReferenceError: Layers3 is not defined
+    at http://localhost:3002/src/components/LinearShell.tsx?t=1777475489685:46:55 @ http://localhost:3002/@vite/client:881
+[  390208ms] [ERROR] [vite] Failed to reload /src/components/LinearShell.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:3002/@vite/client:881
+[  422069ms] ReferenceError: workspaceInitials is not defined
+    at LinearShell (http://localhost:3002/src/components/LinearShell.tsx?t=1777475521563:93:83)
+    at Object.react_stack_bottom_frame (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:18507:20)
+    at renderWithHooks (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:5652:24)
+    at updateFunctionComponent (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:7473:21)
+    at beginWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:8523:20)
+    at runWithFiberInDEV (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:995:72)
+    at performUnitOfWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12559:98)
+    at workLoopSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12422:43)
+    at renderRootSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12406:13)
+    at performWorkOnRoot (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:11825:37)
+[  422070ms] [WARNING] %s
+
+%s
+ An error occurred in the <LinearShell> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:6963
+[  422177ms] ReferenceError: workspaceInitials is not defined
+    at LinearShell (http://localhost:3002/src/components/LinearShell.tsx?t=1777475521563:93:83)
+    at Object.react_stack_bottom_frame (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:18507:20)
+    at renderWithHooks (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:5652:24)
+    at updateFunctionComponent (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:7473:21)
+    at beginWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:8523:20)
+    at runWithFiberInDEV (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:995:72)
+    at performUnitOfWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12559:98)
+    at workLoopSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12422:43)
+    at renderRootSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12406:13)
+    at performWorkOnRoot (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:11825:37)
+[  422177ms] [WARNING] %s
+
+%s
+ An error occurred in the <LinearShell> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:6963
+[  426257ms] ReferenceError: visiblePrimaryNav is not defined
+    at LinearShell (http://localhost:3002/src/components/LinearShell.tsx?t=1777475525758:137:106)
+    at Object.react_stack_bottom_frame (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:18507:20)
+    at renderWithHooks (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:5652:24)
+    at updateFunctionComponent (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:7473:21)
+    at beginWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:8523:20)
+    at runWithFiberInDEV (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:995:72)
+    at performUnitOfWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12559:98)
+    at workLoopSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12422:43)
+    at renderRootSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12406:13)
+    at performWorkOnRoot (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:11825:37)
+[  426257ms] [WARNING] %s
+
+%s
+ An error occurred in the <LinearShell> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:6963
+[  432086ms] ReferenceError: visiblePrimaryNav is not defined
+    at LinearShell (http://localhost:3002/src/components/LinearShell.tsx?t=1777475525758:137:106)
+    at Object.react_stack_bottom_frame (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:18507:20)
+    at renderWithHooks (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:5652:24)
+    at updateFunctionComponent (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:7473:21)
+    at beginWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:8523:20)
+    at runWithFiberInDEV (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:995:72)
+    at performUnitOfWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12559:98)
+    at workLoopSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12422:43)
+    at renderRootSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12406:13)
+    at performWorkOnRoot (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:11825:37)
+[  432087ms] [WARNING] %s
+
+%s
+ An error occurred in the <LinearShell> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:6963

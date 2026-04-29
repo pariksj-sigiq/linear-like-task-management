@@ -219,6 +219,25 @@ export function initials(name: string | null | undefined) {
   return parts.map((part) => part[0]?.toUpperCase()).join("") || "?";
 }
 
+export function avatarColor(name: string | null | undefined) {
+  const colors = [
+    "#00bfd7", // cyan
+    "#10b981", // green
+    "#f59e0b", // orange
+    "#8b5cf6", // purple
+    "#ef4444", // red
+    "#3b82f6", // blue
+    "#ec4899", // pink
+    "#14b8a6", // teal
+  ];
+  const cleaned = (name || "").trim().toLowerCase();
+  let hash = 0;
+  for (let i = 0; i < cleaned.length; i++) {
+    hash = cleaned.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+}
+
 export function formatDate(value: string | null | undefined) {
   if (!value) return "";
   const date = new Date(value);

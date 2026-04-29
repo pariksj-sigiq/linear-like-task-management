@@ -1,0 +1,131 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - button "Workspace menu" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: Σ
+        - generic [ref=e8]: SigiQ
+        - img [ref=e9]
+      - button "Search workspace" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+      - button "Create issue" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+    - generic [ref=e19]:
+      - navigation "Primary" [ref=e20]:
+        - link "Inbox 99+" [ref=e21] [cursor=pointer]:
+          - /url: /inbox
+          - img [ref=e22]
+          - generic [ref=e25]: Inbox
+          - generic [ref=e26]: 99+
+        - link "My issues" [ref=e27] [cursor=pointer]:
+          - /url: /my-issues/activity
+          - img [ref=e28]
+          - generic [ref=e32]: My issues
+        - link "Drafts 3" [ref=e33] [cursor=pointer]:
+          - /url: /drafts
+          - img [ref=e34]
+          - generic [ref=e43]: Drafts
+          - generic [ref=e44]: "3"
+      - region "Workspace" [ref=e45]:
+        - generic [ref=e46]: Workspace
+        - link "Initiatives" [ref=e47] [cursor=pointer]:
+          - /url: /initiatives
+          - img [ref=e48]
+          - generic [ref=e52]: Initiatives
+        - link "Projects" [ref=e53] [cursor=pointer]:
+          - /url: /projects/all
+          - img [ref=e54]
+          - generic [ref=e56]: Projects
+        - link "Views" [ref=e57] [cursor=pointer]:
+          - /url: /views
+          - img [ref=e58]
+          - generic [ref=e63]: Views
+        - link "More" [ref=e64] [cursor=pointer]:
+          - /url: /roadmap
+          - img [ref=e65]
+          - generic [ref=e69]: More
+      - region "Teams" [ref=e70]:
+        - generic [ref=e71]: Your teams
+        - generic [ref=e72]:
+          - link "E Engg" [ref=e73] [cursor=pointer]:
+            - /url: /team/eng/active
+            - generic [ref=e74]: E
+            - generic [ref=e75]: Engg
+            - img [ref=e76]
+          - link "Issues" [ref=e78] [cursor=pointer]:
+            - /url: /team/eng/active
+            - img [ref=e79]
+            - generic [ref=e88]: Issues
+          - link "Cycles" [ref=e89] [cursor=pointer]:
+            - /url: /team/eng/cycles
+            - img [ref=e90]
+            - generic [ref=e93]: Cycles
+          - link "Projects" [ref=e94] [cursor=pointer]:
+            - /url: /team/eng/projects
+            - img [ref=e95]
+            - generic [ref=e97]: Projects
+          - link "Views" [ref=e98] [cursor=pointer]:
+            - /url: /team/eng/views
+            - img [ref=e99]
+            - generic [ref=e104]: Views
+      - region "Favorites" [ref=e105]:
+        - generic [ref=e106]:
+          - text: Favorites
+          - img [ref=e107]
+        - link "Active Issues" [ref=e109] [cursor=pointer]:
+          - /url: /team/eng/active
+          - img [ref=e110]
+          - generic [ref=e119]: Active Issues
+        - link "Current Cycles" [ref=e120] [cursor=pointer]:
+          - /url: /team/eng/cycles
+          - img [ref=e121]
+          - generic [ref=e124]: Current Cycles
+        - link "Archive" [ref=e125] [cursor=pointer]:
+          - /url: /archive
+          - img [ref=e126]
+          - generic [ref=e129]: Archive
+    - generic [ref=e130]:
+      - generic [ref=e131]: SA
+      - generic [ref=e132]:
+        - generic [ref=e133]: System Administrator
+        - generic [ref=e134]: admin
+      - button "Sign out" [ref=e135] [cursor=pointer]:
+        - img [ref=e136]
+  - main [ref=e139]:
+    - generic [ref=e141]:
+      - generic [ref=e142]:
+        - generic [ref=e143]:
+          - heading "ENG Active" [level=1] [ref=e144]
+          - paragraph [ref=e145]: Team-scoped active work queue.
+        - button "New issue" [ref=e147] [cursor=pointer]
+      - generic [ref=e148]:
+        - generic [ref=e149]:
+          - img [ref=e150]
+          - textbox "Filter issues" [ref=e153]
+        - button "Add filter" [ref=e155] [cursor=pointer]:
+          - img [ref=e156]
+          - text: Add filter
+        - button "Display options" [ref=e159] [cursor=pointer]:
+          - img [ref=e160]
+          - text: Display options
+        - generic "Issue layout" [ref=e161]:
+          - button "List view" [ref=e162] [cursor=pointer]:
+            - img [ref=e163]
+          - button "Board view" [ref=e164] [cursor=pointer]:
+            - img [ref=e165]
+        - button "Open details" [ref=e166] [cursor=pointer]:
+          - img [ref=e167]
+      - status [ref=e171]:
+        - generic [ref=e172]:
+          - img [ref=e173]
+          - generic [ref=e175]: Loading issues
+    - generic [ref=e176]:
+      - generic [ref=e177]:
+        - button "Help" [ref=e178] [cursor=pointer]:
+          - img [ref=e179]
+        - generic [ref=e182]: Free plan
+      - generic [ref=e183]:
+        - button "Ask Linear" [ref=e184] [cursor=pointer]:
+          - img [ref=e185]
+          - text: Ask Linear
+        - button "History" [ref=e187] [cursor=pointer]:
+          - img [ref=e188]

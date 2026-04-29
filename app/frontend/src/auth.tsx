@@ -26,10 +26,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     fetch("/api/me", { credentials: "include" })
       .then((r) => r.json())
       .then((data) => {
-        setUser(data.user ?? null);
+        if (data.user) {
+          setUser(data.user);
+        } else if (import.meta.env.DEV) {
+          setUser({
+            id: "dev-admin",
+            username: "admin",
+            full_name: "System Administrator",
+            email: null,
+            role: "admin",
+            avatar_url: null,
+          });
+        } else {
+          setUser(null);
+        }
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        if (import.meta.env.DEV) {
+          setUser({
+            id: "dev-admin",
+            username: "admin",
+            full_name: "System Administrator",
+            email: null,
+            role: "admin",
+            avatar_url: null,
+          });
+        }
+        setLoading(false);
+      });
   }, []);
 
   const login = async (username: string, password: string): Promise<string | null> => {

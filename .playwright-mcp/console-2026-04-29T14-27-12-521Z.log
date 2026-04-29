@@ -1,0 +1,62 @@
+[      70ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[   25003ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[  109989ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[  351962ms] ReferenceError: HelpCircle is not defined
+    at LinearShell (http://localhost:3001/src/components/LinearShell.tsx?t=1777473184433:430:145)
+    at Object.react_stack_bottom_frame (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:18507:20)
+    at renderWithHooks (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:5652:24)
+    at updateFunctionComponent (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:7473:21)
+    at beginWork (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:8523:20)
+    at runWithFiberInDEV (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:995:72)
+    at performUnitOfWork (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12559:98)
+    at workLoopSync (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12422:43)
+    at renderRootSync (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12406:13)
+    at performWorkOnRoot (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:11825:37)
+[  351962ms] [WARNING] %s
+
+%s
+ An error occurred in the <LinearShell> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:6963
+[  357226ms] ReferenceError: HelpCircle is not defined
+    at LinearShell (http://localhost:3001/src/components/LinearShell.tsx?t=1777473184433:430:145)
+    at Object.react_stack_bottom_frame (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:18507:20)
+    at renderWithHooks (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:5652:24)
+    at updateFunctionComponent (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:7473:21)
+    at beginWork (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:8523:20)
+    at runWithFiberInDEV (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:995:72)
+    at performUnitOfWork (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12559:98)
+    at workLoopSync (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12422:43)
+    at renderRootSync (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12406:13)
+    at performWorkOnRoot (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:11825:37)
+[  357226ms] [WARNING] %s
+
+%s
+ An error occurred in the <LinearShell> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:6963
+[  512344ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[  610002ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[  621935ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/src/components/IssueExplorer.tsx?t=1777473454447:0
+[  621936ms] [ERROR] [vite] Failed to reload /src/components/IssueExplorer.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:3001/@vite/client:881
+[  659239ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[  834581ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[  897274ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:3001/@vite/client:963
+[  897275ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  898278ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  899281ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  900285ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  901286ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  902290ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  903536ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  904543ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  905547ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  906551ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  907556ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  908564ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  909570ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  910577ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  911585ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  912593ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  913639ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  914669ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  915749ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034
+[  916803ms] [ERROR] WebSocket connection to 'ws://localhost:3001/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/@vite/client:1034

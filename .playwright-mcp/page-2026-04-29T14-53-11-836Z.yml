@@ -1,0 +1,276 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - button "Workspace menu" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: Σ
+        - generic [ref=e8]: SigiQ
+        - img [ref=e9]
+      - button "Search workspace" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+      - button "Create issue" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+    - generic [ref=e19]:
+      - navigation "Primary" [ref=e20]:
+        - link "Inbox 99+" [ref=e21] [cursor=pointer]:
+          - /url: /inbox
+          - img [ref=e22]
+          - generic [ref=e25]: Inbox
+          - generic [ref=e26]: 99+
+        - link "My issues" [ref=e27] [cursor=pointer]:
+          - /url: /my-issues/activity
+          - img [ref=e28]
+          - generic [ref=e32]: My issues
+        - link "Drafts 3" [ref=e33] [cursor=pointer]:
+          - /url: /drafts
+          - img [ref=e34]
+          - generic [ref=e43]: Drafts
+          - generic [ref=e44]: "3"
+      - region "Workspace" [ref=e45]:
+        - generic [ref=e46]: Workspace
+        - link "Initiatives" [ref=e47] [cursor=pointer]:
+          - /url: /initiatives
+          - img [ref=e48]
+          - generic [ref=e52]: Initiatives
+        - link "Projects" [ref=e53] [cursor=pointer]:
+          - /url: /projects/all
+          - img [ref=e54]
+          - generic [ref=e56]: Projects
+        - link "Views" [ref=e57] [cursor=pointer]:
+          - /url: /views
+          - img [ref=e58]
+          - generic [ref=e63]: Views
+        - link "More" [ref=e64] [cursor=pointer]:
+          - /url: /roadmap
+          - img [ref=e65]
+          - generic [ref=e69]: More
+      - region "Teams" [ref=e70]:
+        - generic [ref=e71]: Your teams
+        - generic [ref=e72]:
+          - link "E Engg" [ref=e73] [cursor=pointer]:
+            - /url: /team/eng/active
+            - generic [ref=e74]: E
+            - generic [ref=e75]: Engg
+            - img [ref=e76]
+          - link "Issues" [ref=e78] [cursor=pointer]:
+            - /url: /team/eng/active
+            - img [ref=e79]
+            - generic [ref=e88]: Issues
+          - link "Cycles" [ref=e89] [cursor=pointer]:
+            - /url: /team/eng/cycles
+            - img [ref=e90]
+            - generic [ref=e93]: Cycles
+          - link "Projects" [ref=e94] [cursor=pointer]:
+            - /url: /team/eng/projects
+            - img [ref=e95]
+            - generic [ref=e97]: Projects
+          - link "Views" [ref=e98] [cursor=pointer]:
+            - /url: /team/eng/views
+            - img [ref=e99]
+            - generic [ref=e104]: Views
+      - region "Favorites" [ref=e105]:
+        - generic [ref=e106]:
+          - text: Favorites
+          - img [ref=e107]
+        - link "Active Issues" [ref=e109] [cursor=pointer]:
+          - /url: /team/eng/active
+          - img [ref=e110]
+          - generic [ref=e119]: Active Issues
+        - link "Current Cycles" [ref=e120] [cursor=pointer]:
+          - /url: /team/eng/cycles
+          - img [ref=e121]
+          - generic [ref=e124]: Current Cycles
+        - link "Archive" [ref=e125] [cursor=pointer]:
+          - /url: /archive
+          - img [ref=e126]
+          - generic [ref=e129]: Archive
+    - generic [ref=e130]:
+      - generic [ref=e131]: SA
+      - generic [ref=e132]:
+        - generic [ref=e133]: System Administrator
+        - generic [ref=e134]: admin
+      - button "Sign out" [ref=e135] [cursor=pointer]:
+        - img [ref=e136]
+  - main [ref=e139]:
+    - generic [ref=e571]:
+      - generic [ref=e572]:
+        - generic [ref=e573]:
+          - img [ref=e574]
+          - link "ET Bug Board" [ref=e577] [cursor=pointer]:
+            - /url: /projects
+          - generic [ref=e578]: ›
+          - generic [ref=e579]: ENG-29
+          - generic [ref=e580]: Improve cycle rollover metrics follow-up 3
+        - generic [ref=e581]:
+          - button "Subscribe" [ref=e582] [cursor=pointer]:
+            - img [ref=e583]
+          - button "Snooze" [ref=e586] [cursor=pointer]:
+            - img [ref=e587]
+          - button "Copy link" [ref=e590] [cursor=pointer]:
+            - img [ref=e591]
+          - button "Copy ID" [ref=e594] [cursor=pointer]:
+            - img [ref=e595]
+          - button "Relations" [ref=e598] [cursor=pointer]:
+            - img [ref=e599]
+          - button "Archive" [ref=e604] [cursor=pointer]
+      - generic [ref=e605]:
+        - main [ref=e606]:
+          - heading "Improve cycle rollover metrics follow-up 3" [level=1] [ref=e607]
+          - paragraph [ref=e608]: Seeded ENG issue 29 for the Linear clone build and evaluation workflows.
+          - generic [ref=e609]:
+            - img [ref=e610]
+            - text: Handle transient tutor LLM failures
+          - generic [ref=e615]:
+            - button "Add reaction" [ref=e616] [cursor=pointer]:
+              - img [ref=e617]
+            - button "Attach" [ref=e619] [cursor=pointer]:
+              - img [ref=e620]
+          - button "Add sub-issues" [ref=e623] [cursor=pointer]:
+            - img [ref=e624]
+            - text: Add sub-issues
+          - generic [ref=e625]:
+            - generic [ref=e626]:
+              - heading "Activity" [level=2] [ref=e627]
+              - generic [ref=e628]: Unsubscribe
+              - generic [ref=e629]:
+                - generic [ref=e630]: DP
+                - generic [ref=e631]: DP
+            - generic [ref=e632]:
+              - generic [ref=e633]: U
+              - generic [ref=e634]:
+                - strong [ref=e635]: Unknown
+                - text: Follow-up note for ENG-29 with current investigation details. · Apr 29
+            - generic [ref=e636]:
+              - img [ref=e637]
+              - generic [ref=e640]: Linear moved issue to ENG Build Sprint 2 · 4h ago
+            - generic [ref=e641]:
+              - textbox "Leave a comment..." [ref=e642]
+              - generic [ref=e643]:
+                - button "Attach" [ref=e644] [cursor=pointer]:
+                  - img [ref=e645]
+                - button "Submit comment" [ref=e648] [cursor=pointer]:
+                  - img [ref=e649]
+        - complementary [ref=e652]:
+          - generic [ref=e653]:
+            - heading "Properties ▾" [level=3] [ref=e654]:
+              - text: Properties
+              - generic [ref=e655]: ▾
+            - combobox [ref=e659]:
+              - option "In Review" [selected]
+              - option "Triage"
+              - option "Backlog"
+              - option "Todo"
+              - option "In Progress"
+              - option "In Review"
+              - option "Done"
+              - option "Canceled"
+            - generic [ref=e660]:
+              - generic "Low" [ref=e661]:
+                - img [ref=e662]
+              - generic [ref=e663]: Set priority
+            - generic [ref=e664]:
+              - generic [ref=e666]: DP
+              - combobox [ref=e667]:
+                - option "Dev Patel" [selected]
+                - option "Alex Rivera"
+                - option "Amina Okafor"
+                - option "Dev Patel"
+                - option "Diego Morales"
+                - option "John Smith"
+                - option "Jordan Lee"
+                - option "Maya Chen"
+                - option "Maya Patel"
+                - option "Nora Kim"
+                - option "Priya Shah"
+                - option "Read Only"
+                - option "Riley Nguyen"
+                - option "Sam Chen"
+                - option "Sarah Connor"
+                - option "System Administrator"
+                - option "Taylor Nguyen"
+            - generic [ref=e668]:
+              - img [ref=e669]
+              - generic [ref=e671]: Set estimate
+            - generic [ref=e672]:
+              - img [ref=e673]
+              - generic [ref=e676]: ENG Build Sprint 2
+          - generic [ref=e677]:
+            - heading "Labels ▾" [level=3] [ref=e678]:
+              - text: Labels
+              - generic [ref=e679]: ▾
+            - generic [ref=e680]:
+              - img [ref=e682]
+              - combobox [ref=e685]:
+                - option "Add label" [selected]
+                - 'option "Area: Backend"'
+                - 'option "Area: Frontend"'
+                - option "Bug"
+                - option "Feature"
+                - option "P0"
+                - option "Research"
+                - option "Reviewer"
+                - 'option "Area: Backend"'
+                - 'option "Area: Frontend"'
+                - option "Bug"
+                - option "Feature"
+                - option "P0"
+                - option "Research"
+                - option "Reviewer"
+                - option "API"
+                - option "Backend"
+                - option "Bug"
+                - option "Docs"
+                - option "Frontend"
+                - option "Incident"
+                - option "Reviewer"
+                - option "Security"
+                - option "Submission"
+                - option "Task QA"
+                - 'option "Area: Backend"'
+                - 'option "Area: Frontend"'
+                - option "Bug"
+                - option "Feature"
+                - option "P0"
+                - option "Research"
+                - option "Reviewer"
+                - option "API"
+                - option "Backend"
+                - option "Bug"
+                - option "Docs"
+                - option "Frontend"
+                - option "Incident"
+                - option "Reviewer"
+                - option "Security"
+                - option "Submission"
+                - option "Task QA"
+          - generic [ref=e686]:
+            - heading "Project ▾" [level=3] [ref=e687]:
+              - text: Project
+              - generic [ref=e688]: ▾
+            - generic [ref=e689]:
+              - img [ref=e691]
+              - combobox [ref=e694]:
+                - option "Issue Flow Implementation" [selected]
+                - option "CUA Task Pack"
+                - option "Submission Readiness"
+                - option "Backend Tool Server Coverage"
+                - option "Submission Packaging"
+                - option "QA Automation"
+                - option "Evaluation Task Authoring"
+                - option "Linear UI Fidelity Pass"
+                - option "Issue Flow Implementation"
+                - option "Backend Tool Server Coverage"
+          - generic [ref=e696]:
+            - textbox "ENG-123" [ref=e697]
+            - button "Add relation" [ref=e698] [cursor=pointer]:
+              - img [ref=e699]
+    - generic [ref=e176]:
+      - generic [ref=e177]:
+        - button "Help" [ref=e178] [cursor=pointer]:
+          - img [ref=e179]
+        - generic [ref=e182]: Free plan
+      - generic [ref=e183]:
+        - button "Ask Linear" [ref=e184] [cursor=pointer]:
+          - img [ref=e185]
+          - text: Ask Linear
+        - button "History" [ref=e187] [cursor=pointer]:
+          - img [ref=e188]

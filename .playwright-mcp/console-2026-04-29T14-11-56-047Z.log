@@ -1,0 +1,58 @@
+[    3174ms] [LOG] %c __                                               _____          __          __           ______          v1.0.0
+/\ \       __                                    /\  __`\       /\ \      __/\ \__       /\__  _\                       
+\ \ \     /\_\    ___      __     __     _ __    \ \ \/\ \  _ __\ \ \____/\_\ \ ,_\      \/_/\ \/     ___     ___       
+ \ \ \  __\/\ \ /' _ `\  /'__`\ /'__`\  /\`'__\   \ \ \ \ \/\`'__\ \ '__`\/\ \ \ \/         \ \ \   /' _ `\  /'___\     
+  \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \L\.\_\ \ \/     \ \ \_\ \ \ \/ \ \ \L\ \ \ \ \ \_  __     \_\ \__/\ \/\ \/\ \__/  __ 
+   \ \____/ \ \_\ \_\ \_\ \____\ \__/.\_\\ \_\      \ \_____\ \_\  \ \_,__/\ \_\ \__\/\ \    /\_____\ \_\ \_\ \____\/\_\
+    \/___/   \/_/\/_/\/_/\/____/\/__/\/_/ \/_/       \/_____/\/_/   \/___/  \/_/\/__/\ \/    \/_____/\/_/\/_/\/____/\/_/
+                                                                                      \/
+
+The product development system for teams and agents
+
+WE'RE HIRING: https://linear.app/careers
+CHANGELOG:    https://linear.app/changelog
+ 
+  font-family: monospace;
+  color: #282A30;
+   @ https://static.linear.app/web/_next/static/chunks/75438-0123d2e8ffbfecfd.js:0
+[    7285ms] [LOG] %c __                                               _____          __          __           ______          v1.62786.0
+/\ \       __                                    /\  __`\       /\ \      __/\ \__       /\__  _\                       
+\ \ \     /\_\    ___      __     __     _ __    \ \ \/\ \  _ __\ \ \____/\_\ \ ,_\      \/_/\ \/     ___     ___       
+ \ \ \  __\/\ \ /' _ `\  /'__`\ /'__`\  /\`'__\   \ \ \ \ \/\`'__\ \ '__`\/\ \ \ \/         \ \ \   /' _ `\  /'___\     
+  \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \L\.\_\ \ \/     \ \ \_\ \ \ \/ \ \ \L\ \ \ \ \ \_  __     \_\ \__/\ \/\ \/\ \__/  __ 
+   \ \____/ \ \_\ \_\ \_\ \____\ \__/.\_\\ \_\      \ \_____\ \_\  \ \_,__/\ \_\ \__\/\ \    /\_____\ \_\ \_\ \____\/\_\
+    \/___/   \/_/\/_/\/_/\/____/\/__/\/_/ \/_/       \/_____/\/_/   \/___/  \/_/\/__/\ \/    \/_____/\/_/\/_/\/____/\/_/
+                                                                                      \/
+
+The product development system for teams and agents
+
+WE'RE HIRING: https://linear.app/careers
+CHANGELOG:    https://linear.app/changelog
+ 
+  font-family: monospace;
+  color: #282A30;
+   @ https://static.linear.app/client/assets/vendor-sentry.DUIRvFmS.js:5
+[   11335ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://accounts.google.com/v3/signin/identifier?opparams=%253F&dsh=S-886239297%3A1777471926715435&access_type=offline&client_id=463717515632-5f96ed9uaue5p206umg9toffdbfmsfbm.apps.googleusercontent.com&o2v=2&prompt=consent&redirect_uri=https%3A%2F%2Flinear.app%2Fauth%2Fgoogle%2Fcallback&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&service=lso&state=%7B%22key%22%3A%22pfjGRdXcV8Ow6CDD06Xs7bNHm2hzhvqB%22%2C%22isMobileAppLogin%22%3Afalse%7D&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAOJhl84l9iU96KKrZ-mql2-q9aVpiJqK3mYn2vufuTDG7_5uscvbuU9P5-6eVFdgjcbP6emKwgGS0aa4EkmqidONdCtFs3mefk25_10fpzi9f1Kwa_FiATPKwFpwYDuCfwiOX8KEyYdnBGLPeTieZVDFMAbcdk1utICRA7gVW-uIVnAGhNY4FE1rew4T3BERyj87hbP4jKvJ62GdMkCA5nwfTJvDa4MWEecxqnrnW0wSC1D400ggc5qprsINqF5AKqPsH9nOE43HUecLrobQSsu_x4pWhnQ52Hhrpxxt3-2xHGeQE1o0lDdoIBb_I6O_IhFhdbkpRqxSeI7TNYuZK-6smnqXcMUV1uxpKfrAX8vMhPUo47Tztk0-p0-axy_fCkYvVXOCOdDG2prVI5zObV50Ihe05i9WdAY2dTtTu3O0WrjB5gPb2i-l5UGpXnB8L0wJSFoXmwTW1BvJvfkiJD3NOYaYA%26flowName%3DGeneralOAuthFlow%26as%3DS-886239297%253A1777471926715435%26client_id%3D463717515632-5f96ed9uaue5p206umg9toffdbfmsfbm.apps.googleusercontent.com%26requestPath%3D%252Fsignin%252Foauth%252Fconsent%23&app_domain=https%3A%2F%2Flinear.app&rart=ANgoxcdlSrQtDQFhdssFY-fFqFc5DfJeqBVMQ9BOxFzJcABAk2S3i__yoQoN2Y15CvMiZxp6Umt4RsanyQ7jfktEQZFSr8ELZj5fh3BE_gYIZPI73Uzyzt8:0
+[   11339ms] [LOG] %c%s color: red; background: yellow; font-size: 24px; WARNING! @ https://www.gstatic.com/_/mss/boq-identity/_/js/k=boq-identity.AccountsSignInUi.en_US.uyRcdCkifhA.es5.O/am=Kd8AAAChCIQMAMb__w0AEABB1MDrWQCaQGQAAAAAAAAAAMACAAA0Ag/d=1/excm=_b,_tp,identifierview/ed=1/dg=0/wt=2/ujg=1/rs=AOaEmlH6F4dg8o247GHVUITP2PYNAIaftg/dti=1/m=_b,_tp:541
+[   11339ms] [LOG] %c%s font-size: 18px; Using this console may allow attackers to impersonate you and steal your information using an attack called Self-XSS.
+Do not enter or paste code that you do not understand. @ https://www.gstatic.com/_/mss/boq-identity/_/js/k=boq-identity.AccountsSignInUi.en_US.uyRcdCkifhA.es5.O/am=Kd8AAAChCIQMAMb__w0AEABB1MDrWQCaQGQAAAAAAAAAAMACAAA0Ag/d=1/excm=_b,_tp,identifierview/ed=1/dg=0/wt=2/ujg=1/rs=AOaEmlH6F4dg8o247GHVUITP2PYNAIaftg/dti=1/m=_b,_tp:541
+[   32327ms] [LOG] %c%s color: red; background: yellow; font-size: 24px; WARNING! @ https://www.gstatic.com/_/mss/boq-identity/_/js/k=boq-identity.OAuthUi.en_GB.WTcdyTvvFtw.es5.O/am=nh8AAAAQAAYA-P9_AwRRg-sZgAIBAAAAAAAAAGAAAIg/d=1/excm=_b,_tp,attributesview/ed=1/dg=0/wt=2/ujg=1/rs=AOaEmlGnxBvt7wRVxvgolNEY_gMl477KtA/dti=1/m=_b,_tp:504
+[   32327ms] [LOG] %c%s font-size: 18px; Using this console may allow attackers to impersonate you and steal your information using an attack called Self-XSS.
+Do not enter or paste code that you don't understand. @ https://www.gstatic.com/_/mss/boq-identity/_/js/k=boq-identity.OAuthUi.en_GB.WTcdyTvvFtw.es5.O/am=nh8AAAAQAAYA-P9_AwRRg-sZgAIBAAAAAAAAAGAAAIg/d=1/excm=_b,_tp,attributesview/ed=1/dg=0/wt=2/ujg=1/rs=AOaEmlGnxBvt7wRVxvgolNEY_gMl477KtA/dti=1/m=_b,_tp:504
+[   38936ms] [LOG] %c __                                               _____          __          __           ______          v1.62794.0
+/\ \       __                                    /\  __`\       /\ \      __/\ \__       /\__  _\                       
+\ \ \     /\_\    ___      __     __     _ __    \ \ \/\ \  _ __\ \ \____/\_\ \ ,_\      \/_/\ \/     ___     ___       
+ \ \ \  __\/\ \ /' _ `\  /'__`\ /'__`\  /\`'__\   \ \ \ \ \/\`'__\ \ '__`\/\ \ \ \/         \ \ \   /' _ `\  /'___\     
+  \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \L\.\_\ \ \/     \ \ \_\ \ \ \/ \ \ \L\ \ \ \ \ \_  __     \_\ \__/\ \/\ \/\ \__/  __ 
+   \ \____/ \ \_\ \_\ \_\ \____\ \__/.\_\\ \_\      \ \_____\ \_\  \ \_,__/\ \_\ \__\/\ \    /\_____\ \_\ \_\ \____\/\_\
+    \/___/   \/_/\/_/\/_/\/____/\/__/\/_/ \/_/       \/_____/\/_/   \/___/  \/_/\/__/\ \/    \/_____/\/_/\/_/\/____/\/_/
+                                                                                      \/
+
+The product development system for teams and agents
+
+WE'RE HIRING: https://linear.app/careers
+CHANGELOG:    https://linear.app/changelog
+ 
+  font-family: monospace;
+  color: #282A30;
+   @ https://static.linear.app/client/assets/vendor-sentry.DUIRvFmS.js:5

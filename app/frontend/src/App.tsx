@@ -50,13 +50,18 @@ function ProtectedApp() {
         <Route path="/views" element={<ViewsPage />} />
         <Route path="/views/:viewId" element={<ViewDetailPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/projects/all" element={<ProjectsPage />} />
         <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
+        <Route path="/project/:projectId/overview" element={<ProjectDetailPage initialTab="overview" />} />
+        <Route path="/project/:projectId/activity" element={<ProjectDetailPage initialTab="activity" />} />
+        <Route path="/project/:projectId/issues" element={<ProjectDetailPage initialTab="issues" />} />
         <Route path="/team/:teamKey/all" element={<TeamIssuesPage segment="all" />} />
         <Route path="/team/:teamKey/active" element={<TeamIssuesPage segment="active" />} />
         <Route path="/team/:teamKey/backlog" element={<TeamIssuesPage segment="backlog" />} />
         <Route path="/team/:teamKey/cycles" element={<CyclesPage />} />
         <Route path="/team/:teamKey/cycles/:cycleId" element={<CycleDetailPage />} />
         <Route path="/team/:teamKey/projects" element={<ProjectsPage teamScoped />} />
+        <Route path="/team/:teamKey/projects/all" element={<ProjectsPage teamScoped />} />
         <Route path="/team/:teamKey/views" element={<ViewsPage teamScoped />} />
         <Route path="/team/:teamKey/settings" element={<TeamSettingsPage />} />
         <Route path="/team/:teamKey/triage" element={<TeamIssuesPage segment="triage" />} />

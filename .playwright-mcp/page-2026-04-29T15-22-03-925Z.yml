@@ -1,0 +1,473 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - button "Workspace menu" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: EL
+        - generic [ref=e8]: eltsuh
+        - img [ref=e9]
+      - button "Search workspace" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+      - button "Create issue" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+    - generic [ref=e19]:
+      - navigation "Primary" [ref=e20]:
+        - link "Inbox 99+" [ref=e21] [cursor=pointer]:
+          - /url: /inbox
+          - img [ref=e22]
+          - generic [ref=e25]: Inbox
+          - generic [ref=e26]: 99+
+        - link "My issues" [ref=e27] [cursor=pointer]:
+          - /url: /my-issues/activity
+          - img [ref=e28]
+          - generic [ref=e32]: My issues
+      - region "Workspace" [ref=e33]:
+        - generic [ref=e34]: Workspace
+        - link "Projects" [ref=e35] [cursor=pointer]:
+          - /url: /projects/all
+          - img [ref=e36]
+          - generic [ref=e38]: Projects
+        - link "Views" [ref=e39] [cursor=pointer]:
+          - /url: /views
+          - img [ref=e40]
+          - generic [ref=e45]: Views
+        - link "More" [ref=e46] [cursor=pointer]:
+          - /url: /roadmap
+          - img [ref=e47]
+          - generic [ref=e51]: More
+      - region "Teams" [ref=e52]:
+        - generic [ref=e53]: Your teams
+        - generic [ref=e54]:
+          - link "E Eltsuh" [ref=e55] [cursor=pointer]:
+            - /url: /team/elt/active
+            - generic [ref=e56]: E
+            - generic [ref=e57]: Eltsuh
+            - img [ref=e58]
+          - link "Issues" [ref=e60] [cursor=pointer]:
+            - /url: /team/elt/active
+            - img [ref=e61]
+            - generic [ref=e70]: Issues
+          - link "Projects" [ref=e71] [cursor=pointer]:
+            - /url: /team/elt/projects
+            - img [ref=e72]
+            - generic [ref=e74]: Projects
+          - link "Views" [ref=e75] [cursor=pointer]:
+            - /url: /team/elt/views
+            - img [ref=e76]
+            - generic [ref=e81]: Views
+      - region "Try" [ref=e82]:
+        - generic [ref=e83]: Try
+        - link "Import issues" [ref=e84] [cursor=pointer]:
+          - /url: /import
+          - img [ref=e85]
+          - generic [ref=e95]: Import issues
+    - generic [ref=e96]:
+      - generic [ref=e97]: What's new
+      - strong [ref=e98]: Linear Agent MCP support
+  - main [ref=e99]:
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - heading "Issues" [level=1] [ref=e105]
+            - img [ref=e106]
+          - tablist [ref=e108]:
+            - tab "All issues" [ref=e109] [cursor=pointer]
+            - tab "Active" [selected] [ref=e110] [cursor=pointer]
+            - tab "Backlog" [ref=e111] [cursor=pointer]
+        - generic [ref=e112]:
+          - button "Filter" [ref=e113] [cursor=pointer]:
+            - img [ref=e114]
+          - button "Display options" [ref=e116] [cursor=pointer]:
+            - img [ref=e117]
+          - button "Toggle sidebar" [ref=e118] [cursor=pointer]:
+            - img [ref=e119]
+      - generic [ref=e121]:
+        - generic [ref=e122]:
+          - generic [ref=e123]:
+            - button "In Review 5" [expanded] [ref=e124] [cursor=pointer]:
+              - img [ref=e125]
+              - generic [ref=e128]: In Review
+              - generic [ref=e129]: "5"
+            - generic [ref=e130]:
+              - button "Create issue in In Review" [ref=e131] [cursor=pointer]:
+                - img [ref=e132]
+              - button "In Review menu" [ref=e133] [cursor=pointer]:
+                - img [ref=e134]
+          - generic [ref=e138]:
+            - generic [ref=e139]:
+              - checkbox "Select ENG-29" [ref=e140] [cursor=pointer]
+              - button "Low ENG-29 Improve cycle rollover metrics follow-up 3" [ref=e141] [cursor=pointer]:
+                - generic "Low" [ref=e142]:
+                  - img [ref=e143]
+                - generic [ref=e144]: ENG-29
+                - generic [ref=e146]: Improve cycle rollover metrics follow-up 3
+              - generic [ref=e147]:
+                - generic "Dev Patel" [ref=e148]: DP
+                - generic [ref=e149]: Apr 29
+            - generic [ref=e150]:
+              - checkbox "Select ENG-23" [ref=e151] [cursor=pointer]
+              - button "Medium ENG-23 Add audit trail for workflow edits follow-up 3" [ref=e152] [cursor=pointer]:
+                - generic "Medium" [ref=e153]:
+                  - img [ref=e154]
+                - generic [ref=e155]: ENG-23
+                - generic [ref=e157]: Add audit trail for workflow edits follow-up 3
+              - generic [ref=e158]:
+                - generic "Amina Okafor" [ref=e159]: AO
+                - generic [ref=e160]: Apr 29
+            - generic [ref=e161]:
+              - checkbox "Select ENG-17" [ref=e162] [cursor=pointer]
+              - button "High ENG-17 Expose project health in snapshot follow-up 2" [ref=e163] [cursor=pointer]:
+                - generic "High" [ref=e164]:
+                  - img [ref=e165]
+                - generic [ref=e166]: ENG-17
+                - generic [ref=e168]: Expose project health in snapshot follow-up 2
+              - generic [ref=e169]:
+                - generic "System Administrator" [ref=e170]: SA
+                - generic [ref=e171]: Apr 29
+            - generic [ref=e172]:
+              - checkbox "Select ENG-11" [ref=e173] [cursor=pointer]
+              - button "Urgent ENG-11 Expose full /tools registry follow-up 2" [ref=e174] [cursor=pointer]:
+                - generic "Urgent" [ref=e175]:
+                  - img [ref=e176]
+                - generic [ref=e178]: ENG-11
+                - generic [ref=e180]: Expose full /tools registry follow-up 2
+              - generic [ref=e181]:
+                - generic "John Smith" [ref=e182]: JS
+                - generic [ref=e183]: Apr 29
+            - generic [ref=e184]:
+              - checkbox "Select ENG-5" [ref=e185] [cursor=pointer]
+              - button "No priority ENG-5 Stabilize command palette indexing" [ref=e186] [cursor=pointer]:
+                - generic "No priority" [ref=e187]:
+                  - img [ref=e188]
+                - generic [ref=e189]: ENG-5
+                - generic [ref=e191]: Stabilize command palette indexing
+              - generic [ref=e192]:
+                - generic "Dev Patel" [ref=e193]: DP
+                - generic [ref=e194]: Apr 29
+        - generic [ref=e195]:
+          - generic [ref=e196]:
+            - button "In Progress 5" [expanded] [ref=e197] [cursor=pointer]:
+              - img [ref=e198]
+              - generic [ref=e201]: In Progress
+              - generic [ref=e202]: "5"
+            - generic [ref=e203]:
+              - button "Create issue in In Progress" [ref=e204] [cursor=pointer]:
+                - img [ref=e205]
+              - button "In Progress menu" [ref=e206] [cursor=pointer]:
+                - img [ref=e207]
+          - generic [ref=e211]:
+            - generic [ref=e212]:
+              - checkbox "Select ENG-28" [ref=e213] [cursor=pointer]
+              - button "Medium ENG-28 Repair notification read state follow-up 3" [ref=e214] [cursor=pointer]:
+                - generic "Medium" [ref=e215]:
+                  - img [ref=e216]
+                - generic [ref=e217]: ENG-28
+                - generic [ref=e219]: Repair notification read state follow-up 3
+              - generic [ref=e220]:
+                - generic "Maya Chen" [ref=e221]: MC
+                - generic [ref=e222]: Apr 29
+            - generic [ref=e223]:
+              - checkbox "Select ENG-22" [ref=e224] [cursor=pointer]
+              - button "High ENG-22 Fix snapshot entity completeness follow-up 3" [ref=e225] [cursor=pointer]:
+                - generic "High" [ref=e226]:
+                  - img [ref=e227]
+                - generic [ref=e228]: ENG-22
+                - generic [ref=e230]: Fix snapshot entity completeness follow-up 3
+              - generic [ref=e231]:
+                - generic "Riley Nguyen" [ref=e232]: RN
+                - generic [ref=e233]: Apr 29
+            - generic [ref=e234]:
+              - checkbox "Select ENG-16" [ref=e235] [cursor=pointer]
+              - button "Urgent ENG-16 Harden bulk issue updates follow-up 2" [ref=e236] [cursor=pointer]:
+                - generic "Urgent" [ref=e237]:
+                  - img [ref=e238]
+                - generic [ref=e240]: ENG-16
+                - generic [ref=e242]: Harden bulk issue updates follow-up 2
+              - generic [ref=e243]:
+                - generic "Unassigned" [ref=e244]: U
+                - generic [ref=e245]: Apr 29
+            - generic [ref=e246]:
+              - checkbox "Select ENG-10" [ref=e247] [cursor=pointer]
+              - button "No priority ENG-10 Handle archived relation edge cases" [ref=e248] [cursor=pointer]:
+                - generic "No priority" [ref=e249]:
+                  - img [ref=e250]
+                - generic [ref=e251]: ENG-10
+                - generic [ref=e253]: Handle archived relation edge cases
+              - generic [ref=e254]:
+                - generic "Sarah Connor" [ref=e255]: SC
+                - generic [ref=e256]: Apr 29
+            - generic [ref=e257]:
+              - checkbox "Select ENG-4" [ref=e258] [cursor=pointer]
+              - button "Low ENG-4 Backfill task fixture links" [ref=e259] [cursor=pointer]:
+                - generic "Low" [ref=e260]:
+                  - img [ref=e261]
+                - generic [ref=e262]: ENG-4
+                - generic [ref=e264]: Backfill task fixture links
+              - generic [ref=e265]:
+                - generic "Maya Chen" [ref=e266]: MC
+                - generic [ref=e267]: Apr 29
+        - generic [ref=e268]:
+          - generic [ref=e269]:
+            - button "Todo 5" [expanded] [ref=e270] [cursor=pointer]:
+              - img [ref=e271]
+              - generic [ref=e274]: Todo
+              - generic [ref=e275]: "5"
+            - generic [ref=e276]:
+              - button "Create issue in Todo" [ref=e277] [cursor=pointer]:
+                - img [ref=e278]
+              - button "Todo menu" [ref=e279] [cursor=pointer]:
+                - img [ref=e280]
+          - generic [ref=e284]:
+            - generic [ref=e285]:
+              - checkbox "Select ENG-27" [ref=e286] [cursor=pointer]
+              - button "High ENG-27 Expose project health in snapshot follow-up 3" [ref=e287] [cursor=pointer]:
+                - generic "High" [ref=e288]:
+                  - img [ref=e289]
+                - generic [ref=e290]: ENG-27
+                - generic [ref=e292]: Expose project health in snapshot follow-up 3
+              - generic [ref=e293]:
+                - generic "John Smith" [ref=e294]: JS
+                - generic [ref=e295]: Apr 29
+            - generic [ref=e296]:
+              - checkbox "Select ENG-21" [ref=e297] [cursor=pointer]
+              - button "Urgent ENG-21 Expose full /tools registry follow-up 3" [ref=e298] [cursor=pointer]:
+                - generic "Urgent" [ref=e299]:
+                  - img [ref=e300]
+                - generic [ref=e302]: ENG-21
+                - generic [ref=e304]: Expose full /tools registry follow-up 3
+              - generic [ref=e305]:
+                - generic "Dev Patel" [ref=e306]: DP
+                - generic [ref=e307]: Apr 29
+            - generic [ref=e308]:
+              - checkbox "Select ENG-15" [ref=e309] [cursor=pointer]
+              - button "No priority ENG-15 Stabilize command palette indexing follow-up 2" [ref=e310] [cursor=pointer]:
+                - generic "No priority" [ref=e311]:
+                  - img [ref=e312]
+                - generic [ref=e313]: ENG-15
+                - generic [ref=e315]: Stabilize command palette indexing follow-up 2
+              - generic [ref=e316]:
+                - generic "Amina Okafor" [ref=e317]: AO
+                - generic [ref=e318]: Apr 29
+            - generic [ref=e319]:
+              - checkbox "Select ENG-9" [ref=e320] [cursor=pointer]
+              - button "Low ENG-9 Improve cycle rollover metrics" [ref=e321] [cursor=pointer]:
+                - generic "Low" [ref=e322]:
+                  - img [ref=e323]
+                - generic [ref=e324]: ENG-9
+                - generic [ref=e326]: Improve cycle rollover metrics
+              - generic [ref=e327]:
+                - generic "System Administrator" [ref=e328]: SA
+                - generic [ref=e329]: Apr 29
+            - generic [ref=e330]:
+              - checkbox "Select ENG-3" [ref=e331] [cursor=pointer]
+              - button "Medium ENG-3 Add audit trail for workflow edits" [ref=e332] [cursor=pointer]:
+                - generic "Medium" [ref=e333]:
+                  - img [ref=e334]
+                - generic [ref=e335]: ENG-3
+                - generic [ref=e337]: Add audit trail for workflow edits
+              - generic [ref=e338]:
+                - generic "John Smith" [ref=e339]: JS
+                - generic [ref=e340]: Apr 29
+        - generic [ref=e341]:
+          - generic [ref=e342]:
+            - button "Backlog 5" [expanded] [ref=e343] [cursor=pointer]:
+              - img [ref=e344]
+              - generic [ref=e347]: Backlog
+              - generic [ref=e348]: "5"
+            - generic [ref=e349]:
+              - button "Create issue in Backlog" [ref=e350] [cursor=pointer]:
+                - img [ref=e351]
+              - button "Backlog menu" [ref=e352] [cursor=pointer]:
+                - img [ref=e353]
+          - generic [ref=e357]:
+            - generic [ref=e358]:
+              - checkbox "Select ENG-26" [ref=e359] [cursor=pointer]
+              - button "Urgent ENG-26 Harden bulk issue updates follow-up 3" [ref=e360] [cursor=pointer]:
+                - generic "Urgent" [ref=e361]:
+                  - img [ref=e362]
+                - generic [ref=e364]: ENG-26
+                - generic [ref=e366]: Harden bulk issue updates follow-up 3
+              - generic [ref=e367]:
+                - generic "Sarah Connor" [ref=e368]: SC
+                - generic [ref=e369]: Apr 29
+            - generic [ref=e370]:
+              - checkbox "Select ENG-20" [ref=e371] [cursor=pointer]
+              - button "No priority ENG-20 Handle archived relation edge cases follow-up 2" [ref=e372] [cursor=pointer]:
+                - generic "No priority" [ref=e373]:
+                  - img [ref=e374]
+                - generic [ref=e375]: ENG-20
+                - generic [ref=e377]: Handle archived relation edge cases follow-up 2
+              - generic [ref=e378]:
+                - generic "Maya Chen" [ref=e379]: MC
+                - generic [ref=e380]: Apr 29
+            - generic [ref=e381]:
+              - checkbox "Select ENG-14" [ref=e382] [cursor=pointer]
+              - button "Low ENG-14 Backfill task fixture links follow-up 2" [ref=e383] [cursor=pointer]:
+                - generic "Low" [ref=e384]:
+                  - img [ref=e385]
+                - generic [ref=e386]: ENG-14
+                - generic [ref=e388]: Backfill task fixture links follow-up 2
+              - generic [ref=e389]:
+                - generic "Riley Nguyen" [ref=e390]: RN
+                - generic [ref=e391]: Apr 29
+            - generic [ref=e392]:
+              - checkbox "Select ENG-8" [ref=e393] [cursor=pointer]
+              - button "Medium ENG-8 Repair notification read state" [ref=e394] [cursor=pointer]:
+                - generic "Medium" [ref=e395]:
+                  - img [ref=e396]
+                - generic [ref=e397]: ENG-8
+                - generic [ref=e399]: Repair notification read state
+              - generic [ref=e400]:
+                - generic "Unassigned" [ref=e401]: U
+                - generic [ref=e402]: Apr 29
+            - generic [ref=e403]:
+              - checkbox "Select ENG-2" [ref=e404] [cursor=pointer]
+              - button "High ENG-2 Fix snapshot entity completeness" [ref=e405] [cursor=pointer]:
+                - generic "High" [ref=e406]:
+                  - img [ref=e407]
+                - generic [ref=e408]: ENG-2
+                - generic [ref=e410]: Fix snapshot entity completeness
+              - generic [ref=e411]:
+                - generic "Sarah Connor" [ref=e412]: SC
+                - generic [ref=e413]: Apr 29
+        - generic [ref=e414]:
+          - generic [ref=e415]:
+            - button "✓ Done 5" [expanded] [ref=e416] [cursor=pointer]:
+              - img [ref=e417]
+              - generic [ref=e419]: ✓
+              - generic [ref=e420]: Done
+              - generic [ref=e421]: "5"
+            - generic [ref=e422]:
+              - button "Create issue in Done" [ref=e423] [cursor=pointer]:
+                - img [ref=e424]
+              - button "Done menu" [ref=e425] [cursor=pointer]:
+                - img [ref=e426]
+          - generic [ref=e430]:
+            - generic [ref=e431]:
+              - checkbox "Select ENG-30" [ref=e432] [cursor=pointer]
+              - button "No priority ENG-30 ✓ Handle archived relation edge cases follow-up 3" [ref=e433] [cursor=pointer]:
+                - generic "No priority" [ref=e434]:
+                  - img [ref=e435]
+                - generic [ref=e436]: ENG-30
+                - generic [ref=e437]: ✓
+                - generic [ref=e438]: Handle archived relation edge cases follow-up 3
+              - generic [ref=e439]:
+                - generic "Riley Nguyen" [ref=e440]: RN
+                - generic [ref=e441]: Apr 29
+            - generic [ref=e442]:
+              - checkbox "Select ENG-24" [ref=e443] [cursor=pointer]
+              - button "Low ENG-24 ✓ Backfill task fixture links follow-up 3" [ref=e444] [cursor=pointer]:
+                - generic "Low" [ref=e445]:
+                  - img [ref=e446]
+                - generic [ref=e447]: ENG-24
+                - generic [ref=e448]: ✓
+                - generic [ref=e449]: Backfill task fixture links follow-up 3
+              - generic [ref=e450]:
+                - generic "Unassigned" [ref=e451]: U
+                - generic [ref=e452]: Apr 29
+            - generic [ref=e453]:
+              - checkbox "Select ENG-18" [ref=e454] [cursor=pointer]
+              - button "Medium ENG-18 ✓ Repair notification read state follow-up 2" [ref=e455] [cursor=pointer]:
+                - generic "Medium" [ref=e456]:
+                  - img [ref=e457]
+                - generic [ref=e458]: ENG-18
+                - generic [ref=e459]: ✓
+                - generic [ref=e460]: Repair notification read state follow-up 2
+              - generic [ref=e461]:
+                - generic "Sarah Connor" [ref=e462]: SC
+                - generic [ref=e463]: Apr 29
+            - generic [ref=e464]:
+              - checkbox "Select ENG-12" [ref=e465] [cursor=pointer]
+              - button "High ENG-12 ✓ Fix snapshot entity completeness follow-up 2" [ref=e466] [cursor=pointer]:
+                - generic "High" [ref=e467]:
+                  - img [ref=e468]
+                - generic [ref=e469]: ENG-12
+                - generic [ref=e470]: ✓
+                - generic [ref=e471]: Fix snapshot entity completeness follow-up 2
+              - generic [ref=e472]:
+                - generic "Maya Chen" [ref=e473]: MC
+                - generic [ref=e474]: Apr 29
+            - generic [ref=e475]:
+              - checkbox "Select ENG-6" [ref=e476] [cursor=pointer]
+              - button "Urgent ENG-6 ✓ Harden bulk issue updates" [ref=e477] [cursor=pointer]:
+                - generic "Urgent" [ref=e478]:
+                  - img [ref=e479]
+                - generic [ref=e481]: ENG-6
+                - generic [ref=e482]: ✓
+                - generic [ref=e483]: Harden bulk issue updates
+              - generic [ref=e484]:
+                - generic "Riley Nguyen" [ref=e485]: RN
+                - generic [ref=e486]: Apr 29
+        - generic [ref=e487]:
+          - generic [ref=e488]:
+            - button "Triage 5" [expanded] [ref=e489] [cursor=pointer]:
+              - img [ref=e490]
+              - generic [ref=e493]: Triage
+              - generic [ref=e494]: "5"
+            - generic [ref=e495]:
+              - button "Create issue in Triage" [ref=e496] [cursor=pointer]:
+                - img [ref=e497]
+              - button "Triage menu" [ref=e498] [cursor=pointer]:
+                - img [ref=e499]
+          - generic [ref=e503]:
+            - generic [ref=e504]:
+              - checkbox "Select ENG-1" [ref=e505] [cursor=pointer]
+              - button "Urgent ENG-1 Expose full /tools registry" [ref=e506] [cursor=pointer]:
+                - generic "Urgent" [ref=e507]:
+                  - img [ref=e508]
+                - generic [ref=e510]: ENG-1
+                - generic [ref=e512]: Expose full /tools registry
+              - generic [ref=e513]:
+                - generic "System Administrator" [ref=e514]: SA
+                - generic [ref=e515]: Apr 29
+            - generic [ref=e516]:
+              - checkbox "Select ENG-25" [ref=e517] [cursor=pointer]
+              - button "No priority ENG-25 Stabilize command palette indexing follow-up 3" [ref=e518] [cursor=pointer]:
+                - generic "No priority" [ref=e519]:
+                  - img [ref=e520]
+                - generic [ref=e521]: ENG-25
+                - generic [ref=e523]: Stabilize command palette indexing follow-up 3
+              - generic [ref=e524]:
+                - generic "System Administrator" [ref=e525]: SA
+                - generic [ref=e526]: Apr 29
+            - generic [ref=e527]:
+              - checkbox "Select ENG-19" [ref=e528] [cursor=pointer]
+              - button "Low ENG-19 Improve cycle rollover metrics follow-up 2" [ref=e529] [cursor=pointer]:
+                - generic "Low" [ref=e530]:
+                  - img [ref=e531]
+                - generic [ref=e532]: ENG-19
+                - generic [ref=e534]: Improve cycle rollover metrics follow-up 2
+              - generic [ref=e535]:
+                - generic "John Smith" [ref=e536]: JS
+                - generic [ref=e537]: Apr 29
+            - generic [ref=e538]:
+              - checkbox "Select ENG-13" [ref=e539] [cursor=pointer]
+              - button "Medium ENG-13 Add audit trail for workflow edits follow-up 2" [ref=e540] [cursor=pointer]:
+                - generic "Medium" [ref=e541]:
+                  - img [ref=e542]
+                - generic [ref=e543]: ENG-13
+                - generic [ref=e545]: Add audit trail for workflow edits follow-up 2
+              - generic [ref=e546]:
+                - generic "Dev Patel" [ref=e547]: DP
+                - generic [ref=e548]: Apr 29
+            - generic [ref=e549]:
+              - checkbox "Select ENG-7" [ref=e550] [cursor=pointer]
+              - button "High ENG-7 Expose project health in snapshot" [ref=e551] [cursor=pointer]:
+                - generic "High" [ref=e552]:
+                  - img [ref=e553]
+                - generic [ref=e554]: ENG-7
+                - generic [ref=e556]: Expose project health in snapshot
+              - generic [ref=e557]:
+                - generic "Amina Okafor" [ref=e558]: AO
+                - generic [ref=e559]: Apr 29
+    - generic [ref=e560]:
+      - generic [ref=e561]:
+        - button "Help" [ref=e562] [cursor=pointer]:
+          - img [ref=e563]
+        - generic [ref=e566]: Free plan
+      - generic [ref=e567]:
+        - button "Ask Linear" [ref=e568] [cursor=pointer]:
+          - img [ref=e569]
+          - text: Ask Linear
+        - button "History" [ref=e571] [cursor=pointer]:
+          - img [ref=e572]

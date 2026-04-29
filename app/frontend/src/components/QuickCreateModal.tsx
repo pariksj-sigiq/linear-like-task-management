@@ -1,19 +1,21 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Circle, User, Folder, Tag, MoreHorizontal, Maximize2, X, Paperclip } from "lucide-react";
 import { collectionFrom, readTool } from "../api";
 import type { LinearUser, Project, Team } from "../linearTypes";
 import { issueKey, projectTitle, userName } from "../linearTypes";
-import { Button, ErrorBanner, ModalShell } from "./ui";
+import { Button, ErrorBanner } from "./ui";
 
 export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [team, setTeam] = useState("ENG");
-  const [status, setStatus] = useState("Backlog");
+  const [team, setTeam] = useState("ELT");
+  const [status, setStatus] = useState("Todo");
   const [priority, setPriority] = useState("");
   const [projectId, setProjectId] = useState("");
   const [assigneeId, setAssigneeId] = useState("");
+  const [createMore, setCreateMore] = useState(false);
   const [teams, setTeams] = useState<Team[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [users, setUsers] = useState<LinearUser[]>([]);
@@ -48,7 +50,7 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
   const reset = () => {
     setTitle("");
     setDescription("");
-    setStatus("Backlog");
+    setStatus("Todo");
     setPriority("");
     setProjectId("");
     setAssigneeId("");
@@ -81,124 +83,84 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
     }
     const data = response.data as Record<string, unknown> | null;
     const issue = (data?.issue || data) as Parameters<typeof issueKey>[0];
-    reset();
-    onClose();
+    if (!createMore) {
+      reset();
+      onClose();
+    } else {
+      reset();
+    }
     if (issue) navigate(`/issue/${issueKey(issue)}`);
   };
 
   return (
-    <ModalShell
-      title="Create issue"
-      onClose={onClose}
-      testId="quick-create-modal"
-      footer={
-        <>
-          <label className="create-more-toggle">
-            <input type="checkbox" />
-            <span>Create more</span>
-          </label>
-          <div className="topbar-actions">
-            <Button type="button" onClick={onClose}>Cancel</Button>
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal" data-testid="quick-create-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="quick-create-header">
+          <div className="quick-create-team-badge">
+            <span className="team-key">{team}</span>
+          </div>
+          <span className="quick-create-arrow">→</span>
+          <span className="quick-create-title">New issue</span>
+          <button type="button" className="icon-btn btn-ghost" aria-label="Expand">
+            <Maximize2 size={16} />
+          </button>
+          <button type="button" className="icon-btn btn-ghost" onClick={onClose} aria-label="Close">
+            <X size={16} />
+          </button>
+        </div>
+        <form id="quick-create-form" className="create-issue-form" onSubmit={submit}>
+          <ErrorBanner message={error} />
+          <input
+            className="create-title-input"
+            aria-label="Title"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Issue title"
+            data-testid="create-issue-title"
+            autoFocus
+          />
+          <input
+            className="create-description-input-single"
+            aria-label="Description"
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            placeholder="Add description..."
+            data-testid="create-issue-description"
+          />
+          <div className="quick-create-properties">
+            <button type="button" className="property-pill">
+              <Circle size={12} /> {status}
+            </button>
+            <button type="button" className="property-pill">
+              --- {priority || "Priority"}
+            </button>
+            <button type="button" className="property-pill">
+              <User size={12} /> {assigneeId ? users.find(u => (u.id || u.username) === assigneeId)?.name || assigneeId : "Assignee"}
+            </button>
+            <button type="button" className="property-pill">
+              <Folder size={12} /> {projectId ? projects.find(p => (p.id || p.key) === projectId)?.name || projectId : "Project"}
+            </button>
+            <button type="button" className="property-pill">
+              <Tag size={12} /> Labels
+            </button>
+            <button type="button" className="property-pill">
+              <MoreHorizontal size={12} />
+            </button>
+          </div>
+          <div className="quick-create-footer">
+            <button type="button" className="icon-btn btn-ghost" aria-label="Attach file">
+              <Paperclip size={16} />
+            </button>
+            <label className="create-more-toggle">
+              <input type="checkbox" checked={createMore} onChange={(e) => setCreateMore(e.target.checked)} />
+              <span>Create more</span>
+            </label>
             <Button type="submit" form="quick-create-form" variant="primary" disabled={submitting} data-testid="create-issue-submit">
               {submitting ? "Creating..." : "Create issue"}
             </Button>
           </div>
-        </>
-      }
-    >
-      <form id="quick-create-form" className="create-issue-form" onSubmit={submit}>
-        <div className="create-issue-topline">
-          <button type="button">Set team</button>
-          <span>›</span>
-          <button type="button">No template</button>
-        </div>
-        <ErrorBanner message={error} />
-        <input
-          className="create-title-input"
-          aria-label="Title"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          placeholder="Issue title"
-          data-testid="create-issue-title"
-          autoFocus
-        />
-        <textarea
-          className="create-description-input"
-          aria-label="Description"
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-          placeholder="Add details, context, or acceptance criteria"
-          data-testid="create-issue-description"
-        />
-        <div className="quick-suggestions">
-          <button type="button">Quick suggestions</button>
-          <button type="button">Assign to me</button>
-        </div>
-        <div className="create-properties">
-          <label className="property-chip">
-            <span>Team</span>
-            <select value={team} onChange={(event) => setTeam(event.target.value)} data-testid="create-issue-team">
-            {teams.length === 0 && (
-              <>
-                <option value="ENG">ENG</option>
-                <option value="DES">DES</option>
-                <option value="OPS">OPS</option>
-              </>
-            )}
-            {teams.map((item) => (
-              <option key={item.id || item.key || item.name} value={item.key || item.id || item.name}>
-                {item.key || item.name}
-              </option>
-            ))}
-            </select>
-          </label>
-          <label className="property-chip">
-            <span>Status</span>
-            <select value={status} onChange={(event) => setStatus(event.target.value)} data-testid="create-issue-status">
-              <option value="Backlog">Backlog</option>
-              <option value="Todo">Todo</option>
-              <option value="In Progress">In Progress</option>
-              <option value="In Review">In Review</option>
-              <option value="Done">Done</option>
-            </select>
-          </label>
-          <label className="property-chip">
-            <span>Priority</span>
-            <select value={priority} onChange={(event) => setPriority(event.target.value)} data-testid="create-issue-priority">
-              <option value="">Priority</option>
-              <option value="urgent">Urgent</option>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
-          </label>
-          <label className="property-chip">
-            <span>Assignee</span>
-            <select value={assigneeId} onChange={(event) => setAssigneeId(event.target.value)} data-testid="create-issue-assignee">
-              <option value="">Assignee</option>
-              {users.map((user) => (
-                <option key={user.id || user.email || userName(user)} value={user.id || user.username || userName(user)}>
-                  {userName(user)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="property-chip property-chip-wide">
-            <span>Project</span>
-            <select value={projectId} onChange={(event) => setProjectId(event.target.value)} data-testid="create-issue-project">
-            <option value="">None</option>
-            {projects.map((project) => (
-              <option key={project.id || project.key || projectTitle(project)} value={project.id || project.key || projectTitle(project)}>
-                {projectTitle(project)}
-              </option>
-            ))}
-            </select>
-          </label>
-          <button className="property-chip" type="button">Estimate</button>
-          <button className="property-chip" type="button">Labels</button>
-          <button className="property-chip" type="button">Cycle</button>
-        </div>
-      </form>
-    </ModalShell>
+        </form>
+      </div>
+    </div>
   );
 }

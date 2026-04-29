@@ -1,0 +1,202 @@
+- generic [ref=e3]:
+  - link "Skip to content" [ref=e4]:
+    - /url: "#skip-nav"
+  - generic [ref=e5]:
+    - generic [ref=e10]:
+      - navigation [ref=e11]:
+        - generic [ref=e13]:
+          - button "eltsuh Workspace Menu" [ref=e15]:
+            - generic [ref=e17]: EL
+            - generic [ref=e18]: eltsuh
+            - img [ref=e19]
+          - generic [ref=e21]:
+            - button "Search workspace" [ref=e23]:
+              - img [ref=e25]
+            - button "Create new issue" [ref=e30]:
+              - img [ref=e32]
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - generic [ref=e38]:
+              - button "Inbox" [ref=e40]:
+                - link "Inbox" [ref=e45]:
+                  - /url: /eltsuh/inbox
+                  - generic [ref=e46]:
+                    - img [ref=e48]
+                    - generic [ref=e51]: Inbox
+              - button "My issues" [ref=e53]:
+                - link "My issues" [ref=e58]:
+                  - /url: /eltsuh/my-issues/assigned
+                  - generic [ref=e59]:
+                    - img [ref=e61]
+                    - text: My issues
+              - generic:
+                - button
+              - status [ref=e63]
+            - generic [ref=e65]:
+              - button "Workspace" [expanded] [ref=e67]:
+                - generic [ref=e68]: Workspace
+                - img [ref=e69]
+              - generic [ref=e72]:
+                - generic [ref=e73]:
+                  - button "Projects" [ref=e75]:
+                    - link "Projects" [ref=e80]:
+                      - /url: /eltsuh/projects/all
+                      - generic [ref=e81]:
+                        - img [ref=e83]
+                        - text: Projects
+                  - button "Views" [ref=e86]:
+                    - link "Views" [ref=e91]:
+                      - /url: /eltsuh/views
+                      - generic [ref=e92]:
+                        - img [ref=e94]
+                        - text: Views
+                  - generic:
+                    - button
+                  - generic:
+                    - button
+                  - status [ref=e97]
+                - button "Show more links" [ref=e101]:
+                  - generic [ref=e102]:
+                    - img [ref=e104]
+                    - text: More
+          - generic [ref=e107]:
+            - generic [ref=e109]:
+              - generic [ref=e110]:
+                - button "Your teams" [expanded] [ref=e111]:
+                  - generic [ref=e112]: Your teams
+                  - img [ref=e113]
+                - button "Join a team" [ref=e116]:
+                  - img [ref=e118]
+              - list [ref=e124]:
+                - button "Eltsuh Issues Projects Views" [ref=e125]:
+                  - generic [ref=e126]:
+                    - generic "Eltsuh" [ref=e127]:
+                      - button "Eltsuh Team menu" [expanded] [ref=e128]:
+                        - generic [ref=e130]:
+                          - img [ref=e132]
+                          - generic "Eltsuh" [ref=e137]
+                          - img [ref=e138]
+                        - generic "Team menu" [ref=e140]:
+                          - img [ref=e141]
+                    - generic [ref=e144]:
+                      - link "Issues" [ref=e149]:
+                        - /url: /eltsuh/team/ELT/active
+                        - generic [ref=e150]:
+                          - img [ref=e151]
+                          - text: Issues
+                      - link "Projects" [ref=e158]:
+                        - /url: /eltsuh/team/ELT/projects/all
+                        - generic [ref=e159]:
+                          - img [ref=e160]
+                          - text: Projects
+                      - link "Views" [ref=e166]:
+                        - /url: /eltsuh/team/ELT/views/issues
+                        - generic [ref=e167]:
+                          - img [ref=e168]
+                          - text: Views
+                  - generic:
+                    - generic:
+                      - list:
+                        - status [ref=e171]
+                - status [ref=e172]
+            - generic [ref=e184]:
+              - button "Try" [expanded] [ref=e186]:
+                - generic [ref=e187]: Try
+                - img [ref=e188]
+              - generic [ref=e192]:
+                - link "Import issues" [ref=e197]:
+                  - /url: /eltsuh/settings/import-export
+                  - generic [ref=e198]:
+                    - img [ref=e200]
+                    - text: Import issues
+                - button "Dismiss" [ref=e204]:
+                  - img "Dismiss" [ref=e205]
+      - generic:
+        - button "Open Help menu" [ref=e211]:
+          - img [ref=e213]
+        - generic "Your workspace is on a free plan. Upgrade to unlock more features." [ref=e217]:
+          - button "Free plan" [ref=e218]
+          - img [ref=e221]
+          - generic [ref=e224]: Free plan
+    - generic [ref=e175]:
+      - main [ref=e225]:
+        - generic [ref=e226]:
+          - generic [ref=e229]:
+            - generic [ref=e231]:
+              - heading "Projects" [level=2] [ref=e234]
+              - button "New project" [ref=e237]:
+                - img [ref=e239]
+            - generic [ref=e241]:
+              - generic [ref=e244]:
+                - link "All projects" [ref=e249]:
+                  - /url: /eltsuh/projects/all
+                  - generic [ref=e250]: All projects
+                - button "Add new view" [ref=e254]:
+                  - img [ref=e256]
+                - status [ref=e259]
+              - generic [ref=e260]:
+                - generic [ref=e261]:
+                  - button "Add filter" [ref=e264]:
+                    - img [ref=e266]
+                  - button "Display options" [ref=e269]:
+                    - img [ref=e272]
+                - button "Close sidebar" [ref=e276]:
+                  - img [ref=e278]
+          - generic [ref=e284]:
+            - generic [ref=e288]:
+              - generic [ref=e289]:
+                - button "Order by Name" [ref=e292]:
+                  - generic [ref=e293]:
+                    - generic [ref=e294]: Name
+                    - img [ref=e295]
+                - button "Order by Health" [ref=e300]:
+                  - generic [ref=e301]:
+                    - generic [ref=e302]: Health
+                    - img [ref=e303]
+                - button "Order by Priority" [ref=e307]:
+                  - generic [ref=e308]:
+                    - generic [ref=e309]: Priority
+                    - img [ref=e310]
+                - generic [ref=e313]: Lead
+                - button "Order by Target date" [ref=e315]:
+                  - generic [ref=e316]:
+                    - generic [ref=e317]: Target date
+                    - img [ref=e318]
+                - generic [ref=e321]: Issues
+                - button "Order by Status" [ref=e323]:
+                  - generic [ref=e324]:
+                    - generic [ref=e325]: Status
+                    - img [ref=e326]
+              - link "Select project Choose icon Constructing linear clone No updates. Click to write update. No Priority parikshit.joon@gmail.com Change project target date 0 0%" [ref=e331]:
+                - /url: /eltsuh/project/constructing-linear-clone-f2edb81a4bb4/overview
+                - generic [ref=e332]:
+                  - generic "Select project" [ref=e335]:
+                    - checkbox [ref=e337]
+                  - generic [ref=e339]:
+                    - button "Choose icon" [ref=e340]:
+                      - img [ref=e341]
+                    - generic "Constructing linear clone" [ref=e345]
+                  - button "No updates. Click to write update." [ref=e348]:
+                    - generic [ref=e349]:
+                      - img [ref=e350]
+                      - generic [ref=e352]: No updates
+                  - button "No Priority" [ref=e356]:
+                    - img "No Priority" [ref=e357]
+                  - button "parikshit.joon@gmail.com" [ref=e364]:
+                    - generic "parikshit.joon@gmail.com" [ref=e366]: PJ
+                  - button "Change project target date" [ref=e368]:
+                    - generic "Change project target date" [ref=e371]:
+                      - img [ref=e372]
+                  - button "0" [ref=e376]:
+                    - generic [ref=e377]: "0"
+                  - button "0%" [ref=e382]:
+                    - img [ref=e383]
+                    - generic [ref=e387]: 0%
+            - status [ref=e388]
+      - generic [ref=e392]:
+        - button "Ask Linear" [ref=e396]:
+          - img [ref=e398]
+          - generic [ref=e400]: Ask Linear
+        - button "Chat history" [ref=e403]:
+          - img [ref=e405]
+  - region "Notifications alt+T"

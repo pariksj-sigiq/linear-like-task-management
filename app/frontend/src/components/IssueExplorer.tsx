@@ -3,22 +3,30 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowDown,
   ArrowUp,
+  BarChart3,
+  Check,
+  ChevronDown,
+  ChevronRight,
   Circle,
   CircleDashed,
   Filter,
+  Grid3x3,
   Kanban,
-  List,
+  LayoutGrid,
   MoreHorizontal,
+  PanelRight,
   Plus,
-  Rows3,
-  Search,
+  Signal,
   SlidersHorizontal,
+  Star,
   UserRound,
+  X,
 } from "lucide-react";
 import { collectionFrom, readTool } from "../api";
 import type { Issue } from "../linearTypes";
 import {
   assigneeName,
+  avatarColor,
   formatDate,
   initials,
   issueKey,
@@ -175,11 +183,10 @@ export function IssueExplorer({
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [mode, setMode] = useState<LayoutMode>(defaultMode);
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const [displayOpen, setDisplayOpen] = useState(false);
+  const [mode] = useState<LayoutMode>(defaultMode);
   const [selected, setSelected] = useState<string[]>([]);
-  const [filters, setFilters] = useState<IssueFilters>({
+  const [activeTab, setActiveTab] = useState<'all' | 'active' | 'backlog'>('active');
+  const [filters] = useState<IssueFilters>({
     query: "",
     state: "",
     assignee: "",
@@ -213,22 +220,22 @@ export function IssueExplorer({
     return () => window.clearTimeout(timer);
   }, [loadIssues, filters.query]);
 
-  const states = useMemo(
-    () => Array.from(new Set(issues.map((issue) => stateName(issue)))).sort(),
-    [issues],
-  );
-  const assignees = useMemo(
-    () => Array.from(new Set(issues.map((issue) => assigneeName(issue)))).sort(),
-    [issues],
-  );
-
   const grouped = useMemo(() => {
     const groups = new Map<string, Issue[]>();
     for (const issue of issues) {
       const name = stateName(issue);
       groups.set(name, [...(groups.get(name) || []), issue]);
     }
-    return Array.from(groups.entries());
+    const entries = Array.from(groups.entries());
+    // Sort groups by board state order
+    return entries.sort((a, b) => {
+      const indexA = BOARD_STATE_ORDER.indexOf(a[0]);
+      const indexB = BOARD_STATE_ORDER.indexOf(b[0]);
+      if (indexA === -1 && indexB === -1) return a[0].localeCompare(b[0]);
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    });
   }, [issues]);
 
   const toggleSelected = (key: string) => {
@@ -254,21 +261,57 @@ export function IssueExplorer({
       {showHeader && (
         <div className="page-header">
           <div>
-            <h1 className="page-title">{title}</h1>
-            {subtitle && <p className="page-subtitle">{subtitle}</p>}
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+              <span className="team-page-icon" style={{ width: 19, height: 19, fontSize: 10 }}>E</span>
+              <h1 className="page-title">Issues</h1>
+              <Star size={14} style={{ color: "var(--text-muted)" }} aria-hidden="true" />
+            </div>
+            <div className="issue-pill-tabs" role="tablist" style={{ marginTop: 8 }}>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'all'}
+                className={`issue-pill-tab${activeTab === 'all' ? ' active' : ''}`}
+                onClick={() => setActiveTab('all')}
+              >
+                All issues
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'active'}
+                className={`issue-pill-tab${activeTab === 'active' ? ' active' : ''}`}
+                onClick={() => setActiveTab('active')}
+              >
+                Active
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'backlog'}
+                className={`issue-pill-tab${activeTab === 'backlog' ? ' active' : ''}`}
+                onClick={() => setActiveTab('backlog')}
+              >
+                Backlog
+              </button>
+            </div>
             {headerTabs}
           </div>
-          {showCreateAction && (
-            <div className="topbar-actions">
-              <Button variant="primary" onClick={() => window.dispatchEvent(new Event("linear:quick-create"))} data-testid="quick-create-issue">
-                New issue
-              </Button>
-            </div>
-          )}
+          <div className="topbar-actions">
+            <Button variant="ghost" iconOnly aria-label="Filter">
+              <Filter size={15} />
+            </Button>
+            <Button variant="ghost" iconOnly aria-label="Display options">
+              <SlidersHorizontal size={15} />
+            </Button>
+            <Button variant="ghost" iconOnly aria-label="Toggle sidebar">
+              <PanelRight size={15} />
+            </Button>
+          </div>
         </div>
       )}
 
-      {boardPreset === "my-issues-activity" ? (
+      {boardPreset === "my-issues-activity" && (
         <div className="activity-view-toolbar" aria-label="Activity board controls">
           <Button variant="ghost" iconOnly aria-label="Filter">
             <Filter size={15} />
@@ -277,148 +320,28 @@ export function IssueExplorer({
             <SlidersHorizontal size={15} />
           </Button>
           <Button variant="ghost" iconOnly aria-label="Layout">
-            <Rows3 size={15} />
+            <LayoutGrid size={15} />
           </Button>
         </div>
-      ) : (
-        <div className="toolbar">
-          <div style={{ position: "relative", minWidth: 280, maxWidth: 460, flex: "1 1 320px" }}>
-            <Search size={16} style={{ position: "absolute", left: 11, top: 10, color: "var(--text-muted)" }} />
-            <input
-              className="input"
-              value={filters.query}
-              onChange={(event) => setFilters((current) => ({ ...current, query: event.target.value }))}
-              placeholder="Filter issues"
-              style={{ paddingLeft: 36 }}
-              data-testid="issue-search-input"
-            />
-          </div>
+      )}
 
-          <div className="menu-wrap">
-            <Button onClick={() => setFiltersOpen((open) => !open)} data-testid="filters-menu">
-              <Filter size={14} />
-              Add filter
-            </Button>
-            {filtersOpen && (
-              <div className="popover">
-                <label className="menu-row">
-                  <span>State</span>
-                  <select
-                    className="select"
-                    value={filters.state}
-                    onChange={(event) => setFilters((current) => ({ ...current, state: event.target.value }))}
-                    data-testid="filter-state-select"
-                  >
-                    <option value="">Any</option>
-                    {states.map((state) => (
-                      <option key={state} value={state}>
-                        {state}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="menu-row">
-                  <span>Assignee</span>
-                  <select
-                    className="select"
-                    value={filters.assignee}
-                    onChange={(event) => setFilters((current) => ({ ...current, assignee: event.target.value }))}
-                    data-testid="filter-assignee-select"
-                  >
-                    <option value="">Any</option>
-                    {assignees.map((assignee) => (
-                      <option key={assignee} value={assignee}>
-                        {assignee}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="menu-row">
-                  <span>Priority</span>
-                  <select
-                    className="select"
-                    value={filters.priority}
-                    onChange={(event) => setFilters((current) => ({ ...current, priority: event.target.value }))}
-                    data-testid="filter-priority-select"
-                  >
-                    <option value="">Any</option>
-                    <option value="urgent">Urgent</option>
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
-                  </select>
-                </label>
-              </div>
-            )}
-          </div>
-
-          <div className="menu-wrap">
-            <Button onClick={() => setDisplayOpen((open) => !open)} data-testid="display-menu">
-              <SlidersHorizontal size={14} />
-              Display options
-            </Button>
-            {displayOpen && (
-              <div className="popover">
-                <button
-                  className="menu-row"
-                  onClick={() => setFilters((current) => ({ ...current, display: "compact" }))}
-                >
-                  <span>Compact rows</span>
-                  <Rows3 size={14} />
-                </button>
-                <button
-                  className="menu-row"
-                  onClick={() => setFilters((current) => ({ ...current, display: "comfortable" }))}
-                >
-                  <span>Comfortable rows</span>
-                  <MoreHorizontal size={14} />
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="segmented" aria-label="Issue layout">
-            <button
-              className={mode === "list" ? "active" : ""}
-              onClick={() => setMode("list")}
-              data-testid="list-toggle"
-              aria-label="List view"
-            >
-              <List size={14} />
-            </button>
-            <button
-              className={mode === "board" ? "active" : ""}
-              onClick={() => setMode("board")}
-              data-testid="board-toggle"
-              aria-label="Board view"
-            >
-              <Kanban size={14} />
-            </button>
-          </div>
-
-          <Button variant="ghost" iconOnly aria-label="Open details">
-            <MoreHorizontal size={14} />
+      {selected.length > 0 && (
+        <div className="topbar-actions" data-testid="bulk-actions" style={{ marginBottom: 8 }}>
+          <span className="pill">{selected.length} selected</span>
+          <Button onClick={() => bulkUpdate({ state: "In Progress", status: "in_progress" })}>
+            Start
           </Button>
-
-          {selected.length > 0 && (
-            <div className="topbar-actions" data-testid="bulk-actions">
-              <span className="pill">{selected.length} selected</span>
-              <Button onClick={() => bulkUpdate({ state: "In Progress", status: "in_progress" })}>
-                Start
-              </Button>
-              <Button onClick={() => bulkUpdate({ state: "Done", status: "done" })}>
-                Done
-              </Button>
-            </div>
-          )}
+          <Button onClick={() => bulkUpdate({ state: "Done", status: "done" })}>
+            Done
+          </Button>
         </div>
       )}
 
       <ErrorBanner message={error} />
 
-      {loading ? (
+      {loading && boardPreset !== "my-issues-activity" ? (
         <Spinner label="Loading issues" />
-      ) : issues.length === 0 ? (
+      ) : issues.length === 0 && boardPreset !== "my-issues-activity" ? (
         <EmptyState
           title={emptyTitle}
           description="Try changing filters or create a new issue."
@@ -431,8 +354,8 @@ export function IssueExplorer({
       ) : mode === "board" ? (
         <IssueBoard groups={grouped} boardPreset={boardPreset} />
       ) : (
-        <IssueTable
-          issues={issues}
+        <IssueGroupedList
+          groups={grouped}
           selected={selected}
           display={filters.display}
           onToggleSelected={toggleSelected}
@@ -504,7 +427,13 @@ function IssueTable({
               </td>
               <td className="truncate">
                 <span className="issue-title-cell">
-                  <UserRound size={16} />
+                  <span
+                    className="assignee-bubble"
+                    title={assigneeName(issue)}
+                    style={{ background: avatarColor(assigneeName(issue)) }}
+                  >
+                    {initials(assigneeName(issue))}
+                  </span>
                   {assigneeName(issue)}
                 </span>
               </td>
@@ -515,6 +444,149 @@ function IssueTable({
         })}
       </tbody>
     </table>
+  );
+}
+
+function IssueGroupedList({
+  groups,
+  selected,
+  display,
+  onToggleSelected,
+  onOpenIssue,
+}: {
+  groups: Array<[string, Issue[]]>;
+  selected: string[];
+  display: IssueFilters["display"];
+  onToggleSelected: (key: string) => void;
+  onOpenIssue: (issue: Issue) => void;
+}) {
+  const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
+
+  const toggleGroup = (state: string) => {
+    setCollapsed((current) => {
+      const next = new Set(current);
+      if (next.has(state)) {
+        next.delete(state);
+      } else {
+        next.add(state);
+      }
+      return next;
+    });
+  };
+
+  // Sort groups by a predefined order matching Linear
+  const statusOrder = ["In Review", "In Progress", "Todo", "Backlog", "Done", "Canceled"];
+  const sortedGroups = [...groups].sort(([a], [b]) => {
+    const indexA = statusOrder.indexOf(a);
+    const indexB = statusOrder.indexOf(b);
+    if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
+
+  return (
+    <div className="linear-issue-list" data-testid="issue-grouped-list">
+      {sortedGroups.map(([state, issues]) => (
+        <div key={state} className="issue-status-group" style={{ marginBottom: 4 }}>
+          <div className="linear-group-header">
+            <button
+              onClick={() => toggleGroup(state)}
+              aria-expanded={!collapsed.has(state)}
+              className="group-header-button"
+            >
+              <ChevronDown
+                size={12}
+                className="group-chevron"
+                style={{
+                  transform: collapsed.has(state) ? "rotate(-90deg)" : "rotate(0deg)",
+                  transition: "transform 150ms ease",
+                }}
+              />
+              <StatusIcon status={state} size={10} />
+              <span className="group-title">{state}</span>
+              <span className="group-count">{issues.length}</span>
+            </button>
+            <div className="group-header-actions">
+              <button
+                type="button"
+                className="group-action-button"
+                aria-label={`Create issue in ${state}`}
+                onClick={(e) => { e.stopPropagation(); window.dispatchEvent(new Event("linear:quick-create")); }}
+              >
+                <Plus size={13} />
+              </button>
+              <button
+                type="button"
+                className="group-action-button"
+                aria-label={`${state} menu`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <MoreHorizontal size={13} />
+              </button>
+            </div>
+          </div>
+          {!collapsed.has(state) && (
+            <div className="issue-group-content">
+              {issues.map((issue) => {
+                const key = issueKey(issue);
+                const state = stateName(issue);
+                return (
+                  <div
+                    key={key}
+                    className="linear-native-row"
+                    onDoubleClick={() => onOpenIssue(issue)}
+                    data-testid={`issue-row-${key}`}
+                  >
+                    <input
+                      type="checkbox"
+                      className="issue-checkbox"
+                      aria-label={`Select ${key}`}
+                      checked={selected.includes(key)}
+                      onChange={() => onToggleSelected(key)}
+                    />
+                    <button
+                      onClick={() => onOpenIssue(issue)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        minWidth: 0,
+                        flex: 1,
+                        border: 0,
+                        background: "transparent",
+                        color: "inherit",
+                        textAlign: "left",
+                        cursor: "pointer",
+                        padding: 0,
+                      }}
+                    >
+                      <PriorityIcon priority={issue.priority} />
+                      <span className="issue-key">{key}</span>
+                      <StatusIcon status={state} size={12} />
+                      <span className="issue-row-title" style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {issueTitle(issue)}
+                      </span>
+                    </button>
+                    <div className="row-spacer" />
+                    <div className="issue-row-right">
+                      <span
+                        className="issue-assignee-avatar"
+                        style={{ background: avatarColor(assigneeName(issue)) }}
+                        title={assigneeName(issue)}
+                      >
+                        {initials(assigneeName(issue))}
+                      </span>
+                      <span className="issue-date">{formatDate(issue.updated_at || issue.created_at)}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -560,8 +632,15 @@ function IssueBoard({ groups, boardPreset }: { groups: Array<[string, Issue[]]>;
             {issues.map((issue) => (
               <Link key={issueKey(issue)} to={`/issue/${issueKey(issue)}`} className="issue-tile linear-board-card">
                 <div className="board-card-topline">
-                  <span className="issue-key">{issueKey(issue)}</span>
-                  <span className="assignee-bubble" title={assigneeName(issue)}>
+                  <span className="issue-key">
+                    {issueKey(issue)}
+                    {boardPreset === "my-issues-activity" && state !== "In QA" && <span className="issue-substate">› QA</span>}
+                  </span>
+                  <span
+                    className="assignee-bubble"
+                    title={assigneeName(issue)}
+                    style={{ background: avatarColor(assigneeName(issue)) }}
+                  >
                     {initials(assigneeName(issue))}
                   </span>
                 </div>
@@ -570,7 +649,6 @@ function IssueBoard({ groups, boardPreset }: { groups: Array<[string, Issue[]]>;
                   {issueTitle(issue)}
                 </div>
                 <div className="board-card-pills">
-                  <span className="mini-pill">---</span>
                   <span className="mini-pill">
                     <CircleDashed size={13} />
                     {issue.estimate || (state.toLowerCase().includes("done") ? "29" : "30")}
@@ -585,10 +663,10 @@ function IssueBoard({ groups, boardPreset }: { groups: Array<[string, Issue[]]>;
                 </div>
               </Link>
             ))}
-            {issues.length === 0 && state !== "Backlog" && (
+            {(issues.length === 0 || (boardPreset === "my-issues-activity" && state === "In QA")) && state !== "Backlog" && (
               <button className="board-add-row" type="button" onClick={() => window.dispatchEvent(new Event("linear:quick-create"))}>
                 <Plus size={13} />
-                Add new issue
+                {boardPreset === "my-issues-activity" ? "" : "Add new issue"}
               </button>
             )}
           </div>
@@ -609,20 +687,25 @@ export function StatusPill({ label }: { label: string }) {
 
 export function PriorityIcon({ priority }: { priority: Issue["priority"] }) {
   const label = priorityLabel(priority);
-  const urgent = label === "Urgent";
-  const high = label === "High";
-  const low = label === "Low" || label === "No priority";
+
+  if (label === "Urgent") {
+    return (
+      <span className="priority" title={label} aria-label={label}>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <rect x="2" y="2" width="12" height="12" rx="3" fill="#f2994a"/>
+          <path d="M8 5v4M8 11v1" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      </span>
+    );
+  }
+
+  const colors = { High: "#f2a900", Medium: "#f2c94c", Low: "#8a8885", None: "#b5b3ad", "No priority": "#b5b3ad" };
+  const color = colors[label as keyof typeof colors] || "#8a8885";
+  const opacity = label === "None" || label === "No priority" ? 0.4 : 1;
+
   return (
     <span className="priority" title={label} aria-label={label}>
-      {urgent ? (
-        <ArrowUp size={15} color="var(--danger)" />
-      ) : high ? (
-        <ArrowUp size={15} color="var(--warning)" />
-      ) : low ? (
-        <CircleDashed size={15} />
-      ) : (
-        <ArrowDown size={15} color="var(--info)" />
-      )}
+      <Signal size={14} color={color} strokeWidth={2.5} style={{ opacity }} />
     </span>
   );
 }
@@ -652,5 +735,68 @@ export function MiniIssueLink({ issue }: { issue: Issue }) {
       </span>
       <StatusPill label={stateName(issue)} />
     </Link>
+  );
+}
+
+export function StatusIcon({ status, size = 12 }: { status: string; size?: number }) {
+  const key = status.toLowerCase();
+  const isDone = key.includes("done") || key.includes("complete") || key.includes("passed");
+  const isCanceled = key.includes("cancel");
+  const isInReview = key.includes("review");
+  const isInProgress = key.includes("progress") || key.includes("active") || key.includes("started");
+  const isTodo = key.includes("todo") || key.includes("backlog");
+
+  const checkPath = "M3 6l2 2 4-4";
+  const xPath = "M4 4l4 4M8 4l-4 4";
+
+  if (isInReview) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
+        <circle cx="6" cy="6" r="5" fill="#28a745"/>
+        <path d={checkPath} stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    );
+  }
+
+  if (isInProgress) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
+        <circle cx="6" cy="6" r="5" fill="#f2a900"/>
+        <circle cx="6" cy="6" r="1.5" fill="white"/>
+      </svg>
+    );
+  }
+
+  if (isTodo) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
+        <circle cx="6" cy="6" r="4.5" stroke="#8a8885" strokeWidth="1.5" fill="none"/>
+      </svg>
+    );
+  }
+
+  if (isDone) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
+        <circle cx="6" cy="6" r="5" fill="#5e6ad2"/>
+        <path d={checkPath} stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    );
+  }
+
+  if (isCanceled) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
+        <circle cx="6" cy="6" r="5" fill="#95918c"/>
+        <path d={xPath} stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    );
+  }
+
+  // Default: gray outline circle
+  return (
+    <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
+      <circle cx="6" cy="6" r="4.5" stroke="#8a8885" strokeWidth="1.5" fill="none"/>
+    </svg>
   );
 }
