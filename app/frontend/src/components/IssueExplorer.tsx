@@ -31,6 +31,16 @@ import { Button, EmptyState, ErrorBanner, Spinner } from "./ui";
 
 type LayoutMode = "list" | "board";
 const EMPTY_PARAMS: Record<string, unknown> = {};
+const BOARD_STATE_ORDER = [
+  "Backlog",
+  "Todo",
+  "Triage",
+  "In Progress",
+  "In Review",
+  "Ready for QA",
+  "Done",
+  "Canceled",
+];
 
 interface IssueExplorerProps {
   title: string;
@@ -393,35 +403,44 @@ function IssueTable({
 }
 
 function IssueBoard({ groups }: { groups: Array<[string, Issue[]]> }) {
+  const groupedByState = new Map(groups);
+  const orderedStates = [
+    ...BOARD_STATE_ORDER,
+    ...groups.map(([state]) => state).filter((state) => !BOARD_STATE_ORDER.includes(state)),
+  ];
+
   return (
     <div className="board" data-testid="issue-board">
-      {groups.map(([state, issues]) => (
-        <div className="board-column" key={state}>
-          <div className="board-title">
-            <span className="issue-title-cell">
-              <span className="pill-dot" style={{ background: stateColor(state) }} />
-              {state}
-            </span>
-            <span>{issues.length}</span>
+      {orderedStates.map((state) => {
+        const issues = groupedByState.get(state) || [];
+        return (
+          <div className="board-column" key={state}>
+            <div className="board-title">
+              <span className="issue-title-cell">
+                <span className="pill-dot" style={{ background: stateColor(state) }} />
+                {state}
+              </span>
+              <span>{issues.length}</span>
+            </div>
+            {issues.map((issue) => (
+              <Link key={issueKey(issue)} to={`/issue/${issueKey(issue)}`} className="issue-tile">
+                <div className="issue-title-cell" style={{ marginBottom: 8 }}>
+                  <PriorityIcon priority={issue.priority} />
+                  <span className="issue-key">{issueKey(issue)}</span>
+                </div>
+                <div style={{ color: "var(--text-primary)", fontWeight: 550, marginBottom: 10 }}>
+                  {issueTitle(issue)}
+                </div>
+                <div className="issue-title-cell" style={{ color: "var(--text-muted)", fontSize: 13 }}>
+                  <span>{teamKey(issue)}</span>
+                  <span>·</span>
+                  <span className="truncate">{assigneeName(issue)}</span>
+                </div>
+              </Link>
+            ))}
           </div>
-          {issues.map((issue) => (
-            <Link key={issueKey(issue)} to={`/issue/${issueKey(issue)}`} className="issue-tile">
-              <div className="issue-title-cell" style={{ marginBottom: 8 }}>
-                <PriorityIcon priority={issue.priority} />
-                <span className="issue-key">{issueKey(issue)}</span>
-              </div>
-              <div style={{ color: "var(--text-primary)", fontWeight: 550, marginBottom: 10 }}>
-                {issueTitle(issue)}
-              </div>
-              <div className="issue-title-cell" style={{ color: "var(--text-muted)", fontSize: 13 }}>
-                <span>{teamKey(issue)}</span>
-                <span>·</span>
-                <span className="truncate">{assigneeName(issue)}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

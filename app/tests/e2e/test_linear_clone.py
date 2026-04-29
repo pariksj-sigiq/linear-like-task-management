@@ -35,6 +35,8 @@ class TestAuthAndShell:
 
     def test_command_palette_opens(self, page: Page) -> None:
         login(page)
+        expect(page.get_by_text("Collinear")).to_be_visible()
+        expect(page.get_by_test_id("favorite-active")).to_have_attribute("href", re.compile(r"/team/eng/active$"))
         page.get_by_test_id("command-palette-button").click()
         expect(page.get_by_test_id("command-palette")).to_be_visible()
         page.keyboard.press("Escape")
@@ -51,6 +53,10 @@ class TestIssues:
         assert rows.count() > 0
         page.get_by_test_id("board-toggle").click()
         expect(page.get_by_test_id("issue-board")).to_be_visible()
+        page.get_by_test_id("favorite-active").click()
+        page.wait_for_load_state("networkidle")
+        expect(page.get_by_role("heading", name="ENG Active")).to_be_visible()
+        expect(page.get_by_test_id("issue-board")).to_be_visible()
 
     def test_issue_detail_comment_flow(self, page: Page) -> None:
         login(page)
@@ -60,7 +66,7 @@ class TestIssues:
         page.get_by_test_id("issue-comment-input").fill("E2E comment from Linear smoke test.")
         page.get_by_test_id("issue-comment-submit").click()
         page.wait_for_load_state("networkidle")
-        expect(page.get_by_text("E2E comment from Linear smoke test.")).to_be_visible()
+        expect(page.locator(".comment").filter(has_text="E2E comment from Linear smoke test.").last).to_be_visible()
 
     def test_quick_create_modal_opens(self, page: Page) -> None:
         login(page)

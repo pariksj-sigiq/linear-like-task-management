@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import {
   Archive,
   Bell,
@@ -41,10 +41,10 @@ export function HomePage() {
 function MyIssuesTabs() {
   return (
     <div className="linear-tabs" aria-label="My issues sections">
-      <a href="/my-issues/assigned">Assigned</a>
-      <a href="/my-issues/created">Created</a>
-      <a href="/my-issues/subscribed">Subscribed</a>
-      <a href="/my-issues/activity" className="active">Activity</a>
+      <NavLink to="/my-issues/assigned">Assigned</NavLink>
+      <NavLink to="/my-issues/created">Created</NavLink>
+      <NavLink to="/my-issues/subscribed">Subscribed</NavLink>
+      <NavLink to="/my-issues/activity">Activity</NavLink>
     </div>
   );
 }

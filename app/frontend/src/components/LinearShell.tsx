@@ -35,7 +35,7 @@ interface LinearShellProps {
 }
 
 const teams = [
-  { key: "ENGG", name: "Engg" },
+  { key: "ENG", name: "Engg" },
 ];
 
 const primaryNav = [
@@ -107,8 +107,8 @@ export function LinearShell({ user, onLogout, children }: LinearShellProps) {
       <aside className="sidebar" data-testid="linear-sidebar">
         <div className="sidebar-header">
           <button className="workspace-menu" type="button" aria-label="Workspace menu">
-            <span className="workspace-mark">S</span>
-            <span className="workspace-name truncate">SigIQ</span>
+            <span className="workspace-mark">C</span>
+            <span className="workspace-name truncate">Collinear</span>
             <ChevronRight size={12} className="workspace-chevron" />
           </button>
           <Button variant="ghost" iconOnly onClick={() => setCommandOpen(true)} aria-label="Search workspace" data-testid="command-palette-button">

@@ -22,9 +22,9 @@ export function Login() {
     <div className="linear-login" data-testid="login-page">
       <div className="linear-login-panel">
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22 }}>
-          <div className="workspace-mark">L</div>
+          <div className="workspace-mark">C</div>
           <div>
-            <h1 className="page-title" style={{ fontSize: 18 }}>Linear Clone</h1>
+            <h1 className="page-title" style={{ fontSize: 18 }}>Collinear</h1>
             <p className="page-subtitle">Sign in to the workspace</p>
           </div>
         </div>
