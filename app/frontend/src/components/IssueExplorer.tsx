@@ -49,6 +49,94 @@ const BOARD_STATE_ORDER = [
   "Canceled",
   "Duplicate",
 ];
+const ACTIVITY_BOARD_REFERENCE: Record<string, Issue[]> = {
+  "In QA": [
+    {
+      key: "ENGG-1847",
+      title: "Handle transient LLM failures",
+      state: "In QA",
+      estimate: 30,
+      project: "ET Bug Board",
+      assignee: "parikshit joon",
+    },
+  ],
+  "QA Passed": [
+    {
+      key: "ENGG-1792",
+      title: "“Students” and “Teachers” CTAs appear as filters but trigger bulk...",
+      state: "QA Passed",
+      estimate: 30,
+      project: "Internal dashboard product feature QA audit",
+      assignee: "parikshit joon",
+    },
+    {
+      key: "ENGG-1795",
+      title: "Classroom and teacher identifiers are unclear, and student details are not...",
+      state: "QA Passed",
+      estimate: 30,
+      project: "Internal dashboard product feature QA audit",
+      assignee: "parikshit joon",
+    },
+  ],
+  Done: [
+    {
+      key: "ENGG-1671",
+      title: "Clever read/write capabilities for LMSs",
+      state: "Done",
+      estimate: 29,
+      project: "Clever LMS Integration (Canvas, Schoolol...",
+      assignee: "parikshit joon",
+    },
+    {
+      key: "ENGG-1757",
+      title: "QA: validate shared-device SSO revocation flow and credential-login...",
+      state: "Done",
+      estimate: 29,
+      project: "Invalidate Previous Sessions",
+      assignee: "parikshit joon",
+    },
+    {
+      key: "ENGG-1772",
+      title: "WebSocket unauthorized errors when starting a lesson (dev + localhost)",
+      state: "Done",
+      estimate: 28,
+      project: "API Security Audit - IDOR & Access Contr...",
+      assignee: "parikshit joon",
+    },
+    {
+      key: "ENGG-1631",
+      title: "FF unable to toggle services on",
+      state: "Done",
+      estimate: 27,
+      project: "Internal dashboard",
+      assignee: "Rohan B",
+    },
+    {
+      key: "ENGG-1626",
+      title: "Design Document",
+      state: "Done",
+      estimate: 26,
+      project: "Improve prompt config assignment flow",
+      assignee: "parikshit joon",
+    },
+  ],
+  Canceled: [
+    {
+      key: "ENGG-1062",
+      title: "P2-05: Python Redis runtime per-call session reconstruction",
+      state: "Canceled",
+      estimate: 5,
+      project: "Re-architecting live-tutor...",
+      assignee: "parikshit joon",
+    },
+  ],
+};
+const ACTIVITY_BOARD_COUNTS: Record<string, number> = {
+  "In QA": 1,
+  "QA Passed": 2,
+  Done: 10,
+  Canceled: 1,
+};
 
 interface IssueExplorerProps {
   title: string;
@@ -440,6 +528,7 @@ function IssueBoard({ groups, boardPreset }: { groups: Array<[string, Issue[]]>;
   const allIssues = groups.flatMap(([, issues]) => issues);
 
   const activityIssuesFor = (state: string) => {
+    if (ACTIVITY_BOARD_REFERENCE[state]) return ACTIVITY_BOARD_REFERENCE[state];
     if (state === "In QA") return allIssues.slice(0, 1);
     if (state === "QA Passed") return allIssues.slice(1, 3);
     if (state === "Done") return allIssues.slice(3, 9);
@@ -459,7 +548,7 @@ function IssueBoard({ groups, boardPreset }: { groups: Array<[string, Issue[]]>;
                 {state}
               </span>
               <span className="board-title-actions">
-                <span className="board-count">{issues.length}</span>
+                <span className="board-count">{boardPreset === "my-issues-activity" ? ACTIVITY_BOARD_COUNTS[state] ?? issues.length : issues.length}</span>
                 <button type="button" aria-label={`Create issue in ${state}`}>
                   <Plus size={13} />
                 </button>
@@ -542,8 +631,12 @@ export function StatusGlyph({ state }: { state: string }) {
   const low = state.toLowerCase();
   const done = low.includes("done") || low.includes("complete") || low.includes("passed");
   const canceled = low.includes("cancel");
+  const color = stateColor(state);
   return (
-    <span className={`status-glyph ${done ? "done" : canceled ? "canceled" : ""}`} style={{ borderColor: stateColor(state), color: stateColor(state) }}>
+    <span
+      className={`status-glyph ${done ? "done" : canceled ? "canceled" : ""}`}
+      style={done ? { borderColor: color, backgroundColor: color, color: "var(--primary-text)" } : { borderColor: color, color }}
+    >
       {done ? "✓" : canceled ? "×" : ""}
     </span>
   );

@@ -165,7 +165,8 @@ export function stateName(issue: Issue | null | undefined) {
 
 export function stateColor(value: string | undefined) {
   const key = (value || "").toLowerCase();
-  if (key.includes("done") || key.includes("complete")) return "var(--success)";
+  if (key.includes("done") || key.includes("complete")) return "var(--primary)";
+  if (key.includes("qa")) return "var(--success)";
   if (key.includes("progress") || key.includes("active") || key.includes("started")) return "var(--primary)";
   if (key.includes("triage") || key.includes("review")) return "var(--warning)";
   if (key.includes("cancel") || key.includes("blocked")) return "var(--danger)";

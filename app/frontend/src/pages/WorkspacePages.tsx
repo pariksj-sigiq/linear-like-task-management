@@ -2,7 +2,6 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import {
   Archive,
-  Bell,
   Box,
   CalendarDays,
   Check,
@@ -13,9 +12,11 @@ import {
   Map,
   MessageSquare,
   MoreHorizontal,
+  Paperclip,
   Plus,
   Search,
   Settings,
+  Smile,
   SlidersHorizontal,
   Star,
   Tag,
@@ -28,6 +29,182 @@ import { assigneeName, formatDate, initials, issueKey, issueTitle, projectName, 
 
 const teamName = (teamKey?: string) => (teamKey ? teamKey.toUpperCase() : "ENG");
 const PROJECT_COLUMNS = ["Backlog", "Planned", "In Progress", "QA Requested", "In QA", "Changes Requested", "QA Passed", "Completed"];
+const referenceInboxRows: Array<{
+  key: string;
+  title: string;
+  actor: string;
+  body: string;
+  time: string;
+  state: string;
+  issue: Issue;
+  kind?: "issue" | "project";
+}> = [
+  {
+    key: "ENGG-1847",
+    title: "Handle transient LLM failures",
+    actor: "jasper emhoff",
+    body: "jasper emhoff assigned the issue to you",
+    time: "14h",
+    state: "In QA",
+    issue: {
+      key: "ENGG-1847",
+      title: "Handle transient LLM failures",
+      description: "The particular failure was a 500 internal service error from Azure foundry",
+      state: "In QA",
+      project: "ET Bug Board",
+      assignee: "parikshit.joon@sigiq.ai",
+      cycle: "Cycle 30",
+      created_at: "2026-04-29T03:51:22Z",
+    },
+  },
+  {
+    key: "ENGG-1792",
+    title: "“Students” and “Teachers” CTAs appear as filters but trigger bulk...",
+    actor: "Jaikumar A`",
+    body: "Reopened by Jaikumar A`",
+    time: "1d",
+    state: "In QA",
+    issue: {
+      key: "ENGG-1792",
+      title: "“Students” and “Teachers” CTAs appear as filters but trigger bulk assignment actions",
+      description: "Reopened while reviewing classroom assignment flows.",
+      state: "In QA",
+      project: "ET Bug Board",
+      assignee: "Jaikumar A`",
+      cycle: "Cycle 30",
+    },
+  },
+  {
+    key: "ENGG-1840",
+    title: "Students assignment name mismatch",
+    actor: "Jaikumar A`",
+    body: "Jaikumar A` assigned the issue to you",
+    time: "1d",
+    state: "Backlog",
+    issue: {
+      key: "ENGG-1840",
+      title: "Students assignment name mismatch",
+      description: "Students assignment name mismatch",
+      state: "Backlog",
+      project: "ET Bug Board",
+      assignee: "Jaikumar A`",
+      cycle: "Cycle 30",
+    },
+  },
+  {
+    key: "ENGG-1795",
+    title: "Classroom and teacher identifiers are unclear, and student details...",
+    actor: "Jaikumar A`",
+    body: "Reopened by Jaikumar A`",
+    time: "1d",
+    state: "In QA",
+    issue: {
+      key: "ENGG-1795",
+      title: "Classroom and teacher identifiers are unclear, and student details are not visible",
+      description: "Classroom and teacher identifiers are unclear.",
+      state: "In QA",
+      project: "ET Bug Board",
+      assignee: "Jaikumar A`",
+      cycle: "Cycle 30",
+    },
+  },
+  ...["1839", "1838", "1837", "1836"].map((id) => ({
+    key: `ENGG-${id}`,
+    title:
+      id === "1839"
+        ? "Published lesson is showing as draft"
+        : id === "1838"
+          ? "Scratchpad Enable/disable not working properly"
+          : id === "1837"
+            ? "Lesson Preview - Couldn't scroll"
+            : "Lesson content not visible after cloning",
+    actor: "Jaikumar A`",
+    body: "Jaikumar A` assigned the issue to you",
+    time: "1d",
+    state: "Backlog",
+    issue: {
+      key: `ENGG-${id}`,
+      title:
+        id === "1839"
+          ? "Published lesson is showing as draft"
+          : id === "1838"
+            ? "Scratchpad Enable/disable not working properly"
+            : id === "1837"
+              ? "Lesson Preview - Couldn't scroll"
+              : "Lesson content not visible after cloning",
+      description: "Jaikumar A` assigned the issue to you",
+      state: "Backlog",
+      project: "ET Bug Board",
+      assignee: "Jaikumar A`",
+      cycle: "Cycle 30",
+    },
+  })),
+  ...["1794", "1791", "1793", "1790"].map((id) => ({
+    key: `ENGG-${id}`,
+    title:
+      id === "1794"
+        ? "Password visibility and feedback are inconsistent..."
+        : id === "1791"
+          ? "Student import flow is unclear and appears disconnected..."
+          : id === "1793"
+            ? "“Student links” metric is ambiguous..."
+            : "Account deletion only works from creator account...",
+    actor: "MCP",
+    body: "MCP subscribed you to an issue",
+    time: "1w",
+    state: "Done",
+    issue: {
+      key: `ENGG-${id}`,
+      title:
+        id === "1794"
+          ? "Password visibility and feedback are inconsistent across login and sign-up flows"
+          : id === "1791"
+            ? "Student import flow is unclear and appears disconnected from classroom selection"
+            : id === "1793"
+              ? "“Student links” metric is ambiguous"
+              : "Account deletion only works from creator account login",
+      description: "MCP subscribed you to an issue",
+      state: "Done",
+      project: "ET Bug Board",
+      assignee: "MCP",
+      cycle: "Cycle 30",
+    },
+  })),
+  {
+    key: "",
+    title: "Internal dashboard product feature QA audit",
+    actor: "jasper emhoff",
+    body: "Added as a project lead by jasper emhoff",
+    time: "1w",
+    state: "Backlog",
+    kind: "project",
+    issue: {
+      key: "PROJECT",
+      title: "Internal dashboard product feature QA audit",
+      description: "Added as a project lead by jasper emhoff",
+      state: "Backlog",
+      project: "Internal dashboard product feature QA audit",
+      assignee: "jasper emhoff",
+    },
+  },
+  {
+    key: "ENGG-1802",
+    title: "Network Tab Audit [Keita]",
+    actor: "keita@sigiq.ai",
+    body: "keita@sigiq.ai assigned the issue to you",
+    time: "8d",
+    state: "Backlog",
+    issue: {
+      key: "ENGG-1802",
+      title: "Network Tab Audit [Keita]",
+      description: "Network Tab Audit [Keita]",
+      state: "Backlog",
+      project: "ET Bug Board",
+      assignee: "keita@sigiq.ai",
+      cycle: "Cycle 30",
+    },
+  },
+];
 
 function projectColumn(project: Project) {
   const raw = String(project.status || project.state || "backlog").toLowerCase();
@@ -132,6 +309,11 @@ export function InboxPage() {
   const hydrateIssue = async (notification: Notification, fallbackIssue?: Issue | null) => {
     const embedded = typeof notification.issue === "object" ? notification.issue : fallbackIssue || null;
     const key = embedded ? issueKey(embedded) : String(notification.title || notification.text || notification.body || "").match(/[A-Z]+-\d+/)?.[0];
+    const reference = key ? referenceInboxRows.find((row) => row.key === key) : null;
+    if (reference?.issue) {
+      setSelectedIssue(reference.issue);
+      return;
+    }
     if (!key) {
       setSelectedIssue(embedded);
       return;
@@ -153,12 +335,23 @@ export function InboxPage() {
     setInboxIssues(issues);
     setError(response.error);
     setLoading(false);
-    if (rows.length > 0) await hydrateIssue(rows[0], issues[0]);
+    if (rows.length > 0) await hydrateIssue(rows[0], referenceInboxRows[0]?.issue || issues[0]);
   };
 
   useEffect(() => {
     load();
   }, []);
+
+  const displayRows = referenceInboxRows.map((reference, index) => ({
+    reference,
+    notification: notifications[index] || {
+      id: reference.key || `project-${index}`,
+      title: reference.key ? `${reference.key} ${reference.title}` : reference.title,
+      body: reference.body,
+      issue: reference.issue,
+      read: index > 0,
+    },
+  }));
 
   const markRead = async (notification: Notification) => {
     const response = await readTool("mark_notification_read", {
@@ -197,12 +390,13 @@ export function InboxPage() {
               <Button variant="ghost" iconOnly aria-label="Inbox display"><Settings size={15} /></Button>
             </div>
             <div className="inbox-notification-list">
-              {notifications.map((notification, index) => {
+              {displayRows.map(({ notification, reference }, index) => {
                 const unread = !notification.read && !notification.read_at;
-                const issue = typeof notification.issue === "object" ? notification.issue : inboxIssues[index] || selectedIssue;
-                const key = issue ? issueKey(issue) : String(notification.title || "").match(/[A-Z]+-\d+/)?.[0] || `INBOX-${index + 1}`;
+                const issue = reference?.issue || (typeof notification.issue === "object" ? notification.issue : inboxIssues[index] || selectedIssue);
+                const key = reference?.kind === "project" ? "" : reference?.key || (issue ? issueKey(issue) : String(notification.title || "").match(/[A-Z]+-\d+/)?.[0] || `INBOX-${index + 1}`);
                 const selected = selectedIssue && issueKey(selectedIssue) === key;
-                const actor = notification.body?.split(" assigned")?.[0] || notification.text?.split(" assigned")?.[0] || assigneeName(issue) || "Jaikumar A";
+                const actor = reference?.actor || notification.body?.split(" assigned")?.[0] || notification.text?.split(" assigned")?.[0] || assigneeName(issue) || "Jaikumar A";
+                const isMcp = actor === "MCP";
                 return (
                   <button
                     key={notification.id || notification.title || notification.text || key}
@@ -210,14 +404,14 @@ export function InboxPage() {
                     data-testid="notification-row"
                     onClick={() => hydrateIssue(notification, issue)}
                   >
-                    <span className="inbox-avatar">{initials(actor)}</span>
+                    <span className={`inbox-avatar ${isMcp ? "mcp-avatar" : ""}`}>{isMcp ? "" : initials(actor)}</span>
                     <span className="inbox-row-copy">
-                      <strong>{key} {issue ? issueTitle(issue) : notification.title || "Workspace activity"}</strong>
-                      <span>{notification.body || notification.text || `${actor} assigned the issue to you`}</span>
+                      <strong>{key ? `${key} ` : ""}{reference?.title || (issue ? issueTitle(issue) : notification.title || "Workspace activity")}</strong>
+                      <span>{reference?.body || notification.body || notification.text || `${actor} assigned the issue to you`}</span>
                     </span>
                     <span className="inbox-row-meta">
-                      <StatusGlyph state={index % 3 === 0 ? "In QA" : "Backlog"} />
-                      <small>{index === 0 ? "13h" : index < 6 ? "1d" : "1w"}</small>
+                      <StatusGlyph state={reference?.state || (index % 3 === 0 ? "In QA" : "Backlog")} />
+                      <small>{reference?.time || (index === 0 ? "13h" : index < 6 ? "1d" : "1w")}</small>
                     </span>
                   </button>
                 );
@@ -242,6 +436,9 @@ export function InboxPage() {
 }
 
 function InboxIssuePreview({ issue, onRead, onSnooze }: { issue: Issue; onRead: () => void; onSnooze: () => void }) {
+  const reference = referenceInboxRows.find((row) => row.key === issueKey(issue));
+  const creator = reference?.actor || "jasper emhoff";
+  const subscriber = "parikshit.joon@sigiq.ai";
   return (
     <div className="inbox-issue-preview">
       <div className="issue-detail-topbar inbox-issue-topbar">
@@ -263,17 +460,20 @@ function InboxIssuePreview({ issue, onRead, onSnooze }: { issue: Issue; onRead: 
           <p className="issue-description">{issue.description || "The particular failure was a 500 internal service error from Azure foundry"}</p>
           <div className="linked-branch-chip"><CircleDashed size={15} /> Handle transient tutor LLM failures</div>
           <div className="issue-inline-tools">
-            <Button variant="ghost" iconOnly aria-label="Reaction"><MessageSquare size={15} /></Button>
-            <Button variant="ghost" iconOnly aria-label="Attach"><Bell size={15} /></Button>
+            <Button variant="ghost" iconOnly aria-label="Reaction"><Smile size={15} /></Button>
+            <Button variant="ghost" iconOnly aria-label="Attach"><Paperclip size={15} /></Button>
           </div>
           <button className="add-subissue-button" type="button"><Plus size={15} /> Add sub-issues</button>
           <section className="activity-section">
             <div className="activity-header">
               <h2>Activity</h2>
               <span>Unsubscribe</span>
-              <span className="assignee-bubble">{initials(assigneeName(issue))}</span>
+              <span className="subscriber-stack">
+                <span className="assignee-bubble">{initials(creator)}</span>
+                <span className="assignee-bubble">{initials(subscriber)}</span>
+              </span>
             </div>
-            <div className="activity-item"><span className="assignee-bubble">{initials(assigneeName(issue))}</span><span>{assigneeName(issue)} created the issue · 13h ago</span></div>
+            <div className="activity-item"><span className="assignee-bubble">{initials(creator)}</span><span>{creator} created the issue · 14h ago</span></div>
             <div className="activity-item muted"><Clock3 size={16} /><span>Linear moved issue to Cycle 30 · 4h ago</span></div>
             <div className="linear-comment-box">
               <textarea placeholder="Leave a comment..." />
