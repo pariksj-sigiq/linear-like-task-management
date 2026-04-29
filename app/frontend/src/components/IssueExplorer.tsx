@@ -9,6 +9,7 @@ import {
   Kanban,
   List,
   MoreHorizontal,
+  Plus,
   Rows3,
   Search,
   SlidersHorizontal,
@@ -36,10 +37,16 @@ const BOARD_STATE_ORDER = [
   "Todo",
   "Triage",
   "In Progress",
+  "In PR Review",
   "In Review",
+  "QA Requested",
+  "In QA",
+  "QA Passed",
   "Ready for QA",
+  "Changes Requested",
   "Done",
   "Canceled",
+  "Duplicate",
 ];
 
 interface IssueExplorerProps {
@@ -186,7 +193,7 @@ export function IssueExplorer({
         <div className="menu-wrap">
           <Button onClick={() => setFiltersOpen((open) => !open)} data-testid="filters-menu">
             <Filter size={14} />
-            Filters
+            Add filter
           </Button>
           {filtersOpen && (
             <div className="popover">
@@ -244,7 +251,7 @@ export function IssueExplorer({
         <div className="menu-wrap">
           <Button onClick={() => setDisplayOpen((open) => !open)} data-testid="display-menu">
             <SlidersHorizontal size={14} />
-            Display
+            Display options
           </Button>
           {displayOpen && (
             <div className="popover">
@@ -284,6 +291,10 @@ export function IssueExplorer({
             <Kanban size={14} />
           </button>
         </div>
+
+        <Button variant="ghost" iconOnly aria-label="Open details">
+          <MoreHorizontal size={14} />
+        </Button>
 
         {selected.length > 0 && (
           <div className="topbar-actions" data-testid="bulk-actions">
@@ -420,7 +431,15 @@ function IssueBoard({ groups }: { groups: Array<[string, Issue[]]> }) {
                 <span className="pill-dot" style={{ background: stateColor(state) }} />
                 {state}
               </span>
-              <span>{issues.length}</span>
+              <span className="board-title-actions">
+                <span className="board-count">{issues.length}</span>
+                <button type="button" aria-label={`Create issue in ${state}`}>
+                  <Plus size={13} />
+                </button>
+                <button type="button" aria-label={`${state} menu`}>
+                  <MoreHorizontal size={13} />
+                </button>
+              </span>
             </div>
             {issues.map((issue) => (
               <Link key={issueKey(issue)} to={`/issue/${issueKey(issue)}`} className="issue-tile">

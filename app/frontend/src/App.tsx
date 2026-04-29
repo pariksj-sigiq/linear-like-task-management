@@ -29,7 +29,7 @@ function ProtectedApp() {
   }
 
   if (location.pathname === "/login") {
-    return user ? <Navigate to="/my-issues" replace /> : <Login />;
+    return user ? <Navigate to="/my-issues/activity" replace /> : <Login />;
   }
 
   if (!user) {

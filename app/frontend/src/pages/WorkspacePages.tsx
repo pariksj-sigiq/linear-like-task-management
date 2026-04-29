@@ -13,6 +13,7 @@ import {
   Plus,
   Search,
   Settings,
+  SlidersHorizontal,
   Star,
 } from "lucide-react";
 import { collectionFrom, readSnapshot, readTool } from "../api";
@@ -22,6 +23,19 @@ import type { Cycle, Issue, Notification, Project, ProjectUpdate, ViewDefinition
 import { formatDate, issueKey, issueTitle, projectTitle, titleize, userName } from "../linearTypes";
 
 const teamName = (teamKey?: string) => (teamKey ? teamKey.toUpperCase() : "ENG");
+const PROJECT_COLUMNS = ["Backlog", "Planned", "In Progress", "QA Requested", "In QA", "Changes Requested", "QA Passed", "Completed"];
+
+function projectColumn(project: Project) {
+  const raw = String(project.status || project.state || "backlog").toLowerCase();
+  if (raw.includes("complete") || raw.includes("done")) return "Completed";
+  if (raw.includes("passed")) return "QA Passed";
+  if (raw.includes("change")) return "Changes Requested";
+  if (raw.includes("in qa")) return "In QA";
+  if (raw.includes("qa")) return "QA Requested";
+  if (raw.includes("start") || raw.includes("progress")) return "In Progress";
+  if (raw.includes("plan")) return "Planned";
+  return "Backlog";
+}
 
 export function HomePage() {
   return (
@@ -257,6 +271,14 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const projectsByColumn = useMemo(
+    () =>
+      PROJECT_COLUMNS.reduce<Record<string, Project[]>>((groups, column) => {
+        groups[column] = projects.filter((project) => projectColumn(project) === column);
+        return groups;
+      }, {}),
+    [projects],
+  );
 
   const load = async () => {
     setLoading(true);
@@ -274,10 +296,9 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
   }, [teamKey, teamScoped]);
 
   return (
-    <div className="page page-narrow" data-testid="projects-page">
+    <div className="page" data-testid="projects-page">
       <PageHeader
         title={teamScoped ? `${teamName(teamKey)} Projects` : "Projects"}
-        subtitle="Project status, ownership, and issue progress."
         actions={
           <Button variant="primary" onClick={() => setCreateOpen(true)} data-testid="create-project-button">
             <Plus size={14} />
@@ -285,26 +306,70 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
           </Button>
         }
       />
+      <div className="linear-tabs project-view-tabs" aria-label="Project views">
+        <NavLink to={teamScoped ? `/team/${teamKey}/projects` : "/projects"}>All projects</NavLink>
+        <a className="active" href="#project-board">
+          <FolderKanban size={13} />
+          Kanban View
+        </a>
+      </div>
+      <div className="toolbar projects-toolbar">
+        <Button>
+          <Search size={14} />
+          Find in view...
+        </Button>
+        <Button>
+          <SlidersHorizontal size={14} />
+          Add filter
+        </Button>
+        <Button>
+          <Settings size={14} />
+          Display options
+        </Button>
+      </div>
       <ErrorBanner message={error} />
       {loading ? (
         <Spinner label="Loading projects" />
       ) : projects.length === 0 ? (
         <EmptyState title="No projects found" description="Create a project or adjust filters." />
       ) : (
-        <div>
-          {projects.map((project) => (
-            <Link key={project.id || project.key || projectTitle(project)} className="project-row" to={`/projects/${project.id || project.key}`}>
-              <span>
-                <span className="issue-title-cell">
-                  <FolderKanban size={15} />
-                  <strong>{projectTitle(project)}</strong>
-                  {project.status && <StatusPill label={project.status} />}
-                </span>
-                <span className="page-subtitle truncate">{project.description || "No description"}</span>
-              </span>
-              <span className="issue-key">{formatDate(project.updated_at || project.target_date)}</span>
-            </Link>
-          ))}
+        <div className="board project-board" id="project-board" data-testid="projects-board">
+          {PROJECT_COLUMNS.map((column) => {
+            const columnProjects = projectsByColumn[column] || [];
+            return (
+              <section className="board-column" key={column} aria-label={`${column} projects`}>
+                <div className="board-title">
+                  <span className="issue-title-cell">
+                    <span className={`status-dot status-${column.toLowerCase().replace(/\s+/g, "-")}`} />
+                    {column}
+                    <span className="board-count">{columnProjects.length}</span>
+                  </span>
+                  <span className="board-title-actions">
+                    <button type="button" aria-label={`Create project in ${column}`} onClick={() => setCreateOpen(true)}>
+                      <Plus size={13} />
+                    </button>
+                  </span>
+                </div>
+                {columnProjects.map((project) => (
+                  <Link key={project.id || project.key || projectTitle(project)} className="issue-tile project-card" to={`/projects/${project.id || project.key}`}>
+                    <span className="issue-title-cell project-card-title">
+                      <FolderKanban size={14} />
+                      <strong>{projectTitle(project)}</strong>
+                    </span>
+                    <span className="project-card-description">{project.description || "No description"}</span>
+                    <span className="project-card-meta">
+                      <StatusPill label={project.status || project.state || column} />
+                      <span>{formatDate(project.updated_at || project.target_date)}</span>
+                    </span>
+                  </Link>
+                ))}
+                <button className="board-add-row" type="button" onClick={() => setCreateOpen(true)}>
+                  <Plus size={13} />
+                  Add new project
+                </button>
+              </section>
+            );
+          })}
         </div>
       )}
       <ProjectCreateModal open={createOpen} onClose={() => setCreateOpen(false)} onCreated={load} teamKey={teamScoped ? teamName(teamKey) : undefined} />
