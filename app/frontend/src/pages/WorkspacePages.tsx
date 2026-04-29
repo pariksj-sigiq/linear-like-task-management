@@ -28,10 +28,23 @@ export function HomePage() {
     <div className="page">
       <IssueExplorer
         title="My Issues"
-        subtitle="Issues assigned to you, grouped for the workday."
         toolName="list_my_issues"
         emptyTitle="No assigned issues"
+        defaultMode="board"
+        showCreateAction={false}
+        headerTabs={<MyIssuesTabs />}
       />
+    </div>
+  );
+}
+
+function MyIssuesTabs() {
+  return (
+    <div className="linear-tabs" aria-label="My issues sections">
+      <a href="/my-issues/assigned">Assigned</a>
+      <a href="/my-issues/created">Created</a>
+      <a href="/my-issues/subscribed">Subscribed</a>
+      <a href="/my-issues/activity" className="active">Activity</a>
     </div>
   );
 }
@@ -40,10 +53,12 @@ export function MyIssuesPage() {
   return (
     <div className="page">
       <IssueExplorer
-        title="My Issues"
-        subtitle="Assigned, created, or subscribed issues."
+        title="My issues"
         toolName="list_my_issues"
-        emptyTitle="No issues assigned to you"
+        emptyTitle="No assigned issues"
+        defaultMode="board"
+        showCreateAction={false}
+        headerTabs={<MyIssuesTabs />}
       />
     </div>
   );
@@ -610,6 +625,7 @@ export function TierTwoPage({ kind }: { kind: string }) {
     if (kind.includes("setting")) return <Settings size={18} />;
     return <Archive size={18} />;
   }, [kind]);
+  const humanReadable = typeof snapshot?.human_readable === "string" ? snapshot.human_readable : "";
 
   return (
     <div className="page page-narrow" data-testid={`${kind}-page`}>
@@ -624,7 +640,7 @@ export function TierTwoPage({ kind }: { kind: string }) {
           <p className="page-subtitle">
             This route is wired into the workspace shell and ready for backend expansion.
           </p>
-          {snapshot?.human_readable && (
+          {humanReadable && (
             <pre
               style={{
                 marginTop: 12,
@@ -633,7 +649,7 @@ export function TierTwoPage({ kind }: { kind: string }) {
                 fontSize: 13,
               }}
             >
-              {String(snapshot.human_readable)}
+              {humanReadable}
             </pre>
           )}
         </div>

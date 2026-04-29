@@ -2,7 +2,7 @@
 
 ## Summary
 
-This repo implements a Linear-style issue/project workspace with a React UI, FastAPI tool server, Postgres schema, deterministic seed data, tests, and 15 CUA tasks.
+This repo implements a Linear-style issue/project workspace with a React UI, FastAPI tool server, Postgres schema, deterministic seed data, tests, and 15 CUA tasks. The seeded workspace is self-referential: its issues/projects describe the actual work of building and validating this clone.
 
 Seed snapshot after `make seed`:
 

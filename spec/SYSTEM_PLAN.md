@@ -1,17 +1,16 @@
 # Linear Clone System Plan
 
-## Current Scaffold Snapshot
+## Current Implementation Snapshot
 
-The checked-out app is still the generic SaaS starter:
+The checked-out app is a Linear-style clone for the Collinear take-home:
 
-- Backend tools: `search_items`, `create_item`
-- Frontend routes: `/items`, `/items/new`, `/items/:id`
-- Database tables: `users`, `sessions`, `items`, `audit_log`
-- Notable blocker: `app/server.py` imports `app.schema`, but no
-  `app/schema.py` currently exists in the checkout
+- Backend: FastAPI `/step` tool server with native Linear-style tools and compatibility aliases.
+- Frontend: React workspace shell with issue, planning, inbox, command palette, settings, and stub utility routes.
+- Database: Postgres schema for teams, issues, projects, cycles, labels, views, notifications, tasks, and audit/activity.
+- Seed: deterministic clone-build workspace describing the work of creating this assignment.
 
-This file describes the target system contract for the Linear clone workers.
-It does not modify app code.
+This file describes the implementation contract and the fixed records used by
+CUA task verifiers.
 
 ## Architecture Contract
 
@@ -115,7 +114,7 @@ these identifiers stable.
 | Users | `alex.rivera`, `maya.patel`, `sam.chen`, `taylor.nguyen`, `jordan.lee`, `priya.shah`, `nora.kim`, `diego.morales` |
 | Teams | `PLAT`, `GROW`, `DES` |
 | Workflow states | `Backlog`, `Todo`, `In Progress`, `In Review`, `Ready for QA`, `Done`, `Canceled` |
-| Labels | `API`, `Security`, `Customer`, `Regression`, `Launch`, `Docs`, `Billing`, `Incident`, `Frontend`, `Backend` |
+| Labels | `API`, `Security`, `Reviewer`, `Regression`, `Submission`, `Docs`, `Task QA`, `Incident`, `Frontend`, `Backend` |
 | Projects | `prj-api-hardening`, `prj-launch-readiness`, `prj-billing-polish` |
 | Cycles | `cyc-platform-w18`, `cyc-platform-w19`, `cyc-growth-w18` |
 | Issues | `LIN-077`, `LIN-087`, `LIN-099`, `LIN-104`, `LIN-121`, `LIN-122`, `LIN-130`, `LIN-131`, `LIN-132`, `LIN-140`, `LIN-141`, `LIN-142`, `LIN-150`, `LIN-151`, `LIN-152`, `LIN-160`, `LIN-161`, `LIN-162`, `LIN-170`, `LIN-171`, `LIN-172`, `LIN-180`, `LIN-181`, `LIN-182` |
@@ -129,4 +128,3 @@ these identifiers stable.
 - On create flows, use the server-returned id before subsequent label,
   relation, comment, or child-issue mutations.
 - Make all Tier 2 mutation buttons disabled and visually marked read-only.
-

@@ -95,7 +95,7 @@ def seed_task_fixtures() -> None:
     cur.execute(
         """
         INSERT INTO workspaces (id, name, url_key)
-        VALUES ('wks_tasks', 'Linear Assessment', 'linear-assessment')
+        VALUES ('wks_tasks', 'Linear Clone Build', 'linear-clone-build')
         ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, url_key = EXCLUDED.url_key
         """
     )
@@ -126,8 +126,8 @@ def seed_task_fixtures() -> None:
         )
 
     teams = [
-        ("tm_plat", "PLAT", "Platform", "terminal", "#5e6ad2"),
-        ("tm_grow", "GROW", "Growth", "trending-up", "#4cb782"),
+        ("tm_plat", "PLAT", "Clone Platform", "terminal", "#5e6ad2"),
+        ("tm_grow", "GROW", "Evaluation QA", "clipboard-check", "#4cb782"),
     ]
     for team_id, key, name, icon, color in teams:
         cur.execute(
@@ -170,10 +170,10 @@ def seed_task_fixtures() -> None:
     labels = [
         ("api", "API", "#5E6AD2"),
         ("security", "Security", "#F59E0B"),
-        ("customer", "Customer", "#10B981"),
-        ("launch", "Launch", "#8B5CF6"),
+        ("reviewer", "Reviewer", "#10B981"),
+        ("submission", "Submission", "#8B5CF6"),
         ("docs", "Docs", "#64748B"),
-        ("billing", "Billing", "#06B6D4"),
+        ("taskqa", "Task QA", "#06B6D4"),
         ("incident", "Incident", "#EF4444"),
         ("frontend", "Frontend", "#EC4899"),
         ("backend", "Backend", "#3B82F6"),
@@ -191,9 +191,9 @@ def seed_task_fixtures() -> None:
             )
 
     projects = [
-        ("prj-api-hardening", "API Hardening", "OAuth callback and API reliability work.", "planned", "on_track", "usr_maya", "2026-04-01", "2026-05-30"),
-        ("prj-launch-readiness", "Launch Readiness", "Prepare docs, launch review, and handoff work.", "started", "on_track", "usr_priya", "2026-04-08", "2026-06-10"),
-        ("prj-billing-polish", "Billing Polish", "Reduce billing escalations before renewal season.", "planned", "on_track", "usr_taylor", "2026-04-15", "2026-06-20"),
+        ("prj-api-hardening", "Backend Tool Server Coverage", "Finalize /step tools, snapshot/reset behavior, and audit/activity logging.", "planned", "on_track", "usr_maya", "2026-04-01", "2026-05-30"),
+        ("prj-launch-readiness", "Submission Readiness", "Prepare README, QA report, package artifacts, and Loom handoff.", "started", "on_track", "usr_priya", "2026-04-08", "2026-06-10"),
+        ("prj-billing-polish", "CUA Task Pack", "Author deterministic browser tasks with golden applies and scoring verifiers.", "planned", "on_track", "usr_taylor", "2026-04-15", "2026-06-20"),
     ]
     for project in projects:
         cur.execute(
@@ -214,9 +214,9 @@ def seed_task_fixtures() -> None:
         )
 
     cycles = [
-        ("cyc-platform-w18", "tm_plat", 18, "Platform W18", "2026-04-20", "2026-05-03", "active"),
-        ("cyc-platform-w19", "tm_plat", 19, "Platform W19", "2026-05-04", "2026-05-17", "upcoming"),
-        ("cyc-growth-w18", "tm_grow", 18, "Growth W18", "2026-04-20", "2026-05-03", "active"),
+        ("cyc-platform-w18", "tm_plat", 18, "Clone Build W18", "2026-04-20", "2026-05-03", "active"),
+        ("cyc-platform-w19", "tm_plat", 19, "Clone Polish W19", "2026-05-04", "2026-05-17", "upcoming"),
+        ("cyc-growth-w18", "tm_grow", 18, "Evaluation QA W18", "2026-04-20", "2026-05-03", "active"),
     ]
     for cycle in cycles:
         cur.execute(
@@ -229,32 +229,32 @@ def seed_task_fixtures() -> None:
         )
 
     issue_specs = [
-        ("LIN-077", "Command palette reassignment target", "Todo", "medium", "usr_jordan", "prj-api-hardening", "cyc-platform-w18", "Validate command palette reassignment flow."),
-        ("LIN-087", "Fix OAuth callback rollback guard", "In Progress", "high", "usr_maya", "prj-api-hardening", "cyc-platform-w18", "Rollback path must be ready before callback changes ship."),
-        ("LIN-099", "Enterprise customer follow-up owner missing", "Todo", "medium", "usr_jordan", "prj-api-hardening", "cyc-platform-w18", "Customer issue needs a clear owner handoff."),
-        ("LIN-104", "API burn-rate alert parent", "In Progress", "high", "usr_maya", "prj-api-hardening", "cyc-platform-w18", "Parent issue for API burn-rate alert work."),
-        ("LIN-121", "Callback retry copy follow-up", "Todo", "medium", "usr_nora", "prj-api-hardening", "cyc-platform-w18", "Needs relation cleanup."),
-        ("LIN-122", "Duplicate OAuth callback task", "Todo", "low", "usr_diego", "prj-api-hardening", "cyc-platform-w18", "Potential duplicate task."),
-        ("LIN-130", "Launch review customer import", "In Review", "medium", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Launch review item one."),
-        ("LIN-131", "Launch review webhook checklist", "In Review", "medium", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Launch review item two."),
-        ("LIN-132", "Launch review settings copy", "In Review", "medium", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Launch review item three."),
-        ("LIN-133", "Launch review distractor", "Todo", "medium", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Should not be moved to QA."),
-        ("LIN-140", "Deferrable low-priority metrics cleanup", "Todo", "low", "usr_nora", "prj-api-hardening", "cyc-platform-w18", "Deferrable scope candidate."),
-        ("LIN-141", "Deferrable low-priority dashboard polish", "Todo", "low", "usr_nora", "prj-api-hardening", "cyc-platform-w18", "Deferrable scope candidate."),
-        ("LIN-142", "Committed W18 production fix", "Todo", "urgent", "usr_maya", "prj-api-hardening", "cyc-platform-w18", "Must remain in W18."),
-        ("LIN-150", "Chargeback escalation follow-up", "Backlog", "medium", "usr_nora", "prj-billing-polish", "cyc-platform-w19", "Billing escalation: chargeback review needed."),
-        ("LIN-151", "Invoice export escalation", "Backlog", "medium", "usr_nora", "prj-billing-polish", "cyc-platform-w19", "Billing escalation: invoice export failure."),
-        ("LIN-152", "Tax rounding escalation", "Backlog", "medium", "usr_nora", "prj-billing-polish", "cyc-platform-w19", "Billing escalation: tax rounding mismatch."),
-        ("LIN-153", "Billing distractor task", "Backlog", "low", "usr_diego", "prj-billing-polish", "cyc-growth-w18", "Do not bulk assign this issue."),
-        ("LIN-160", "Board card that belongs in review", "In Progress", "medium", "usr_jordan", "prj-api-hardening", "cyc-platform-w18", "Board correction target."),
-        ("LIN-161", "Board card correctly in progress", "In Progress", "medium", "usr_jordan", "prj-api-hardening", "cyc-platform-w18", "Should stay in progress."),
+        ("LIN-077", "Command palette review reassignment flow", "Todo", "medium", "usr_jordan", "prj-api-hardening", "cyc-platform-w18", "Validate the global command palette reassignment path."),
+        ("LIN-087", "Lock snapshot contract rollback guard", "In Progress", "high", "usr_maya", "prj-api-hardening", "cyc-platform-w18", "Rollback path must be ready before snapshot contract changes ship."),
+        ("LIN-099", "Reviewer handoff owner missing", "Todo", "medium", "usr_jordan", "prj-api-hardening", "cyc-platform-w18", "Reviewer-facing issue needs a clear owner handoff."),
+        ("LIN-104", "Tool server coverage parent", "In Progress", "high", "usr_maya", "prj-api-hardening", "cyc-platform-w18", "Parent issue for tool registry, snapshot, and error-contract coverage."),
+        ("LIN-121", "Snapshot retry copy follow-up", "Todo", "medium", "usr_nora", "prj-api-hardening", "cyc-platform-w18", "Needs relation cleanup around the snapshot contract guard."),
+        ("LIN-122", "Duplicate snapshot rollback task", "Todo", "low", "usr_diego", "prj-api-hardening", "cyc-platform-w18", "Potential duplicate of the snapshot rollback work."),
+        ("LIN-130", "Submission review README commands", "In Review", "medium", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Submission review item for setup and run commands."),
+        ("LIN-131", "Submission review QA report", "In Review", "medium", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Submission review item for QA evidence."),
+        ("LIN-132", "Submission review feature inventory", "In Review", "medium", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Submission review item for feature coverage mapping."),
+        ("LIN-133", "Submission review distractor", "Todo", "medium", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Should not be moved to QA."),
+        ("LIN-140", "Deferrable README polish cleanup", "Todo", "low", "usr_nora", "prj-api-hardening", "cyc-platform-w18", "Deferrable scope candidate."),
+        ("LIN-141", "Deferrable Loom script polish", "Todo", "low", "usr_nora", "prj-api-hardening", "cyc-platform-w18", "Deferrable scope candidate."),
+        ("LIN-142", "Committed fetch failure fix", "Todo", "urgent", "usr_maya", "prj-api-hardening", "cyc-platform-w18", "Must remain in W18."),
+        ("LIN-150", "Task verifier zero-state scoring gap", "Backlog", "medium", "usr_nora", "prj-billing-polish", "cyc-platform-w19", "Task QA escalation: zero-state scoring needs review."),
+        ("LIN-151", "Golden apply fixture drift", "Backlog", "medium", "usr_nora", "prj-billing-polish", "cyc-platform-w19", "Task QA escalation: golden fixture drift needs review."),
+        ("LIN-152", "Instruction wording mismatch", "Backlog", "medium", "usr_nora", "prj-billing-polish", "cyc-platform-w19", "Task QA escalation: instruction wording mismatch needs review."),
+        ("LIN-153", "Task pack distractor", "Backlog", "low", "usr_diego", "prj-billing-polish", "cyc-growth-w18", "Do not bulk assign this issue."),
+        ("LIN-160", "Issue detail card belongs in review", "In Progress", "medium", "usr_jordan", "prj-api-hardening", "cyc-platform-w18", "Board correction target."),
+        ("LIN-161", "Frontend shell card correctly in progress", "In Progress", "medium", "usr_jordan", "prj-api-hardening", "cyc-platform-w18", "Should stay in progress."),
         ("LIN-162", "Adjacent board distractor", "Todo", "low", "usr_jordan", "prj-api-hardening", "cyc-platform-w18", "Board distractor."),
-        ("LIN-170", "Launch docs parent", "Todo", "medium", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Parent for launch docs handoff."),
-        ("LIN-171", "Launch docs relation target", "Todo", "medium", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Relation target for launch docs handoff."),
-        ("LIN-172", "Launch docs distractor", "Todo", "low", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Do not link this task."),
-        ("LIN-180", "Alex active regression candidate one", "In Progress", "low", "usr_alex", "prj-api-hardening", "cyc-platform-w18", "My Issues priority pass target."),
-        ("LIN-181", "Alex active regression candidate two", "In Progress", "low", "usr_alex", "prj-api-hardening", "cyc-platform-w18", "My Issues priority pass target."),
-        ("LIN-182", "Alex active distractor candidate three", "In Progress", "low", "usr_alex", "prj-api-hardening", "cyc-platform-w18", "My Issues priority pass target but not regression."),
+        ("LIN-170", "Submission docs parent", "Todo", "medium", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Parent for final docs handoff."),
+        ("LIN-171", "README packaging relation target", "Todo", "medium", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Relation target for submission docs handoff."),
+        ("LIN-172", "Submission docs distractor", "Todo", "low", "usr_priya", "prj-launch-readiness", "cyc-platform-w18", "Do not link this task."),
+        ("LIN-180", "Alex UI density regression candidate", "In Progress", "low", "usr_alex", "prj-api-hardening", "cyc-platform-w18", "My Issues priority pass target."),
+        ("LIN-181", "Alex sidebar footer regression candidate", "In Progress", "low", "usr_alex", "prj-api-hardening", "cyc-platform-w18", "My Issues priority pass target."),
+        ("LIN-182", "Alex loading-state polish candidate", "In Progress", "low", "usr_alex", "prj-api-hardening", "cyc-platform-w18", "My Issues priority pass target but not regression."),
     ]
     for identifier, title, state_name, priority, assignee, project_id, cycle_id, description in issue_specs:
         number = int(identifier.split("-")[1])
@@ -295,14 +295,14 @@ def seed_task_fixtures() -> None:
         "LIN-104": ["lbl_plat_api"],
         "LIN-121": ["lbl_plat_api"],
         "LIN-122": ["lbl_plat_api"],
-        "LIN-130": ["lbl_plat_customer"],
-        "LIN-131": ["lbl_plat_customer"],
-        "LIN-132": ["lbl_plat_customer"],
-        "LIN-150": ["lbl_plat_billing"],
-        "LIN-151": ["lbl_plat_billing"],
-        "LIN-152": ["lbl_plat_billing"],
-        "LIN-170": ["lbl_plat_launch"],
-        "LIN-171": ["lbl_plat_launch"],
+        "LIN-130": ["lbl_plat_reviewer"],
+        "LIN-131": ["lbl_plat_reviewer"],
+        "LIN-132": ["lbl_plat_reviewer"],
+        "LIN-150": ["lbl_plat_taskqa"],
+        "LIN-151": ["lbl_plat_taskqa"],
+        "LIN-152": ["lbl_plat_taskqa"],
+        "LIN-170": ["lbl_plat_submission"],
+        "LIN-171": ["lbl_plat_submission"],
         "LIN-180": ["lbl_plat_bug"],
         "LIN-181": ["lbl_plat_bug"],
         "LIN-182": ["lbl_plat_bug"],
@@ -315,9 +315,9 @@ def seed_task_fixtures() -> None:
             )
 
     comments = [
-        ("cmt_billing_150", "LIN-150", "Chargeback escalation remains open for the enterprise renewal."),
-        ("cmt_billing_151", "LIN-151", "Invoice export escalation is blocking the finance handoff."),
-        ("cmt_billing_152", "LIN-152", "Tax rounding escalation is still unresolved for the billing polish project."),
+        ("cmt_taskqa_150", "LIN-150", "Zero-state scoring escalation remains open for task verification."),
+        ("cmt_taskqa_151", "LIN-151", "Golden fixture drift is blocking the CUA task handoff."),
+        ("cmt_taskqa_152", "LIN-152", "Instruction wording mismatch is still unresolved for the task pack."),
     ]
     for comment_id, identifier, body in comments:
         cur.execute(
@@ -356,12 +356,12 @@ def main() -> None:
     wait_for_health(f"{TOOL_SERVER_URL}/health")
     seed_users()
 
-    workspace = tool("create_workspace", {"name": "Acme Product", "url_key": "acme"})
+    workspace = tool("create_workspace", {"name": "Collinear Clone Studio", "url_key": "linear-clone"})
     teams = {}
     for team in [
-        ("ENG", "Engineering", "code", "#5e6ad2"),
-        ("DES", "Design", "palette", "#d26ac2"),
-        ("OPS", "Operations", "workflow", "#4cb782"),
+        ("ENG", "Backend Tooling", "code", "#5e6ad2"),
+        ("DES", "Frontend Experience", "palette", "#d26ac2"),
+        ("OPS", "QA & Delivery", "workflow", "#4cb782"),
     ]:
         teams[team[0]] = tool(
             "create_team",
@@ -400,7 +400,7 @@ def main() -> None:
         for label_name, color in [
             ("Bug", "#eb5757"),
             ("Feature", "#5e6ad2"),
-            ("Customer", "#4cb782"),
+            ("Reviewer", "#4cb782"),
             ("P0", "#ffcf5c"),
             ("Area: Frontend", "#d26ac2"),
             ("Area: Backend", "#5e6ad2"),
@@ -411,12 +411,12 @@ def main() -> None:
 
     projects: dict[str, dict[str, Any]] = {}
     project_specs = [
-        ("prj-api", "API Reliability", "Reduce customer-visible API failure rate.", "started", "at_risk", "user_002", "2026-04-01", "2026-06-15"),
-        ("prj-mobile", "Mobile Issue Composer", "Bring quick issue creation to mobile.", "started", "on_track", "user_003", "2026-04-08", "2026-05-30"),
-        ("prj-design-system", "Design System Refresh", "Polish core Linear-like primitives.", "planned", "unknown", "user_005", "2026-05-01", "2026-07-10"),
-        ("prj-onboarding", "Customer Onboarding Signals", "Surface high-revenue customer asks.", "started", "off_track", "user_006", "2026-03-20", "2026-06-01"),
-        ("prj-ops-automation", "Operations Automation", "Automate triage and weekly reporting.", "planned", "on_track", "user_007", "2026-04-15", "2026-07-01"),
-        ("prj-roadmap", "Roadmap Planning", "Align cross-team project timelines.", "started", "on_track", "user_001", "2026-04-01", "2026-08-01"),
+        ("prj-api", "Backend Tool Server Coverage", "Complete the Linear-style /step tool surface and snapshot/reset contract.", "started", "at_risk", "user_002", "2026-04-01", "2026-06-15"),
+        ("prj-mobile", "Issue Flow Implementation", "Build issue list, board, detail, quick-create, and picker flows.", "started", "on_track", "user_003", "2026-04-08", "2026-05-30"),
+        ("prj-design-system", "Linear UI Fidelity Pass", "Polish dense dark UI primitives, spacing, and responsive behavior.", "planned", "unknown", "user_005", "2026-05-01", "2026-07-10"),
+        ("prj-onboarding", "Evaluation Task Authoring", "Author CUA tasks with deterministic golden states and verification scripts.", "started", "off_track", "user_006", "2026-03-20", "2026-06-01"),
+        ("prj-ops-automation", "QA Automation", "Automate smoke checks, seed validation, and browser regression coverage.", "planned", "on_track", "user_007", "2026-04-15", "2026-07-01"),
+        ("prj-roadmap", "Submission Packaging", "Prepare README, QA report, package artifacts, and Loom walkthrough notes.", "started", "on_track", "user_001", "2026-04-01", "2026-08-01"),
     ]
     for slug, name, desc, state, health, lead, start, target in project_specs:
         projects[slug] = tool(
@@ -446,7 +446,7 @@ def main() -> None:
                 {
                     "team_id": team["id"],
                     "number": idx,
-                    "name": f"{key} Cycle {idx}",
+                    "name": f"{key} Build Sprint {idx}",
                     "start_date": start.isoformat(),
                     "end_date": (start + timedelta(days=13)).isoformat(),
                     "state": state,
@@ -456,10 +456,10 @@ def main() -> None:
 
     issue_titles = {
         "ENG": [
-            "Reduce webhook retry latency",
-            "Fix OAuth refresh token rotation",
+            "Expose full /tools registry",
+            "Fix snapshot entity completeness",
             "Add audit trail for workflow edits",
-            "Backfill missing customer request links",
+            "Backfill task fixture links",
             "Stabilize command palette indexing",
             "Harden bulk issue updates",
             "Expose project health in snapshot",
@@ -470,7 +470,7 @@ def main() -> None:
         "DES": [
             "Refresh issue row density",
             "Align dark mode contrast tokens",
-            "Design customer request empty state",
+            "Design reviewer request empty state",
             "Polish project update composer",
             "Audit picker keyboard states",
             "Rework inbox notification hierarchy",
@@ -480,21 +480,21 @@ def main() -> None:
             "Prototype cycle progress chart",
         ],
         "OPS": [
-            "Create weekly triage view",
-            "Define support escalation labels",
+            "Create weekly task triage view",
+            "Define evaluation escalation labels",
             "Automate stale issue reminders",
-            "Review enterprise customer asks",
-            "Prepare incident retro template",
+            "Review assignment feedback asks",
+            "Prepare QA retro template",
             "Archive duplicate roadmap issues",
-            "Update onboarding project health",
+            "Update task authoring health",
             "Map team capacity by cycle",
             "Clean up no-assignee backlog",
-            "Draft cross-team launch checklist",
+            "Draft cross-team submission checklist",
         ],
     }
     created_issues: list[dict[str, Any]] = []
     priorities = ["urgent", "high", "medium", "low", "none"]
-    assignees = ["user_002", "user_003", "user_005", "user_006", "user_007", "user_008", None]
+    assignees = ["user_001", "user_002", "user_003", "user_005", "user_006", "user_007", "user_008", None]
     state_names = ["Triage", "Backlog", "Todo", "In Progress", "In Review", "Done"]
     project_cycle = list(projects.values())
     for key, titles in issue_titles.items():
@@ -507,7 +507,7 @@ def main() -> None:
                 {
                     "team_id": teams[key]["id"],
                     "title": title,
-                    "description": f"Seeded {key} issue {i + 1} for Linear clone evaluation workflows.",
+                    "description": f"Seeded {key} issue {i + 1} for the Linear clone build and evaluation workflows.",
                     "state_id": states_by_team[key][state_names[i % len(state_names)]],
                     "priority": priorities[i % len(priorities)],
                     "estimate": [1, 2, 3, 5, 8][i % 5],
@@ -516,7 +516,7 @@ def main() -> None:
                     "project_id": project["id"],
                     "cycle_id": cycle["id"],
                     "due_date": (base + timedelta(days=i + 3)).isoformat(),
-                    "label_ids": [labels_by_team[key]["Bug" if i % 3 == 0 else "Feature"], labels_by_team[key]["P0" if i % 11 == 0 else "Customer"]],
+                    "label_ids": [labels_by_team[key]["Bug" if i % 3 == 0 else "Feature"], labels_by_team[key]["P0" if i % 11 == 0 else "Reviewer"]],
                 },
             )
             created_issues.append(issue)
@@ -529,21 +529,21 @@ def main() -> None:
                 tool("add_relation", {"issue_id": issue["id"], "related_issue_id": created_issues[-2]["id"], "type": "blocks"})
 
     for name, filters, layout in [
-        ("My active work", {"assignee_id": "user_002", "state_category": "started"}, "list"),
-        ("High priority bugs", {"priority": "urgent"}, "list"),
-        ("Customer asks", {"label_id": labels_by_team["OPS"]["Customer"]}, "list"),
+        ("My active clone work", {"assignee_id": "user_002", "state_category": "started"}, "list"),
+        ("High priority regressions", {"priority": "urgent"}, "list"),
+        ("Reviewer asks", {"label_id": labels_by_team["OPS"]["Reviewer"]}, "list"),
         ("No assignee", {"assignee_id": None}, "list"),
         ("In review", {"state_category": "started"}, "board"),
-        ("Done this cycle", {"state_category": "completed"}, "list"),
+        ("Done this sprint", {"state_category": "completed"}, "list"),
     ]:
         tool("create_view", {"name": name, "owner_id": "user_002", "filter_json": filters, "layout": layout, "group_by": "status"})
 
     customers = []
     for customer in [
-        ("Northstar Bank", "northstar.example", "Enterprise", 240000, "Enterprise", "active"),
-        ("Helio Retail", "helio.example", "Business", 82000, "Mid-market", "active"),
-        ("Orbit Labs", "orbit.example", "Startup", 18000, "Startup", "trial"),
-        ("Cobalt Health", "cobalt.example", "Enterprise", 310000, "Enterprise", "at_risk"),
+        ("Collinear Review", "collinear.example", "Enterprise", 240000, "Evaluation", "active"),
+        ("Browser Runner", "browser-runner.example", "Business", 82000, "Automation", "active"),
+        ("Task Authoring", "task-authoring.example", "Startup", 18000, "Internal", "trial"),
+        ("Submission QA", "submission-qa.example", "Enterprise", 310000, "Evaluation", "at_risk"),
     ]:
         customers.append(tool("create_customer", {"name": customer[0], "domain": customer[1], "tier": customer[2], "revenue": customer[3], "size": customer[4], "status": customer[5], "owner_id": "user_006"}))
     for idx, customer in enumerate(customers):
@@ -553,15 +553,15 @@ def main() -> None:
             {
                 "customer_id": customer["id"],
                 "issue_id": target_issue["id"],
-                "requester_name": f"{customer['name']} champion",
-                "body": f"{customer['name']} needs this resolved before renewal.",
+                "requester_name": f"{customer['name']} reviewer",
+                "body": f"{customer['name']} needs this resolved before the final assessment review.",
                 "source": "manual",
                 "important": idx % 2 == 0,
             },
         )
 
-    tool("create_initiative", {"name": "Improve enterprise reliability", "description": "Rolls up customer-impacting engineering and operations work.", "owner_id": "user_001", "state": "active", "target_date": "2026-08-15", "project_ids": [projects["prj-api"]["id"], projects["prj-onboarding"]["id"], projects["prj-ops-automation"]["id"]]})
-    tool("create_initiative", {"name": "Polish planning workflows", "description": "Design and roadmap improvements for planning-heavy teams.", "owner_id": "user_005", "state": "planned", "target_date": "2026-09-01", "project_ids": [projects["prj-design-system"]["id"], projects["prj-roadmap"]["id"]]})
+    tool("create_initiative", {"name": "Deliver Linear clone assessment", "description": "Rolls up backend tools, deterministic data, QA automation, and task authoring.", "owner_id": "user_001", "state": "active", "target_date": "2026-08-15", "project_ids": [projects["prj-api"]["id"], projects["prj-onboarding"]["id"], projects["prj-ops-automation"]["id"]]})
+    tool("create_initiative", {"name": "Polish evaluation workflows", "description": "UI fidelity, roadmap surfaces, and delivery docs for the final review.", "owner_id": "user_005", "state": "planned", "target_date": "2026-09-01", "project_ids": [projects["prj-design-system"]["id"], projects["prj-roadmap"]["id"]]})
 
     for user_id, issue in [("user_002", created_issues[0]), ("user_002", created_issues[11]), ("user_003", created_issues[22]), ("user_006", created_issues[33])]:
         tool("create_notification", {"recipient_id": user_id, "kind": "assigned", "actor_id": "user_001", "issue_id": issue["id"]})

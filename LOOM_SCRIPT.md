@@ -4,6 +4,8 @@
 
 This is a Linear-style clone built for the Collinear take-home. It ships as a Dockerized web app, a FastAPI tool server, Postgres seed data, Playwright tests, and 15 CUA tasks.
 
+The workspace data is intentionally self-referential: the projects and issues describe the work of building this clone, validating it, authoring the task pack, and preparing the final submission.
+
 Commands:
 
 ```bash
@@ -71,7 +73,7 @@ Example tool call:
 ```bash
 curl -X POST http://localhost:8030/step \
   -H 'Content-Type: application/json' \
-  -d '{"action":{"tool_name":"search_issues","parameters":{"query":"API","limit":5}}}'
+  -d '{"action":{"tool_name":"search_issues","parameters":{"query":"snapshot","limit":5}}}'
 ```
 
 ## 6:30 - Seed Data And Tasks

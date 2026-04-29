@@ -42,6 +42,11 @@ function ProtectedApp() {
         <Route path="/" element={<HomePage />} />
         <Route path="/inbox" element={<InboxPage />} />
         <Route path="/my-issues" element={<MyIssuesPage />} />
+        <Route path="/my-issues/assigned" element={<MyIssuesPage />} />
+        <Route path="/my-issues/created" element={<MyIssuesPage />} />
+        <Route path="/my-issues/subscribed" element={<MyIssuesPage />} />
+        <Route path="/my-issues/activity" element={<MyIssuesPage />} />
+        <Route path="/drafts" element={<TierTwoPage kind="drafts" />} />
         <Route path="/views" element={<ViewsPage />} />
         <Route path="/views/:viewId" element={<ViewDetailPage />} />
         <Route path="/projects" element={<ProjectsPage />} />

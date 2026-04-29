@@ -1,0 +1,24 @@
+version = "1.0"
+
+[metadata]
+id = "linear-T01"
+name = "Submission review bulk QA pass"
+author_name = "Collinear AI"
+category = "linear-clone"
+tags = ["cua", "linear", "gui-only", "tier1", "issues", "labels", "comments", "bulk-operations"]
+difficulty = "L3"
+difficulty_explanation = "Requires selecting exactly three similar submission review issues and applying multiple changes without touching distractors."
+features = ["issues", "labels", "comments", "bulk-operations"]
+tools = ["bulk_update_issues", "bulk_apply_labels", "add_comment"]
+failure_modes = ["bulk_selective_action", "wrong_column"]
+
+[environment]
+template = "cua-eval-linear-clone"
+allow_internet = false
+cpus = 4
+memory_mb = 6144
+storage_mb = 15360
+
+[verifier]
+timeout_sec = 90
+command = "python tests/verify.py"

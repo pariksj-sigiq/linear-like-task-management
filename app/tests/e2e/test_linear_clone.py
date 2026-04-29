@@ -74,7 +74,7 @@ class TestPlanningAndUtilityPages:
         page.get_by_test_id("nav-projects").click()
         page.wait_for_load_state("networkidle")
         expect(page.get_by_test_id("projects-page")).to_be_visible()
-        page.get_by_text("API Reliability").first.click()
+        page.get_by_text("Backend Tool Server Coverage").first.click()
         page.wait_for_load_state("networkidle")
         expect(page.get_by_test_id("project-detail-page")).to_be_visible()
 

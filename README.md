@@ -25,11 +25,12 @@ Then open `http://localhost:8030`.
 
 ## Implemented Features
 
-- Linear-style dark workspace shell with sidebar, team nav, favorites, topbar search, quick create, and account footer.
+- Linear-style light workspace shell with sidebar, team nav, My Issues activity board, quick create, and account footer.
 - Issue list and board view with filters, display controls, bulk updates, labels, state, assignee, project, cycle, comments, relations, and sub-issues.
 - My Issues, Inbox, saved Views, Projects, Project detail/updates, Cycles, Team settings, Command palette, Roadmap, Initiatives, Account/Workspace settings, and Archive routes.
 - FastAPI `/step` tool server with 118 tools, `/tools`, `/reset`, and `/snapshot`.
 - Postgres schema and deterministic seed data with 16 users, 5 teams, 116 issues, 9 projects, and 12 cycles.
+- Self-referential workspace data: seeded Linear issues/projects describe the actual clone-build plan, QA pass, task authoring, and submission packaging work.
 - 15 CUA tasks under `tasks/linear-T*/`, each with `instruction.md`, `golden_apply.py`, and `verify.py`.
 - Docker web app plus Electron desktop packaging.
 

@@ -1,6 +1,6 @@
 [
   {
     "dataset": "linear-clone",
-    "notes": "Primary application data is generated deterministically by app/seed/seed_app.py through POST /step tools."
+    "notes": "Primary application data is generated deterministically by app/seed/seed_app.py through POST /step tools. Seeded issues/projects are themed around building and validating this Linear clone."
   }
 ]

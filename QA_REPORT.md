@@ -6,6 +6,8 @@ Health rating: green.
 
 The Linear clone is implemented across backend tools, Postgres schema, deterministic seed data, React UI, unit tests, e2e tests, and CUA task verifiers.
 
+The seeded Linear workspace is themed around the real clone-build plan: backend tool coverage, UI fidelity, task authoring, QA automation, submission packaging, and review handoff work.
+
 ## Validation Evidence
 
 | Gate | Result |
@@ -50,6 +52,6 @@ The tool server exposes 118 tools including native and compatibility aliases. Ti
 
 ## Residual Notes
 
-- The frontend intentionally uses practical Linear-like fidelity rather than a screenshot-perfect proprietary reproduction.
+- The frontend was retuned against the logged-in Linear light-theme My Issues activity surface; remaining proprietary data/content is represented with deterministic seeded clone data.
 - Tier 2 surfaces are rendered as navigable stubs with real shell context and seed-backed snapshot data.
 - The Docker build prints npm deprecation/audit warnings from dependency versions; these do not block build or tests.

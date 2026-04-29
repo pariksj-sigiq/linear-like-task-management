@@ -1,0 +1,1 @@
+Hey, please add a submission child issue under LIN-170 titled Submission checklist for docs handoff. Assign it to Priya Shah, put it in Submission Readiness, add the Submission and Docs labels, and relate it to LIN-171. Please complete this through the application UI only. Do not use browser developer tools, API calls, terminal commands, scripts, or direct database edits.

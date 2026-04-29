@@ -113,14 +113,14 @@ class TestIssues:
 
 class TestPlanningSurfaces:
     def test_project_progress_and_updates(self):
-        project = step("search_projects", {"query": "API Reliability"})["projects"][0]
+        project = step("search_projects", {"query": "Backend Tool Server Coverage"})["projects"][0]
         update = step("post_project_update", {"project_id": project["id"], "author_id": "user_001", "body": "Pytest project update", "health": "on_track"})
         assert update["health"] == "on_track"
         progress = step("get_project_progress", {"id": project["id"]})
         assert "progress" in progress
 
     def test_cycle_metrics(self):
-        cycle = step("search_cycles", {"query": "ENG Cycle 2"})["cycles"][0]
+        cycle = step("search_cycles", {"query": "ENG Build Sprint 2"})["cycles"][0]
         metrics = step("get_cycle_metrics", {"id": cycle["id"]})
         assert metrics["cycle_id"] == cycle["id"]
         assert "completion_percent" in metrics
@@ -140,21 +140,29 @@ class TestInboxSearchAndCustomers:
         snoozed = step("snooze_notification", {"id": notification["id"], "snoozed_until": "2026-05-01T12:00:00Z"})
         assert snoozed["snoozed_until"] is not None
 
+    def test_admin_login_has_assigned_my_issues(self):
+        data = step("list_my_issues", {"query": "user_001", "limit": 10})
+        assert data["count"] > 0
+
     def test_global_search_returns_mixed_entities(self):
-        data = step("global_search", {"query": "API", "limit": 10})
+        data = step("global_search", {"query": "Backend", "limit": 10})
         assert data["results"]
         assert {item["type"] for item in data["results"]} & {"issue", "project", "view", "team"}
 
+    def test_global_search_matches_issue_labels(self):
+        data = step("global_search", {"query": "API", "limit": 10})
+        assert any(item["type"] == "issue" for item in data["results"])
+
     def test_customer_request_can_link_to_issue(self):
-        customer = step("search_customers", {"query": "Northstar"})["customers"][0]
-        issue = step("search_issues", {"query": "webhook", "limit": 1})["issues"][0]
+        customer = step("search_customers", {"query": "Collinear"})["customers"][0]
+        issue = step("search_issues", {"query": "command", "limit": 1})["issues"][0]
         request = step(
             "create_customer_request",
             {
                 "customer_id": customer["id"],
                 "issue_id": issue["id"],
-                "requester_name": "Northstar champion",
-                "body": "Please prioritize webhook reliability.",
+                "requester_name": "Collinear reviewer",
+                "body": "Please prioritize command palette reliability.",
                 "important": True,
             },
         )

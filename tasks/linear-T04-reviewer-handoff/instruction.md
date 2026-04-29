@@ -1,0 +1,1 @@
+Hey, LIN-099 is the open reviewer thread without an owner handoff. Please assign it to Sam Chen, move it to In Progress, make sure it has the Reviewer label, and add a comment that says Sam owns the reviewer follow-up. Please complete this through the application UI only. Do not use browser developer tools, API calls, terminal commands, scripts, or direct database edits.

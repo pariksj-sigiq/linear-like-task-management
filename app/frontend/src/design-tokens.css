@@ -1,40 +1,40 @@
 :root {
-  --sidebar-bg: #111111;
-  --sidebar-hover: #1a1a1a;
-  --sidebar-active: #242424;
-  --sidebar-text: #c9c9c9;
-  --sidebar-muted: #747474;
-  --sidebar-width: 280px;
+  --sidebar-bg: #f4f4f3;
+  --sidebar-hover: #ecebea;
+  --sidebar-active: #e4e3e2;
+  --sidebar-text: #4f4d4a;
+  --sidebar-muted: #7f7b76;
+  --sidebar-width: 210px;
 
-  --topbar-bg: #171717;
+  --topbar-bg: #fbfaf9;
   --topbar-height: 52px;
-  --topbar-border: #2a2a2a;
+  --topbar-border: #eeeeec;
 
   --primary: #5e6ad2;
-  --primary-hover: #7179db;
-  --primary-text: #f7f7f7;
+  --primary-hover: #4f5bc4;
+  --primary-text: #ffffff;
   --accent: #f2c94c;
 
-  --content-bg: #161616;
-  --content-bg-raised: #1c1c1c;
-  --card-bg: #202020;
-  --panel-bg: #191919;
-  --popover-bg: #222222;
+  --content-bg: #fbfaf9;
+  --content-bg-raised: #ffffff;
+  --card-bg: #ffffff;
+  --panel-bg: #ffffff;
+  --popover-bg: #ffffff;
 
-  --text-primary: #eeeeee;
-  --text-secondary: #b5b5b5;
-  --text-muted: #7a7a7a;
-  --text-faint: #555555;
+  --text-primary: #242321;
+  --text-secondary: #5f5c58;
+  --text-muted: #8a8580;
+  --text-faint: #b5b1ad;
 
-  --border: #2d2d2d;
-  --border-strong: #3a3a3a;
+  --border: #e6e4e1;
+  --border-strong: #d6d3cf;
   --border-radius: 6px;
 
-  --success: #5fb878;
-  --warning: #d8a657;
-  --danger: #dc6b6b;
-  --info: #74a7e6;
-  --purple: #a88bfa;
+  --success: #28a06a;
+  --warning: #b8860b;
+  --danger: #cf5148;
+  --info: #4d7bd6;
+  --purple: #6e56cf;
 
   --font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-size-xs: 0.78rem;

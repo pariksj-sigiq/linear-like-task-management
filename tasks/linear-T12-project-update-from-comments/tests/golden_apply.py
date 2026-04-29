@@ -12,7 +12,7 @@ import requests
 
 TOOL_SERVER_URL = os.getenv("TOOL_SERVER_URL", "http://localhost:8030")
 TASK_ID = 'linear-T12'
-CALLS: list[tuple[str, dict[str, Any]]] = [('update_project', {'project_id': 'prj-billing-polish', 'status': 'active', 'health': 'at_risk'}), ('create_project_update', {'project_id': 'prj-billing-polish', 'status': 'active', 'health': 'at_risk', 'author_username': 'alex.rivera', 'body': 'At risk due to chargeback, invoice export, and tax rounding escalations from LIN-150, LIN-151, and LIN-152.'})]
+CALLS: list[tuple[str, dict[str, Any]]] = [('update_project', {'project_id': 'prj-billing-polish', 'status': 'active', 'health': 'at_risk'}), ('create_project_update', {'project_id': 'prj-billing-polish', 'status': 'active', 'health': 'at_risk', 'author_username': 'alex.rivera', 'body': 'At risk due to zero-state scoring, golden fixture drift, and instruction wording escalations from LIN-150, LIN-151, and LIN-152.'})]
 
 
 def call_tool(tool_name: str, parameters: dict[str, Any]) -> dict[str, Any]:

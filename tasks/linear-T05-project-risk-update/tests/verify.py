@@ -9,7 +9,7 @@ from typing import Any
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/cloneapp")
 TASK_ID = 'linear-T05'
-CHECKS: list[tuple[str, str]] = [('project_health_at_risk', "SELECT EXISTS (SELECT 1 FROM projects WHERE id = 'prj-api-hardening' AND health = 'at_risk')"), ('project_status_active', "SELECT EXISTS (SELECT 1 FROM projects WHERE id = 'prj-api-hardening' AND status = 'active')"), ('update_health_at_risk', "SELECT EXISTS (SELECT 1 FROM project_updates WHERE project_id = 'prj-api-hardening' AND health = 'at_risk')"), ('update_mentions_oauth', "SELECT EXISTS (SELECT 1 FROM project_updates WHERE project_id = 'prj-api-hardening' AND body ILIKE '%OAuth callback%')"), ('update_mentions_rollback_and_maya', "SELECT EXISTS (SELECT 1 FROM project_updates WHERE project_id = 'prj-api-hardening' AND body ILIKE '%rollback plan%' AND body ILIKE '%Maya%')")]
+CHECKS: list[tuple[str, str]] = [('project_health_at_risk', "SELECT EXISTS (SELECT 1 FROM projects WHERE id = 'prj-api-hardening' AND health = 'at_risk')"), ('project_status_active', "SELECT EXISTS (SELECT 1 FROM projects WHERE id = 'prj-api-hardening' AND status = 'active')"), ('update_health_at_risk', "SELECT EXISTS (SELECT 1 FROM project_updates WHERE project_id = 'prj-api-hardening' AND health = 'at_risk')"), ('update_mentions_snapshot_contract', "SELECT EXISTS (SELECT 1 FROM project_updates WHERE project_id = 'prj-api-hardening' AND body ILIKE '%snapshot contract%')"), ('update_mentions_rollback_and_maya', "SELECT EXISTS (SELECT 1 FROM project_updates WHERE project_id = 'prj-api-hardening' AND body ILIKE '%rollback plan%' AND body ILIKE '%Maya%')")]
 
 
 def emit(reward: float, checks: dict[str, bool] | None = None, error: str | None = None) -> None:

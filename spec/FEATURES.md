@@ -3,7 +3,7 @@
 ## Summary
 
 - Target app: Linear
-- Current repo state: starter Items scaffold, not yet a Linear clone
+- Current repo state: implemented Linear-style clone with self-referential seed data
 - Tier 1 full-build features: 18
 - Tier 2 read-only/stub features: 8
 - Primary evaluation surfaces: Issues, issue detail, projects, cycles, saved
@@ -68,11 +68,11 @@ The seed must be deterministic and task-shaped.
 | Entity | Minimum target | Notes |
 |---|---|---|
 | Users | 8 | Include `alex.rivera`, `maya.patel`, `sam.chen`, `taylor.nguyen` |
-| Teams | 3 | Platform, Growth, Design |
+| Teams | 3 | Clone Platform, Evaluation QA, Frontend Experience |
 | Workflow states | 7 per team | Backlog, Todo, In Progress, In Review, Ready for QA, Done, Canceled |
-| Labels | 16 | Include API, Security, Customer, Regression, Launch, Docs, Billing |
-| Cycles | 6 | Current and next cycles for Platform and Growth |
-| Projects | 8 | Include API Hardening, Launch Readiness, Billing Polish |
+| Labels | 16 | Include API, Security, Reviewer, Regression, Submission, Docs, Task QA |
+| Cycles | 6 | Current and next clone-build cycles for Platform and Evaluation QA |
+| Projects | 8 | Include Backend Tool Server Coverage, Submission Readiness, CUA Task Pack |
 | Issues | 70 | Enough for filters, board columns, bulk ops, relations |
 | Comments | 90 | Mix of user comments and system activity |
 | Activity events | 160 | Create/update/relation/comment events |
@@ -102,4 +102,3 @@ approximations and should be treated as the clone's implementation contract.
 See `spec/RESEARCH.md` for exact route order and data-testids. Tier 1 routes
 must be fully interactive. Tier 2 routes must be reachable, visually coherent,
 and honest read-only stubs.
-

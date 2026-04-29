@@ -16,6 +16,7 @@ export default defineConfig({
     proxy: {
       "/health": "http://localhost:8030",
       "/tools": "http://localhost:8030",
+      "/api": "http://localhost:8030",
       "/step": "http://localhost:8030",
       "/reset": "http://localhost:8030",
       "/snapshot": "http://localhost:8030",

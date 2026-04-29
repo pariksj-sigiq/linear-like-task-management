@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowDown,
@@ -39,7 +39,9 @@ interface IssueExplorerProps {
   params?: Record<string, unknown>;
   emptyTitle?: string;
   showHeader?: boolean;
+  showCreateAction?: boolean;
   defaultMode?: LayoutMode;
+  headerTabs?: ReactNode;
 }
 
 interface IssueFilters {
@@ -57,7 +59,9 @@ export function IssueExplorer({
   params = EMPTY_PARAMS,
   emptyTitle = "No issues found",
   showHeader = true,
+  showCreateAction = true,
   defaultMode = "list",
+  headerTabs,
 }: IssueExplorerProps) {
   const navigate = useNavigate();
   const [issues, setIssues] = useState<Issue[]>([]);
@@ -144,12 +148,15 @@ export function IssueExplorer({
           <div>
             <h1 className="page-title">{title}</h1>
             {subtitle && <p className="page-subtitle">{subtitle}</p>}
+            {headerTabs}
           </div>
-          <div className="topbar-actions">
-            <Button variant="primary" onClick={() => window.dispatchEvent(new Event("linear:quick-create"))} data-testid="quick-create-issue">
-              New issue
-            </Button>
-          </div>
+          {showCreateAction && (
+            <div className="topbar-actions">
+              <Button variant="primary" onClick={() => window.dispatchEvent(new Event("linear:quick-create"))} data-testid="quick-create-issue">
+                New issue
+              </Button>
+            </div>
+          )}
         </div>
       )}
 

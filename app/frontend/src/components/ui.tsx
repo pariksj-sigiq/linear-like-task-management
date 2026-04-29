@@ -71,10 +71,10 @@ export function ErrorBanner({ message }: { message: string | null }) {
         display: "flex",
         alignItems: "center",
         gap: 8,
-        border: "1px solid rgba(220, 107, 107, 0.35)",
+        border: "1px solid rgba(207, 81, 72, 0.28)",
         borderRadius: 6,
-        background: "rgba(220, 107, 107, 0.08)",
-        color: "#efb3b3",
+        background: "rgba(207, 81, 72, 0.08)",
+        color: "var(--danger)",
         marginBottom: 12,
         padding: "8px 10px",
       }}

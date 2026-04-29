@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   GitBranch,
@@ -308,7 +309,7 @@ function PropertyPicker({
   testId,
 }: {
   label: string;
-  icon: JSX.Element;
+  icon: ReactNode;
   value: string;
   options: Array<{ value: string; label: string }>;
   fallback: string[];

@@ -2,21 +2,18 @@
 
 ## Source Status
 
-No live Linear workspace screenshots are present in this repo. The current
-`spec/screenshots/` directory only contains `.gitkeep`, and the app under
-`app/` is still the starter Items scaffold. This research file therefore uses
-public Linear documentation, public marketing screenshots, and widely visible
-Linear UI conventions as approximations. The values below are locked
-implementation targets for this clone, not sampled measurements from private
-Linear screenshots.
+The current fidelity pass used the user's logged-in Linear My Issues activity
+surface as a read-only live reference. The implementation keeps private account
+content out of the repo, but mirrors the observed light theme, sidebar rhythm,
+tab pills, kanban columns, and compact issue cards with seeded clone data.
 
 ## Screenshot And Reference Index
 
 | Ref | Source type | Surface | State | What it anchors |
 |---|---|---|---|---|
-| R01 | Public docs approximation | Workspace shell | Default | Left sidebar, team sections, compact top chrome |
-| R02 | Public docs approximation | Issues list | Default | Dense issue table, icons, priority, assignee, labels |
-| R03 | Public docs approximation | Board | Default | Workflow columns and draggable issue cards |
+| R01 | Live read-only reference | Workspace shell | Light theme | Left sidebar, team sections, compact top chrome |
+| R02 | Live read-only reference | My Issues activity | Board | Tab pills, display controls, workflow columns, issue cards |
+| R03 | Public docs approximation | Issues list | Default | Dense issue table, icons, priority, assignee, labels |
 | R04 | Public docs approximation | Issue detail | Default | Split issue content, properties, comments, activity |
 | R05 | Public docs approximation | Create issue modal | Default | Fast modal create flow and keyboard-friendly fields |
 | R06 | Public docs approximation | Project detail | Default | Project metadata, linked issues, updates stream |
@@ -27,39 +24,38 @@ Linear screenshots.
 
 ## Locked Design Tokens
 
-These values should be copied into `app/frontend/src/design-tokens.css` by the
-frontend worker. They intentionally use a restrained dark Linear-like product
-palette without claiming pixel-perfect parity.
+These values are reflected in `app/frontend/src/design-tokens.css` and target
+Linear's light workspace theme.
 
 | Token | Value | Notes |
 |---|---|---|
 | `--font-ui` | `Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif` | Linear-like dense product UI |
 | `--font-mono` | `"SFMono-Regular", Consolas, "Liberation Mono", monospace` | Issue keys and shortcuts |
-| `--app-bg` | `#08090f` | Outer application background |
-| `--sidebar-bg` | `#0d0f17` | Global navigation |
-| `--panel-bg` | `#11131c` | Lists, detail panes, modal body |
-| `--panel-raised` | `#171a25` | Cards, popovers, selected rows |
-| `--panel-hover` | `#1d2130` | Row/card hover |
-| `--border-subtle` | `#252938` | Dividers and card borders |
-| `--border-strong` | `#3a4052` | Focused inputs and selected panels |
-| `--text-primary` | `#f4f5f8` | Main text |
-| `--text-secondary` | `#b6bdcb` | Metadata and secondary labels |
-| `--text-muted` | `#7b8496` | Timestamps, placeholders |
-| `--text-disabled` | `#555d6f` | Disabled controls |
+| `--app-bg` | `#fbfaf9` | Outer application background |
+| `--sidebar-bg` | `#f4f4f3` | Global navigation |
+| `--panel-bg` | `#ffffff` | Lists, detail panes, modal body |
+| `--panel-raised` | `#ffffff` | Cards, popovers, selected rows |
+| `--panel-hover` | `#f4f3f1` | Row/card hover |
+| `--border-subtle` | `#e6e4e1` | Dividers and card borders |
+| `--border-strong` | `#d6d3cf` | Focused inputs and selected panels |
+| `--text-primary` | `#242321` | Main text |
+| `--text-secondary` | `#5f5c58` | Metadata and secondary labels |
+| `--text-muted` | `#8a8580` | Timestamps, placeholders |
+| `--text-disabled` | `#b5b1ad` | Disabled controls |
 | `--accent` | `#5e6ad2` | Primary Linear-like action color |
-| `--accent-hover` | `#7179dd` | Primary hover |
-| `--accent-soft` | `#202547` | Selected item fill |
-| `--success` | `#26a269` | Done, healthy |
-| `--warning` | `#d79921` | At risk, warning |
-| `--danger` | `#e5484d` | Blocked, urgent |
+| `--accent-hover` | `#4f5bc4` | Primary hover |
+| `--accent-soft` | `#eceae7` | Selected item fill |
+| `--success` | `#28a06a` | Done, healthy |
+| `--warning` | `#b8860b` | At risk, warning |
+| `--danger` | `#cf5148` | Blocked, urgent |
 | `--priority-urgent` | `#ff5c7a` | Urgent priority |
 | `--priority-high` | `#f59e0b` | High priority |
 | `--priority-medium` | `#60a5fa` | Medium priority |
 | `--priority-low` | `#8b93a7` | Low priority |
 | `--radius-sm` | `4px` | Inputs and pills |
 | `--radius-md` | `6px` | Modals, cards, popovers |
-| `--shadow-popover` | `0 18px 50px rgba(0, 0, 0, 0.45)` | Menus and palette |
-| `--sidebar-width` | `248px` | Desktop shell |
+| `--shadow-popover` | `0 18px 45px rgba(34, 31, 28, 0.14)` | Menus and palette |
+| `--sidebar-width` | `210px` | Desktop shell |
 | `--detail-width` | `420px` | Issue detail side panel |
 | `--topbar-height` | `48px` | Page toolbar |
 | `--row-height` | `44px` | Issue list rows |
@@ -74,9 +70,10 @@ Sidebar order:
 | Item | Route | Tier | Required test id |
 |---|---|---|---|
 | Inbox | `/inbox` | Tier 1 | `nav-inbox` |
-| My Issues | `/my-issues` | Tier 1 | `nav-my-issues` |
+| My issues | `/my-issues/activity` | Tier 1 | `nav-my-issues` |
+| Drafts | `/drafts` | Tier 2 stub | `nav-drafts` |
 | Views | `/views` | Tier 1 | `nav-views` |
-| Issues | `/issues` | Tier 1 | `nav-issues` |
+| Issues | `/team/eng/active` | Tier 1 | `team-eng-active-nav` |
 | Projects | `/projects` | Tier 1 | `nav-projects` |
 | Cycles | `/cycles` | Tier 1 | `nav-cycles` |
 | Roadmap | `/roadmap` | Tier 2 stub | `nav-roadmap` |
@@ -308,4 +305,3 @@ Required data-testids:
 - Inbox unread/archive state must be user-specific.
 - Tier 2 pages must be visibly present but read-only, with disabled mutation
   controls and no backend write calls.
-

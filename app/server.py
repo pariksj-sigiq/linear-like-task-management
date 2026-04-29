@@ -1408,6 +1408,14 @@ def global_search(args: SearchArgs) -> dict[str, Any]:
     q = args.query or ""
     with DBSession(engine) as db:
         issues = search_issues(SearchIssuesArgs(query=q, limit=10))["issues"]
+        seen_issue_ids = {issue["id"] for issue in issues}
+        label_matches = search_labels(SearchArgs(query=q, limit=5))["labels"] if q else []
+        for label in label_matches:
+            labelled = search_issues(SearchIssuesArgs(label_id=label["id"], limit=10))["issues"]
+            for issue in labelled:
+                if issue["id"] not in seen_issue_ids:
+                    issues.append(issue)
+                    seen_issue_ids.add(issue["id"])
         projects = search_projects(SearchArgs(query=q, limit=10))["projects"]
         views = search_views(SearchArgs(query=q, limit=10))["views"]
         customers = search_customers(SearchArgs(query=q, limit=10))["customers"]

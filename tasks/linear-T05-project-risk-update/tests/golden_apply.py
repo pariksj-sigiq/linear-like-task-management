@@ -12,7 +12,7 @@ import requests
 
 TOOL_SERVER_URL = os.getenv("TOOL_SERVER_URL", "http://localhost:8030")
 TASK_ID = 'linear-T05'
-CALLS: list[tuple[str, dict[str, Any]]] = [('update_project', {'project_id': 'prj-api-hardening', 'status': 'active', 'health': 'at_risk'}), ('create_project_update', {'project_id': 'prj-api-hardening', 'status': 'active', 'health': 'at_risk', 'author_username': 'alex.rivera', 'body': 'OAuth callback risk is still open. Rollback plan is ready and Maya owns the follow-up.'})]
+CALLS: list[tuple[str, dict[str, Any]]] = [('update_project', {'project_id': 'prj-api-hardening', 'status': 'active', 'health': 'at_risk'}), ('create_project_update', {'project_id': 'prj-api-hardening', 'status': 'active', 'health': 'at_risk', 'author_username': 'alex.rivera', 'body': 'Snapshot contract risk is still open. Rollback plan is ready and Maya owns the follow-up.'})]
 
 
 def call_tool(tool_name: str, parameters: dict[str, Any]) -> dict[str, Any]:
