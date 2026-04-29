@@ -1,43 +1,40 @@
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  ArrowDown,
-  ArrowUp,
-  BarChart3,
-  Check,
-  ChevronDown,
+  CheckCircle2,
   ChevronRight,
   Circle,
   CircleDashed,
   Filter,
-  Grid3x3,
   Kanban,
-  LayoutGrid,
+  LoaderCircle,
   MoreHorizontal,
   PanelRight,
   Plus,
   Signal,
   SlidersHorizontal,
-  Star,
-  UserRound,
-  X,
+  XCircle,
 } from "lucide-react";
 import { collectionFrom, readTool } from "../api";
 import type { Issue } from "../linearTypes";
 import {
   assigneeName,
-  avatarColor,
   formatDate,
   initials,
   issueKey,
   issueTitle,
   priorityLabel,
   projectName,
-  stateColor,
   stateName,
   teamKey,
 } from "../linearTypes";
 import { Button, EmptyState, ErrorBanner, Spinner } from "./ui";
+import { Badge } from "./ui/badge";
+import { Card } from "./ui/card";
+import { Checkbox } from "./ui/checkbox";
+import { ChartAreaInteractive, type ChartAreaPoint } from "./chart-area-interactive";
+import { SectionCards, type SectionCardItem } from "./section-cards";
+import { cn } from "../lib/utils";
 
 type LayoutMode = "list" | "board";
 const EMPTY_PARAMS: Record<string, unknown> = {};
@@ -249,6 +246,73 @@ export function IssueExplorer({
     });
   }, [filtered]);
 
+  const overviewCards = useMemo<SectionCardItem[]>(() => {
+    const rows = filtered;
+    const countFor = (predicate: (state: string) => boolean) =>
+      rows.filter((issue) => predicate(stateName(issue).toLowerCase())).length;
+    const done = countFor((state) => state.includes("done") || state.includes("complete") || state.includes("passed"));
+    const active = countFor((state) => state.includes("progress") || state.includes("review") || state.includes("qa"));
+    const backlog = countFor((state) => state.includes("backlog") || state.includes("todo") || state.includes("triage"));
+
+    return [
+      {
+        label: "Visible",
+        value: rows.length,
+        description: "Issues in this scope",
+        detail: title,
+        badge: selected.length ? `${selected.length} selected` : "Live",
+        trend: "neutral",
+      },
+      {
+        label: "Active",
+        value: active,
+        description: "Started, review, or QA",
+        detail: "Needs current attention",
+        badge: active > done ? "High" : "OK",
+        trend: active > done ? "up" : "neutral",
+      },
+      {
+        label: "Backlog",
+        value: backlog,
+        description: "Queued work",
+        detail: "Todo, triage, or backlog",
+        badge: backlog > active ? "Watch" : "OK",
+        trend: backlog > active ? "up" : "neutral",
+      },
+      {
+        label: "Done",
+        value: done,
+        description: "Completed in view",
+        detail: rows.length ? `${Math.round((done / rows.length) * 100)}% of visible work` : "No visible work",
+        badge: done ? "Closed" : "None",
+        trend: done ? "down" : "neutral",
+      },
+    ];
+  }, [filtered, selected.length, title]);
+
+  const issueFlowData = useMemo<ChartAreaPoint[]>(() => {
+    const buckets = new Map<string, ChartAreaPoint>();
+    const ensureBucket = (date: string) => {
+      const existing = buckets.get(date);
+      if (existing) return existing;
+      const next = { date, opened: 0, resolved: 0 };
+      buckets.set(date, next);
+      return next;
+    };
+
+    filtered.forEach((issue) => {
+      const created = dateKey(issue.created_at || issue.updated_at);
+      const updated = dateKey(issue.updated_at || issue.created_at);
+      ensureBucket(created).opened += 1;
+      const state = stateName(issue).toLowerCase();
+      if (state.includes("done") || state.includes("complete") || state.includes("passed")) {
+        ensureBucket(updated).resolved += 1;
+      }
+    });
+
+    return [...buckets.values()].sort((a, b) => a.date.localeCompare(b.date));
+  }, [filtered]);
+
   const toggleSelected = (key: string) => {
     setSelected((current) =>
       current.includes(key) ? current.filter((item) => item !== key) : [...current, key],
@@ -270,45 +334,44 @@ export function IssueExplorer({
   return (
     <section data-testid="issue-explorer">
       {showHeader && (
-        <div className="page-header">
+        <div className="mb-3 flex min-h-12 items-start justify-between gap-5">
           <div>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-              <span className="team-page-icon" style={{ width: 19, height: 19, fontSize: 10 }}>E</span>
-              <h1 className="page-title">Issues</h1>
-              <Star size={14} style={{ color: "var(--text-muted)" }} aria-hidden="true" />
-            </div>
-            <div className="issue-pill-tabs" role="tablist" style={{ marginTop: 8 }}>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeTab === 'all'}
-                className={`issue-pill-tab${activeTab === 'all' ? ' active' : ''}`}
-                onClick={() => setActiveTab('all')}
-              >
-                All issues
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeTab === 'active'}
-                className={`issue-pill-tab${activeTab === 'active' ? ' active' : ''}`}
-                onClick={() => setActiveTab('active')}
-              >
-                Active
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeTab === 'backlog'}
-                className={`issue-pill-tab${activeTab === 'backlog' ? ' active' : ''}`}
-                onClick={() => setActiveTab('backlog')}
-              >
-                Backlog
-              </button>
-            </div>
+            <h1 className="text-base font-semibold text-foreground">{title}</h1>
+            {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
+            {boardPreset !== "my-issues-activity" && (
+              <div className="mt-2 inline-flex items-center gap-1" role="tablist">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === 'all'}
+                  className={cn("rounded-md px-3 py-1 text-sm text-muted-foreground hover:bg-muted", activeTab === "all" && "bg-muted text-foreground")}
+                  onClick={() => setActiveTab('all')}
+                >
+                  All issues
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === 'active'}
+                  className={cn("rounded-md px-3 py-1 text-sm text-muted-foreground hover:bg-muted", activeTab === "active" && "bg-muted text-foreground")}
+                  onClick={() => setActiveTab('active')}
+                >
+                  Active
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === 'backlog'}
+                  className={cn("rounded-md px-3 py-1 text-sm text-muted-foreground hover:bg-muted", activeTab === "backlog" && "bg-muted text-foreground")}
+                  onClick={() => setActiveTab('backlog')}
+                >
+                  Backlog
+                </button>
+              </div>
+            )}
             {headerTabs}
           </div>
-          <div className="topbar-actions">
+          <div className="flex items-center gap-2">
             <Button variant="ghost" iconOnly aria-label="Filter">
               <Filter size={15} />
             </Button>
@@ -322,23 +385,9 @@ export function IssueExplorer({
         </div>
       )}
 
-      {boardPreset === "my-issues-activity" && (
-        <div className="activity-view-toolbar" aria-label="Activity board controls">
-          <Button variant="ghost" iconOnly aria-label="Filter">
-            <Filter size={15} />
-          </Button>
-          <Button variant="ghost" iconOnly aria-label="Display options">
-            <SlidersHorizontal size={15} />
-          </Button>
-          <Button variant="ghost" iconOnly aria-label="Layout">
-            <LayoutGrid size={15} />
-          </Button>
-        </div>
-      )}
-
       {selected.length > 0 && (
-        <div className="topbar-actions" data-testid="bulk-actions" style={{ marginBottom: 8 }}>
-          <span className="pill">{selected.length} selected</span>
+        <div className="mb-2 flex items-center gap-2" data-testid="bulk-actions">
+          <Badge variant="outline">{selected.length} selected</Badge>
           <Button onClick={() => bulkUpdate({ state: "In Progress", status: "in_progress" })}>
             Start
           </Button>
@@ -349,6 +398,13 @@ export function IssueExplorer({
       )}
 
       <ErrorBanner message={error} />
+
+      {showHeader && boardPreset !== "my-issues-activity" && (
+        <div className="mb-3 grid gap-3">
+          <SectionCards cards={overviewCards} />
+          <ChartAreaInteractive data={issueFlowData.length ? issueFlowData : undefined} compact />
+        </div>
+      )}
 
       {loading && boardPreset !== "my-issues-activity" ? (
         <Spinner label="Loading issues" />
@@ -377,85 +433,10 @@ export function IssueExplorer({
   );
 }
 
-function IssueTable({
-  issues,
-  selected,
-  display,
-  onToggleSelected,
-  onOpenIssue,
-}: {
-  issues: Issue[];
-  selected: string[];
-  display: IssueFilters["display"];
-  onToggleSelected: (key: string) => void;
-  onOpenIssue: (issue: Issue) => void;
-}) {
-  return (
-    <table className="issue-table" data-testid="issue-list">
-      <thead>
-        <tr>
-          <th style={{ width: 42 }} aria-label="Select issues" />
-          <th>Issue</th>
-          <th style={{ width: 148 }}>Status</th>
-          <th style={{ width: 168 }}>Assignee</th>
-          <th style={{ width: 158 }}>Project</th>
-          <th style={{ width: 104 }}>Updated</th>
-        </tr>
-      </thead>
-      <tbody>
-        {issues.map((issue) => {
-          const key = issueKey(issue);
-          const state = stateName(issue);
-          return (
-            <tr
-              key={key}
-              className="issue-row"
-              onDoubleClick={() => onOpenIssue(issue)}
-              style={{ height: display === "comfortable" ? 56 : undefined }}
-              data-testid={`issue-row-${key}`}
-            >
-              <td>
-                <input
-                  type="checkbox"
-                  aria-label={`Select ${key}`}
-                  checked={selected.includes(key)}
-                  onChange={() => onToggleSelected(key)}
-                />
-              </td>
-              <td>
-                <button
-                  className="issue-title-cell"
-                  onClick={() => onOpenIssue(issue)}
-                  style={{ width: "100%", border: 0, background: "transparent", color: "inherit", textAlign: "left" }}
-                >
-                  <PriorityIcon priority={issue.priority} />
-                  <span className="issue-key">{key}</span>
-                  <span className="truncate" style={{ color: "var(--text-primary)" }}>{issueTitle(issue)}</span>
-                </button>
-              </td>
-              <td>
-                <StatusPill label={state} />
-              </td>
-              <td className="truncate">
-                <span className="issue-title-cell">
-                  <span
-                    className="assignee-bubble"
-                    title={assigneeName(issue)}
-                    style={{ background: avatarColor(assigneeName(issue)) }}
-                  >
-                    {initials(assigneeName(issue))}
-                  </span>
-                  {assigneeName(issue)}
-                </span>
-              </td>
-              <td className="truncate">{projectName(issue.project)}</td>
-              <td>{formatDate(issue.updated_at || issue.created_at)}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  );
+function dateKey(value: unknown) {
+  const date = typeof value === "string" || value instanceof Date ? new Date(value) : new Date();
+  if (Number.isNaN(date.getTime())) return new Date().toISOString().slice(0, 10);
+  return date.toISOString().slice(0, 10);
 }
 
 function IssueGroupedList({
@@ -497,98 +478,83 @@ function IssueGroupedList({
   });
 
   return (
-    <div className="linear-issue-list" data-testid="issue-grouped-list">
+    <div className="grid gap-1" data-testid="issue-grouped-list">
       {sortedGroups.map(([state, issues]) => (
-        <div key={state} className="issue-status-group" style={{ marginBottom: 4 }}>
-          <div className="linear-group-header">
+        <div key={state} className="grid gap-1 rounded-md border border-border bg-card">
+          <div className="flex min-h-9 items-center justify-between gap-2 border-b border-border px-3">
             <button
               onClick={() => toggleGroup(state)}
               aria-expanded={!collapsed.has(state)}
-              className="group-header-button"
+              className="flex min-w-0 items-center gap-2 text-sm font-medium text-foreground"
             >
               <ChevronRight
                 size={12}
-                className="group-chevron"
-                style={{
-                  transform: collapsed.has(state) ? "rotate(90deg)" : "rotate(0deg)",
-                  transition: "transform 150ms ease",
-                }}
+                className={cn("text-muted-foreground transition-transform", !collapsed.has(state) ? "rotate-90" : "rotate-0")}
               />
               <StatusIcon status={state} size={10} />
-              <span className="group-title">{state}</span>
-              <span className="group-count">{issues.length}</span>
+              <span className="truncate">{state}</span>
+              <Badge variant="outline" className="h-5 px-1.5 text-[11px]">{issues.length}</Badge>
             </button>
-            <div className="group-header-actions">
-              <button
+            <div className="flex items-center gap-1">
+              <Button
                 type="button"
-                className="group-action-button"
+                variant="ghost"
+                iconOnly
                 aria-label={`Create issue in ${state}`}
                 onClick={(e) => { e.stopPropagation(); window.dispatchEvent(new Event("linear:quick-create")); }}
               >
                 <Plus size={13} />
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
-                className="group-action-button"
+                variant="ghost"
+                iconOnly
                 aria-label={`${state} menu`}
                 onClick={(e) => e.stopPropagation()}
               >
                 <MoreHorizontal size={13} />
-              </button>
+              </Button>
             </div>
           </div>
           {!collapsed.has(state) && (
-            <div className="issue-group-content">
+            <div className="divide-y divide-border">
               {issues.map((issue) => {
                 const key = issueKey(issue);
                 const state = stateName(issue);
                 return (
                   <div
                     key={key}
-                    className="linear-native-row"
+                    className={cn(
+                      "grid h-8 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 px-3 text-sm hover:bg-muted/50",
+                      display === "comfortable" && "h-auto py-3",
+                    )}
                     onDoubleClick={() => onOpenIssue(issue)}
                     data-testid={`issue-row-${key}`}
                   >
-                    <input
-                      type="checkbox"
-                      className="issue-checkbox"
+                    <Checkbox
                       aria-label={`Select ${key}`}
                       checked={selected.includes(key)}
-                      onChange={() => onToggleSelected(key)}
+                      onCheckedChange={() => onToggleSelected(key)}
                     />
                     <button
                       onClick={() => onOpenIssue(issue)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        minWidth: 0,
-                        flex: 1,
-                        border: 0,
-                        background: "transparent",
-                        color: "inherit",
-                        textAlign: "left",
-                        cursor: "pointer",
-                        padding: 0,
-                      }}
+                      className="flex min-w-0 items-center gap-2 text-left text-foreground"
                     >
                       <PriorityIcon priority={issue.priority} />
-                      <span className="issue-key">{key}</span>
+                      <span className="shrink-0 text-xs tabular-nums text-muted-foreground">{key}</span>
                       <StatusIcon status={state} size={12} />
-                      <span className="issue-row-title" style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      <span className="min-w-0 truncate">
                         {issueTitle(issue)}
                       </span>
                     </button>
-                    <div className="row-spacer" />
-                    <div className="issue-row-right">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span
-                        className="issue-assignee-avatar"
-                        style={{ background: avatarColor(assigneeName(issue)) }}
+                        className="grid size-5 place-items-center rounded-full bg-muted text-[10px] font-medium text-muted-foreground"
                         title={assigneeName(issue)}
                       >
                         {initials(assigneeName(issue))}
                       </span>
-                      <span className="issue-date">{formatDate(issue.updated_at || issue.created_at)}</span>
+                      <span>{formatDate(issue.updated_at || issue.created_at)}</span>
                     </div>
                   </div>
                 );
@@ -620,65 +586,66 @@ function IssueBoard({ groups, boardPreset }: { groups: Array<[string, Issue[]]>;
   };
 
   return (
-    <div className="board" data-testid="issue-board">
+    <div className="grid min-h-[calc(100svh-15rem)] gap-3 overflow-x-auto lg:grid-cols-4" data-testid="issue-board">
       {orderedStates.map((state) => {
         const issues = boardPreset === "my-issues-activity" ? activityIssuesFor(state) : groupedByState.get(state) || [];
         return (
-          <div className="board-column" key={state}>
-            <div className="board-title">
-              <span className="issue-title-cell">
-                <span className="pill-dot" style={{ background: stateColor(state) }} />
+          <div className="min-w-64 overflow-hidden rounded-md border border-border bg-background" key={state}>
+            <div className="flex min-h-10 items-center justify-between gap-2 border-b border-border px-3">
+              <span className="flex min-w-0 items-center gap-2 text-sm font-medium text-foreground">
+                <StatusIcon status={state} size={13} />
                 {state}
               </span>
-              <span className="board-title-actions">
-                <span className="board-count">{boardPreset === "my-issues-activity" ? ACTIVITY_BOARD_COUNTS[state] ?? issues.length : issues.length}</span>
-                <button type="button" aria-label={`Create issue in ${state}`}>
+              <span className="flex items-center gap-1">
+                <Badge variant="outline" className="h-5 px-1.5 text-[11px]">{boardPreset === "my-issues-activity" ? ACTIVITY_BOARD_COUNTS[state] ?? issues.length : issues.length}</Badge>
+                <Button type="button" variant="ghost" iconOnly aria-label={`Create issue in ${state}`}>
                   <Plus size={13} />
-                </button>
-                <button type="button" aria-label={`${state} menu`}>
+                </Button>
+                <Button type="button" variant="ghost" iconOnly aria-label={`${state} menu`}>
                   <MoreHorizontal size={13} />
-                </button>
+                </Button>
               </span>
             </div>
             {issues.map((issue) => (
-              <Link key={issueKey(issue)} to={`/issue/${issueKey(issue)}`} className="issue-tile linear-board-card">
-                <div className="board-card-topline">
-                  <span className="issue-key">
+              <Card key={issueKey(issue)} className="m-2 rounded-md border border-border bg-card p-3 shadow-none transition-colors hover:bg-muted/40">
+                <Link to={`/issue/${issueKey(issue)}`} className="grid gap-2">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs tabular-nums text-muted-foreground">
                     {issueKey(issue)}
-                    {boardPreset === "my-issues-activity" && state !== "In QA" && <span className="issue-substate">› QA</span>}
+                    {boardPreset === "my-issues-activity" && state !== "In QA" && <span className="ml-1">› QA</span>}
                   </span>
                   <span
-                    className="assignee-bubble"
+                    className="grid size-5 place-items-center rounded-full bg-muted text-[10px] font-medium text-muted-foreground"
                     title={assigneeName(issue)}
-                    style={{ background: avatarColor(assigneeName(issue)) }}
                   >
                     {initials(assigneeName(issue))}
                   </span>
                 </div>
-                <div className="board-card-title">
-                  <StatusGlyph state={stateName(issue)} />
+                <div className="flex min-w-0 items-start gap-2 text-sm font-medium text-foreground">
+                  <StatusIcon status={stateName(issue)} size={13} />
                   {issueTitle(issue)}
                 </div>
-                <div className="board-card-pills">
-                  <span className="mini-pill">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <Badge variant="outline" className="gap-1 text-muted-foreground">
                     <CircleDashed size={13} />
                     {issue.estimate || (state.toLowerCase().includes("done") ? "29" : "30")}
-                  </span>
+                  </Badge>
                   {projectName(issue.project) !== "No project" && (
-                    <span className="mini-pill project-mini-pill">
+                    <Badge variant="outline" className="max-w-full gap-1 text-muted-foreground">
                       <Kanban size={13} />
-                      {projectName(issue.project)}
-                    </span>
+                      <span className="truncate">{projectName(issue.project)}</span>
+                    </Badge>
                   )}
-                  {state.toLowerCase().includes("done") && <span className="mini-pill">1/9</span>}
+                  {state.toLowerCase().includes("done") && <Badge variant="outline">1/9</Badge>}
                 </div>
-              </Link>
+                </Link>
+              </Card>
             ))}
             {(issues.length === 0 || (boardPreset === "my-issues-activity" && state === "In QA")) && state !== "Backlog" && (
-              <button className="board-add-row" type="button" onClick={() => window.dispatchEvent(new Event("linear:quick-create"))}>
+              <Button className="m-2 w-[calc(100%-1rem)] justify-start" variant="ghost" type="button" onClick={() => window.dispatchEvent(new Event("linear:quick-create"))}>
                 <Plus size={13} />
                 {boardPreset === "my-issues-activity" ? "" : "Add new issue"}
-              </button>
+              </Button>
             )}
           </div>
         );
@@ -689,10 +656,10 @@ function IssueBoard({ groups, boardPreset }: { groups: Array<[string, Issue[]]>;
 
 export function StatusPill({ label }: { label: string }) {
   return (
-    <span className="pill">
-      <span className="pill-dot" style={{ background: stateColor(label) }} />
+    <Badge variant="outline" className="gap-1.5 text-muted-foreground">
+      <StatusIcon status={label} size={12} />
       <span className="truncate">{label}</span>
-    </span>
+    </Badge>
   );
 }
 
@@ -701,22 +668,24 @@ export function PriorityIcon({ priority }: { priority: Issue["priority"] }) {
 
   if (label === "Urgent") {
     return (
-      <span className="priority" title={label} aria-label={label}>
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-          <rect x="2" y="2" width="12" height="12" rx="3" fill="#f2994a"/>
-          <path d="M8 5v4M8 11v1" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-        </svg>
+      <span className="text-destructive" title={label} aria-label={label}>
+        <Signal size={14} strokeWidth={2.5} />
       </span>
     );
   }
 
-  const colors = { High: "#f2a900", Medium: "#f2c94c", Low: "#8a8885", None: "#b5b3ad", "No priority": "#b5b3ad" };
-  const color = colors[label as keyof typeof colors] || "#8a8885";
-  const opacity = label === "None" || label === "No priority" ? 0.4 : 1;
-
   return (
-    <span className="priority" title={label} aria-label={label}>
-      <Signal size={14} color={color} strokeWidth={2.5} style={{ opacity }} />
+    <span
+      className={cn(
+        "text-muted-foreground",
+        label === "High" && "text-destructive",
+        label === "Medium" && "text-primary",
+        label === "Low" && "text-muted-foreground/70",
+      )}
+      title={label}
+      aria-label={label}
+    >
+      <Signal size={14} strokeWidth={2.5} />
     </span>
   );
 }
@@ -725,11 +694,16 @@ export function StatusGlyph({ state }: { state: string }) {
   const low = state.toLowerCase();
   const done = low.includes("done") || low.includes("complete") || low.includes("passed");
   const canceled = low.includes("cancel");
-  const color = stateColor(state);
+  const qa = low.includes("qa");
   return (
     <span
-      className={`status-glyph ${done ? "done" : canceled ? "canceled" : ""}`}
-      style={done ? { borderColor: color, backgroundColor: color, color: "var(--primary-text)" } : { borderColor: color, color }}
+      className={cn(
+        "grid size-3.5 place-items-center rounded-full border text-[10px] leading-none",
+        qa && "border-chart-3 bg-chart-3/20 text-chart-3",
+        done && !qa && "border-primary bg-primary text-primary-foreground",
+        canceled && "border-muted-foreground text-muted-foreground",
+        !qa && !done && !canceled && "border-muted-foreground text-muted-foreground",
+      )}
     >
       {done ? "✓" : canceled ? "×" : ""}
     </span>
@@ -738,10 +712,10 @@ export function StatusGlyph({ state }: { state: string }) {
 
 export function MiniIssueLink({ issue }: { issue: Issue }) {
   return (
-    <Link to={`/issue/${issueKey(issue)}`} className="relation-row">
-      <span className="issue-title-cell">
-        <Circle size={16} color={stateColor(stateName(issue))} />
-        <span className="issue-key">{issueKey(issue)}</span>
+    <Link to={`/issue/${issueKey(issue)}`} className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2 text-sm hover:bg-muted/50">
+      <span className="flex min-w-0 items-center gap-2">
+        <StatusIcon status={stateName(issue)} size={14} />
+        <span className="text-xs tabular-nums text-muted-foreground">{issueKey(issue)}</span>
         <span className="truncate">{issueTitle(issue)}</span>
       </span>
       <StatusPill label={stateName(issue)} />
@@ -753,104 +727,39 @@ export function StatusIcon({ status, size = 14 }: { status: string; size?: numbe
   const key = status.toLowerCase();
   const isDone = key.includes("done") || key.includes("complete") || key.includes("passed");
   const isCanceled = key.includes("cancel");
+  const isQa = key.includes("qa");
   const isInReview = key.includes("review");
   const isInProgress = key.includes("progress") || key.includes("active") || key.includes("started");
   const isTodo = key.includes("todo");
   const isBacklog = key.includes("backlog");
 
-  // Linear's exact SVG pattern with stroke-dasharray for progress
-  const cx = size / 2;
-  const cy = size / 2;
-  const outerRadius = size / 2 - 1;
-  const innerRadius = size / 7;
+  if (isQa) {
+    return <CheckCircle2 size={size} className="text-chart-3" />;
+  }
 
   if (isInReview) {
-    // Green circle with checkmark (complete)
-    return (
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
-        <circle cx={cx} cy={cy} r={outerRadius} fill="none" stroke="#28a745" strokeWidth="1.5" />
-        <circle cx={cx} cy={cy} r={innerRadius} fill="#28a745" />
-      </svg>
-    );
+    return <CheckCircle2 size={size} className="text-primary" />;
   }
 
   if (isInProgress) {
-    // Yellow/orange circle with partial progress (dasharray)
-    const circumference = 2 * Math.PI * outerRadius;
-    const progress = 0.5; // 50% progress
-    const dashArray = `${circumference * progress} ${circumference}`;
-
-    return (
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
-        <circle cx={cx} cy={cy} r={outerRadius} fill="none" stroke="#e0e0e0" strokeWidth="1.5" />
-        <circle
-          cx={cx}
-          cy={cy}
-          r={outerRadius}
-          fill="none"
-          stroke="#f2a900"
-          strokeWidth="1.5"
-          strokeDasharray={dashArray}
-          strokeDashoffset={-circumference * 0.05}
-          transform={`rotate(-90 ${cx} ${cy})`}
-        />
-        <circle cx={cx} cy={cy} r={innerRadius} fill="#f2a900" />
-      </svg>
-    );
+    return <LoaderCircle size={size} className="text-primary" />;
   }
 
   if (isTodo) {
-    // Gray outlined circle (empty)
-    return (
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
-        <circle cx={cx} cy={cy} r={outerRadius} stroke="#8a8885" strokeWidth="1.5" fill="none" />
-      </svg>
-    );
+    return <Circle size={size} className="text-muted-foreground" />;
   }
 
   if (isBacklog) {
-    // Gray dashed circle
-    const circumference = 2 * Math.PI * outerRadius;
-    return (
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
-        <circle
-          cx={cx}
-          cy={cy}
-          r={outerRadius}
-          stroke="#8a8885"
-          strokeWidth="1.5"
-          fill="none"
-          strokeDasharray="3 2"
-        />
-      </svg>
-    );
+    return <CircleDashed size={size} className="text-muted-foreground" />;
   }
 
   if (isDone) {
-    // Purple/blue filled circle with checkmark
-    return (
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
-        <circle cx={cx} cy={cy} r={outerRadius} fill="none" stroke="#5e6ad2" strokeWidth="1.5" />
-        <circle cx={cx} cy={cy} r={innerRadius} fill="#5e6ad2" />
-      </svg>
-    );
+    return <CheckCircle2 size={size} className="text-primary" />;
   }
 
   if (isCanceled) {
-    // Gray canceled circle
-    return (
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
-        <circle cx={cx} cy={cy} r={outerRadius} fill="none" stroke="#95918c" strokeWidth="1.5" />
-        <line x1={cx - 3} y1={cy - 3} x2={cx + 3} y2={cy + 3} stroke="#95918c" strokeWidth="1.5" />
-        <line x1={cx + 3} y1={cy - 3} x2={cx - 3} y2={cy + 3} stroke="#95918c" strokeWidth="1.5" />
-      </svg>
-    );
+    return <XCircle size={size} className="text-muted-foreground" />;
   }
 
-  // Default: gray outline
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
-      <circle cx={cx} cy={cy} r={outerRadius} stroke="#8a8885" strokeWidth="1.5" fill="none" />
-    </svg>
-  );
+  return <Circle size={size} className="text-muted-foreground" />;
 }

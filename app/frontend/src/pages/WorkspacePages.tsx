@@ -1,5 +1,7 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
+import type { FormEvent, ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link, NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import {
   Archive,
   Box,
@@ -24,6 +26,11 @@ import {
 import { collectionFrom, readSnapshot, readTool } from "../api";
 import { IssueExplorer, MiniIssueLink, StatusGlyph, StatusPill } from "../components/IssueExplorer";
 import { Button, EmptyState, ErrorBanner, ModalShell, PageHeader, Spinner, TextAreaField, TextField } from "../components/ui";
+import { Badge } from "../components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Checkbox } from "../components/ui/checkbox";
+import { Input } from "../components/ui/input";
+import { cn } from "../lib/utils";
 import type { Cycle, Issue, Notification, Project, ProjectUpdate, ViewDefinition } from "../linearTypes";
 import { assigneeName, formatDate, initials, issueKey, issueTitle, projectName, projectTitle, stateName, titleize, userName } from "../linearTypes";
 
@@ -242,8 +249,10 @@ function projectColumn(project: Project) {
 }
 
 export function HomePage() {
+  useDocumentTitle("My issues › Activity");
+
   return (
-    <div className="page">
+    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12">
       <IssueExplorer
         title="My Issues"
         toolName="list_my_issues"
@@ -258,24 +267,35 @@ export function HomePage() {
 }
 
 function MyIssuesTabs() {
+  const tabClass = ({ isActive }: { isActive: boolean }) =>
+    cn(
+      "rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+      isActive && "bg-muted text-foreground",
+    );
+
   return (
-    <div className="linear-tabs" aria-label="My issues sections">
-      <NavLink to="/my-issues/assigned">Assigned</NavLink>
-      <NavLink to="/my-issues/created">Created</NavLink>
-      <NavLink to="/my-issues/subscribed">Subscribed</NavLink>
-      <NavLink to="/my-issues/activity">Activity</NavLink>
+    <div className="mt-4 flex flex-wrap items-center gap-2" aria-label="My issues sections">
+      <NavLink className={tabClass} to="/my-issues/assigned">Assigned</NavLink>
+      <NavLink className={tabClass} to="/my-issues/created">Created</NavLink>
+      <NavLink className={tabClass} to="/my-issues/subscribed">Subscribed</NavLink>
+      <NavLink className={tabClass} to="/my-issues/activity">Activity</NavLink>
     </div>
   );
 }
 
 export function MyIssuesPage() {
+  const location = useLocation();
+  const isActivity = location.pathname.endsWith("/activity");
+
+  useDocumentTitle("My issues › Activity");
+
   return (
-    <div className="page">
+    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12">
       <IssueExplorer
         title="My issues"
         toolName="list_my_issues"
         emptyTitle="No assigned issues"
-        defaultMode="list"
+        defaultMode={isActivity ? "board" : "list"}
         showCreateAction={false}
         boardPreset="my-issues-activity"
         headerTabs={<MyIssuesTabs />}
@@ -292,8 +312,12 @@ export function TeamIssuesPage({ segment }: { segment: "all" | "active" | "backl
     backlog: "backlog",
     triage: "triage",
   };
+
+  const pageTitle = segment === "active" ? "Eltsuh › Active issues" : segment === "backlog" ? "Eltsuh › Backlog" : `Eltsuh › ${titleize(segment)}`;
+  useDocumentTitle(pageTitle);
+
   return (
-    <div className="page">
+    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12">
       <IssueExplorer
         title={`${teamName(teamKey)} ${titleize(segment)}`}
         subtitle={`Team-scoped ${segment} work queue.`}
@@ -311,8 +335,10 @@ export function TeamIssuesPage({ segment }: { segment: "all" | "active" | "backl
 
 
 export function ArchivePage() {
+  useDocumentTitle("Archive");
+
   return (
-    <div className="page" data-testid="archive-page">
+    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12" data-testid="archive-page">
       <IssueExplorer
         title="Archive"
         subtitle="Closed and archived issues remain searchable here."
@@ -330,6 +356,8 @@ export function InboxPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const showLinearEmptyInbox = true;
+
+  useDocumentTitle("Inbox");
 
   const hydrateIssue = async (notification: Notification, fallbackIssue?: Issue | null) => {
     const embedded = typeof notification.issue === "object" ? notification.issue : fallbackIssue || null;
@@ -398,23 +426,23 @@ export function InboxPage() {
   };
 
   return (
-    <div className="inbox-page" data-testid="inbox-page">
+    <div className="min-w-0 p-4 pb-12" data-testid="inbox-page">
       <ErrorBanner message={error} />
       {loading && !showLinearEmptyInbox ? (
         <Spinner label="Loading notifications" />
       ) : (
-        <div className="inbox-split">
-          <aside className="inbox-list-pane">
-            <div className="inbox-pane-header">
-              <h1>Inbox</h1>
-              <span className="header-dots">•••</span>
-              <span className="spacer" />
+        <div className="grid min-h-[calc(100svh-9rem)] overflow-hidden rounded-md border border-border bg-card lg:grid-cols-[22rem_minmax(0,1fr)]">
+          <aside className="min-w-0 border-b border-border lg:border-b-0 lg:border-r">
+            <div className="flex h-12 items-center gap-2 border-b border-border px-3">
+              <h1 className="text-sm font-semibold text-foreground">Inbox</h1>
+              <span className="text-muted-foreground">•••</span>
+              <span className="flex-1" />
               <Button variant="ghost" iconOnly aria-label="Filter inbox"><SlidersHorizontal size={15} /></Button>
               <Button variant="ghost" iconOnly aria-label="Inbox display"><Settings size={15} /></Button>
             </div>
             {showLinearEmptyInbox || notifications.length === 0 ? (
-              <div className="inbox-empty-list" />
-            ) : <div className="inbox-notification-list">
+              <div className="h-full min-h-64" />
+            ) : <div className="grid">
               {displayRows.map(({ notification, reference }, index) => {
                 const unread = !notification.read && !notification.read_at;
                 const issue = reference?.issue || (typeof notification.issue === "object" ? notification.issue : inboxIssues[index] || selectedIssue);
@@ -425,16 +453,20 @@ export function InboxPage() {
                 return (
                   <button
                     key={notification.id || notification.title || notification.text || key}
-                    className={`inbox-notification ${unread ? "unread" : ""} ${selected ? "selected" : ""}`}
+                    className={cn(
+                      "grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3 border-b border-border px-3 py-2.5 text-left text-sm transition-colors hover:bg-muted/60",
+                      unread && "bg-muted/30",
+                      selected && "bg-accent text-accent-foreground",
+                    )}
                     data-testid="notification-row"
                     onClick={() => hydrateIssue(notification, issue)}
                   >
-                    <span className={`inbox-avatar ${isMcp ? "mcp-avatar" : ""}`}>{isMcp ? "" : initials(actor)}</span>
-                    <span className="inbox-row-copy">
-                      <strong>{key ? `${key} ` : ""}{reference?.title || (issue ? issueTitle(issue) : notification.title || "Workspace activity")}</strong>
-                      <span>{reference?.body || notification.body || notification.text || `${actor} assigned the issue to you`}</span>
+                    <AvatarBubble>{isMcp ? "M" : initials(actor)}</AvatarBubble>
+                    <span className="min-w-0 space-y-1">
+                      <strong className="block truncate font-medium">{key ? `${key} ` : ""}{reference?.title || (issue ? issueTitle(issue) : notification.title || "Workspace activity")}</strong>
+                      <span className="block truncate text-muted-foreground">{reference?.body || notification.body || notification.text || `${actor} assigned the issue to you`}</span>
                     </span>
-                    <span className="inbox-row-meta">
+                    <span className="flex items-center gap-2 text-muted-foreground">
                       <StatusGlyph state={reference?.state || (index % 3 === 0 ? "In QA" : "Backlog")} />
                       <small>{reference?.time || (index === 0 ? "13h" : index < 6 ? "1d" : "1w")}</small>
                     </span>
@@ -443,11 +475,10 @@ export function InboxPage() {
               })}
             </div>}
           </aside>
-          <main className="inbox-detail-pane">
+          <main className="min-w-0 overflow-auto bg-background">
             {showLinearEmptyInbox || notifications.length === 0 ? (
-              <div className="linear-empty-inbox">
-                <div className="empty-inbox-icon" />
-                <span>No notifications</span>
+              <div className="grid min-h-full place-items-center p-8">
+                <EmptyState title="No notifications" description="Inbox updates will appear here." />
               </div>
             ) : selectedIssue ? (
               <InboxIssuePreview
@@ -470,60 +501,96 @@ function InboxIssuePreview({ issue, onRead, onSnooze }: { issue: Issue; onRead: 
   const creator = reference?.actor || "jasper emhoff";
   const subscriber = "parikshit.joon@sigiq.ai";
   return (
-    <div className="inbox-issue-preview">
-      <div className="issue-detail-topbar inbox-issue-topbar">
-        <div className="issue-breadcrumb">
+    <div className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div className="lg:col-span-2 flex items-center justify-between gap-3 border-b border-border pb-3">
+        <div className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
           <Box size={16} />
           <span>{projectName(issue.project) || "ET Bug Board"}</span>
           <span>›</span>
-          <span>{issueKey(issue)} {issueTitle(issue)}</span>
+          <span className="truncate text-foreground">{issueKey(issue)} {issueTitle(issue)}</span>
         </div>
-        <div className="issue-action-cluster">
+        <div className="flex items-center gap-1">
           <Button variant="ghost" iconOnly onClick={onRead} aria-label="Mark read" data-testid="mark-notification-read"><Check size={15} /></Button>
           <Button variant="ghost" iconOnly onClick={onSnooze} aria-label="Snooze" data-testid="snooze-notification"><Clock3 size={15} /></Button>
           <Button variant="ghost" iconOnly aria-label="More actions"><MoreHorizontal size={15} /></Button>
         </div>
       </div>
-      <div className="issue-detail-layout inbox-detail-layout">
-        <main className="issue-document">
-          <h1>{issueTitle(issue)}</h1>
-          <p className="issue-description">{issue.description || "The particular failure was a 500 internal service error from Azure foundry"}</p>
-          <div className="linked-branch-chip"><CircleDashed size={15} /> Handle transient tutor LLM failures</div>
-          <div className="issue-inline-tools">
+
+      <Card className="min-w-0 rounded-md" size="sm">
+        <CardContent className="space-y-5">
+          <div className="space-y-2">
+            <h1 className="text-xl font-semibold tracking-tight text-foreground">{issueTitle(issue)}</h1>
+            <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+              {issue.description || "The particular failure was a 500 internal service error from Azure foundry"}
+            </p>
+          </div>
+          <Badge variant="outline" className="w-fit gap-1 text-muted-foreground">
+            <CircleDashed size={15} />
+            Handle transient tutor LLM failures
+          </Badge>
+          <div className="flex items-center gap-1">
             <Button variant="ghost" iconOnly aria-label="Reaction"><Smile size={15} /></Button>
             <Button variant="ghost" iconOnly aria-label="Attach"><Paperclip size={15} /></Button>
           </div>
-          <button className="add-subissue-button" type="button"><Plus size={15} /> Add sub-issues</button>
-          <section className="activity-section">
-            <div className="activity-header">
-              <h2>Activity</h2>
-              <span>Unsubscribe</span>
-              <span className="subscriber-stack">
-                <span className="assignee-bubble">{initials(creator)}</span>
-                <span className="assignee-bubble">{initials(subscriber)}</span>
+          <Button className="w-fit gap-2" variant="ghost" type="button"><Plus size={15} /> Add sub-issues</Button>
+          <section className="space-y-3 border-t border-border pt-4">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-sm font-semibold text-foreground">Activity</h2>
+              <span className="flex items-center gap-1">
+                <Badge variant="outline" className="text-muted-foreground">Unsubscribe</Badge>
+                <AvatarBubble>{initials(creator)}</AvatarBubble>
+                <AvatarBubble>{initials(subscriber)}</AvatarBubble>
               </span>
             </div>
-            <div className="activity-item"><span className="assignee-bubble">{initials(creator)}</span><span>{creator} created the issue · 14h ago</span></div>
-            <div className="activity-item muted"><Clock3 size={16} /><span>Linear moved issue to Cycle 30 · 4h ago</span></div>
-            <div className="linear-comment-box">
-              <textarea placeholder="Leave a comment..." />
-              <div><Button variant="ghost" iconOnly aria-label="Send"><Plus size={15} /></Button></div>
+            <div className="flex items-center gap-3 rounded-md border border-border bg-muted/20 px-3 py-2 text-sm text-muted-foreground">
+              <AvatarBubble>{initials(creator)}</AvatarBubble>
+              <span>{creator} created the issue · 14h ago</span>
+            </div>
+            <div className="flex items-center gap-3 rounded-md border border-border bg-muted/20 px-3 py-2 text-sm text-muted-foreground">
+              <Clock3 size={16} />
+              <span>Linear moved issue to Cycle 30 · 4h ago</span>
+            </div>
+            <div className="rounded-md border border-input bg-background p-2">
+              <textarea className="min-h-20 w-full resize-none bg-transparent px-1 py-1 text-sm text-foreground outline-none placeholder:text-muted-foreground" placeholder="Leave a comment..." />
+              <div className="flex justify-end"><Button variant="ghost" iconOnly aria-label="Send"><Plus size={15} /></Button></div>
             </div>
           </section>
-        </main>
-        <aside className="issue-properties-rail">
-          <section className="linear-property-card">
-            <h3>Properties <span>▾</span></h3>
-            <div className="property-line"><StatusGlyph state={stateName(issue)} /> <span>{stateName(issue)}</span></div>
-            <div className="property-line"><span>---</span> <span>Set priority</span></div>
-            <div className="property-line"><span className="assignee-bubble">{initials(assigneeName(issue))}</span> <span>{assigneeName(issue)}</span></div>
-            <div className="property-line"><CircleDashed size={16} /> <span>Set estimate</span></div>
-            <div className="property-line"><Clock3 size={16} /> <span>Cycle 30</span></div>
-          </section>
-          <section className="linear-property-card"><h3>Labels <span>▾</span></h3><div className="property-line"><Tag size={16} /> <span>Add label</span></div></section>
-          <section className="linear-property-card"><h3>Project <span>▾</span></h3><div className="property-line"><Box size={16} /> <span>{projectName(issue.project) || "ET Bug Board"}</span></div></section>
-        </aside>
-      </div>
+        </CardContent>
+      </Card>
+
+      <aside className="space-y-3">
+        <Card className="rounded-md" size="sm">
+          <CardHeader className="flex flex-row items-center justify-between gap-3">
+            <CardTitle>Properties</CardTitle>
+            <span className="text-muted-foreground">▾</span>
+          </CardHeader>
+          <CardContent className="space-y-1">
+            <PropertyLine label={<StatusGlyph state={stateName(issue)} />} value={stateName(issue)} />
+            <PropertyLine label="Priority" value="Set priority" />
+            <PropertyLine label={<AvatarBubble>{initials(assigneeName(issue))}</AvatarBubble>} value={assigneeName(issue)} />
+            <PropertyLine label={<CircleDashed size={16} />} value="Set estimate" />
+            <PropertyLine label={<Clock3 size={16} />} value="Cycle 30" />
+          </CardContent>
+        </Card>
+        <Card className="rounded-md" size="sm">
+          <CardHeader className="flex flex-row items-center justify-between gap-3">
+            <CardTitle>Labels</CardTitle>
+            <span className="text-muted-foreground">▾</span>
+          </CardHeader>
+          <CardContent>
+            <PropertyLine label={<Tag size={16} />} value="Add label" />
+          </CardContent>
+        </Card>
+        <Card className="rounded-md" size="sm">
+          <CardHeader className="flex flex-row items-center justify-between gap-3">
+            <CardTitle>Project</CardTitle>
+            <span className="text-muted-foreground">▾</span>
+          </CardHeader>
+          <CardContent>
+            <PropertyLine label={<Box size={16} />} value={projectName(issue.project) || "ET Bug Board"} />
+          </CardContent>
+        </Card>
+      </aside>
     </div>
   );
 }
@@ -533,6 +600,8 @@ export function ViewsPage({ teamScoped = false }: { teamScoped?: boolean }) {
   const [views, setViews] = useState<ViewDefinition[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useDocumentTitle(teamScoped ? `${teamName(teamKey)} › Views` : "Views");
 
   useEffect(() => {
     (async () => {
@@ -547,7 +616,7 @@ export function ViewsPage({ teamScoped = false }: { teamScoped?: boolean }) {
   }, [teamKey, teamScoped]);
 
   return (
-    <div className="page page-narrow" data-testid="views-page">
+    <div className="mx-auto min-w-0 max-w-5xl rounded-md border border-border bg-card p-4 pb-12" data-testid="views-page">
       <PageHeader
         title={teamScoped ? `${teamName(teamKey)} Views` : "Views"}
         subtitle="Saved filters for recurring team workflows."
@@ -558,15 +627,19 @@ export function ViewsPage({ teamScoped = false }: { teamScoped?: boolean }) {
       ) : views.length === 0 ? (
         <EmptyState title="No saved views" description="Saved views from the tool API will render here." />
       ) : (
-        <div>
+        <div className="overflow-hidden rounded-md border border-border">
           {views.map((view) => (
-            <Link key={view.id || view.key || view.name} className="project-row" to={`/views/${view.id || view.key || view.name}`}>
-              <span className="issue-title-cell">
+            <Link
+              key={view.id || view.key || view.name}
+              className="flex min-h-10 items-center justify-between gap-3 border-b border-border px-3 py-2 text-sm transition-colors last:border-b-0 hover:bg-muted/60"
+              to={`/views/${view.id || view.key || view.name}`}
+            >
+              <span className="flex min-w-0 items-center gap-2">
                 <Star size={14} />
-                <strong>{view.name || view.key || "View"}</strong>
-                {view.team_key && <span className="pill">{view.team_key}</span>}
+                <strong className="truncate">{view.name || view.key || "View"}</strong>
+                {view.team_key && <Badge variant="outline">{view.team_key}</Badge>}
               </span>
-              <span className="issue-key">{view.description || "Saved filter"}</span>
+              <span className="truncate text-muted-foreground">{view.description || "Saved filter"}</span>
             </Link>
           ))}
         </div>
@@ -578,7 +651,7 @@ export function ViewsPage({ teamScoped = false }: { teamScoped?: boolean }) {
 export function ViewDetailPage() {
   const { viewId } = useParams();
   return (
-    <div className="page">
+    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12">
       <IssueExplorer
         title={`View ${viewId}`}
         subtitle="Issues matching this saved view."
@@ -595,6 +668,9 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+
+  useDocumentTitle("Projects");
+
   const projectsByColumn = useMemo(
     () =>
       PROJECT_COLUMNS.reduce<Record<string, Project[]>>((groups, column) => {
@@ -624,7 +700,7 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
   }
 
   return (
-    <div className="page" data-testid="projects-page">
+    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12" data-testid="projects-page">
       <PageHeader
         title={teamScoped ? `${teamName(teamKey)} Projects` : "Projects"}
         actions={
@@ -634,14 +710,14 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
           </Button>
         }
       />
-      <div className="linear-tabs project-view-tabs" aria-label="Project views">
-        <NavLink to={teamScoped ? `/team/${teamKey}/projects` : "/projects"}>All projects</NavLink>
-        <a className="active" href="#project-board">
+      <div className="mb-3 flex flex-wrap items-center gap-1" aria-label="Project views">
+        <NavLink className="rounded-md px-2 py-1 text-sm text-muted-foreground hover:bg-muted hover:text-foreground" to={teamScoped ? `/team/${teamKey}/projects` : "/projects"}>All projects</NavLink>
+        <a className="inline-flex items-center gap-1.5 rounded-md bg-muted px-2 py-1 text-sm font-medium text-foreground" href="#project-board">
           <FolderKanban size={13} />
           Kanban View
         </a>
       </div>
-      <div className="toolbar projects-toolbar">
+      <div className="mb-3 flex flex-wrap items-center gap-2">
         <Button>
           <Search size={14} />
           Find in view...
@@ -661,41 +737,47 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
       ) : projects.length === 0 ? (
         <EmptyState title="No projects found" description="Create a project or adjust filters." />
       ) : (
-        <div className="board project-board" id="project-board" data-testid="projects-board">
+        <div className="grid gap-3 overflow-x-auto lg:grid-flow-col lg:auto-cols-[18rem]" id="project-board" data-testid="projects-board">
           {PROJECT_COLUMNS.map((column) => {
             const columnProjects = projectsByColumn[column] || [];
             return (
-              <section className="board-column" key={column} aria-label={`${column} projects`}>
-                <div className="board-title">
-                  <span className="issue-title-cell">
-                    <span className={`status-dot status-${column.toLowerCase().replace(/\s+/g, "-")}`} />
+              <Card className="rounded-md" size="sm" key={column} aria-label={`${column} projects`}>
+                <CardHeader className="flex flex-row items-center justify-between gap-3 border-b border-border">
+                  <span className="flex min-w-0 items-center gap-2 text-sm font-medium">
+                    <StatusGlyph state={column} />
                     {column}
-                    <span className="board-count">{columnProjects.length}</span>
+                    <Badge variant="outline">{columnProjects.length}</Badge>
                   </span>
-                  <span className="board-title-actions">
-                    <button type="button" aria-label={`Create project in ${column}`} onClick={() => setCreateOpen(true)}>
+                  <span className="flex items-center gap-1">
+                    <Button type="button" variant="ghost" iconOnly aria-label={`Create project in ${column}`} onClick={() => setCreateOpen(true)}>
                       <Plus size={13} />
-                    </button>
+                    </Button>
                   </span>
-                </div>
-                {columnProjects.map((project) => (
-                  <Link key={project.id || project.key || projectTitle(project)} className="issue-tile project-card" to={`/projects/${project.id || project.key}`}>
-                    <span className="issue-title-cell project-card-title">
-                      <FolderKanban size={14} />
-                      <strong>{projectTitle(project)}</strong>
-                    </span>
-                    <span className="project-card-description">{project.description || "No description"}</span>
-                    <span className="project-card-meta">
-                      <StatusPill label={project.status || project.state || column} />
-                      <span>{formatDate(project.updated_at || project.target_date)}</span>
-                    </span>
-                  </Link>
-                ))}
-                <button className="board-add-row" type="button" onClick={() => setCreateOpen(true)}>
-                  <Plus size={13} />
-                  Add new project
-                </button>
-              </section>
+                </CardHeader>
+                <CardContent className="grid gap-2">
+                  {columnProjects.map((project) => (
+                    <Link
+                      key={project.id || project.key || projectTitle(project)}
+                      className="grid gap-2 rounded-md border border-border bg-background p-3 text-sm transition-colors hover:bg-muted/60"
+                      to={`/projects/${project.id || project.key}`}
+                    >
+                      <span className="flex min-w-0 items-center gap-2">
+                        <FolderKanban size={14} />
+                        <strong className="truncate">{projectTitle(project)}</strong>
+                      </span>
+                      <span className="line-clamp-2 text-muted-foreground">{project.description || "No description"}</span>
+                      <span className="flex items-center justify-between gap-2 text-muted-foreground">
+                        <StatusPill label={project.status || project.state || column} />
+                        <span>{formatDate(project.updated_at || project.target_date)}</span>
+                      </span>
+                    </Link>
+                  ))}
+                  <Button className="justify-start gap-2 text-muted-foreground" variant="ghost" type="button" onClick={() => setCreateOpen(true)}>
+                    <Plus size={13} />
+                    Add new project
+                  </Button>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
@@ -707,34 +789,42 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
 
 function LinearProjectsReferencePage() {
   return (
-    <div className="page linear-team-list-page linear-projects-page" data-testid="projects-page">
-      <div className="linear-team-topbar">
-        <div className="linear-team-title">
-          <span>Projects</span>
-        </div>
+    <div className="min-w-0 p-4 pb-12" data-testid="projects-page">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h1 className="text-base font-semibold text-foreground">Projects</h1>
         <Button variant="ghost" iconOnly aria-label="New project"><Plus size={15} /></Button>
       </div>
-      <div className="team-issue-tabs project-list-tabs" aria-label="Project views">
-        <NavLink to="/team/elt/projects/all">All projects</NavLink>
-        <button type="button" aria-label="Add new view"><Layers3 size={14} /></button>
+      <div className="mb-3 flex items-center gap-1" aria-label="Project views">
+        <NavLink className="rounded-md bg-muted px-2 py-1 text-sm font-medium text-foreground" to="/team/elt/projects/all">All projects</NavLink>
+        <Button variant="ghost" iconOnly type="button" aria-label="Add new view"><Layers3 size={14} /></Button>
       </div>
-      <div className="linear-page-toolbar">
+      <div className="mb-3 flex items-center gap-1">
         <Button variant="ghost" iconOnly aria-label="Add filter"><SlidersHorizontal size={14} /></Button>
         <Button variant="ghost" iconOnly aria-label="Display options"><Settings size={14} /></Button>
         <Button variant="ghost" iconOnly aria-label="Close sidebar"><Box size={14} /></Button>
       </div>
-      <div className="linear-project-table" role="table" aria-label="Projects">
-        <div className="linear-project-header" role="row">
-          <span>Name</span><span>Health</span><span>Priority</span><span>Lead</span><span>Target date</span><span>Issues</span><span>Status</span>
+      <div className="overflow-hidden rounded-md border border-border bg-card" role="table" aria-label="Projects">
+        <div className="grid grid-cols-[minmax(12rem,1fr)_6rem_7rem_8rem_8rem_5rem_6rem] gap-3 border-b border-border bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground" role="row">
+          <span>Name</span>
+          <span>Health</span>
+          <span>Priority</span>
+          <span>Lead</span>
+          <span>Target date</span>
+          <span>Issues</span>
+          <span>Status</span>
         </div>
-        <Link className="linear-project-row" to="/project/constructing-linear-clone-f2edb81a4bb4/overview" role="row">
-          <span className="project-name-cell"><input type="checkbox" aria-label="Select project" /><Box size={15} /> <strong>{referenceProject.name}</strong></span>
-          <span><span className="open-circle" /></span>
+        <Link className="grid grid-cols-[minmax(12rem,1fr)_6rem_7rem_8rem_8rem_5rem_6rem] items-center gap-3 px-3 py-2 text-sm transition-colors hover:bg-muted/60" to="/project/constructing-linear-clone-f2edb81a4bb4/overview" role="row">
+          <span className="flex min-w-0 items-center gap-2">
+            <Checkbox aria-label="Select project" />
+            <Box size={15} />
+            <strong className="truncate">{referenceProject.name}</strong>
+          </span>
+          <span><span className="inline-block size-2 rounded-full border border-muted-foreground" /></span>
           <span>---</span>
-          <span className="assignee-bubble">PJ</span>
+          <AvatarBubble>PJ</AvatarBubble>
           <span>Target date</span>
           <span>0</span>
-          <span><span className="status-dot status-backlog" /> 0%</span>
+          <span className="flex items-center gap-2"><StatusGlyph state="Backlog" /> 0%</span>
         </Link>
       </div>
     </div>
@@ -775,7 +865,7 @@ function ProjectCreateModal({ open, onClose, onCreated, teamKey }: { open: boole
       onClose={onClose}
       testId="create-project-modal"
       footer={
-        <div className="topbar-actions" style={{ marginLeft: "auto" }}>
+        <div className="ml-auto flex items-center gap-2">
           <Button onClick={onClose}>Cancel</Button>
           <Button type="submit" form="project-create-form" variant="primary" disabled={submitting} data-testid="create-project-submit">
             {submitting ? "Creating..." : "Create project"}
@@ -783,7 +873,7 @@ function ProjectCreateModal({ open, onClose, onCreated, teamKey }: { open: boole
         </div>
       }
     >
-      <form id="project-create-form" className="field-stack" onSubmit={submit}>
+      <form id="project-create-form" className="grid gap-3" onSubmit={submit}>
         <ErrorBanner message={error} />
         <TextField label="Name" value={name} onChange={setName} placeholder="Project name" autoFocus testId="project-name-input" />
         <TextAreaField label="Description" value={description} onChange={setDescription} placeholder="What changes when this ships?" testId="project-description-input" />
@@ -804,6 +894,13 @@ export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "o
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (project) {
+      const title = `${projectTitle(project)} › ${titleize(tab)}`;
+      document.title = title;
+    }
+  }, [project, tab]);
+
   const load = async () => {
     setLoading(true);
     const response = await readTool("get_project", { project_id: projectId, id: projectId });
@@ -822,19 +919,34 @@ export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "o
 
   if (String(projectId || "").includes("constructing-linear-clone")) {
     return (
-      <div className="page linear-team-list-page linear-project-detail-page" data-testid="project-detail-page">
-        <div className="linear-project-detail-top">
-          <div className="project-breadcrumb"><Box size={15} /><span>{referenceProject.name}</span><Star size={14} /><MoreHorizontal size={15} /></div>
-          <div className="linear-page-toolbar project-detail-tools">
+      <div className="min-w-0 p-4 pb-12" data-testid="project-detail-page">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
+            <Box size={15} />
+            <span className="truncate text-foreground">{referenceProject.name}</span>
+            <Star size={14} />
+            <MoreHorizontal size={15} />
+          </div>
+          <div className="flex items-center gap-1">
             <Button variant="ghost" iconOnly aria-label="Copy page URL"><Paperclip size={14} /></Button>
             <Button variant="ghost" iconOnly aria-label="Setup project notifications"><Clock3 size={14} /></Button>
           </div>
         </div>
-        <div className="team-issue-tabs project-detail-tabs" aria-label="Project tabs">
+        <div className="mb-4 flex flex-wrap items-center gap-1" aria-label="Project tabs">
           {(["overview", "activity", "issues"] as const).map((item) => (
-            <button key={item} className={tab === item ? "active" : ""} onClick={() => setTab(item)}>{titleize(item)}</button>
+            <button
+              key={item}
+              className={cn(
+                "rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+                tab === item && "bg-muted font-medium text-foreground",
+              )}
+              onClick={() => setTab(item)}
+              type="button"
+            >
+              {titleize(item)}
+            </button>
           ))}
-          <button type="button" aria-label="Add new view"><Layers3 size={14} /></button>
+          <Button variant="ghost" iconOnly type="button" aria-label="Add new view"><Layers3 size={14} /></Button>
         </div>
         {tab === "overview" && <ProjectOverviewReference />}
         {tab === "activity" && <ProjectActivityReference />}
@@ -865,19 +977,19 @@ export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "o
     await load();
   };
 
-  if (loading) return <div className="page"><Spinner label="Loading project" /></div>;
+  if (loading) return <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12"><Spinner label="Loading project" /></div>;
 
   return (
-    <div className="page" data-testid="project-detail-page">
+    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12" data-testid="project-detail-page">
       <PageHeader title={projectTitle(project)} subtitle={project?.description || `Project ${projectId}`} />
       <ErrorBanner message={error} />
-      <div className="split">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <section>
-          <div className="panel">
-            <div className="panel-section">
-              <h2 className="page-title" style={{ fontSize: 15 }}>Issues</h2>
+          <div className="rounded-md border border-border bg-card">
+            <div className="border-b border-border p-3 last:border-b-0">
+              <h2 className="text-sm font-semibold text-foreground">Issues</h2>
             </div>
-            <div className="panel-section">
+            <div className="border-b border-border p-3 last:border-b-0">
               {issues.length === 0 ? (
                 <IssueExplorer
                   title="Project issues"
@@ -891,27 +1003,27 @@ export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "o
             </div>
           </div>
         </section>
-        <aside className="panel">
-          <div className="panel-section property-grid">
+        <aside className="rounded-md border border-border bg-card">
+          <div className="grid gap-1 border-b border-border p-3 last:border-b-0">
             <Property label="Status" value={project?.status || project?.state || "Unknown"} />
             <Property label="Lead" value={userName(project?.lead)} />
             <Property label="Target" value={formatDate(project?.target_date)} />
           </div>
-          <div className="panel-section">
-            <h2 className="page-title" style={{ fontSize: 14, marginBottom: 10 }}>Updates</h2>
+          <div className="border-b border-border p-3 last:border-b-0">
+            <h2 className="mb-2.5 text-sm font-semibold text-foreground">Updates</h2>
             {updates.map((update) => (
-              <div key={update.id || update.created_at || update.body} className="comment">
-                <div className="issue-title-cell" style={{ marginBottom: 5 }}>
+              <div key={update.id || update.created_at || update.body} className="rounded-md border border-border bg-muted/20 p-2 text-sm">
+                <div className="mb-1.5 flex items-center gap-2">
                   <MessageSquare size={13} />
                   <strong>{userName(update.author)}</strong>
-                  <span className="issue-key">{formatDate(update.created_at)}</span>
+                  <span className="text-muted-foreground">{formatDate(update.created_at)}</span>
                 </div>
-                <div style={{ color: "var(--text-secondary)" }}>{update.body || update.text}</div>
+                <div className="text-sm text-muted-foreground">{update.body || update.text}</div>
               </div>
             ))}
-            <form onSubmit={postUpdate} className="field-stack" style={{ marginTop: 10 }}>
+            <form onSubmit={postUpdate} className="mt-2.5 grid gap-2">
               <textarea
-                className="textarea"
+                className="min-h-24 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
                 value={updateBody}
                 onChange={(event) => setUpdateBody(event.target.value)}
                 placeholder="Post a project update"
@@ -930,84 +1042,117 @@ export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "o
 
 function ProjectOverviewReference() {
   return (
-    <div className="linear-project-overview">
-      <div className="project-icon-large"><Box size={22} /></div>
-      <h1>{referenceProject.name}</h1>
-      <p>Add a short summary...</p>
-      <div className="project-property-line">
-        <span>Properties</span>
-        <span><span className="status-dot status-backlog" /> Backlog</span>
+    <Card className="rounded-md" size="sm">
+      <CardContent className="space-y-5">
+        <div className="inline-grid size-10 place-items-center rounded-md bg-muted text-muted-foreground"><Box size={22} /></div>
+        <div className="space-y-1">
+          <h1 className="text-xl font-semibold tracking-tight text-foreground">{referenceProject.name}</h1>
+          <p className="text-sm text-muted-foreground">Add a short summary...</p>
+        </div>
+      <div className="grid gap-2 rounded-md border border-border bg-muted/20 p-3 text-sm text-muted-foreground sm:grid-cols-2 lg:grid-cols-4">
+        <span className="font-medium text-foreground">Properties</span>
+        <span className="flex items-center gap-2"><StatusGlyph state="Backlog" /> Backlog</span>
         <span>--- No priority</span>
-        <span><span className="assignee-bubble">PJ</span> {referenceProject.lead}</span>
+        <span className="flex items-center gap-2"><AvatarBubble>PJ</AvatarBubble> {referenceProject.lead}</span>
         <span>Target date</span>
-        <span><span className="team-key inline-team-key">E</span> Eltsuh</span>
+        <span className="flex items-center gap-2"><Badge variant="outline">E</Badge> Eltsuh</span>
         <span>•••</span>
       </div>
-      <div className="project-property-line muted"><span>Resources</span><button type="button">+ Add document or link...</button></div>
-      <button className="project-update-empty" type="button"><MessageSquare size={16} /> Write first project update</button>
-      <h3>Description</h3>
-      <p className="project-empty-copy">Add description...</p>
-      <button className="milestone-row" type="button">+ Milestone</button>
-    </div>
+      <div className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2 text-sm text-muted-foreground">
+        <span>Resources</span>
+        <Button type="button" variant="ghost">+ Add document or link...</Button>
+      </div>
+      <Button className="w-fit gap-2" variant="ghost" type="button"><MessageSquare size={16} /> Write first project update</Button>
+      <div className="space-y-2">
+        <h3 className="text-sm font-semibold text-foreground">Description</h3>
+        <p className="text-sm text-muted-foreground">Add description...</p>
+      </div>
+      <Button className="w-fit justify-start" variant="ghost" type="button">+ Milestone</Button>
+      </CardContent>
+    </Card>
   );
 }
 
 function ProjectActivityReference() {
   return (
-    <div className="linear-project-overview">
-      <h2>Activity</h2>
-      <div className="activity-item"><span className="assignee-bubble">PJ</span><span>parikshit.joon@gmail.com created the project · Apr 29</span></div>
-      <div className="activity-item muted"><Clock3 size={16} /><span>Linear updated project status to Backlog · Apr 29</span></div>
-    </div>
+    <Card className="rounded-md" size="sm">
+      <CardHeader>
+        <CardTitle>Activity</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <div className="flex items-center gap-3 rounded-md border border-border bg-muted/20 px-3 py-2 text-sm text-muted-foreground">
+          <AvatarBubble>PJ</AvatarBubble>
+          <span>parikshit.joon@gmail.com created the project · Apr 29</span>
+        </div>
+        <div className="flex items-center gap-3 rounded-md border border-border bg-muted/20 px-3 py-2 text-sm text-muted-foreground">
+          <Clock3 size={16} />
+          <span>Linear updated project status to Backlog · Apr 29</span>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
 function ProjectIssuesReference({ issues, onRemove, onAdd, addOpen, setAddOpen }: { issues: Issue[]; onRemove: (key: string) => void; onAdd: (issue: Issue) => void; addOpen: boolean; setAddOpen: (open: boolean) => void }) {
   const grouped = ["In Review", "In Progress", "Todo", "Backlog"].map((state) => [state, issues.filter((issue) => stateName(issue) === state)] as const);
   return (
-    <div className="linear-project-issues">
-      <div className="linear-page-toolbar project-issues-tools">
+    <div className="space-y-4">
+      <div className="flex items-center gap-1">
         <Button variant="ghost" iconOnly aria-label="Add filter"><SlidersHorizontal size={14} /></Button>
         <Button variant="ghost" iconOnly aria-label="Display options"><Settings size={14} /></Button>
         <Button variant="ghost" iconOnly aria-label="Open project details"><Box size={14} /></Button>
       </div>
       {issues.length > 0 && <Button variant="primary" onClick={() => setAddOpen(true)} data-testid="project-add-issue">Add issues</Button>}
       {grouped.map(([state, rows]) => rows.length > 0 && (
-        <section key={state} className="project-issue-group">
-          <div className="linear-group-header"><span className="group-caret">▾</span><StatusGlyph state={state} /><span>{state}</span><span className="group-count">{rows.length}</span><button type="button" onClick={() => setAddOpen(true)}><Plus size={14} /></button></div>
+        <section key={state} className="overflow-hidden rounded-md border border-border bg-card">
+          <div className="flex items-center gap-2 border-b border-border bg-muted/30 px-3 py-2 text-sm font-medium">
+            <span>▾</span>
+            <StatusGlyph state={state} />
+            <span>{state}</span>
+            <Badge variant="outline">{rows.length}</Badge>
+            <Button className="ml-auto" type="button" variant="ghost" iconOnly onClick={() => setAddOpen(true)}><Plus size={14} /></Button>
+          </div>
           {rows.map((issue) => (
-            <div className="linear-native-row project-linked-issue" key={issueKey(issue)}>
-              <span className="row-priority">{Number(issue.priority) === 1 ? "!" : "▮▮"}</span>
-              <span className="issue-key">{issueKey(issue)}</span>
+            <div className="grid grid-cols-[2rem_5rem_auto_minmax(0,1fr)_auto_auto] items-center gap-2 border-b border-border px-3 py-2 text-sm last:border-b-0" key={issueKey(issue)}>
+              <span className="font-medium text-muted-foreground">{Number(issue.priority) === 1 ? "!" : "▮▮"}</span>
+              <span className="text-muted-foreground">{issueKey(issue)}</span>
               <StatusGlyph state={stateName(issue)} />
-              <strong>{issueTitle(issue)}</strong>
-              <span className="row-spacer" />
-              <span className="assignee-bubble">{initials(assigneeName(issue))}</span>
-              <button type="button" className="remove-project-issue" onClick={() => onRemove(issueKey(issue))}>Remove</button>
+              <strong className="truncate">{issueTitle(issue)}</strong>
+              <AvatarBubble>{initials(assigneeName(issue))}</AvatarBubble>
+              <Button type="button" variant="ghost" onClick={() => onRemove(issueKey(issue))}>Remove</Button>
             </div>
           ))}
         </section>
       ))}
       {issues.length === 0 && (
-        <div className="project-empty-issues">
-          <div className="project-empty-illustration" aria-hidden="true" />
+        <div className="grid min-h-80 place-items-center rounded-md border border-dashed border-border bg-card p-8 text-center">
+          <div className="mb-3 inline-grid size-12 place-items-center rounded-full bg-muted text-muted-foreground" aria-hidden="true">
+            <Plus size={20} />
+          </div>
           <strong>Add issues to the project</strong>
           <p>Start building your project by creating an issue.</p>
-          <p className="project-empty-hint">You can also add teams, team members, and project dates in the project sidebar with <span className="kbd-inline">⌘</span><span className="kbd-inline">I</span>.</p>
-          <Button variant="primary" onClick={() => setAddOpen(true)} data-testid="project-add-issue">Create new issue <span className="kbd-inline">C</span></Button>
+          <p className="max-w-md text-sm text-muted-foreground">You can also add teams, team members, and project dates in the project sidebar with <Badge variant="outline">⌘</Badge><Badge variant="outline">I</Badge>.</p>
+          <Button variant="primary" onClick={() => setAddOpen(true)} data-testid="project-add-issue">Create new issue <Badge variant="outline">C</Badge></Button>
         </div>
       )}
       {addOpen && (
-        <div className="modal-overlay" role="dialog" aria-label="Add issues to project">
-          <div className="project-add-modal">
-            <div className="issue-detail-topbar"><strong>Add issues to project</strong><Button variant="ghost" iconOnly onClick={() => setAddOpen(false)} aria-label="Close"><MoreHorizontal size={15} /></Button></div>
+        <ModalShell title="Add issues to project" onClose={() => setAddOpen(false)}>
+          <div className="grid gap-1">
             {candidateProjectIssues.map((issue) => (
-              <button key={issueKey(issue)} className="linear-native-row add-issue-choice" onClick={() => { onAdd(issue); setAddOpen(false); }}>
-                <span className="issue-key">{issueKey(issue)}</span><StatusGlyph state={stateName(issue)} /><strong>{issueTitle(issue)}</strong><span className="row-spacer" /><span className="assignee-bubble">{initials(assigneeName(issue))}</span>
+              <button
+                key={issueKey(issue)}
+                className="grid grid-cols-[5rem_auto_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-2 py-2 text-left text-sm transition-colors hover:bg-muted"
+                onClick={() => { onAdd(issue); setAddOpen(false); }}
+                type="button"
+              >
+                <span className="text-muted-foreground">{issueKey(issue)}</span>
+                <StatusGlyph state={stateName(issue)} />
+                <strong className="truncate">{issueTitle(issue)}</strong>
+                <AvatarBubble>{initials(assigneeName(issue))}</AvatarBubble>
               </button>
             ))}
           </div>
-        </div>
+        </ModalShell>
       )}
     </div>
   );
@@ -1018,6 +1163,8 @@ export function CyclesPage() {
   const [cycles, setCycles] = useState<Cycle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useDocumentTitle(`${teamName(teamKey)} › Cycles`);
 
   useEffect(() => {
     (async () => {
@@ -1030,7 +1177,7 @@ export function CyclesPage() {
   }, [teamKey]);
 
   return (
-    <div className="page page-narrow" data-testid="cycles-page">
+    <div className="mx-auto min-w-0 max-w-5xl rounded-md border border-border bg-card p-4 pb-12" data-testid="cycles-page">
       <PageHeader title={`${teamName(teamKey)} Cycles`} subtitle="Active, upcoming, and completed cycles." />
       <ErrorBanner message={error} />
       {loading ? (
@@ -1038,15 +1185,19 @@ export function CyclesPage() {
       ) : cycles.length === 0 ? (
         <EmptyState title="No cycles" description="Cycles from the tool API will appear here." />
       ) : (
-        <div>
+        <div className="overflow-hidden rounded-md border border-border">
           {cycles.map((cycle) => (
-            <Link key={cycle.id || cycle.key || cycle.name} className="project-row" to={`/team/${teamKey}/cycles/${cycle.id || cycle.key}`}>
-              <span className="issue-title-cell">
+            <Link
+              key={cycle.id || cycle.key || cycle.name}
+              className="flex min-h-10 items-center justify-between gap-3 border-b border-border px-3 py-2 text-sm transition-colors last:border-b-0 hover:bg-muted/60"
+              to={`/team/${teamKey}/cycles/${cycle.id || cycle.key}`}
+            >
+              <span className="flex min-w-0 items-center gap-2">
                 <CalendarDays size={15} />
-                <strong>{cycle.name || `Cycle ${cycle.number || cycle.key}`}</strong>
+                <strong className="truncate">{cycle.name || `Cycle ${cycle.number || cycle.key}`}</strong>
                 {cycle.status && <StatusPill label={cycle.status} />}
               </span>
-              <span className="issue-key">{formatDate(cycle.starts_at)} - {formatDate(cycle.ends_at)}</span>
+              <span className="text-muted-foreground">{formatDate(cycle.starts_at)} - {formatDate(cycle.ends_at)}</span>
             </Link>
           ))}
         </div>
@@ -1058,7 +1209,7 @@ export function CyclesPage() {
 export function CycleDetailPage() {
   const { teamKey, cycleId } = useParams();
   return (
-    <div className="page">
+    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12">
       <IssueExplorer
         title={`${teamName(teamKey)} Cycle ${cycleId}`}
         subtitle="Issues planned for this cycle."
@@ -1087,16 +1238,16 @@ export function TeamSettingsPage() {
   }, [teamKey]);
 
   return (
-    <div className="page page-narrow" data-testid="team-settings-page">
+    <div className="mx-auto min-w-0 max-w-5xl rounded-md border border-border bg-card p-4 pb-12" data-testid="team-settings-page">
       <PageHeader title={`${teamName(teamKey)} Settings`} subtitle="Workflow and team configuration." />
       <ErrorBanner message={error} />
-      <div className="panel">
-        <div className="panel-section">
-          <h2 className="page-title" style={{ fontSize: 15 }}>Workflow states</h2>
+      <div className="rounded-md border border-border bg-card">
+        <div className="border-b border-border p-3 last:border-b-0">
+          <h2 className="text-sm font-semibold text-foreground">Workflow states</h2>
         </div>
-        <div className="panel-section">
+        <div className="border-b border-border p-3 last:border-b-0">
           {states.length === 0 ? (
-            <p className="page-subtitle">No workflow states returned yet.</p>
+            <p className="text-sm text-muted-foreground">No workflow states returned yet.</p>
           ) : (
             states.map((state) => <StatusPill key={state} label={state} />)
           )}
@@ -1110,6 +1261,8 @@ export function GlobalSearchPage() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Array<Record<string, unknown>>>([]);
   const [error, setError] = useState<string | null>(null);
+
+  useDocumentTitle("Search");
 
   useEffect(() => {
     const timer = window.setTimeout(async () => {
@@ -1125,16 +1278,15 @@ export function GlobalSearchPage() {
   }, [query]);
 
   return (
-    <div className="page page-narrow" data-testid="search-page">
+    <div className="mx-auto min-w-0 max-w-5xl rounded-md border border-border bg-card p-4 pb-12" data-testid="search-page">
       <PageHeader title="Search" subtitle="Global search across issues, projects, cycles, and views." />
-      <div style={{ position: "relative", marginBottom: 16 }}>
-        <Search size={16} style={{ position: "absolute", left: 12, top: 10, color: "var(--text-muted)" }} />
-        <input
-          className="input"
+      <div className="relative mb-4">
+        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search workspace"
-          style={{ paddingLeft: 38 }}
+          className="pl-9"
           data-testid="global-search-input"
         />
       </div>
@@ -1143,12 +1295,12 @@ export function GlobalSearchPage() {
         <EmptyState title="Search the workspace" description="Results from global_search will appear here." />
       ) : (
         results.map((result) => (
-          <div key={String(result.id || result.key || result.title || result.name)} className="project-row">
-            <span className="issue-title-cell">
+          <div key={String(result.id || result.key || result.title || result.name)} className="flex min-h-10 items-center justify-between gap-3 border-b border-border px-3 py-2 text-sm last:border-b-0">
+            <span className="flex min-w-0 items-center gap-2">
               <Search size={14} />
-              <strong>{String(result.title || result.name || result.key || "Result")}</strong>
+              <strong className="truncate">{String(result.title || result.name || result.key || "Result")}</strong>
             </span>
-            <span className="issue-key">{String(result.type || "")}</span>
+            <span className="text-muted-foreground">{String(result.type || "")}</span>
           </div>
         ))
       )}
@@ -1204,11 +1356,11 @@ export function TierTwoPage({ kind }: { kind: string }) {
   }, [kind, snapshot]);
 
   return (
-    <div className="page page-narrow" data-testid={`${kind}-page`}>
+    <div className="mx-auto min-w-0 max-w-5xl rounded-md border border-border bg-card p-4 pb-12" data-testid={`${kind}-page`}>
       <PageHeader
         title={titleize(kind)}
         actions={
-          <div className="topbar-actions">
+          <div className="flex items-center gap-2">
             <Button variant="ghost" iconOnly aria-label="Search"><Search size={14} /></Button>
             <Button variant="ghost" iconOnly aria-label="Display options"><SlidersHorizontal size={14} /></Button>
             <Button variant="ghost" iconOnly aria-label="More"><MoreHorizontal size={14} /></Button>
@@ -1216,24 +1368,24 @@ export function TierTwoPage({ kind }: { kind: string }) {
         }
       />
       <ErrorBanner message={error} />
-      <div className="linear-tabs project-view-tabs" aria-label={`${kind} tabs`}>
-        <a className="active" href="#all">All</a>
-        <a href="#active">Active</a>
-        <a href="#archived">Archived</a>
+      <div className="mb-3 flex flex-wrap items-center gap-1" aria-label={`${kind} tabs`}>
+        <a className="rounded-md bg-muted px-2 py-1 text-sm font-medium text-foreground" href="#all">All</a>
+        <a className="rounded-md px-2 py-1 text-sm text-muted-foreground hover:bg-muted hover:text-foreground" href="#active">Active</a>
+        <a className="rounded-md px-2 py-1 text-sm text-muted-foreground hover:bg-muted hover:text-foreground" href="#archived">Archived</a>
       </div>
-      <div className="linear-list-surface">
-        <div className="linear-list-header">
-          <span className="issue-title-cell">
+      <div className="overflow-hidden rounded-md border border-border bg-card">
+        <div className="flex items-center justify-between gap-3 border-b border-border bg-muted/40 px-3 py-2 text-sm">
+          <span className="flex min-w-0 items-center gap-2 font-medium text-foreground">
             {icon}
             <strong>{titleize(kind)}</strong>
           </span>
-          <span>{rows.length}</span>
+          <Badge variant="outline">{rows.length}</Badge>
         </div>
         {rows.map((row) => (
-          <button className="linear-list-row" key={row.key} type="button">
-            <span className="issue-title-cell">
-              <span className="issue-key">{row.key}</span>
-              <strong>{row.title}</strong>
+          <button className="grid w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 border-b border-border px-3 py-2 text-left text-sm transition-colors last:border-b-0 hover:bg-muted/60" key={row.key} type="button">
+            <span className="flex min-w-0 items-center gap-2">
+              <span className="text-muted-foreground">{row.key}</span>
+              <strong className="truncate">{row.title}</strong>
             </span>
             <span className="truncate">{row.meta}</span>
             <StatusPill label={row.state} />
@@ -1244,10 +1396,27 @@ export function TierTwoPage({ kind }: { kind: string }) {
   );
 }
 
+function AvatarBubble({ children }: { children: string }) {
+  return (
+    <span className="inline-grid size-6 shrink-0 place-items-center rounded-full bg-muted text-[11px] font-medium text-muted-foreground">
+      {children}
+    </span>
+  );
+}
+
+function PropertyLine({ label, value }: { label: ReactNode; value: ReactNode }) {
+  return (
+    <div className="flex min-h-8 items-center justify-between gap-3 rounded-md px-2 text-sm text-muted-foreground">
+      <span className="flex min-w-0 items-center gap-2 text-foreground">{label}</span>
+      <span className="truncate text-right">{value}</span>
+    </div>
+  );
+}
+
 function Property({ label, value }: { label: string; value?: string | null }) {
   return (
-    <div className="property-row">
-      <span>{label}</span>
+    <div className="flex min-h-8 items-center justify-between gap-3 rounded-md px-2 text-sm text-muted-foreground">
+      <span className="text-foreground">{label}</span>
       <strong className="truncate">{value || "-"}</strong>
     </div>
   );

@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import { AuthProvider, useAuth } from "./auth";
-import { LinearShell } from "./components/LinearShell";
+import { AppRoot } from "./components/AppRoot";
 import { Login } from "./pages/Login";
 import { IssuePage } from "./pages/IssuePage";
 import {
@@ -24,8 +25,14 @@ function ProtectedApp() {
   const location = useLocation();
   const { user, loading, logout } = useAuth();
 
+  useEffect(() => {
+    if (!document.title || document.title === "Vite + React + TS") {
+      document.title = "Eltsuh";
+    }
+  }, []);
+
   if (loading) {
-    return <div className="linear-login"><p style={{ color: "var(--text-secondary)" }}>Loading...</p></div>;
+    return <div className="grid min-h-svh place-items-center bg-background text-sm text-muted-foreground">Loading...</div>;
   }
 
   if (location.pathname === "/login") {
@@ -37,7 +44,7 @@ function ProtectedApp() {
   }
 
   return (
-    <LinearShell user={user} onLogout={logout}>
+    <AppRoot user={user} onLogout={logout}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/inbox" element={<InboxPage />} />
@@ -75,7 +82,7 @@ function ProtectedApp() {
         <Route path="/archive" element={<ArchivePage />} />
         <Route path="*" element={<Navigate to="/my-issues" replace />} />
       </Routes>
-    </LinearShell>
+    </AppRoot>
   );
 }
 

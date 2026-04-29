@@ -1,17 +1,59 @@
 :root {
   color-scheme: light;
 
+  /* shadcn semantic tokens */
+  --background-rgb: 255 255 255;
+  --foreground-rgb: 10 10 10;
+  --card-rgb: 255 255 255;
+  --card-foreground-rgb: 10 10 10;
+  --popover-rgb: 255 255 255;
+  --popover-foreground-rgb: 10 10 10;
+  --primary-rgb: 94 106 210;
+  --primary-foreground-rgb: 255 255 255;
+  --primary-hover-rgb: 78 91 200;
+  --secondary-rgb: 244 244 243;
+  --secondary-foreground-rgb: 90 90 88;
+  --muted-rgb: 244 244 243;
+  --muted-foreground-rgb: 138 136 133;
+  --accent-rgb: 244 244 243;
+  --accent-foreground-rgb: 10 10 10;
+  --destructive-rgb: 250 82 82;
+  --destructive-foreground-rgb: 255 255 255;
+  --border-rgb: 230 230 230;
+  --input-rgb: 230 230 230;
+  --ring-rgb: 94 106 210;
+  --sidebar-rgb: 250 250 250;
+  --sidebar-foreground-rgb: 90 90 88;
+  --sidebar-primary-rgb: 94 106 210;
+  --sidebar-primary-foreground-rgb: 255 255 255;
+  --sidebar-accent-rgb: 244 244 243;
+  --sidebar-accent-foreground-rgb: 10 10 10;
+  --sidebar-border-rgb: 230 230 230;
+  --sidebar-ring-rgb: 94 106 210;
+  --topbar-rgb: 255 255 255;
+  --text-primary-rgb: 10 10 10;
+  --text-secondary-rgb: 90 90 88;
+  --chart-1-rgb: 94 106 210;
+  --chart-2-rgb: 77 123 214;
+  --chart-3-rgb: 40 167 69;
+  --chart-4-rgb: 242 169 0;
+  --chart-5-rgb: 250 82 82;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
   /* Sidebar */
   --sidebar-bg: #fafafa;
   --sidebar-hover: #f4f4f3;
   --sidebar-active: #f4f4f3;
   --sidebar-text: #5a5a58;
   --sidebar-muted: #8a8885;
-  --sidebar-width: 224px;
+  --sidebar-width: 244px;
 
   /* Topbar */
   --topbar-bg: #ffffff;
-  --topbar-height: 46px;
+  --topbar-height: 88px;
   --topbar-border: #e6e6e6;
 
   /* Accent / Primary (Linear purple) */
@@ -89,7 +131,7 @@
   --danger-bg: rgba(250, 82, 82, 0.08);
 
   /* Typography - matched from real Linear */
-  --font-family: "Inter Variable", "SF Pro Display", -apple-system, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --font-family: "Inter Variable", "SF Pro Display", -apple-system, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", "Linear Thai", sans-serif;
   --font-size-xs: 11px;
   --font-size-sm: 12px;
   --font-size-base: 13px;
@@ -108,6 +150,43 @@
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
+
+    --background-rgb: 22 22 22;
+    --foreground-rgb: 238 238 238;
+    --card-rgb: 32 32 32;
+    --card-foreground-rgb: 238 238 238;
+    --popover-rgb: 34 34 34;
+    --popover-foreground-rgb: 238 238 238;
+    --primary-rgb: 94 106 210;
+    --primary-foreground-rgb: 247 247 247;
+    --primary-hover-rgb: 113 121 219;
+    --secondary-rgb: 34 34 34;
+    --secondary-foreground-rgb: 181 181 181;
+    --muted-rgb: 34 34 34;
+    --muted-foreground-rgb: 122 122 122;
+    --accent-rgb: 42 42 42;
+    --accent-foreground-rgb: 238 238 238;
+    --destructive-rgb: 220 107 107;
+    --destructive-foreground-rgb: 255 255 255;
+    --border-rgb: 45 45 45;
+    --input-rgb: 45 45 45;
+    --ring-rgb: 113 121 219;
+    --sidebar-rgb: 17 17 17;
+    --sidebar-foreground-rgb: 201 201 201;
+    --sidebar-primary-rgb: 94 106 210;
+    --sidebar-primary-foreground-rgb: 247 247 247;
+    --sidebar-accent-rgb: 36 36 36;
+    --sidebar-accent-foreground-rgb: 238 238 238;
+    --sidebar-border-rgb: 42 42 42;
+    --sidebar-ring-rgb: 113 121 219;
+    --topbar-rgb: 23 23 23;
+    --text-primary-rgb: 238 238 238;
+    --text-secondary-rgb: 181 181 181;
+    --chart-1-rgb: 113 121 219;
+    --chart-2-rgb: 116 167 230;
+    --chart-3-rgb: 95 184 120;
+    --chart-4-rgb: 216 166 87;
+    --chart-5-rgb: 220 107 107;
 
     --sidebar-bg: #111111;
     --sidebar-hover: #1a1a1a;

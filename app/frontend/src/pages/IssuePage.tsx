@@ -1,5 +1,7 @@
-import { FormEvent, useEffect, useState } from "react";
+import type { FormEvent, HTMLAttributes, ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import {
   ChevronDown,
   Clock3,
@@ -11,6 +13,8 @@ import {
 import { collectionFrom, readTool } from "../api";
 import { MiniIssueLink, PriorityIcon, StatusGlyph } from "../components/IssueExplorer";
 import { Button, EmptyState, ErrorBanner, PageHeader, Spinner } from "../components/ui";
+import { Badge } from "../components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import type { Comment, Issue, Label, LinearUser, Project, WorkflowState } from "../linearTypes";
 import {
   assigneeName,
@@ -19,7 +23,6 @@ import {
   issueKey,
   issueTitle,
   projectName,
-  projectTitle,
   stateName,
   teamKey,
   userName,
@@ -52,6 +55,13 @@ export function IssuePage() {
   useEffect(() => {
     loadIssue();
   }, [routeIssueKey]);
+
+  useEffect(() => {
+    if (issue) {
+      const title = `${issueKey(issue)} ${issueTitle(issue)}`;
+      document.title = title;
+    }
+  }, [issue]);
 
   useEffect(() => {
     Promise.all([
@@ -95,7 +105,7 @@ export function IssuePage() {
 
   if (loading) {
     return (
-      <div className="page">
+      <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12">
         <Spinner label="Loading issue" />
       </div>
     );
@@ -103,7 +113,7 @@ export function IssuePage() {
 
   if (!issue) {
     return (
-      <div className="page page-narrow">
+      <div className="mx-auto min-w-0 max-w-5xl rounded-md border border-border bg-card p-4 pb-12">
         <PageHeader title="Issue not found" subtitle={routeIssueKey} />
         <ErrorBanner message={error} />
         <EmptyState title="No issue returned" description="get_issue did not return an issue for this key." />
@@ -115,54 +125,62 @@ export function IssuePage() {
   const subissues = issue.subissues || issue.children || [];
 
   return (
-    <div className="issue-detail-page" data-testid="issue-detail-page">
+    <div className="min-w-0 p-4 pb-12" data-testid="issue-detail-page">
       <ErrorBanner message={error} />
 
-      <div className="issue-detail-layout">
-        <main className="issue-detail-main">
-          <h1>{issueTitle(issue)}</h1>
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
+        <Card className="min-w-0 rounded-md" size="sm">
+          <CardContent className="space-y-5">
+            <div className="space-y-2">
+              <h1 className="text-xl font-semibold tracking-tight text-foreground">{issueTitle(issue)}</h1>
 
-          <p className="issue-description">
-            {issue.description || "The particular failure was a 500 internal service error from Azure foundry"}
-          </p>
-
-          <button className="add-subissue-button" type="button">
-            <Plus size={15} />
-            Add sub-issues
-          </button>
-
-          {subissues.length > 0 && (
-            <div className="subissue-list">
-              {subissues.map((child) => <MiniIssueLink key={issueKey(child)} issue={child} />)}
+              <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+                {issue.description || "The particular failure was a 500 internal service error from Azure foundry"}
+              </p>
             </div>
-          )}
 
-          <section className="activity-section">
-            <div className="activity-header">
-              <h2>Activity</h2>
-              <span>Unsubscribe</span>
+            <Button className="w-fit gap-2" type="button" variant="ghost">
+              <Plus size={15} />
+              Add sub-issues
+            </Button>
+
+            {subissues.length > 0 && (
+              <div className="grid gap-2 rounded-md border border-border bg-muted/20 p-2">
+                {subissues.map((child) => <MiniIssueLink key={issueKey(child)} issue={child} />)}
+              </div>
+            )}
+
+            <section className="space-y-3 border-t border-border pt-4">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-sm font-semibold text-foreground">Activity</h2>
+                <Badge variant="outline" className="text-muted-foreground">Unsubscribe</Badge>
             </div>
               {comments.length === 0 ? (
-                <div className="activity-item">
-                  <span className="assignee-bubble">{initials(assigneeName(issue))}</span>
+                <div className="flex items-center gap-3 rounded-md border border-border bg-muted/20 px-3 py-2 text-sm text-muted-foreground">
+                  <AvatarBubble>{initials(assigneeName(issue))}</AvatarBubble>
+                  <Clock3 size={15} />
                   <span>{assigneeName(issue)} created the issue · {formatDate(issue.created_at) || "13h ago"}</span>
                 </div>
               ) : (
                 comments.map((item) => (
-                  <div key={item.id || item.created_at || item.body || item.text} className="activity-item comment">
-                    <span className="assignee-bubble">{initials(userName(item.author))}</span>
+                  <div
+                    key={item.id || item.created_at || item.body || item.text}
+                    className="flex items-start gap-3 rounded-md border border-border bg-muted/20 px-3 py-2 text-sm text-muted-foreground"
+                  >
+                    <AvatarBubble>{initials(userName(item.author))}</AvatarBubble>
                     <span><strong>{userName(item.author)}</strong> {item.body || item.text || item.content} · {formatDate(item.created_at)}</span>
                   </div>
                 ))
               )}
-              <form onSubmit={addComment} className="linear-comment-box">
+              <form onSubmit={addComment} className="rounded-md border border-input bg-background p-2">
                 <textarea
+                  className="min-h-24 w-full resize-none bg-transparent px-1 py-1 text-sm text-foreground outline-none placeholder:text-muted-foreground"
                   value={comment}
                   onChange={(event) => setComment(event.target.value)}
                   placeholder="Leave a comment..."
                   data-testid="issue-comment-input"
                 />
-                <div>
+                <div className="flex justify-end gap-1">
                   <Button type="button" variant="ghost" iconOnly aria-label="Attach"><Link2 size={15} /></Button>
                   <Button type="submit" variant="ghost" iconOnly aria-label="Submit comment" data-testid="issue-comment-submit">
                     <Send size={15} />
@@ -170,62 +188,93 @@ export function IssuePage() {
                 </div>
               </form>
             </section>
-        </main>
+          </CardContent>
+        </Card>
 
-        <aside className="issue-detail-sidebar">
-          <div className="properties-panel">
-            <div className="properties-header">
-              <span>Properties</span>
-              <ChevronDown size={16} className="properties-chevron" />
-            </div>
+        <aside>
+          <Card className="rounded-md" size="sm">
+            <CardHeader className="flex flex-row items-center justify-between gap-3">
+              <CardTitle>Properties</CardTitle>
+              <ChevronDown size={16} className="text-muted-foreground" />
+            </CardHeader>
+            <CardContent className="space-y-1">
+              <PropertyRow data-testid="issue-status-display" label={<StatusGlyph state={stateName(issue)} />}>
+                {stateName(issue)}
+              </PropertyRow>
 
-            <div className="property-row" data-testid="issue-status-display">
-              <span className="issue-title-cell">
-                <StatusGlyph state={stateName(issue)} />
-              </span>
-              <span>{stateName(issue)}</span>
-            </div>
+              <PropertyRow
+                data-testid="issue-priority-display"
+                label={(
+                  <>
+                    <PriorityIcon priority={issue.priority} />
+                    <span>Priority</span>
+                  </>
+                )}
+              >
+                {issue.priority === 3 ? "Medium" : issue.priority === 1 ? "Urgent" : issue.priority === 2 ? "High" : issue.priority === 4 ? "Low" : "No priority"}
+              </PropertyRow>
 
-            <div className="property-row" data-testid="issue-priority-display">
-              <span className="issue-title-cell">
-                <PriorityIcon priority={issue.priority} />
-                <span>Priority</span>
-              </span>
-              <span>{issue.priority === 3 ? "Medium" : issue.priority === 1 ? "Urgent" : issue.priority === 2 ? "High" : issue.priority === 4 ? "Low" : "No priority"}</span>
-            </div>
+              <PropertyRow
+                data-testid="issue-assignee-display"
+                label={(
+                  <>
+                    <AvatarBubble>{initials(assigneeName(issue))}</AvatarBubble>
+                    <span>Assignee</span>
+                  </>
+                )}
+              >
+                {assigneeName(issue)}
+              </PropertyRow>
 
-            <div className="property-row" data-testid="issue-assignee-display">
-              <span className="issue-title-cell">
-                <span className="assignee-bubble">{initials(assigneeName(issue))}</span>
-                <span>Assignee</span>
-              </span>
-              <span>{assigneeName(issue)}</span>
-            </div>
+              <section className="mt-4 space-y-2 border-t border-border pt-3">
+                <div className="flex items-center justify-between text-sm font-medium text-foreground">
+                  <span>Labels</span>
+                  <ChevronDown size={16} />
+                </div>
+                <Button className="w-full justify-start gap-2" type="button" variant="ghost" data-testid="issue-add-label">
+                  <Tag size={14} />
+                  Add label
+                </Button>
+              </section>
 
-            <div className="labels-section">
-              <div className="section-header">
-                <span>Labels</span>
-                <ChevronDown size={16} />
-              </div>
-              <button className="add-button" type="button" data-testid="issue-add-label">
-                <Plus size={14} />
-                Add label
-              </button>
-            </div>
-
-            <div className="project-section">
-              <div className="section-header">
-                <span>Project</span>
-                <ChevronDown size={16} />
-              </div>
-              <button className="add-button" type="button" data-testid="issue-add-project">
-                <Plus size={14} />
-                {projectName(issue.project) || "Add to project"}
-              </button>
-            </div>
-          </div>
+              <section className="mt-4 space-y-2 border-t border-border pt-3">
+                <div className="flex items-center justify-between text-sm font-medium text-foreground">
+                  <span>Project</span>
+                  <ChevronDown size={16} />
+                </div>
+                <Button className="w-full justify-start gap-2" type="button" variant="ghost" data-testid="issue-add-project">
+                  <Plus size={14} />
+                  {projectName(issue.project) || "Add to project"}
+                </Button>
+              </section>
+            </CardContent>
+          </Card>
         </aside>
       </div>
+    </div>
+  );
+}
+
+function AvatarBubble({ children }: { children: string }) {
+  return (
+    <span className="inline-grid size-6 shrink-0 place-items-center rounded-full bg-muted text-[11px] font-medium text-muted-foreground">
+      {children}
+    </span>
+  );
+}
+
+function PropertyRow({
+  children,
+  label,
+  ...props
+}: {
+  children: ReactNode;
+  label: ReactNode;
+} & HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className="flex min-h-8 items-center justify-between gap-3 rounded-md px-2 text-sm text-muted-foreground" {...props}>
+      <span className="flex min-w-0 items-center gap-2 text-foreground">{label}</span>
+      <span className="truncate text-right">{children}</span>
     </div>
   );
 }
