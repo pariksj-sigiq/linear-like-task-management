@@ -13,8 +13,9 @@ body {
   background: var(--content-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: var(--font-size-base);
-  line-height: 1.42;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
 }
 
 * {
@@ -67,9 +68,9 @@ a {
   --input-bg: #151515;
   --button-bg: #1a1a1a;
   --button-hover-bg: #242424;
-  --tab-active-bg: #262626;
+  --tab-active-bg: rgba(255, 255, 255, 0.08);
   --tab-hover-bg: #1e1e1e;
-  --row-hover-bg: #171717;
+  --row-hover-bg: rgba(255, 255, 255, 0.04);
   --pill-bg: #1c1c1c;
   --text-primary: #ededed;
   --text-secondary: #b4b4b4;
@@ -95,6 +96,11 @@ a {
   background: #26315a;
   border-color: #26315a;
   color: #8ea0ff;
+}
+
+.linear-dark .team-icon {
+  background: #5e6ad2;
+  color: white;
 }
 
 .linear-dark .whats-new-card {
@@ -240,6 +246,12 @@ a {
   text-transform: none;
 }
 
+.sidebar-section-title .section-chevron {
+  color: var(--sidebar-muted);
+  rotate: 90deg;
+  opacity: 0.7;
+}
+
 .nav-item {
   display: flex;
   align-items: center;
@@ -253,6 +265,7 @@ a {
   text-align: left;
   transition: background 120ms ease, color 120ms ease;
   font-size: var(--font-size-base);
+  font-weight: 500;
 }
 
 .nav-item:hover {
@@ -308,6 +321,22 @@ a {
   background: #fff2f3;
   color: #ef4d5a;
   border: 1px solid #ffd5d9;
+}
+
+.team-icon {
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border-radius: var(--border-radius);
+  background: #5e6ad2;
+  color: white;
+  flex-shrink: 0;
+}
+
+.team-icon svg {
+  width: 11px;
+  height: 11px;
 }
 
 .team-root-chevron {
@@ -645,7 +674,7 @@ a {
 }
 
 .linear-native-row:hover {
-  background: #f6f6f5;
+  background: var(--row-hover-bg);
 }
 
 .linear-native-row .issue-checkbox {
@@ -1198,9 +1227,13 @@ a {
 }
 
 .issue-pill-tab.active {
-  background: #f4f4f3;
+  background: var(--tab-active-bg);
   color: var(--text-primary);
   font-weight: 500;
+}
+
+.linear-dark .issue-pill-tab.active {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .linear-tabs {
@@ -2862,6 +2895,35 @@ a {
 
 .property-pill:hover {
   background: var(--surface-secondary);
+}
+
+.dropdown-menu {
+  min-width: 180px;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  background: var(--popover-bg);
+  box-shadow: 0 18px 45px var(--shadow-popover);
+  padding: 6px;
+  margin-top: 4px;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.dropdown-item:hover {
+  background: var(--menu-hover-bg);
+  color: var(--text-primary);
 }
 
 .quick-create-footer {

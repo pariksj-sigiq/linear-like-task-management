@@ -1,21 +1,23 @@
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
-  Boxes,
+  ArrowDownToLine,
   ChevronRight,
   CircleDashed,
-  FolderKanban,
+  Clock,
   HelpCircle,
   History,
   Inbox,
+  Layers3,
+  LayoutGrid,
   MessageSquare,
   MoreHorizontal,
   Plus,
   Search,
   Settings,
   SquarePen,
+  Users,
   UserRoundCheck,
-  View,
 } from "lucide-react";
 import type { LinearUser } from "../linearTypes";
 import { Button, Kbd } from "./ui";
@@ -38,15 +40,15 @@ const primaryNav = [
 ];
 
 const workspaceNav = [
-  { label: "Projects", path: "/projects/all", icon: FolderKanban, testId: "nav-projects" },
-  { label: "Views", path: "/views", icon: View, testId: "nav-views" },
+  { label: "Projects", path: "/projects/all", icon: Layers3, testId: "nav-projects" },
+  { label: "Views", path: "/views", icon: LayoutGrid, testId: "nav-views" },
   { label: "More", path: "/roadmap", icon: MoreHorizontal, testId: "nav-roadmap" },
 ];
 
 const teamNav = [
   { label: "Issues", segment: "active", icon: CircleDashed },
-  { label: "Projects", segment: "projects", icon: FolderKanban },
-  { label: "Views", segment: "views", icon: View },
+  { label: "Projects", segment: "projects", icon: Layers3 },
+  { label: "Views", segment: "views", icon: LayoutGrid },
 ];
 
 const teams = [{ key: "ELT", name: "Eltsuh" }];
@@ -56,6 +58,17 @@ export function LinearShell({ children }: LinearShellProps) {
   const location = useLocation();
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
+  const [isDark, setIsDark] = useState(() =>
+    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => setIsDark(e.matches);
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
   useEffect(() => {
     const openQuickCreate = () => setQuickCreateOpen(true);
@@ -98,7 +111,7 @@ export function LinearShell({ children }: LinearShellProps) {
     location.pathname.startsWith("/inbox");
 
   return (
-    <div className="linear-app app-layout">
+    <div className={`linear-app app-layout${isDark ? ' linear-dark' : ''}`}>
       <aside className="sidebar" data-testid="linear-sidebar">
         <div className="sidebar-header">
           <button className="workspace-menu" type="button" aria-label="Workspace menu">
@@ -122,18 +135,26 @@ export function LinearShell({ children }: LinearShellProps) {
           </nav>
 
           <section className="sidebar-section" aria-label="Workspace">
-            <div className="sidebar-section-title">Workspace</div>
+            <div className="sidebar-section-title">
+              <span>Workspace</span>
+              <ChevronRight size={10} className="section-chevron" style={{ marginLeft: 4 }} />
+            </div>
             {workspaceNav.map((item) => (
               <SidebarLink key={item.path} {...item} />
             ))}
           </section>
 
           <section className="sidebar-section" aria-label="Teams">
-            <div className="sidebar-section-title">Your teams</div>
+            <div className="sidebar-section-title">
+              <span>Your teams</span>
+              <ChevronRight size={10} className="section-chevron" style={{ marginLeft: 4 }} />
+            </div>
             {teams.map((team) => (
               <div key={team.key}>
                 <NavLink to={`/team/${team.key.toLowerCase()}/active`} className="nav-item team-root" data-testid={`team-${team.key.toLowerCase()}-nav`}>
-                  <span className="team-key">{team.key[0]}</span>
+                  <span className="team-icon">
+                    <Users size={15} />
+                  </span>
                   <span>{team.name}</span>
                   <ChevronRight size={13} className="team-root-chevron" />
                 </NavLink>
@@ -153,8 +174,12 @@ export function LinearShell({ children }: LinearShellProps) {
           </section>
 
           <section className="sidebar-section" aria-label="Try">
-            <div className="sidebar-section-title">Try</div>
-            <SidebarLink label="Import issues" path="/import" icon={Boxes} testId="try-import-issues" />
+            <div className="sidebar-section-title">
+              <span>Try</span>
+              <ChevronRight size={10} className="section-chevron" style={{ marginLeft: 4 }} />
+            </div>
+            <SidebarLink label="Import issues" path="/import" icon={ArrowDownToLine} testId="try-import-issues" />
+            <SidebarLink label="Cycles" path="/team/elt/cycles" icon={Clock} testId="try-cycles" />
           </section>
         </div>
 
@@ -228,7 +253,7 @@ function SidebarLink({
 }: {
   label: string;
   path: string;
-  icon: typeof Inbox | typeof Boxes;
+  icon: typeof Inbox | typeof ArrowDownToLine | typeof Clock;
   testId: string;
   badge?: string;
 }) {

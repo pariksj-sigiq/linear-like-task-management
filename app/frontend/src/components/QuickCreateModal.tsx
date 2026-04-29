@@ -21,6 +21,10 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
   const [users, setUsers] = useState<LinearUser[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showStatusMenu, setShowStatusMenu] = useState(false);
+  const [showPriorityMenu, setShowPriorityMenu] = useState(false);
+  const [showAssigneeMenu, setShowAssigneeMenu] = useState(false);
+  const [showProjectMenu, setShowProjectMenu] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -39,11 +43,20 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        if (showStatusMenu || showPriorityMenu || showAssigneeMenu || showProjectMenu) {
+          setShowStatusMenu(false);
+          setShowPriorityMenu(false);
+          setShowAssigneeMenu(false);
+          setShowProjectMenu(false);
+        } else {
+          onClose();
+        }
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onClose, open]);
+  }, [onClose, open, showStatusMenu, showPriorityMenu, showAssigneeMenu, showProjectMenu]);
 
   if (!open) return null;
 
@@ -55,6 +68,10 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
     setProjectId("");
     setAssigneeId("");
     setError(null);
+    setShowStatusMenu(false);
+    setShowPriorityMenu(false);
+    setShowAssigneeMenu(false);
+    setShowProjectMenu(false);
   };
 
   const submit = async (event: FormEvent) => {
@@ -128,18 +145,114 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
             data-testid="create-issue-description"
           />
           <div className="quick-create-properties">
-            <button type="button" className="property-pill">
-              <Circle size={12} /> {status}
-            </button>
-            <button type="button" className="property-pill">
-              --- {priority || "Priority"}
-            </button>
-            <button type="button" className="property-pill">
-              <User size={12} /> {assigneeId ? users.find(u => (u.id || u.username) === assigneeId)?.name || assigneeId : "Assignee"}
-            </button>
-            <button type="button" className="property-pill">
-              <Folder size={12} /> {projectId ? projects.find(p => (p.id || p.key) === projectId)?.name || projectId : "Project"}
-            </button>
+            <div style={{ position: 'relative' }}>
+              <button type="button" className="property-pill" onClick={() => setShowStatusMenu(!showStatusMenu)}>
+                <Circle size={12} /> {status}
+              </button>
+              {showStatusMenu && (
+                <div className="dropdown-menu" style={{ position: 'absolute', top: '100%', left: 0, zIndex: 1000 }}>
+                  {['Backlog', 'Todo', 'In Progress', 'Done', 'Canceled'].map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      className="dropdown-item"
+                      onClick={() => {
+                        setStatus(s);
+                        setShowStatusMenu(false);
+                      }}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div style={{ position: 'relative' }}>
+              <button type="button" className="property-pill" onClick={() => setShowPriorityMenu(!showPriorityMenu)}>
+                --- {priority || "Priority"}
+              </button>
+              {showPriorityMenu && (
+                <div className="dropdown-menu" style={{ position: 'absolute', top: '100%', left: 0, zIndex: 1000 }}>
+                  {['Urgent', 'High', 'Medium', 'Low', 'No priority'].map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      className="dropdown-item"
+                      onClick={() => {
+                        setPriority(p === 'No priority' ? '' : p);
+                        setShowPriorityMenu(false);
+                      }}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div style={{ position: 'relative' }}>
+              <button type="button" className="property-pill" onClick={() => setShowAssigneeMenu(!showAssigneeMenu)}>
+                <User size={12} /> {assigneeId ? users.find(u => (u.id || u.username) === assigneeId)?.name || assigneeId : "Assignee"}
+              </button>
+              {showAssigneeMenu && (
+                <div className="dropdown-menu" style={{ position: 'absolute', top: '100%', left: 0, zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
+                  <button
+                    type="button"
+                    className="dropdown-item"
+                    onClick={() => {
+                      setAssigneeId('');
+                      setShowAssigneeMenu(false);
+                    }}
+                  >
+                    No assignee
+                  </button>
+                  {users.map((u) => (
+                    <button
+                      key={u.id || u.username}
+                      type="button"
+                      className="dropdown-item"
+                      onClick={() => {
+                        setAssigneeId(u.id || u.username || '');
+                        setShowAssigneeMenu(false);
+                      }}
+                    >
+                      {u.name || u.username}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div style={{ position: 'relative' }}>
+              <button type="button" className="property-pill" onClick={() => setShowProjectMenu(!showProjectMenu)}>
+                <Folder size={12} /> {projectId ? projects.find(p => (p.id || p.key) === projectId)?.name || projectId : "Project"}
+              </button>
+              {showProjectMenu && (
+                <div className="dropdown-menu" style={{ position: 'absolute', top: '100%', left: 0, zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
+                  <button
+                    type="button"
+                    className="dropdown-item"
+                    onClick={() => {
+                      setProjectId('');
+                      setShowProjectMenu(false);
+                    }}
+                  >
+                    No project
+                  </button>
+                  {projects.map((p) => (
+                    <button
+                      key={p.id || p.key}
+                      type="button"
+                      className="dropdown-item"
+                      onClick={() => {
+                        setProjectId(p.id || p.key || '');
+                        setShowProjectMenu(false);
+                      }}
+                    >
+                      {p.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <button type="button" className="property-pill">
               <Tag size={12} /> Labels
             </button>

@@ -220,9 +220,20 @@ export function IssueExplorer({
     return () => window.clearTimeout(timer);
   }, [loadIssues, filters.query]);
 
+  const filtered = useMemo(() => {
+    if (activeTab === 'all') return issues;
+    if (activeTab === 'active') return issues.filter(i =>
+      ['In Review', 'In Progress', 'Todo'].includes(stateName(i))
+    );
+    if (activeTab === 'backlog') return issues.filter(i =>
+      stateName(i) === 'Backlog'
+    );
+    return issues;
+  }, [issues, activeTab]);
+
   const grouped = useMemo(() => {
     const groups = new Map<string, Issue[]>();
-    for (const issue of issues) {
+    for (const issue of filtered) {
       const name = stateName(issue);
       groups.set(name, [...(groups.get(name) || []), issue]);
     }
@@ -236,7 +247,7 @@ export function IssueExplorer({
       if (indexB === -1) return -1;
       return indexA - indexB;
     });
-  }, [issues]);
+  }, [filtered]);
 
   const toggleSelected = (key: string) => {
     setSelected((current) =>
@@ -495,11 +506,11 @@ function IssueGroupedList({
               aria-expanded={!collapsed.has(state)}
               className="group-header-button"
             >
-              <ChevronDown
+              <ChevronRight
                 size={12}
                 className="group-chevron"
                 style={{
-                  transform: collapsed.has(state) ? "rotate(-90deg)" : "rotate(0deg)",
+                  transform: collapsed.has(state) ? "rotate(90deg)" : "rotate(0deg)",
                   transition: "transform 150ms ease",
                 }}
               />
@@ -738,65 +749,108 @@ export function MiniIssueLink({ issue }: { issue: Issue }) {
   );
 }
 
-export function StatusIcon({ status, size = 12 }: { status: string; size?: number }) {
+export function StatusIcon({ status, size = 14 }: { status: string; size?: number }) {
   const key = status.toLowerCase();
   const isDone = key.includes("done") || key.includes("complete") || key.includes("passed");
   const isCanceled = key.includes("cancel");
   const isInReview = key.includes("review");
   const isInProgress = key.includes("progress") || key.includes("active") || key.includes("started");
-  const isTodo = key.includes("todo") || key.includes("backlog");
+  const isTodo = key.includes("todo");
+  const isBacklog = key.includes("backlog");
 
-  const checkPath = "M3 6l2 2 4-4";
-  const xPath = "M4 4l4 4M8 4l-4 4";
+  // Linear's exact SVG pattern with stroke-dasharray for progress
+  const cx = size / 2;
+  const cy = size / 2;
+  const outerRadius = size / 2 - 1;
+  const innerRadius = size / 7;
 
   if (isInReview) {
+    // Green circle with checkmark (complete)
     return (
-      <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
-        <circle cx="6" cy="6" r="5" fill="#28a745"/>
-        <path d={checkPath} stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
+        <circle cx={cx} cy={cy} r={outerRadius} fill="none" stroke="#28a745" strokeWidth="1.5" />
+        <circle cx={cx} cy={cy} r={innerRadius} fill="#28a745" />
       </svg>
     );
   }
 
   if (isInProgress) {
+    // Yellow/orange circle with partial progress (dasharray)
+    const circumference = 2 * Math.PI * outerRadius;
+    const progress = 0.5; // 50% progress
+    const dashArray = `${circumference * progress} ${circumference}`;
+
     return (
-      <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
-        <circle cx="6" cy="6" r="5" fill="#f2a900"/>
-        <circle cx="6" cy="6" r="1.5" fill="white"/>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
+        <circle cx={cx} cy={cy} r={outerRadius} fill="none" stroke="#e0e0e0" strokeWidth="1.5" />
+        <circle
+          cx={cx}
+          cy={cy}
+          r={outerRadius}
+          fill="none"
+          stroke="#f2a900"
+          strokeWidth="1.5"
+          strokeDasharray={dashArray}
+          strokeDashoffset={-circumference * 0.05}
+          transform={`rotate(-90 ${cx} ${cy})`}
+        />
+        <circle cx={cx} cy={cy} r={innerRadius} fill="#f2a900" />
       </svg>
     );
   }
 
   if (isTodo) {
+    // Gray outlined circle (empty)
     return (
-      <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
-        <circle cx="6" cy="6" r="4.5" stroke="#8a8885" strokeWidth="1.5" fill="none"/>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
+        <circle cx={cx} cy={cy} r={outerRadius} stroke="#8a8885" strokeWidth="1.5" fill="none" />
+      </svg>
+    );
+  }
+
+  if (isBacklog) {
+    // Gray dashed circle
+    const circumference = 2 * Math.PI * outerRadius;
+    return (
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
+        <circle
+          cx={cx}
+          cy={cy}
+          r={outerRadius}
+          stroke="#8a8885"
+          strokeWidth="1.5"
+          fill="none"
+          strokeDasharray="3 2"
+        />
       </svg>
     );
   }
 
   if (isDone) {
+    // Purple/blue filled circle with checkmark
     return (
-      <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
-        <circle cx="6" cy="6" r="5" fill="#5e6ad2"/>
-        <path d={checkPath} stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
+        <circle cx={cx} cy={cy} r={outerRadius} fill="none" stroke="#5e6ad2" strokeWidth="1.5" />
+        <circle cx={cx} cy={cy} r={innerRadius} fill="#5e6ad2" />
       </svg>
     );
   }
 
   if (isCanceled) {
+    // Gray canceled circle
     return (
-      <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
-        <circle cx="6" cy="6" r="5" fill="#95918c"/>
-        <path d={xPath} stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
+        <circle cx={cx} cy={cy} r={outerRadius} fill="none" stroke="#95918c" strokeWidth="1.5" />
+        <line x1={cx - 3} y1={cy - 3} x2={cx + 3} y2={cy + 3} stroke="#95918c" strokeWidth="1.5" />
+        <line x1={cx + 3} y1={cy - 3} x2={cx - 3} y2={cy + 3} stroke="#95918c" strokeWidth="1.5" />
       </svg>
     );
   }
 
-  // Default: gray outline circle
+  // Default: gray outline
   return (
-    <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
-      <circle cx="6" cy="6" r="4.5" stroke="#8a8885" strokeWidth="1.5" fill="none"/>
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
+      <circle cx={cx} cy={cy} r={outerRadius} stroke="#8a8885" strokeWidth="1.5" fill="none" />
     </svg>
   );
 }

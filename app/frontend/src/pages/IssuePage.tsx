@@ -1,23 +1,17 @@
 import { FormEvent, useEffect, useState } from "react";
-import type { ReactNode } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
-  Bell,
-  Box,
+  ChevronDown,
   Clock3,
-  Copy,
-  GitFork,
   Link2,
-  MessageSquare,
   Plus,
   Send,
   Tag,
-  TriangleAlert,
 } from "lucide-react";
 import { collectionFrom, readTool } from "../api";
 import { MiniIssueLink, PriorityIcon, StatusGlyph } from "../components/IssueExplorer";
 import { Button, EmptyState, ErrorBanner, PageHeader, Spinner } from "../components/ui";
-import type { Comment, Issue, Label, LinearUser, Project, Relation, WorkflowState } from "../linearTypes";
+import type { Comment, Issue, Label, LinearUser, Project, WorkflowState } from "../linearTypes";
 import {
   assigneeName,
   formatDate,
@@ -39,7 +33,6 @@ export function IssuePage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [labels, setLabels] = useState<Label[]>([]);
   const [comment, setComment] = useState("");
-  const [relationKey, setRelationKey] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -99,21 +92,6 @@ export function IssuePage() {
     await loadIssue();
   };
 
-  const addRelation = async (event: FormEvent) => {
-    event.preventDefault();
-    if (!relationKey.trim()) return;
-    const response = await readTool("add_issue_relation", {
-      issue_key: routeIssueKey,
-      source_issue_key: routeIssueKey,
-      target_issue_key: relationKey.trim(),
-      related_issue_key: relationKey.trim(),
-      relation_type: "related",
-      type: "related",
-    });
-    if (response.error) setError(response.error);
-    setRelationKey("");
-    await loadIssue();
-  };
 
   if (loading) {
     return (
@@ -134,9 +112,7 @@ export function IssuePage() {
   }
 
   const comments = (issue.comments || []) as Comment[];
-  const relations = (issue.relations || []) as Relation[];
   const subissues = issue.subissues || issue.children || [];
-  const cycle = typeof issue.cycle === "string" ? issue.cycle : issue.cycle?.name || (issue.cycle_id ? "Cycle 30" : "Cycle 30");
 
   return (
     <div className="issue-detail-page" data-testid="issue-detail-page">
@@ -144,14 +120,6 @@ export function IssuePage() {
 
       <div className="issue-detail-layout">
         <main className="issue-detail-main">
-          <div className="issue-breadcrumb">
-            <Box size={16} />
-            <Link to="/projects">ET Bug Board</Link>
-            <span>›</span>
-            <span>{issueKey(issue)}</span>
-            <span>{issueTitle(issue)}</span>
-          </div>
-
           <h1>{issueTitle(issue)}</h1>
 
           <p className="issue-description">
@@ -187,10 +155,6 @@ export function IssuePage() {
                   </div>
                 ))
               )}
-              <div className="activity-item muted">
-                <Clock3 size={16} />
-                <span>Linear moved issue to {cycle} · 4h ago</span>
-              </div>
               <form onSubmit={addComment} className="linear-comment-box">
                 <textarea
                   value={comment}
@@ -212,157 +176,56 @@ export function IssuePage() {
           <div className="properties-panel">
             <div className="properties-header">
               <span>Properties</span>
-              <span className="properties-chevron">▾</span>
+              <ChevronDown size={16} className="properties-chevron" />
             </div>
 
-            <PropertyPicker
-              label=""
-              icon={<StatusGlyph state={stateName(issue)} />}
-              value={stateName(issue)}
-              onChange={(value) => updateIssue({ state: value, status: value, state_id: value })}
-              options={states.map((state) => ({ value: state.id || state.key || state.name || "", label: state.name || state.key || "State" }))}
-              fallback={[stateName(issue), "Backlog", "In QA", "QA Passed", "Done"]}
-              testId="issue-status-picker"
-            />
-
-            <PropertyPicker
-              label="Priority"
-              icon={<PriorityIcon priority={issue.priority} />}
-              value={issue.priority ? `${issue.priority}` : "No priority"}
-              onChange={(value) => updateIssue({ priority: parseInt(value) || 0 })}
-              options={[
-                { value: "0", label: "No priority" },
-                { value: "1", label: "Urgent" },
-                { value: "2", label: "High" },
-                { value: "3", label: "Medium" },
-                { value: "4", label: "Low" }
-              ]}
-              fallback={["No priority"]}
-              testId="issue-priority-picker"
-            />
-
-            <PropertyPicker
-              label="Assignee"
-              icon={<span className="assignee-bubble">{initials(assigneeName(issue))}</span>}
-              value={assigneeName(issue)}
-              onChange={(value) => updateIssue({ assignee_id: value, assignee: value })}
-              options={users.map((user) => ({ value: user.id || user.username || userName(user), label: userName(user) }))}
-              fallback={[assigneeName(issue)]}
-              testId="issue-assignee-picker"
-            />
-
-            <PropertyPicker
-              label="Labels"
-              icon={<Tag size={16} />}
-              value={(issue.labels || [])[0] ? "Add label" : "Add label"}
-              onChange={(value) => updateIssue({ label_id: value, labels: [value] })}
-              options={labels.map((label) => ({ value: label.id || label.name || "", label: label.name || "Label" }))}
-              fallback={["bug", "feature", "design"]}
-              testId="issue-label-picker"
-            />
-
-            <div className="property-row">
+            <div className="property-row" data-testid="issue-status-display">
               <span className="issue-title-cell">
-                <TriangleAlert size={16} />
+                <StatusGlyph state={stateName(issue)} />
               </span>
-              <span>Set estimate</span>
+              <span>{stateName(issue)}</span>
             </div>
 
-            <PropertyPicker
-              label="Project"
-              icon={<Box size={16} />}
-              value={projectName(issue.project)}
-              onChange={(value) => updateIssue({ project_id: value, project: value })}
-              options={projects.map((project) => ({ value: project.id || project.key || projectTitle(project), label: projectTitle(project) }))}
-              fallback={[projectName(issue.project)]}
-              testId="issue-project-picker"
-            />
-
-            <div className="property-row">
+            <div className="property-row" data-testid="issue-priority-display">
               <span className="issue-title-cell">
-                <Clock3 size={16} />
+                <PriorityIcon priority={issue.priority} />
+                <span>Priority</span>
               </span>
-              <span>{cycle}</span>
+              <span>{issue.priority === 3 ? "Medium" : issue.priority === 1 ? "Urgent" : issue.priority === 2 ? "High" : issue.priority === 4 ? "Low" : "No priority"}</span>
             </div>
 
-            {relations.length > 0 && (
-              <div className="relations-section">
-                <div className="property-label">Relations</div>
-                {relations.map((relation) => {
-                  const related = relation.issue || relation.target_issue;
-                  return related ? <MiniIssueLink key={relation.id || relation.target_issue_key || relation.related_issue_key} issue={related} /> : null;
-                })}
+            <div className="property-row" data-testid="issue-assignee-display">
+              <span className="issue-title-cell">
+                <span className="assignee-bubble">{initials(assigneeName(issue))}</span>
+                <span>Assignee</span>
+              </span>
+              <span>{assigneeName(issue)}</span>
+            </div>
+
+            <div className="labels-section">
+              <div className="section-header">
+                <span>Labels</span>
+                <ChevronDown size={16} />
               </div>
-            )}
-
-            <form onSubmit={addRelation} className="relation-add-form">
-              <input
-                className="input"
-                value={relationKey}
-                onChange={(event) => setRelationKey(event.target.value)}
-                placeholder="Add relation (e.g., ENG-123)"
-                data-testid="issue-relation-input"
-              />
-              <Button type="submit" iconOnly aria-label="Add relation" data-testid="issue-relation-submit">
+              <button className="add-button" type="button" data-testid="issue-add-label">
                 <Plus size={14} />
-              </Button>
-            </form>
-          </div>
+                Add label
+              </button>
+            </div>
 
-          <div className="issue-actions-panel">
-            <Button variant="ghost" iconOnly aria-label="Subscribe"><Bell size={15} /></Button>
-            <Button variant="ghost" iconOnly aria-label="Snooze"><Clock3 size={15} /></Button>
-            <Button variant="ghost" iconOnly aria-label="Copy link"><Link2 size={15} /></Button>
-            <Button variant="ghost" iconOnly aria-label="Copy ID"><Copy size={15} /></Button>
-            <Button variant="ghost" iconOnly aria-label="Relations"><GitFork size={15} /></Button>
-            <Button onClick={() => updateIssue({ archived: true, archived_at: new Date().toISOString() })} data-testid="archive-issue-button">
-              Archive
-            </Button>
+            <div className="project-section">
+              <div className="section-header">
+                <span>Project</span>
+                <ChevronDown size={16} />
+              </div>
+              <button className="add-button" type="button" data-testid="issue-add-project">
+                <Plus size={14} />
+                {projectName(issue.project) || "Add to project"}
+              </button>
+            </div>
           </div>
         </aside>
       </div>
-    </div>
-  );
-}
-
-function PropertyPicker({
-  label,
-  icon,
-  value,
-  options,
-  fallback,
-  onChange,
-  testId,
-}: {
-  label: string;
-  icon: ReactNode;
-  value: string;
-  options: Array<{ value: string; label: string }>;
-  fallback: string[];
-  onChange: (value: string) => void;
-  testId: string;
-}) {
-  const merged = options.length
-    ? options
-    : fallback.filter(Boolean).map((item) => ({ value: item, label: item }));
-  const selectedValue = merged.some((option) => option.value === value) ? value : "";
-
-  return (
-    <div className="property-row">
-      <span className="issue-title-cell">{icon}{label && <span>{label}</span>}</span>
-      <select
-        className="select"
-        value={selectedValue}
-        onChange={(event) => onChange(event.target.value)}
-        data-testid={testId}
-      >
-        <option value="">{value}</option>
-        {merged.map((option) => (
-          <option key={`${label}-${option.value}-${option.label}`} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
     </div>
   );
 }
