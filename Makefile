@@ -17,7 +17,7 @@ seed:
 test: test-unit test-e2e
 
 test-unit:
-	cd app && $(PYTHON) -m pytest tests/test_tools.py -v
+	cd app && $(PYTHON) -m pytest tests/test_*.py -v
 
 test-e2e:
 	cd app && $(PYTHON) -m pytest tests/e2e/ -v

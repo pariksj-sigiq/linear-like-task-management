@@ -135,6 +135,31 @@ class TestIssues:
         assert updated["state_name"] == "In Review"
         assert updated["priority"] == "urgent"
 
+    def test_create_sub_issue_attaches_child_to_parent(self):
+        parent = step("get_issue", {"id": "ENG-9"})["issue"]
+        title = f"Unit test child issue {uuid.uuid4().hex[:8]}"
+
+        child = step(
+            "create_sub_issue",
+            {
+                "parent_identifier": "ENG-9",
+                "title": title,
+                "description": "Created as a child from the parent issue.",
+                "status_name": parent["state_name"],
+                "priority": parent["priority"],
+                "assignee_id": parent["assignee_id"],
+                "project_id": parent["project_id"],
+                "cycle_id": parent["cycle_id"],
+            },
+        )
+
+        assert child["parent_id"] == parent["id"]
+        child_detail = step("get_issue", {"id": child["key"]})["issue"]
+        assert child_detail["parent"]["key"] == "ENG-9"
+        assert child_detail["parent"]["title"] == parent["title"]
+        refreshed = step("get_issue", {"id": "ENG-9"})["issue"]
+        assert any(issue["title"] == title and issue["parent_id"] == parent["id"] for issue in refreshed["subissues"])
+
     def test_reference_issue_keys_open_from_seed(self):
         elt_issue = step("get_issue", {"id": "ELT-18"})["issue"]
         assert elt_issue["key"] == "ELT-18"
