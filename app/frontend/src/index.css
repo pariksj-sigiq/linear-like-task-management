@@ -111,3 +111,23 @@
     --chart-5-rgb: 220 107 107;
   }
 }
+
+html[data-linear-font-size="small"] {
+  font-size: 14px;
+}
+
+html[data-linear-font-size="large"] {
+  font-size: 17px;
+}
+
+html[data-linear-pointer-cursors="true"] button,
+html[data-linear-pointer-cursors="true"] a,
+html[data-linear-pointer-cursors="true"] select,
+html[data-linear-pointer-cursors="true"] [role="button"] {
+  cursor: pointer;
+}
+
+html[data-linear-compact-rows="true"] .linear-page [class*="min-h-10"],
+html[data-linear-compact-rows="true"] .linear-page [class*="min-h-[44px]"] {
+  min-height: 34px;
+}

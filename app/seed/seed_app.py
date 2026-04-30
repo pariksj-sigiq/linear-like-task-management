@@ -616,6 +616,27 @@ def main() -> None:
     seed_users()
 
     workspace = tool("create_workspace", {"name": "Collinear Clone Studio", "url_key": "linear-clone"})
+    for position, status in enumerate(
+        [
+            ("Planned", "planned", "#8a8f98", True),
+            ("In Progress", "active", "#5e6ad2", False),
+            ("Paused", "paused", "#f2994a", False),
+            ("Completed", "completed", "#4cb782", False),
+            ("Canceled", "canceled", "#eb5757", False),
+        ]
+    ):
+        tool(
+            "create_project_status",
+            {
+                "workspace_id": workspace["id"],
+                "name": status[0],
+                "category": status[1],
+                "color": status[2],
+                "position": position,
+                "is_default": status[3],
+            },
+        )
+
     teams = {}
     for team in [
         ("ENG", "Backend Tooling", "code", "#5e6ad2"),
@@ -628,6 +649,34 @@ def main() -> None:
         )
 
     user_ids = ["user_001", "user_002", "user_003", "user_004", "user_005", "user_006", "user_007", "user_008"]
+    tool(
+        "update_user_preferences",
+        {
+            "user_id": "user_001",
+            "default_home_view": "Active issues",
+            "display_names": "Full name",
+            "first_day_of_week": "Sunday",
+            "convert_emoticons": True,
+            "send_comment_shortcut": "⌘+Enter",
+            "font_size": "Default",
+            "theme": "System",
+            "use_pointer_cursors": False,
+            "compact_issue_rows": False,
+            "sidebar_counts": True,
+            "open_at_login": True,
+            "default_workspace_id": workspace["id"],
+        },
+    )
+    tool(
+        "create_api_key",
+        {
+            "name": "Local agent access",
+            "workspace_id": workspace["id"],
+            "created_by": "user_001",
+            "agent_name": "POST /step automation",
+            "scopes": ["read", "write", "admin"],
+        },
+    )
     for team in teams.values():
         for user_id in user_ids:
             role = "admin" if user_id == "user_001" else "member"

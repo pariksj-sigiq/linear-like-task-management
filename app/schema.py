@@ -31,6 +31,65 @@ class WorkspaceArgs(BaseModel):
     url_key: str
 
 
+class UpdateWorkspaceArgs(BaseModel):
+    id: str = "wks_001"
+    name: str | None = None
+    url_key: str | None = None
+
+
+class UserArgs(BaseModel):
+    username: str
+    full_name: str
+    email: str | None = None
+    role: str = "standard"
+    password: str = "password"
+    avatar_url: str | None = None
+
+
+class UpdateUserArgs(BaseModel):
+    id: str
+    username: str | None = None
+    full_name: str | None = None
+    email: str | None = None
+    role: str | None = None
+    avatar_url: str | None = None
+
+
+class UserPreferenceArgs(BaseModel):
+    user_id: str
+    default_home_view: str | None = None
+    display_names: str | None = None
+    first_day_of_week: str | None = None
+    convert_emoticons: bool | None = None
+    send_comment_shortcut: str | None = None
+    font_size: str | None = None
+    theme: str | None = None
+    use_pointer_cursors: bool | None = None
+    compact_issue_rows: bool | None = None
+    sidebar_counts: bool | None = None
+    open_at_login: bool | None = None
+    default_workspace_id: str | None = None
+
+
+class ApiKeyArgs(BaseModel):
+    name: str
+    created_by: str = "user_001"
+    workspace_id: str = "wks_001"
+    scopes: list[str] = Field(default_factory=lambda: ["read", "write"])
+    agent_name: str | None = None
+
+
+class RevokeApiKeyArgs(BaseModel):
+    id: str
+
+
+class SettingActionArgs(BaseModel):
+    page_key: str
+    action: str
+    value: str | None = None
+    actor_id: str = "user_001"
+
+
 class TeamArgs(BaseModel):
     name: str
     key: str
@@ -110,6 +169,24 @@ class UpdateProjectArgs(BaseModel):
     target_date: str | None = None
 
 
+class ProjectStatusArgs(BaseModel):
+    workspace_id: str = "wks_001"
+    name: str
+    category: str = "active"
+    color: str = "#5e6ad2"
+    position: int = 0
+    is_default: bool = False
+
+
+class UpdateProjectStatusArgs(BaseModel):
+    id: str
+    name: str | None = None
+    category: str | None = None
+    color: str | None = None
+    position: int | None = None
+    is_default: bool | None = None
+
+
 class MilestoneArgs(BaseModel):
     project_id: str
     name: str
@@ -130,7 +207,7 @@ class UpdateMilestoneArgs(BaseModel):
 
 class ProjectUpdateArgs(BaseModel):
     project_id: str
-    author_id: str = "user_001"
+    author_id: str | None = None  # Backend will set from session
     body: str
     health: str = "on_track"
 

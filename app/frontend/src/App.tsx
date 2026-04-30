@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from "./auth";
 import { AppRoot } from "./components/AppRoot";
 import { Login } from "./pages/Login";
 import { IssuePage } from "./pages/IssuePage";
+import { SettingsPage } from "./pages/SettingsPages";
 import {
   ArchivePage,
   CycleDetailPage,
@@ -77,6 +78,7 @@ function ProtectedApp() {
         <Route path="/project/:projectId/overview" element={<ProjectDetailPage initialTab="overview" />} />
         <Route path="/project/:projectId/activity" element={<ProjectDetailPage initialTab="activity" />} />
         <Route path="/project/:projectId/issues" element={<ProjectDetailPage initialTab="issues" />} />
+        <Route path="/project/:projectId/settings" element={<ProjectDetailPage initialTab="settings" />} />
         <Route path="/team/:teamKey/all" element={<TeamIssuesPage segment="all" />} />
         <Route path="/team/:teamKey/active" element={<TeamIssuesPage segment="active" />} />
         <Route path="/team/:teamKey/backlog" element={<TeamIssuesPage segment="backlog" />} />
@@ -91,8 +93,7 @@ function ProtectedApp() {
         <Route path="/initiatives" element={<TierTwoPage kind="initiatives" />} />
         <Route path="/initiatives/:initiativeId" element={<TierTwoPage kind="initiative detail" />} />
         <Route path="/roadmap" element={<TierTwoPage kind="roadmap" />} />
-        <Route path="/settings/account" element={<TierTwoPage kind="account settings" />} />
-        <Route path="/settings/workspace" element={<TierTwoPage kind="workspace settings" />} />
+        <Route path="/settings/*" element={<SettingsPage />} />
         <Route path="/search" element={<GlobalSearchPage />} />
         <Route path="/archive" element={<ArchivePage />} />
         <Route path="*" element={<Navigate to="/my-issues" replace />} />

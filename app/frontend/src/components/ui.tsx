@@ -14,21 +14,26 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "primary" | "ghost" | "danger";
+  variant?: "default" | "primary" | "ghost" | "danger" | "outline" | "secondary" | "link";
   iconOnly?: boolean;
+  size?: "default" | "sm" | "lg" | "icon" | "icon-sm";
 }
 
 export function Button({
   variant = "default",
   iconOnly = false,
+  size,
   className,
   children,
   ...props
 }: ButtonProps) {
+  const shadVariant =
+    variant === "danger" ? "destructive" : variant === "primary" ? "default" : variant;
+  const shadSize = size ?? (iconOnly ? "icon-sm" : "default");
   return (
     <ShadButton
-      variant={variant === "danger" ? "destructive" : variant === "primary" ? "default" : variant}
-      size={iconOnly ? "icon-sm" : "default"}
+      variant={shadVariant}
+      size={shadSize}
       className={className}
       {...props}
     >
@@ -58,10 +63,10 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="grid min-h-56 place-items-center rounded-md border border-dashed border-border bg-card p-8 text-center">
+    <div className="grid min-h-[400px] place-items-center rounded-md p-8 text-center">
       <div className="max-w-md">
-        <div className="font-medium text-foreground">{title}</div>
-        {description && <p className="mt-2 text-sm text-muted-foreground">{description}</p>}
+        <div className="text-sm font-normal text-muted-foreground">{title}</div>
+        {description && <p className="mt-1.5 text-sm text-muted-foreground/80">{description}</p>}
         {action && <div className="mt-4 flex justify-center">{action}</div>}
       </div>
     </div>

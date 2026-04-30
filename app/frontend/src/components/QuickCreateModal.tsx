@@ -64,7 +64,15 @@ const defaultLabels: Label[] = [
 ];
 type QuickCreateMenu = "team" | "status" | "priority" | "assignee" | "project" | "labels" | "more" | null;
 
-export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function QuickCreateModal({
+  open,
+  onClose,
+  initialProjectId = "",
+}: {
+  open: boolean;
+  onClose: () => void;
+  initialProjectId?: string;
+}) {
   const navigate = useNavigate();
   const location = useLocation();
   const wasOpen = useRef(open);
@@ -90,13 +98,14 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
     if (open && !wasOpen.current) {
       setDismissed(false);
       setActiveMenu(null);
+      if (initialProjectId) setProjectId(initialProjectId);
     }
     if (!open) {
       setDismissed(false);
       setActiveMenu(null);
     }
     wasOpen.current = open;
-  }, [open]);
+  }, [open, initialProjectId]);
 
   useEffect(() => {
     if (!open) return;
@@ -182,9 +191,10 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
       teamKey: team,
       state: status,
       status,
-      priority: priority || undefined,
+      priority: priority ? priority.toLowerCase() : undefined,
       project_id: projectId,
       assignee_id: assigneeId,
+      label_names: selectedLabel?.name ? [selectedLabel.name] : undefined,
     });
     setSubmitting(false);
     if (response.error) {
@@ -471,6 +481,7 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
                           onSelect={(event) => {
                             event.preventDefault();
                             setSelectedLabel(item);
+                            setActiveMenu(null);
                           }}
                         >
                           <span aria-hidden className="size-3 rounded-full" style={{ backgroundColor: labelColor(item) }} />

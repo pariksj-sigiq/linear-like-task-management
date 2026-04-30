@@ -7,6 +7,7 @@ directly against the tables in app/postgres/init.sql.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import secrets
@@ -29,6 +30,7 @@ from sqlalchemy.orm import Session as DBSession
 
 from app.models import Session as SessionModel
 from app.models import User
+from app.schema import ApiKeyArgs
 from app.schema import BulkIssueArgs
 from app.schema import CommentArgs
 from app.schema import CustomerArgs
@@ -55,10 +57,13 @@ from app.schema import MilestoneArgs
 from app.schema import NotificationActionArgs
 from app.schema import NotificationArgs
 from app.schema import ProjectArgs
+from app.schema import ProjectStatusArgs
 from app.schema import ProjectUpdateArgs
 from app.schema import RelationArgs
+from app.schema import RevokeApiKeyArgs
 from app.schema import ReorderWorkflowStatesArgs
 from app.schema import SearchArgs
+from app.schema import SettingActionArgs
 from app.schema import SearchIssuesArgs
 from app.schema import SnoozeNotificationArgs
 from app.schema import TeamArgs
@@ -70,8 +75,13 @@ from app.schema import UpdateIssueArgs
 from app.schema import UpdateLabelArgs
 from app.schema import UpdateMilestoneArgs
 from app.schema import UpdateProjectArgs
+from app.schema import UpdateProjectStatusArgs
+from app.schema import UpdateUserArgs
 from app.schema import UpdateViewArgs
 from app.schema import UpdateWorkflowStateArgs
+from app.schema import UpdateWorkspaceArgs
+from app.schema import UserArgs
+from app.schema import UserPreferenceArgs
 from app.schema import UserSearchArgs
 from app.schema import ViewArgs
 from app.schema import WorkflowStateArgs
@@ -113,6 +123,85 @@ def _row(row: RowMapping | None) -> dict[str, Any] | None:
 
 def _rows(rows: list[RowMapping]) -> list[dict[str, Any]]:
     return [_jsonify(dict(r)) for r in rows]
+
+
+def _ensure_settings_tables(db: DBSession) -> None:
+    db.execute(
+        text(
+            """
+            CREATE TABLE IF NOT EXISTS user_preferences (
+                user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+                default_home_view TEXT NOT NULL DEFAULT 'Active issues',
+                display_names TEXT NOT NULL DEFAULT 'Full name',
+                first_day_of_week TEXT NOT NULL DEFAULT 'Sunday',
+                convert_emoticons BOOLEAN NOT NULL DEFAULT TRUE,
+                send_comment_shortcut TEXT NOT NULL DEFAULT '⌘+Enter',
+                font_size TEXT NOT NULL DEFAULT 'Default',
+                theme TEXT NOT NULL DEFAULT 'System',
+                use_pointer_cursors BOOLEAN NOT NULL DEFAULT FALSE,
+                compact_issue_rows BOOLEAN NOT NULL DEFAULT FALSE,
+                sidebar_counts BOOLEAN NOT NULL DEFAULT TRUE,
+                open_at_login BOOLEAN NOT NULL DEFAULT TRUE,
+                default_workspace_id TEXT,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+            """
+        )
+    )
+    db.execute(
+        text(
+            """
+            CREATE TABLE IF NOT EXISTS project_statuses (
+                id TEXT PRIMARY KEY,
+                workspace_id TEXT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+                name TEXT NOT NULL,
+                category TEXT NOT NULL DEFAULT 'active',
+                color TEXT NOT NULL DEFAULT '#5e6ad2',
+                position INTEGER NOT NULL DEFAULT 0,
+                is_default BOOLEAN NOT NULL DEFAULT FALSE,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                UNIQUE (workspace_id, name)
+            )
+            """
+        )
+    )
+    db.execute(
+        text(
+            """
+            CREATE TABLE IF NOT EXISTS api_keys (
+                id TEXT PRIMARY KEY,
+                workspace_id TEXT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+                name TEXT NOT NULL,
+                token_prefix TEXT NOT NULL,
+                token_hash TEXT NOT NULL UNIQUE,
+                scopes TEXT NOT NULL DEFAULT 'read,write',
+                agent_name TEXT,
+                created_by TEXT REFERENCES users(id) ON DELETE SET NULL,
+                last_used_at TIMESTAMPTZ,
+                revoked_at TIMESTAMPTZ,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+            """
+        )
+    )
+    db.execute(
+        text(
+            """
+            CREATE TABLE IF NOT EXISTS settings_actions (
+                id TEXT PRIMARY KEY,
+                page_key TEXT NOT NULL,
+                action TEXT NOT NULL,
+                value TEXT,
+                actor_id TEXT REFERENCES users(id) ON DELETE SET NULL,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+            """
+        )
+    )
 
 
 def observation_from_result(result: ToolResult) -> dict[str, Any]:
@@ -164,6 +253,10 @@ def _next_id(db: DBSession, table: str, prefix: str) -> str:
         if not exists:
             return candidate
         count += 1
+
+
+def _hash_token(token: str) -> str:
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
 
 def _audit(db: DBSession, entity_type: str, entity_id: str, action: str, details: dict[str, Any] | None = None) -> None:
@@ -297,6 +390,17 @@ def _get_issue_by_ref(db: DBSession, *, issue_id: str | None = None, key: str | 
     if not row:
         return None
     return _hydrate_issue(db, row)
+
+
+def _subissues_for_issue(db: DBSession, issue_id: str) -> list[dict[str, Any]]:
+    return [
+        _hydrate_issue(db, row)
+        for row in _many(
+            db,
+            _issue_select() + " WHERE i.parent_id = :id AND i.archived_at IS NULL ORDER BY i.updated_at DESC LIMIT 100",
+            {"id": issue_id},
+        )
+    ]
 
 
 def _resolve_user_id(db: DBSession, value: str | None) -> str | None:
@@ -522,6 +626,10 @@ def search_workspaces(args: SearchArgs) -> dict[str, Any]:
             params,
         )
         return {"count": len(rows), "workspaces": rows}
+
+
+def update_workspace(args: UpdateWorkspaceArgs) -> dict[str, Any]:
+    return _update_record("workspaces", args.id, args.model_dump(exclude={"id"}, exclude_none=True), ["name", "url_key"])
 
 
 def create_team(args: TeamArgs) -> dict[str, Any]:
@@ -755,6 +863,50 @@ def update_project(args: UpdateProjectArgs) -> dict[str, Any]:
     return _update_record("projects", args.id, updates, ["name", "description", "state", "status", "health", "priority", "icon", "lead_id", "start_date", "target_date"])
 
 
+def create_project_status(args: ProjectStatusArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        _ensure_settings_tables(db)
+        existing = _one(db, "SELECT * FROM project_statuses WHERE workspace_id = :workspace_id AND name = :name", {"workspace_id": args.workspace_id, "name": args.name})
+        if existing:
+            return existing
+        status_id = _next_id(db, "project_statuses", "pstat")
+        db.execute(
+            text(
+                "INSERT INTO project_statuses (id, workspace_id, name, category, color, position, is_default) "
+                "VALUES (:id, :workspace_id, :name, :category, :color, :position, :is_default)"
+            ),
+            {"id": status_id, **args.model_dump()},
+        )
+        _audit(db, "project_status", status_id, "created", args.model_dump())
+        db.commit()
+        return _one(db, "SELECT * FROM project_statuses WHERE id = :id", {"id": status_id}) or {}
+
+
+def list_project_statuses(args: SearchArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        _ensure_settings_tables(db)
+        rows = _many(
+            db,
+            """
+            SELECT ps.*, w.name AS workspace_name, w.url_key AS workspace_url_key
+            FROM project_statuses ps
+            JOIN workspaces w ON w.id = ps.workspace_id
+            WHERE (:pattern = '%%' OR ps.name ILIKE :pattern OR ps.category ILIKE :pattern OR w.name ILIKE :pattern)
+            ORDER BY ps.position, ps.name
+            LIMIT :limit
+            """,
+            {"pattern": f"%{args.query or ''}%", "limit": args.limit},
+        )
+        return {"count": len(rows), "project_statuses": rows}
+
+
+def update_project_status(args: UpdateProjectStatusArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        _ensure_settings_tables(db)
+        db.commit()
+    return _update_record("project_statuses", args.id, args.model_dump(exclude={"id"}, exclude_none=True), ["name", "category", "color", "position", "is_default"])
+
+
 def delete_project(args: IdArgs) -> dict[str, Any]:
     with DBSession(engine) as db:
         db.execute(text("DELETE FROM projects WHERE id = :id"), {"id": args.id})
@@ -807,10 +959,29 @@ def archive_project(args: IdArgs) -> dict[str, Any]:
 
 def post_project_update(args: ProjectUpdateArgs) -> dict[str, Any]:
     with DBSession(engine) as db:
+        # If no author_id provided, get from session or use first available user
+        if not args.author_id:
+            # Try to get any valid user from DB
+            any_user = _one(db, "SELECT id FROM users ORDER BY created_at LIMIT 1", {})
+            if not any_user:
+                return {"error": "No users found in database"}
+            author_id = any_user["id"]
+        else:
+            # Validate provided author_id exists
+            author_exists = _one(db, "SELECT id FROM users WHERE id = :id", {"id": args.author_id})
+            if not author_exists:
+                # Use first available user as fallback
+                any_user = _one(db, "SELECT id FROM users ORDER BY created_at LIMIT 1", {})
+                if not any_user:
+                    return {"error": "No users found in database"}
+                author_id = any_user["id"]
+            else:
+                author_id = args.author_id
+
         update_id = _next_id(db, "project_updates", "pu")
         db.execute(
             text("INSERT INTO project_updates (id, project_id, author_id, body, health) VALUES (:id, :project_id, :author_id, :body, :health)"),
-            {"id": update_id, **args.model_dump()},
+            {"id": update_id, "project_id": args.project_id, "author_id": author_id, "body": args.body, "health": args.health},
         )
         db.execute(text("UPDATE projects SET health = :health, updated_at = NOW() WHERE id = :project_id"), {"health": args.health, "project_id": args.project_id})
         _audit(db, "project", args.project_id, "update_posted", {"update_id": update_id, "health": args.health})
@@ -1007,8 +1178,12 @@ def get_issue(args: GetIssueArgs) -> dict[str, Any]:
             "SELECT a.*, u.full_name AS actor_name FROM issue_activity a LEFT JOIN users u ON u.id = a.actor_id WHERE issue_id = :id ORDER BY a.created_at DESC",
             {"id": issue["id"]},
         )
-        issue["subissues"] = search_issues(SearchIssuesArgs(limit=100))["issues"]
-        issue["subissues"] = [i for i in issue["subissues"] if i.get("parent_id") == issue["id"]]
+        issue["subissues"] = _subissues_for_issue(db, issue["id"])
+        if issue.get("parent_id"):
+            parent = _get_issue_by_ref(db, issue_id=issue["parent_id"])
+            if parent:
+                parent["subissues"] = _subissues_for_issue(db, parent["id"])
+                issue["parent"] = parent
         issue["relations"] = _many(
             db,
             """
@@ -1522,6 +1697,29 @@ def search_users(args: UserSearchArgs) -> dict[str, Any]:
         return {"count": len(rows), "users": rows}
 
 
+def create_user(args: UserArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        existing = _one(db, "SELECT id, username, full_name, email, role, avatar_url FROM users WHERE username = :username", {"username": args.username})
+        if existing:
+            return {"user": existing}
+        user_id = _next_id(db, "users", "user")
+        db.execute(
+            text(
+                "INSERT INTO users (id, username, password, full_name, email, role, avatar_url) "
+                "VALUES (:id, :username, :password, :full_name, :email, :role, :avatar_url)"
+            ),
+            {"id": user_id, **args.model_dump()},
+        )
+        _audit(db, "user", user_id, "created", {"username": args.username, "role": args.role})
+        db.commit()
+        return {"user": _one(db, "SELECT id, username, full_name, email, role, avatar_url FROM users WHERE id = :id", {"id": user_id}) or {}}
+
+
+def update_user(args: UpdateUserArgs) -> dict[str, Any]:
+    user = _update_record("users", args.id, args.model_dump(exclude={"id"}, exclude_none=True), ["username", "full_name", "email", "role", "avatar_url"])
+    return {"user": {key: value for key, value in user.items() if key != "password"}}
+
+
 def get_user(args: IdArgs) -> dict[str, Any]:
     with DBSession(engine) as db:
         user = _one(db, "SELECT id, username, full_name, email, role, avatar_url FROM users WHERE id = :id OR username = :id", {"id": args.id})
@@ -1530,9 +1728,146 @@ def get_user(args: IdArgs) -> dict[str, Any]:
         return {"user": user}
 
 
+def get_user_preferences(args: IdArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        _ensure_settings_tables(db)
+        user_id = _scalar(db, "SELECT id FROM users WHERE id = :id OR username = :id", {"id": args.id}) or args.id
+        row = _one(db, "SELECT * FROM user_preferences WHERE user_id = :user_id", {"user_id": user_id})
+        if not row:
+            db.execute(text("INSERT INTO user_preferences (user_id, default_workspace_id) VALUES (:user_id, (SELECT id FROM workspaces ORDER BY created_at LIMIT 1)) ON CONFLICT DO NOTHING"), {"user_id": user_id})
+            db.commit()
+            row = _one(db, "SELECT * FROM user_preferences WHERE user_id = :user_id", {"user_id": user_id})
+        return {"preferences": row or {"user_id": user_id}}
+
+
+def update_user_preferences(args: UserPreferenceArgs) -> dict[str, Any]:
+    allowed = args.model_dump(exclude={"user_id"}, exclude_none=True)
+    with DBSession(engine) as db:
+        _ensure_settings_tables(db)
+        user_id = _scalar(db, "SELECT id FROM users WHERE id = :id OR username = :id", {"id": args.user_id}) or args.user_id
+        db.execute(text("INSERT INTO user_preferences (user_id, default_workspace_id) VALUES (:user_id, (SELECT id FROM workspaces ORDER BY created_at LIMIT 1)) ON CONFLICT DO NOTHING"), {"user_id": user_id})
+        for key, value in allowed.items():
+            db.execute(text(f"UPDATE user_preferences SET {key} = :value, updated_at = NOW() WHERE user_id = :user_id"), {"value": value, "user_id": user_id})
+        _audit(db, "user_preferences", user_id, "updated", allowed)
+        db.commit()
+        return {"preferences": _one(db, "SELECT * FROM user_preferences WHERE user_id = :user_id", {"user_id": user_id}) or {}}
+
+
+def _api_key_select() -> str:
+    return """
+        SELECT ak.id, ak.workspace_id, ak.name, ak.token_prefix, ak.scopes, ak.agent_name,
+               ak.created_by, ak.last_used_at, ak.revoked_at, ak.created_at, ak.updated_at,
+               u.full_name AS created_by_name, w.name AS workspace_name
+        FROM api_keys ak
+        JOIN workspaces w ON w.id = ak.workspace_id
+        LEFT JOIN users u ON u.id = ak.created_by
+    """
+
+
+def create_api_key(args: ApiKeyArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        _ensure_settings_tables(db)
+        workspace_id = _scalar(db, "SELECT id FROM workspaces WHERE id = :id OR url_key = :id", {"id": args.workspace_id}) or args.workspace_id
+        created_by = _scalar(db, "SELECT id FROM users WHERE id = :id OR username = :id", {"id": args.created_by}) or args.created_by
+        existing = _one(
+            db,
+            _api_key_select() + " WHERE ak.workspace_id = :workspace_id AND ak.name = :name AND ak.revoked_at IS NULL",
+            {"workspace_id": workspace_id, "name": args.name},
+        )
+        if existing:
+            return {"api_key": existing, "token": None}
+        token = "lin_" + secrets.token_urlsafe(24)
+        key_id = _next_id(db, "api_keys", "key")
+        scopes = ",".join(args.scopes or ["read", "write"])
+        db.execute(
+            text(
+                """
+                INSERT INTO api_keys (id, workspace_id, name, token_prefix, token_hash, scopes, agent_name, created_by)
+                VALUES (:id, :workspace_id, :name, :token_prefix, :token_hash, :scopes, :agent_name, :created_by)
+                """
+            ),
+            {
+                "id": key_id,
+                "workspace_id": workspace_id,
+                "name": args.name,
+                "token_prefix": token[:12],
+                "token_hash": _hash_token(token),
+                "scopes": scopes,
+                "agent_name": args.agent_name,
+                "created_by": created_by,
+            },
+        )
+        _audit(db, "api_key", key_id, "created", {"name": args.name, "scopes": scopes, "agent_name": args.agent_name})
+        db.commit()
+        return {"api_key": _one(db, _api_key_select() + " WHERE ak.id = :id", {"id": key_id}) or {}, "token": token}
+
+
+def list_api_keys(args: SearchArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        _ensure_settings_tables(db)
+        rows = _many(
+            db,
+            _api_key_select()
+            + """
+              WHERE (:pattern = '%%' OR ak.name ILIKE :pattern OR ak.scopes ILIKE :pattern OR ak.agent_name ILIKE :pattern OR w.name ILIKE :pattern)
+              ORDER BY ak.revoked_at NULLS FIRST, ak.created_at DESC
+              LIMIT :limit
+            """,
+            {"pattern": f"%{args.query or ''}%", "limit": args.limit},
+        )
+        return {"count": len(rows), "api_keys": rows}
+
+
+def revoke_api_key(args: RevokeApiKeyArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        _ensure_settings_tables(db)
+        db.execute(text("UPDATE api_keys SET revoked_at = COALESCE(revoked_at, NOW()), updated_at = NOW() WHERE id = :id"), {"id": args.id})
+        _audit(db, "api_key", args.id, "revoked")
+        db.commit()
+        return {"api_key": _one(db, _api_key_select() + " WHERE ak.id = :id", {"id": args.id}) or {"id": args.id, "revoked_at": datetime.now(timezone.utc).isoformat()}}
+
+
+def record_setting_action(args: SettingActionArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        _ensure_settings_tables(db)
+        actor_id = _scalar(db, "SELECT id FROM users WHERE id = :id OR username = :id", {"id": args.actor_id}) or args.actor_id
+        action_id = _next_id(db, "settings_actions", "sact")
+        db.execute(
+            text(
+                """
+                INSERT INTO settings_actions (id, page_key, action, value, actor_id)
+                VALUES (:id, :page_key, :action, :value, :actor_id)
+                """
+            ),
+            {"id": action_id, "page_key": args.page_key, "action": args.action, "value": args.value, "actor_id": actor_id},
+        )
+        _audit(db, "settings_action", action_id, "recorded", args.model_dump())
+        db.commit()
+        return {"setting_action": _one(db, "SELECT * FROM settings_actions WHERE id = :id", {"id": action_id}) or {}}
+
+
+def list_setting_actions(args: SearchArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        _ensure_settings_tables(db)
+        rows = _many(
+            db,
+            """
+            SELECT sa.*, u.full_name AS actor_name
+            FROM settings_actions sa
+            LEFT JOIN users u ON u.id = sa.actor_id
+            WHERE (:pattern = '%%' OR sa.page_key ILIKE :pattern OR sa.action ILIKE :pattern OR sa.value ILIKE :pattern)
+            ORDER BY sa.created_at DESC
+            LIMIT :limit
+            """,
+            {"pattern": f"%{args.query or ''}%", "limit": args.limit},
+        )
+        return {"count": len(rows), "settings_actions": rows}
+
+
 TOOL_DEFS: list[tuple[str, str, type[Any], bool]] = [
     ("create_workspace", "Create a workspace.", WorkspaceArgs, True),
     ("search_workspaces", "Search workspaces.", SearchArgs, False),
+    ("update_workspace", "Update workspace settings.", UpdateWorkspaceArgs, True),
     ("create_team", "Create a team.", TeamArgs, True),
     ("search_teams", "Search teams.", TeamSearchArgs, False),
     ("list_teams", "List teams.", TeamSearchArgs, False),
@@ -1579,6 +1914,9 @@ TOOL_DEFS: list[tuple[str, str, type[Any], bool]] = [
     ("search_projects", "Search projects.", SearchArgs, False),
     ("get_project", "Get project details.", IdArgs, False),
     ("update_project", "Update project.", UpdateProjectArgs, True),
+    ("create_project_status", "Create a project status option.", ProjectStatusArgs, True),
+    ("list_project_statuses", "List project status options.", SearchArgs, False),
+    ("update_project_status", "Update a project status option.", UpdateProjectStatusArgs, True),
     ("archive_project", "Archive project.", IdArgs, True),
     ("delete_project", "Delete a project permanently.", IdArgs, True),
     ("set_project_lead", "Set project lead.", UpdateProjectArgs, True),
@@ -1629,7 +1967,16 @@ TOOL_DEFS: list[tuple[str, str, type[Any], bool]] = [
     ("mark_customer_request_important", "Mark customer request important.", IdArgs, True),
     ("global_search", "Search issues, projects, views, teams, and customers.", SearchArgs, False),
     ("search_users", "Search users.", UserSearchArgs, False),
+    ("create_user", "Create workspace user.", UserArgs, True),
+    ("update_user", "Update workspace user.", UpdateUserArgs, True),
     ("get_user", "Get user.", IdArgs, False),
+    ("get_user_preferences", "Get account preferences.", IdArgs, False),
+    ("update_user_preferences", "Update account preferences.", UserPreferenceArgs, True),
+    ("create_api_key", "Create a workspace API key for agents, scripts, and the POST /step tool server.", ApiKeyArgs, True),
+    ("list_api_keys", "List workspace API keys and agent access status.", SearchArgs, False),
+    ("revoke_api_key", "Revoke a workspace API key.", RevokeApiKeyArgs, True),
+    ("record_setting_action", "Record an interactive settings action for Tier 2 settings pages.", SettingActionArgs, True),
+    ("list_setting_actions", "List interactive settings actions.", SearchArgs, False),
     ("list_issues", "Compatibility alias for issue listing.", Any, False),
     ("create_sub_issue", "Compatibility alias for creating a child issue.", Any, True),
     ("create_issue_relation", "Compatibility alias for creating a relation.", Any, True),
@@ -1913,6 +2260,8 @@ def call_tool(name: str, arguments: dict[str, Any]) -> ToolResult:
                 result = create_workspace(WorkspaceArgs(**arguments))
             case "search_workspaces":
                 result = search_workspaces(SearchArgs(**arguments))
+            case "update_workspace":
+                result = update_workspace(UpdateWorkspaceArgs(**arguments))
             case "create_team":
                 result = create_team(TeamArgs(**arguments))
             case "search_teams" | "list_teams":
@@ -2067,6 +2416,12 @@ def call_tool(name: str, arguments: dict[str, Any]) -> ToolResult:
                 result = get_project(IdArgs(**arguments))
             case "update_project":
                 result = update_project(UpdateProjectArgs(**_legacy_project_args(arguments)))
+            case "create_project_status":
+                result = create_project_status(ProjectStatusArgs(**arguments))
+            case "list_project_statuses":
+                result = list_project_statuses(SearchArgs(**arguments))
+            case "update_project_status":
+                result = update_project_status(UpdateProjectStatusArgs(**arguments))
             case "archive_project":
                 result = archive_project(IdArgs(**arguments))
             case "delete_project":
@@ -2177,8 +2532,26 @@ def call_tool(name: str, arguments: dict[str, Any]) -> ToolResult:
                 result = _legacy_command_palette_action(arguments)
             case "search_users":
                 result = search_users(UserSearchArgs(**arguments))
+            case "create_user":
+                result = create_user(UserArgs(**arguments))
+            case "update_user":
+                result = update_user(UpdateUserArgs(**arguments))
             case "get_user":
                 result = get_user(IdArgs(**arguments))
+            case "get_user_preferences":
+                result = get_user_preferences(IdArgs(**arguments))
+            case "update_user_preferences":
+                result = update_user_preferences(UserPreferenceArgs(**arguments))
+            case "create_api_key":
+                result = create_api_key(ApiKeyArgs(**arguments))
+            case "list_api_keys":
+                result = list_api_keys(SearchArgs(**arguments))
+            case "revoke_api_key":
+                result = revoke_api_key(RevokeApiKeyArgs(**arguments))
+            case "record_setting_action":
+                result = record_setting_action(SettingActionArgs(**arguments))
+            case "list_setting_actions":
+                result = list_setting_actions(SearchArgs(**arguments))
             case _:
                 return ToolResult(is_error=True, text=f"Unknown tool: {name}")
         return ToolResult(is_error=False, text=f"{name} completed.", structured_content=result)
@@ -2295,6 +2668,7 @@ async def reset() -> dict[str, Any]:
         "views",
         "project_updates",
         "project_milestones",
+        "project_statuses",
         "issue_comments",
         "issue_activity",
         "issue_subscriptions",
@@ -2309,11 +2683,15 @@ async def reset() -> dict[str, Any]:
         "workflow_states",
         "team_members",
         "teams",
+        "api_keys",
+        "settings_actions",
         "workspaces",
+        "user_preferences",
         "sessions",
         "users",
     ]
     with DBSession(engine) as db:
+        _ensure_settings_tables(db)
         for table in tables:
             db.execute(text(f"DELETE FROM {table}"))
         db.commit()
@@ -2326,11 +2704,14 @@ async def snapshot() -> dict[str, Any]:
     table_names = [
         "users",
         "workspaces",
+        "api_keys",
+        "settings_actions",
         "teams",
         "workflow_states",
         "labels",
         "projects",
         "project_milestones",
+        "project_statuses",
         "project_updates",
         "cycles",
         "issues",
@@ -2343,8 +2724,10 @@ async def snapshot() -> dict[str, Any]:
         "initiatives",
         "customers",
         "customer_requests",
+        "user_preferences",
     ]
     with DBSession(engine) as db:
+        _ensure_settings_tables(db)
         for table in table_names:
             data[table] = _many(db, f"SELECT * FROM {table} ORDER BY 1")
         audit_count = int(_scalar(db, "SELECT COUNT(*) FROM audit_log") or 0)

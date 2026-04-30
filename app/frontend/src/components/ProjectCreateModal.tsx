@@ -16,7 +16,10 @@ import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogTitle,
 } from "./ui/dialog";
+import { VisuallyHidden } from "radix-ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -260,6 +263,10 @@ export function ProjectCreateModal({
         className="top-[8%] max-h-[88vh] w-[calc(100%-2rem)] max-w-[820px] translate-y-0 overflow-visible rounded-2xl bg-popover p-0 sm:max-w-[820px]"
         data-testid="create-project-modal"
       >
+        <VisuallyHidden.Root>
+          <DialogTitle>New project</DialogTitle>
+          <DialogDescription>Create a new project for your team.</DialogDescription>
+        </VisuallyHidden.Root>
         <form onSubmit={submit} className="flex h-full flex-col">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border/60 px-5 py-3.5">

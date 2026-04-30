@@ -1,4 +1,4 @@
-import type { FormEvent, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
@@ -7,10 +7,12 @@ import {
   Box,
   CalendarDays,
   Check,
+  ChevronRight,
   Clock3,
   CircleDashed,
   Filter,
   FolderKanban,
+  GitBranch,
   Layers3,
   Map,
   MessageSquare,
@@ -25,8 +27,14 @@ import {
   Tag,
 } from "lucide-react";
 import { collectionFrom, readSnapshot, readTool } from "../api";
-import { IssueExplorer, MiniIssueLink, PriorityIcon, StatusGlyph, StatusPill } from "../components/IssueExplorer";
+import { IssueExplorer, PriorityIcon, StatusGlyph, StatusPill } from "../components/IssueExplorer";
+import { SubIssueProgress } from "../components/SubIssueProgress";
 import { ProjectCreateModal } from "../components/ProjectCreateModal";
+import { ProjectHeader } from "../components/project/ProjectHeader";
+import { ProjectPropertiesSidebar } from "../components/project/ProjectPropertiesSidebar";
+import { ProjectOverviewTab } from "../components/project/OverviewTab";
+import { ProjectActivityTab } from "../components/project/ActivityTab";
+import { ProjectIssuesTab } from "../components/project/IssuesTab";
 import {
   ProjectsFilterMenu,
   EMPTY_PROJECT_FILTERS,
@@ -41,14 +49,14 @@ import {
   type ProjectsView,
 } from "../components/ProjectsDisplayMenu";
 import { ProjectsBoardView } from "../components/ProjectsBoardView";
-import { Button, EmptyState, ErrorBanner, ModalShell, PageHeader, Spinner } from "../components/ui";
+import { Button, EmptyState, ErrorBanner, PageHeader, Spinner } from "../components/ui";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { useAuth } from "../auth";
 import { cn } from "../lib/utils";
 import type { Cycle, Issue, Notification, Project, ProjectUpdate, ViewDefinition } from "../linearTypes";
-import { assigneeName, formatDate, initials, issueKey, issueTitle, priorityLabel, projectName, projectTitle, stateName, titleize, userName } from "../linearTypes";
+import { assigneeName, formatDate, initials, issueChildCount, issueKey, issueTitle, priorityLabel, projectName, projectTitle, splitIssueTree, stateName, titleize, userName } from "../linearTypes";
 
 const teamName = (teamKey?: string) => (teamKey ? teamKey.toUpperCase() : "ENG");
 const PROJECT_COLUMNS = ["Backlog", "Planned", "In Progress", "QA Requested", "In QA", "Changes Requested", "QA Passed", "Completed"];
@@ -282,6 +290,47 @@ interface MyIssueActivityEvent {
   issue?: Issue | null;
 }
 
+type MyIssuesViewMode = "list" | "board";
+type MyIssuesOrder = "updated" | "created" | "priority";
+
+interface MyIssuesFilters {
+  status: string[];
+  priority: string[];
+  creator: string[];
+  project: string[];
+  date: string[];
+  assignee: "all" | "me" | "unassigned";
+}
+
+interface MyIssuesDisplay {
+  order: MyIssuesOrder;
+  priority: boolean;
+  status: boolean;
+  assignee: boolean;
+  project: boolean;
+  date: boolean;
+  compact: boolean;
+}
+
+const EMPTY_MY_ISSUES_FILTERS: MyIssuesFilters = {
+  status: [],
+  priority: [],
+  creator: [],
+  project: [],
+  date: [],
+  assignee: "all",
+};
+
+const DEFAULT_MY_ISSUES_DISPLAY: MyIssuesDisplay = {
+  order: "updated",
+  priority: true,
+  status: true,
+  assignee: true,
+  project: false,
+  date: true,
+  compact: false,
+};
+
 function MyIssuesTabs() {
   const location = useLocation();
   const active = myIssuesTabFromPath(location.pathname);
@@ -316,6 +365,23 @@ export function MyIssuesPage() {
   const [activity, setActivity] = useState<MyIssueActivityEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState<MyIssuesFilters>(EMPTY_MY_ISSUES_FILTERS);
+  const [display, setDisplay] = useState<MyIssuesDisplay>(DEFAULT_MY_ISSUES_DISPLAY);
+  const [view, setView] = useState<MyIssuesViewMode>("list");
+  const [openControl, setOpenControl] = useState<"filter" | "display" | null>(null);
+
+  const visibleIssues = useMemo(
+    () => sortMyIssues(issues.filter((issue) => matchesMyIssueFilters(issue, filters, userId)), display.order),
+    [issues, filters, userId, display.order],
+  );
+  const visibleActivity = useMemo(
+    () => sortMyIssueActivity(
+      uniqueMyIssueActivityRows(activity).filter((event) => event.issue && matchesMyIssueFilters(event.issue, filters, userId)),
+      display.order,
+    ),
+    [activity, filters, userId, display.order],
+  );
+  const activeFilterCount = myIssuesFiltersCount(filters);
 
   useDocumentTitle(`My issues › ${titleize(tab)}`);
 
@@ -356,30 +422,52 @@ export function MyIssuesPage() {
         <div className="flex min-h-12 items-center justify-between gap-3 px-2">
           <MyIssuesTabs />
           <div className="flex items-center gap-1.5">
-            <Button type="button" variant="ghost" size="icon-sm" aria-label="Filter my issues" className="rounded-full border border-border bg-background shadow-sm">
-              <SlidersHorizontal size={14} />
-            </Button>
-            <Button type="button" variant="ghost" size="icon-sm" aria-label="Display my issues" className="rounded-full border border-border bg-background shadow-sm">
-              <Settings size={14} />
-            </Button>
-            <Button type="button" variant="ghost" size="icon-sm" aria-label="My issues layout" className="rounded-full border border-border bg-background shadow-sm">
-              <Layers3 size={14} />
-            </Button>
+            <MyIssuesFilterMenu
+              open={openControl === "filter"}
+              onOpenChange={(open) => setOpenControl(open ? "filter" : null)}
+              filters={filters}
+              onChange={setFilters}
+            >
+              <Button type="button" variant="ghost" size="icon-sm" aria-label="Add filter" className="relative rounded-full border border-border bg-background shadow-sm">
+                <Filter size={14} />
+                {activeFilterCount > 0 && (
+                  <span className="absolute -right-1 -top-1 grid size-4 place-items-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </Button>
+            </MyIssuesFilterMenu>
+            <MyIssuesDisplayMenu
+              open={openControl === "display"}
+              onOpenChange={(open) => setOpenControl(open ? "display" : null)}
+              view={view}
+              onViewChange={setView}
+              display={display}
+              onDisplayChange={setDisplay}
+            >
+              <Button type="button" variant="ghost" size="icon-sm" aria-label="Display options" className="rounded-full border border-border bg-background shadow-sm">
+                <SlidersHorizontal size={14} />
+              </Button>
+            </MyIssuesDisplayMenu>
           </div>
         </div>
       </div>
 
-      {loading ? (
-        <div className="px-3 py-6">
-          <Spinner label="Loading my issues" />
+      <div className="min-h-0">
+        {loading ? (
+          <div className="px-3 py-6">
+            <Spinner label="Loading my issues" />
+          </div>
+        ) : view === "board" ? (
+          <MyIssuesBoard issues={tab === "activity" ? visibleActivity.map((event) => event.issue).filter(Boolean) as Issue[] : visibleIssues} display={display} />
+        ) : tab === "activity" ? (
+          <MyIssueActivityList activity={visibleActivity} display={display} />
+        ) : tab === "assigned" ? (
+          <AssignedMyIssuesList issues={visibleIssues} display={display} />
+        ) : (
+          <FlatMyIssuesList issues={visibleIssues} tab={tab} display={display} />
+        )}
         </div>
-      ) : tab === "activity" ? (
-        <MyIssueActivityList activity={activity} />
-      ) : tab === "assigned" ? (
-        <AssignedMyIssuesList issues={issues} />
-      ) : (
-        <FlatMyIssuesList issues={issues} tab={tab} />
-      )}
     </div>
   );
 }
@@ -396,15 +484,17 @@ function resolveMyIssuesUserId(user: { id?: string; username?: string } | null) 
   return user.id || "user_001";
 }
 
-function AssignedMyIssuesList({ issues }: { issues: Issue[] }) {
+function AssignedMyIssuesList({ issues, display }: { issues: Issue[]; display: MyIssuesDisplay }) {
   const urgent = issues.filter((issue) => !isCompletedIssue(issue) && priorityLabel(issue.priority) === "Urgent");
   const otherActive = issues.filter((issue) => !isCompletedIssue(issue) && priorityLabel(issue.priority) !== "Urgent");
   const completed = issues.filter(isCompletedIssue);
-  const groups: Array<[string, Issue[]]> = [
-    ["Urgent issues", urgent],
-    ["Other active", otherActive],
-    ["Completed", completed],
-  ].filter(([, rows]) => rows.length > 0);
+  const groups: Array<[string, Issue[]]> = (
+    [
+      ["Urgent issues", urgent],
+      ["Other active", otherActive],
+      ["Completed", completed],
+    ] as Array<[string, Issue[]]>
+  ).filter(([, rows]) => rows.length > 0);
 
   if (!groups.length) return <EmptyState title="No assigned issues" description="Issues assigned to you will appear here." />;
 
@@ -412,14 +502,14 @@ function AssignedMyIssuesList({ issues }: { issues: Issue[] }) {
     <div className="grid gap-2 px-2 py-2" data-testid="my-issues-assigned-list">
       {groups.map(([label, rows]) => (
         <MyIssuesGroup key={label} label={label} count={rows.length}>
-          {rows.map((issue) => <MyIssueRow key={issueKey(issue)} issue={issue} context="assigned" />)}
+          <MyIssueTreeRows issues={rows} context="assigned" display={display} />
         </MyIssuesGroup>
       ))}
     </div>
   );
 }
 
-function FlatMyIssuesList({ issues, tab }: { issues: Issue[]; tab: Exclude<MyIssuesTab, "assigned" | "activity"> }) {
+function FlatMyIssuesList({ issues, tab, display }: { issues: Issue[]; tab: Exclude<MyIssuesTab, "assigned" | "activity">; display: MyIssuesDisplay }) {
   if (!issues.length) {
     return <EmptyState title={tab === "created" ? "No created issues" : "No subscribed issues"} description="Matching issues will appear here." />;
   }
@@ -427,29 +517,28 @@ function FlatMyIssuesList({ issues, tab }: { issues: Issue[]; tab: Exclude<MyIss
   return (
     <div className="px-2 py-2" data-testid={`my-issues-${tab}-list`}>
       <div className="divide-y divide-transparent">
-        {issues.map((issue) => <MyIssueRow key={issueKey(issue)} issue={issue} context={tab} />)}
+        <MyIssueTreeRows issues={issues} context={tab} display={display} />
       </div>
     </div>
   );
 }
 
-function MyIssueActivityList({ activity }: { activity: MyIssueActivityEvent[] }) {
-  const seen = new Set<string>();
-  const rows = activity
-    .filter((event) => event.issue)
-    .filter((event) => {
-      const key = event.issue ? issueKey(event.issue) : event.issue_id || "activity";
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    })
-    .slice(0, 20);
+function MyIssueActivityList({ activity, display }: { activity: MyIssueActivityEvent[]; display: MyIssuesDisplay }) {
+  const rows = activity.slice(0, 20);
   if (!rows.length) return <EmptyState title="No activity" description="Issue updates you perform will appear here." />;
 
   return (
     <div className="grid gap-2 px-2 py-2" data-testid="my-issues-activity-list">
       <MyIssuesGroup label="Today" count={rows.length}>
-        {rows.map((event) => event.issue && <MyIssueRow key={event.id || `${event.issue_id}-${event.created_at}`} issue={event.issue} context="activity" activity={event} />)}
+        {rows.map((event) => event.issue && (
+          <MyIssueRow
+            key={event.id || `${event.issue_id}-${event.created_at}`}
+            issue={event.issue}
+            context="activity"
+            activity={event}
+            display={display}
+          />
+        ))}
       </MyIssuesGroup>
     </div>
   );
@@ -468,9 +557,38 @@ function MyIssuesGroup({ label, count, children }: { label: string; count: numbe
   );
 }
 
-function MyIssueRow({ issue, context, activity }: { issue: Issue; context: MyIssuesTab; activity?: MyIssueActivityEvent }) {
+function MyIssueTreeRows({ issues, context, display }: { issues: Issue[]; context: MyIssuesTab; display: MyIssuesDisplay }) {
+  return (
+    <>
+      {splitIssueTree(issues).map(({ issue, children }) => (
+        <MyIssueRow
+          key={issueKey(issue)}
+          issue={issue}
+          childrenIssues={children}
+          context={context}
+          display={display}
+        />
+      ))}
+    </>
+  );
+}
+
+function MyIssueRow({
+  issue,
+  context,
+  activity,
+  display,
+  childrenIssues = [],
+}: {
+  issue: Issue;
+  context: MyIssuesTab;
+  activity?: MyIssueActivityEvent;
+  display: MyIssuesDisplay;
+  childrenIssues?: Issue[];
+}) {
   const key = issueKey(issue);
   const priority = visiblePriority(issue.priority);
+  const childCount = childrenIssues.length || issueChildCount(issue);
   const meta =
     context === "created"
       ? "Created by you"
@@ -479,30 +597,717 @@ function MyIssueRow({ issue, context, activity }: { issue: Issue; context: MyIss
         : context === "activity"
           ? `Updated on ${formatDate(activity?.created_at || issue.updated_at || issue.created_at)}`
           : formatDate(issue.updated_at || issue.created_at);
+  const sourcePath = context === "activity" ? "/my-issues/activity" : `/my-issues/${context}`;
+  const sourcePill = context === "activity" ? "Activity" : titleize(context);
+  const sourceState = {
+    source: "my-issues",
+    from: sourcePath,
+    fromLabel: "My issues",
+    fromPill: sourcePill,
+  };
 
   return (
-    <Link
-      to={`/issue/${key}`}
-      className="group grid min-h-12 grid-cols-[1.25rem_4rem_1.25rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 text-[14px] transition-colors hover:bg-muted/55"
-      data-testid={`my-issue-row-${key}`}
-    >
-      <span data-testid={`my-issue-priority-${slugifyPriority(priority)}`}>
-        <PriorityIcon priority={priority} />
-      </span>
-      <span className="text-[13px] tabular-nums text-muted-foreground">{key}</span>
-      <StatusGlyph state={stateName(issue)} />
-      <span className="min-w-0 truncate font-medium text-foreground">{issueTitle(issue)}</span>
-      <span className="flex items-center gap-3 text-[13px] text-muted-foreground">
-        <span
-          className="grid size-5 place-items-center rounded-full bg-[#12bfd3] text-[9px] font-semibold text-white"
-          title={assigneeName(issue)}
-        >
-          {initials(assigneeName(issue))}
+    <div data-testid={`my-issue-row-block-${key}`}>
+      <Link
+        to={`/issue/${key}`}
+        state={sourceState}
+        className={cn(
+          "group grid grid-cols-[1.25rem_5rem_1.25rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 text-[14px] transition-colors hover:bg-muted/55",
+          display.compact ? "min-h-9" : "min-h-12",
+        )}
+        data-testid={`my-issue-row-${key}`}
+      >
+        <span data-testid={`my-issue-priority-${slugifyPriority(priority)}`}>{display.priority && <PriorityIcon priority={priority} />}</span>
+        <span className="whitespace-nowrap text-[13px] tabular-nums text-muted-foreground">{key}</span>
+        <span>{display.status && <StatusGlyph state={stateName(issue)} />}</span>
+        <span className="flex min-w-0 items-center gap-2">
+          <span className="min-w-0">
+            <span className="block truncate font-medium text-foreground">{issueTitle(issue)}</span>
+            {display.project && issue.project && (
+              <span className="block truncate text-[12px] text-muted-foreground">{String(issue.project)}</span>
+            )}
+          </span>
+          {childCount > 0 && (
+            <SubIssueProgress
+              issue={issue}
+              childrenIssues={childrenIssues.length ? childrenIssues : undefined}
+              className="h-5 px-1.5 text-[11px]"
+              testId={`my-issue-subissue-count-${key}`}
+            />
+          )}
         </span>
-        <span className="whitespace-nowrap">{meta}</span>
-      </span>
-    </Link>
+        <span className="flex items-center gap-3 text-[13px] text-muted-foreground">
+          {display.assignee && (
+            <span
+              className="grid size-5 place-items-center rounded-full bg-[#12bfd3] text-[9px] font-semibold text-white"
+              title={assigneeName(issue)}
+            >
+              {initials(assigneeName(issue))}
+            </span>
+          )}
+          {display.date && <span className="whitespace-nowrap">{meta}</span>}
+        </span>
+      </Link>
+
+      {childrenIssues.length > 0 && (
+        <div className="ml-[7.65rem] border-l border-border/80 py-0.5 pl-3">
+          {childrenIssues.map((child) => (
+            <Link
+              key={issueKey(child)}
+              to={`/issue/${issueKey(child)}`}
+              state={{ ...sourceState, parentKey: key, parentTitle: issueTitle(issue) }}
+              className="grid min-h-9 grid-cols-[5rem_1.25rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-2 text-[13px] text-muted-foreground transition-colors hover:bg-muted/55"
+              data-testid={`my-issue-subissue-row-${issueKey(child)}`}
+            >
+              <span className="whitespace-nowrap tabular-nums">{issueKey(child)}</span>
+              <span>{display.status && <StatusGlyph state={stateName(child)} />}</span>
+              <span className="min-w-0 truncate text-foreground">{issueTitle(child)}</span>
+              <span className="flex items-center gap-1.5">
+                <GitBranch size={11} />
+                <span>{assigneeName(child)}</span>
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
   );
+}
+
+function MyIssuesFilterMenu({
+  open,
+  onOpenChange,
+  filters,
+  onChange,
+  children,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  filters: MyIssuesFilters;
+  onChange: (filters: MyIssuesFilters) => void;
+  children: ReactNode;
+}) {
+  const [panel, setPanel] = useState<"root" | "status" | "priority" | "assignee" | "creator" | "project" | "date">("root");
+  const toggleArrayFilter = (key: "status" | "priority" | "creator" | "project" | "date", value: string) => {
+    const current = filters[key];
+    onChange({
+      ...filters,
+      [key]: current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
+    });
+    setPanel("root");
+    onOpenChange(false);
+  };
+  const closeFilterMenu = () => {
+    setPanel("root");
+    onOpenChange(false);
+  };
+  const toggleFilterMenu = () => {
+    if (open) {
+      closeFilterMenu();
+      return;
+    }
+    setPanel("root");
+    onOpenChange(true);
+  };
+  const panelTop =
+    panel === "status" ? "top-[50px]"
+      : panel === "assignee" ? "top-[86px]"
+        : panel === "creator" ? "top-[122px]"
+          : panel === "priority" ? "top-[158px]"
+            : panel === "date" ? "top-[194px]"
+              : "top-[230px]";
+
+  return (
+    <div className="relative z-[70]">
+      <span onClick={toggleFilterMenu}>{children}</span>
+      {open && <button type="button" aria-label="Close filter menu" className="fixed inset-0 z-[65] cursor-default bg-transparent" onClick={closeFilterMenu} />}
+      {open && (
+      <>
+      {panel !== "root" && (
+        <div className={cn("absolute right-[246px] z-[75] w-[218px] overflow-hidden rounded-xl border border-border bg-popover text-sm text-popover-foreground shadow-[0_18px_44px_rgba(0,0,0,0.18)]", panelTop)}>
+          {panel === "status" ? (
+            <HoverFilterPanel>
+              {[
+                ["Backlog", "2 issues", <StatusGlyph state="Backlog" />],
+                ["Todo", "", <StatusGlyph state="Todo" />],
+                ["In Progress", "", <StatusGlyph state="In Progress" />],
+                ["In Review", "", <StatusGlyph state="In Review" />],
+                ["Done", "1 issue", <StatusGlyph state="Done" />],
+                ["Canceled", "", <StatusGlyph state="Canceled" />],
+              ].map(([label, count, icon]) => (
+                <HoverFilterOption key={String(label)} active={filters.status.includes(String(label))} icon={icon} label={String(label)} count={String(count)} onClick={() => toggleArrayFilter("status", String(label))} />
+              ))}
+            </HoverFilterPanel>
+          ) : panel === "assignee" ? (
+            <HoverFilterPanel>
+              {[
+                ["Unassigned", "2 issues", <UserMiniIcon muted />],
+                ["Current user", "", <UserMiniIcon />],
+                ["Parikshit Joon", "", <AvatarDot label="PJ" color="bg-[#12bfd3]" />],
+                ["Sarah Connor", "1 issue", <AvatarDot label="SC" color="bg-[#12bfd3]" />],
+                ["Riley Nguyen", "", <AvatarDot label="RN" color="bg-[#c5a137]" />],
+              ].map(([label, count, icon]) => (
+                <HoverFilterOption
+                  key={String(label)}
+                  active={(label === "Unassigned" && filters.assignee === "unassigned") || (label === "Current user" && filters.assignee === "me")}
+                  icon={icon}
+                  label={String(label)}
+                  count={String(count)}
+                  onClick={() => {
+                    if (label === "Unassigned") onChange({ ...filters, assignee: filters.assignee === "unassigned" ? "all" : "unassigned" });
+                    if (label !== "Unassigned") onChange({ ...filters, assignee: filters.assignee === "me" ? "all" : "me" });
+                    closeFilterMenu();
+                  }}
+                />
+              ))}
+            </HoverFilterPanel>
+          ) : panel === "creator" ? (
+            <HoverFilterPanel>
+              {[
+                ["Current user", "", <UserMiniIcon />],
+                ["Parikshit Joon", "3 issues", <AvatarDot label="PJ" color="bg-[#12bfd3]" />],
+                ["Sarah Connor", "1 issue", <AvatarDot label="SC" color="bg-[#12bfd3]" />],
+                ["Riley Nguyen", "", <AvatarDot label="RN" color="bg-[#c5a137]" />],
+              ].map(([label, count, icon]) => (
+                <HoverFilterOption key={String(label)} active={filters.creator.includes(String(label))} icon={icon} label={String(label)} count={String(count)} onClick={() => toggleArrayFilter("creator", String(label))} />
+              ))}
+            </HoverFilterPanel>
+          ) : panel === "priority" ? (
+            <HoverFilterPanel>
+              {[
+                ["No priority", "2 issues", <NoPriorityIcon />],
+                ["Urgent", "", <span className="grid size-4 place-items-center rounded bg-[#ef5c42] text-[11px] font-bold text-white">!</span>],
+                ["High", "", <PriorityBars level={3} />],
+                ["Medium", "1 issue", <PriorityBars level={2} />],
+                ["Low", "", <PriorityBars level={1} />],
+              ].map(([label, count, icon]) => (
+                <HoverFilterOption key={String(label)} active={filters.priority.includes(String(label))} icon={icon} label={String(label)} count={String(count)} onClick={() => toggleArrayFilter("priority", String(label))} />
+              ))}
+            </HoverFilterPanel>
+          ) : panel === "date" ? (
+            <HoverFilterPanel>
+              {[
+                ["Today", "20 issues", <CalendarDays size={14} strokeWidth={2} className="text-muted-foreground" />],
+                ["Yesterday", "", <CalendarDays size={14} strokeWidth={2} className="text-muted-foreground" />],
+                ["This week", "", <CalendarDays size={14} strokeWidth={2} className="text-muted-foreground" />],
+                ["Older", "", <Clock3 size={14} strokeWidth={2} className="text-muted-foreground" />],
+              ].map(([label, count, icon]) => (
+                <HoverFilterOption key={String(label)} active={filters.date.includes(String(label))} icon={icon} label={String(label)} count={String(count)} onClick={() => toggleArrayFilter("date", String(label))} />
+              ))}
+            </HoverFilterPanel>
+          ) : (
+            <HoverFilterPanel>
+              {[
+                ["No project", "", <ProjectMiniIcon muted />],
+                ["Constructing linear clone", "2 issues", <ProjectMiniIcon />],
+                ["Backend Tool Server Coverage", "1 issue", <ProjectMiniIcon />],
+                ["ET Bug Board", "", <ProjectMiniIcon />],
+              ].map(([label, count, icon]) => (
+                <HoverFilterOption key={String(label)} active={filters.project.includes(String(label))} icon={icon} label={String(label)} count={String(count)} onClick={() => toggleArrayFilter("project", String(label))} />
+              ))}
+            </HoverFilterPanel>
+          )}
+        </div>
+      )}
+      <div className="absolute right-0 top-[calc(100%+7px)] z-[70] w-[238px] overflow-hidden rounded-xl border border-border bg-popover p-0 text-sm text-popover-foreground shadow-[0_14px_32px_rgba(0,0,0,0.13)]" data-testid="my-issues-filter-menu">
+        <div className="flex h-10 items-center gap-2 border-b border-border/70 px-3 text-[13px] text-muted-foreground">
+          <span className="min-w-0 flex-1 truncate">Add Filter...</span>
+          <kbd className="text-[12px] text-muted-foreground">F</kbd>
+        </div>
+        <div className="py-1 text-[13px]">
+          <FilterMenuRow active={panel === "status"} icon={<CircleDashed size={14} />} label="Status" onHover={() => setPanel("status")} />
+          <FilterMenuRow active={panel === "assignee"} icon={<UsersIcon />} label="Assignee" onHover={() => setPanel("assignee")} />
+          <FilterMenuRow active={panel === "creator"} icon={<UsersIcon />} label="Creator" onHover={() => setPanel("creator")} />
+          <FilterMenuRow active={panel === "priority"} icon={<PriorityBars level={3} />} label="Priority" onHover={() => setPanel("priority")} />
+          <FilterMenuRow active={panel === "date"} icon={<CalendarDays size={14} />} label="Dates" onHover={() => setPanel("date")} />
+          <FilterMenuRow active={panel === "project"} icon={<Box size={14} />} label="Project" onHover={() => setPanel("project")} />
+        </div>
+      </div>
+      </>
+      )}
+    </div>
+  );
+}
+
+function MyIssuesDisplayMenu({
+  open,
+  onOpenChange,
+  view,
+  onViewChange,
+  display,
+  onDisplayChange,
+  children,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  view: MyIssuesViewMode;
+  onViewChange: (view: MyIssuesViewMode) => void;
+  display: MyIssuesDisplay;
+  onDisplayChange: (display: MyIssuesDisplay) => void;
+  children: ReactNode;
+}) {
+  const toggleDisplay = (key: keyof Pick<MyIssuesDisplay, "priority" | "status" | "assignee" | "project" | "date" | "compact">) =>
+    onDisplayChange({ ...display, [key]: !display[key] });
+
+  return (
+    <div className="relative z-[70]">
+      <span onClick={() => onOpenChange(!open)}>{children}</span>
+      {open && <button type="button" aria-label="Close display menu" className="fixed inset-0 z-[65] cursor-default bg-transparent" onClick={() => onOpenChange(false)} />}
+      {open && (
+      <div className="absolute right-0 top-[calc(100%+7px)] z-[70] w-[302px] rounded-xl border border-border bg-popover p-0 text-sm text-popover-foreground shadow-[0_14px_32px_rgba(0,0,0,0.13)]" data-testid="my-issues-display-menu">
+        <div className="px-4 pb-3 pt-3">
+          <div className="grid grid-cols-2 gap-1 rounded-full bg-muted/70 p-1">
+            <ViewToggle active={view === "list"} label="List" onClick={() => onViewChange("list")} />
+            <ViewToggle active={view === "board"} label="Board" onClick={() => onViewChange("board")} />
+          </div>
+        </div>
+        <div className="grid gap-2 border-t border-border/70 px-4 py-3 text-[13px]">
+          <DisplaySelectRow label="Grouping" value="My activity" />
+          <DisplaySelectRow label="Sub-grouping" value="No grouping" />
+          <DisplaySelectRow
+            label="Ordering"
+            value={display.order === "updated" ? "My activity date" : display.order === "created" ? "Created" : "Priority"}
+            onClick={() => onDisplayChange({ ...display, order: display.order === "updated" ? "created" : display.order === "created" ? "priority" : "updated" })}
+          />
+        </div>
+        <div className="grid gap-2 border-t border-border/70 px-4 py-3 text-[13px]">
+          <DisplaySelectRow label="Completed issues" value="All" />
+          <div className="flex h-7 items-center justify-between">
+            <span className="text-muted-foreground">Show sub-issues</span>
+            <button type="button" onClick={() => toggleDisplay("compact")} className={cn("h-4 w-7 rounded-full p-0.5 transition-colors", !display.compact ? "bg-primary" : "bg-muted-foreground/30")}>
+              <span className={cn("block size-3 rounded-full bg-white transition-transform", !display.compact && "translate-x-3")} />
+            </button>
+          </div>
+        </div>
+        <div className="border-t border-border/70 px-4 pb-4 pt-3">
+          <div className="mb-2 text-[13px] text-muted-foreground">List options</div>
+          <div className="mb-2 flex h-7 items-center justify-between text-[13px]">
+            <span className="text-muted-foreground">Nested sub-issues</span>
+            <button type="button" onClick={() => toggleDisplay("compact")} className={cn("h-4 w-7 rounded-full p-0.5 transition-colors", display.compact ? "bg-primary" : "bg-muted-foreground/30")}>
+              <span className={cn("block size-3 rounded-full bg-white transition-transform", display.compact && "translate-x-3")} />
+            </button>
+          </div>
+          <div className="mb-2 text-[13px] text-muted-foreground">Display properties</div>
+          <div className="flex flex-wrap gap-1.5">
+            {([
+              ["id", "ID"],
+              ["priority", "Priority"],
+              ["status", "Status"],
+              ["assignee", "Assignee"],
+              ["project", "Project"],
+              ["due", "Due date"],
+              ["labels", "Labels"],
+              ["date", "Updated"],
+              ["activity", "My activity date"],
+            ] as Array<[string, string]>).map(([key, label]) => {
+              const active = key === "id" || key === "activity" || key === "due" || key === "labels" ? false : display[key as keyof Pick<MyIssuesDisplay, "priority" | "status" | "assignee" | "project" | "date">];
+              return (
+              <button
+                key={key}
+                type="button"
+                aria-pressed={active}
+                onClick={() => {
+                  if (["priority", "status", "assignee", "project", "date"].includes(key)) {
+                    toggleDisplay(key as keyof Pick<MyIssuesDisplay, "priority" | "status" | "assignee" | "project" | "date" | "compact">);
+                  }
+                }}
+                className={cn(
+                  "h-6 rounded-full border px-2 text-[12px] transition-colors",
+                  active ? "border-transparent bg-muted text-foreground" : "border-border/60 bg-background text-muted-foreground hover:bg-muted/60",
+                )}
+              >
+                {label}
+              </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+      )}
+    </div>
+  );
+}
+
+function FilterToggle({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} className="flex h-8 items-center gap-2 rounded-md px-2 text-left text-[13px] hover:bg-muted/70">
+      <span className={cn("grid size-4 place-items-center rounded-sm border", active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background")}>
+        {active && <Check size={12} strokeWidth={3} />}
+      </span>
+      <span className="min-w-0 flex-1 truncate">{label}</span>
+    </button>
+  );
+}
+
+function FilterMenuRow({ icon, label, active, onHover }: { icon: ReactNode; label: string; active?: boolean; onHover: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onHover}
+      onMouseEnter={onHover}
+      onMouseMove={onHover}
+      onMouseOver={onHover}
+      onPointerEnter={onHover}
+      onPointerMove={onHover}
+      onFocus={onHover}
+      className={cn(
+        "flex h-9 w-full items-center gap-2 px-3 text-left text-[13px]",
+        active ? "bg-muted text-foreground" : "text-foreground hover:bg-muted/70",
+      )}
+    >
+      <span className="grid size-4 place-items-center text-muted-foreground">{icon}</span>
+      <span className="min-w-0 flex-1 truncate">{label}</span>
+      <ChevronRight size={13} className="text-muted-foreground" />
+    </button>
+  );
+}
+
+function HoverFilterPanel({ children }: { children: ReactNode }) {
+  return (
+    <div className="overflow-hidden rounded-xl">
+      <div className="flex h-10 items-center border-b border-border/70 px-3 text-[13px] text-muted-foreground">Filter...</div>
+      <div className="py-1">{children}</div>
+    </div>
+  );
+}
+
+function HoverFilterOption({
+  active,
+  icon,
+  label,
+  count,
+  onClick,
+}: {
+  active: boolean;
+  icon: ReactNode;
+  label: string;
+  count?: string;
+  onClick: () => void;
+}) {
+  return (
+    <button type="button" onClick={onClick} className="flex h-8 w-full items-center gap-2 px-3 text-left text-[13px] text-foreground hover:bg-muted/70">
+      <span className="grid size-4 place-items-center text-muted-foreground">{active ? <Check size={13} /> : icon}</span>
+      <span className="min-w-0 flex-1 truncate">{label}</span>
+      {count && <span className="text-[12px] text-muted-foreground">{count}</span>}
+    </button>
+  );
+}
+
+function AvatarDot({ label, color }: { label: string; color: string }) {
+  return <span className={cn("grid size-4 place-items-center rounded-full text-[7px] font-semibold text-white", color)}>{label}</span>;
+}
+
+function PriorityBars({ level }: { level: 1 | 2 | 3 }) {
+  return (
+    <span className="flex h-4 w-4 items-end gap-[2px]" aria-hidden>
+      {[1, 2, 3].map((bar) => (
+        <span
+          key={bar}
+          className={cn("w-[3px] rounded-sm", bar <= level ? "bg-muted-foreground" : "bg-muted-foreground/30")}
+          style={{ height: `${bar * 4 + 1}px` }}
+        />
+      ))}
+    </span>
+  );
+}
+
+function ViewToggle({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} aria-pressed={active} className={cn("flex h-7 items-center justify-center rounded-full text-[13px] font-medium", active ? "bg-background text-foreground shadow-sm ring-1 ring-foreground/10" : "text-muted-foreground hover:text-foreground")}>
+      {label}
+    </button>
+  );
+}
+
+function DisplaySelectRow({ label, value, onClick }: { label: string; value: string; onClick?: () => void }) {
+  return (
+    <button type="button" onClick={onClick} className="flex h-7 items-center justify-between gap-3 rounded-md text-left">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="inline-flex h-7 items-center gap-1 rounded-md border border-border bg-background px-2 text-foreground shadow-sm">
+        {value}
+        <ChevronRight size={12} className="rotate-90 text-muted-foreground" />
+      </span>
+    </button>
+  );
+}
+
+function UsersIcon() {
+  return <UserMiniIcon />;
+}
+
+function PriorityMiniIcon() {
+  return <span className="text-[13px] leading-none">▮▮▮</span>;
+}
+
+function UserMiniIcon({ muted = false }: { muted?: boolean }) {
+  return (
+    <span className={cn("relative block size-4", muted ? "text-muted-foreground/70" : "text-muted-foreground")}>
+      <span className="absolute left-[5px] top-[2px] size-[5px] rounded-full border border-current" />
+      <span className="absolute bottom-[2px] left-[3px] h-[6px] w-[9px] rounded-t-full border border-current border-b-0" />
+    </span>
+  );
+}
+
+function ProjectMiniIcon({ muted = false }: { muted?: boolean }) {
+  return (
+    <span className={cn("grid size-4 place-items-center", muted ? "text-muted-foreground/70" : "text-muted-foreground")}>
+      <Box size={14} strokeWidth={1.9} />
+    </span>
+  );
+}
+
+function NoPriorityIcon() {
+  return (
+    <span className="flex size-4 items-center justify-center gap-[2px] text-muted-foreground" aria-hidden>
+      <span className="h-[2px] w-[3px] rounded-full bg-current" />
+      <span className="h-[2px] w-[3px] rounded-full bg-current" />
+      <span className="h-[2px] w-[3px] rounded-full bg-current" />
+    </span>
+  );
+}
+
+function MyIssuesBoard({ issues, display }: { issues: Issue[]; display: MyIssuesDisplay }) {
+  const groups = ["Backlog", "Todo", "In Progress", "In QA", "Done"].map((label) => [
+    label,
+    issues.filter((issue) => boardBucketForIssue(issue) === label),
+  ] as [string, Issue[]]).filter(([, rows]) => rows.length > 0);
+
+  if (!groups.length) return <EmptyState title="No matching issues" description="Adjust filters to see more issues." />;
+
+  return (
+    <div className="grid auto-cols-[minmax(220px,1fr)] grid-flow-col gap-3 overflow-x-auto px-2 py-2" data-testid="my-issues-board">
+      {groups.map(([label, rows]) => (
+        <section key={label} className="min-w-[220px] rounded-lg bg-muted/55 p-2">
+          <div className="mb-2 flex items-center gap-2 px-1 text-[13px] font-medium text-muted-foreground">
+            <span>{label}</span>
+            <span>{rows.length}</span>
+          </div>
+          <div className="grid gap-1.5">
+            {rows.map((issue) => (
+              <Link key={issueKey(issue)} to={`/issue/${issueKey(issue)}`} className="rounded-md border border-border bg-background p-2 text-[13px] shadow-sm hover:bg-muted/45">
+                <div className="mb-1 flex items-center gap-2 text-muted-foreground">
+                  {display.priority && <PriorityIcon priority={visiblePriority(issue.priority)} />}
+                  <span>{issueKey(issue)}</span>
+                  {display.status && <StatusGlyph state={stateName(issue)} />}
+                </div>
+                <div className="line-clamp-2 font-medium text-foreground">{issueTitle(issue)}</div>
+                {display.assignee && <div className="mt-2 text-[12px] text-muted-foreground">{assigneeName(issue)}</div>}
+              </Link>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function MyIssuesDetailsPanel({
+  issue,
+  visibleCount,
+  filters,
+  display,
+  onClearFilters,
+}: {
+  issue: Issue | null;
+  visibleCount: number;
+  filters: MyIssuesFilters;
+  display: MyIssuesDisplay;
+  onClearFilters: () => void;
+}) {
+  const [tab, setTab] = useState<"labels" | "priority" | "projects">("labels");
+  return (
+    <aside className="p-2 pl-0" data-testid="my-issues-details-panel">
+      <div className="min-h-[calc(100vh-7.25rem)] rounded-xl border border-border bg-background shadow-[0_10px_28px_rgba(0,0,0,0.08)]">
+        <div className="border-b border-border/70 px-3 py-2">
+          <div className="grid grid-cols-3 gap-1 rounded-full bg-muted/70 p-1">
+            {(["labels", "priority", "projects"] as const).map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setTab(item)}
+                className={cn(
+                  "h-7 rounded-full text-[13px] font-medium capitalize",
+                  tab === item ? "bg-background text-foreground shadow-sm ring-1 ring-foreground/10" : "text-muted-foreground",
+                )}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="px-5 py-7 text-center text-[13px] text-muted-foreground">
+          {tab === "labels" ? (
+            "No labels used"
+          ) : tab === "priority" && issue ? (
+            <div className="grid gap-3 text-left">
+              <DetailRow label="Priority" value={priorityLabel(visiblePriority(issue.priority))} />
+              <DetailRow label="Status" value={stateName(issue)} />
+              <DetailRow label="Assignee" value={assigneeName(issue)} />
+            </div>
+          ) : tab === "projects" && issue ? (
+            <div className="grid gap-3 text-left">
+              <Link to={`/issue/${issueKey(issue)}`} className="block rounded-lg border border-border bg-muted/35 p-3 hover:bg-muted">
+                <div className="mb-1 text-muted-foreground">{issueKey(issue)}</div>
+                <div className="font-medium text-foreground">{issueTitle(issue)}</div>
+              </Link>
+              <DetailRow label="Project" value={String(issue.project || "No project")} />
+              <DetailRow label="Visible" value={`${visibleCount} issues`} />
+              <DetailRow label="Ordering" value={display.order === "updated" ? "My activity date" : display.order === "created" ? "Created" : "Priority"} />
+              {myIssuesFiltersCount(filters) > 0 && (
+                <button type="button" onClick={onClearFilters} className="justify-self-start text-muted-foreground hover:text-foreground">
+                  Clear filters
+                </button>
+              )}
+            </div>
+          ) : (
+            "No issue selected"
+          )}
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex min-h-7 items-center justify-between gap-3">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="min-w-0 truncate text-right text-foreground">{value}</span>
+    </div>
+  );
+}
+
+function uniqueMyIssueActivityRows(activity: MyIssueActivityEvent[]) {
+  const seen = new Set<string>();
+  return activity
+    .filter((event) => event.issue)
+    .filter((event) => {
+      const key = event.issue ? issueKey(event.issue) : event.issue_id || "activity";
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+
+function myIssuesFiltersCount(filters: MyIssuesFilters) {
+  return filters.status.length
+    + filters.priority.length
+    + filters.creator.length
+    + filters.project.length
+    + filters.date.length
+    + (filters.assignee === "all" ? 0 : 1);
+}
+
+function matchesMyIssueFilters(issue: Issue, filters: MyIssuesFilters, userId: string) {
+  if (filters.status.length) {
+    const issueState = stateName(issue).toLowerCase();
+    const completed = isCompletedIssue(issue);
+    const matchesStatus = filters.status.some((status) => {
+      const normalized = status.toLowerCase();
+      if (normalized === "done") return completed;
+      if (normalized === "canceled") return issueState.includes("cancel");
+      return issueState.includes(normalized) || normalized.includes(issueState);
+    });
+    if (!matchesStatus) return false;
+  }
+  if (filters.priority.length) {
+    const rawLabel = priorityLabel(issue.priority);
+    const label = priorityLabel(visiblePriority(issue.priority));
+    if (!filters.priority.includes(label) && !filters.priority.includes(rawLabel)) return false;
+  }
+  if (filters.assignee === "unassigned" && assigneeName(issue).toLowerCase() !== "unassigned") return false;
+  if (filters.assignee === "me" && !issueAssignedToUser(issue, userId)) return false;
+  if (filters.creator.length) {
+    const creator = issueCreatorName(issue).toLowerCase();
+    const matchesCreator = filters.creator.some((value) => {
+      const target = value.toLowerCase();
+      if (target === "current user") return creator.includes("parikshit") || creator.includes("pj") || issueAssignedToUser(issue, userId);
+      return creator.includes(target) || target.includes(creator);
+    });
+    if (!matchesCreator) return false;
+  }
+  if (filters.project.length) {
+    const project = String(issue.project || "").toLowerCase();
+    const matchesProject = filters.project.some((value) => {
+      const target = value.toLowerCase();
+      if (target === "no project") return !project || project === "none";
+      return project.includes(target) || target.includes(project);
+    });
+    if (!matchesProject) return false;
+  }
+  if (filters.date.length) {
+    const matchesDate = filters.date.some((value) => issueMatchesDateFilter(issue, value));
+    if (!matchesDate) return false;
+  }
+  return true;
+}
+
+function issueAssignedToUser(issue: Issue, userId: string) {
+  const raw = issue as Issue & { assignee_id?: string; assignee?: { id?: string; email?: string; name?: string } | string };
+  const assigneeId = String(raw.assignee_id || (typeof raw.assignee === "object" ? raw.assignee?.id : "") || "");
+  const assigneeText = assigneeName(issue).toLowerCase();
+  return assigneeId === userId || assigneeText.includes("parikshit") || assigneeText.includes("pj");
+}
+
+function issueCreatorName(issue: Issue) {
+  const raw = issue as Issue & {
+    creator?: { name?: string; email?: string; username?: string } | string;
+    creator_name?: string;
+    created_by?: string;
+  };
+  return userName(raw.creator || raw.creator_name || raw.created_by || assigneeName(issue));
+}
+
+function issueMatchesDateFilter(issue: Issue, filter: string) {
+  const date = new Date(issue.updated_at || issue.created_at || "");
+  if (Number.isNaN(date.getTime())) return filter === "Older";
+  const now = new Date();
+  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const startYesterday = startToday - 24 * 60 * 60 * 1000;
+  const time = date.getTime();
+  if (filter === "Today") return time >= startToday;
+  if (filter === "Yesterday") return time >= startYesterday && time < startToday;
+  if (filter === "This week") return time >= startToday - 6 * 24 * 60 * 60 * 1000;
+  if (filter === "Older") return time < startToday - 6 * 24 * 60 * 60 * 1000;
+  return true;
+}
+
+function sortMyIssues(issues: Issue[], order: MyIssuesOrder) {
+  return [...issues].sort((a, b) => compareMyIssues(a, b, order));
+}
+
+function sortMyIssueActivity(activity: MyIssueActivityEvent[], order: MyIssuesOrder) {
+  return [...activity].sort((a, b) => compareMyIssues(a.issue as Issue, b.issue as Issue, order));
+}
+
+function compareMyIssues(a: Issue, b: Issue, order: MyIssuesOrder) {
+  if (order === "priority") return priorityRank(b.priority) - priorityRank(a.priority);
+  const key = order === "created" ? "created_at" : "updated_at";
+  return issueTime(b, key) - issueTime(a, key);
+}
+
+function issueTime(issue: Issue, key: "created_at" | "updated_at") {
+  const value = issue[key] || issue.created_at || issue.updated_at || "";
+  const time = Date.parse(String(value));
+  return Number.isFinite(time) ? time : 0;
+}
+
+function priorityRank(priority: Issue["priority"]) {
+  const label = priorityLabel(visiblePriority(priority));
+  if (label === "Urgent") return 4;
+  if (label === "High") return 3;
+  if (label === "Medium") return 2;
+  if (label === "Low") return 1;
+  return 0;
+}
+
+function boardBucketForIssue(issue: Issue) {
+  const state = stateName(issue).toLowerCase();
+  if (state.includes("done") || state.includes("complete") || state.includes("passed")) return "Done";
+  if (state.includes("qa")) return "In QA";
+  if (state.includes("progress") || state.includes("started")) return "In Progress";
+  if (state.includes("todo") || state.includes("triage")) return "Todo";
+  return "Backlog";
 }
 
 function isCompletedIssue(issue: Issue) {
@@ -568,7 +1373,7 @@ export function InboxPage() {
   const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const showLinearEmptyInbox = true;
+  const showLinearEmptyInbox = !loading && notifications.length === 0;
 
   useDocumentTitle("Inbox");
 
@@ -894,24 +1699,15 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [view, setView] = useState<ProjectsView>("list");
+  const [filters, setFilters] = useState<ProjectFilters>(EMPTY_PROJECT_FILTERS);
+  const [displayProps, setDisplayProps] = useState<ProjectsDisplayProps>({ ...DEFAULT_PROJECT_DISPLAY_PROPS });
 
   useDocumentTitle("Projects");
 
-  const projectsByColumn = useMemo(
-    () =>
-      PROJECT_COLUMNS.reduce<Record<string, Project[]>>((groups, column) => {
-        groups[column] = projects.filter((project) => projectColumn(project) === column);
-        return groups;
-      }, {}),
-    [projects],
-  );
-
   const load = async () => {
     setLoading(true);
-    const response = await readTool("search_projects", {
-      team_key: teamScoped ? teamName(teamKey) : undefined,
-      limit: 80,
-    });
+    const response = await readTool("search_projects", { limit: 100 });
     setProjects(collectionFrom<Project>(response.data, ["projects", "results", "items"]));
     setError(response.error);
     setLoading(false);
@@ -921,80 +1717,251 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
     load();
   }, [teamKey, teamScoped]);
 
+  const filteredProjects = useMemo(
+    () => projects.filter((project) => matchesProjectFilters(project, filters)),
+    [projects, filters],
+  );
+
+  const activeFilterCount = projectFiltersCount(filters);
+  const hasCustomDisplay = useMemo(
+    () =>
+      (Object.keys(DEFAULT_PROJECT_DISPLAY_PROPS) as Array<keyof ProjectsDisplayProps>).some(
+        (key) => displayProps[key] !== DEFAULT_PROJECT_DISPLAY_PROPS[key],
+      ),
+    [displayProps],
+  );
+
   return (
-    <div className="linear-page" data-testid="projects-page">
-      <div className="mb-3 flex h-9 items-center justify-between gap-3">
-        <h1 className="text-base font-medium text-foreground">{teamScoped ? `${teamName(teamKey)} Projects` : "Projects"}</h1>
-      </div>
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-1" aria-label="Project views">
-          <NavLink className="rounded-full border border-border bg-muted px-3 py-1.5 text-sm font-medium leading-none text-foreground shadow-sm" to={teamScoped ? `/team/${teamKey}/projects/all` : "/projects/all"}>All projects</NavLink>
-          <Button
-            variant="ghost"
-            iconOnly
-            type="button"
-            aria-label="New project"
-            title="New project"
-            onClick={() => setCreateOpen(true)}
-            data-testid="create-project-button"
-          >
-            <span className="relative inline-grid size-4 place-items-center">
-              <Layers3 size={16} className="text-muted-foreground" />
-              <Plus size={9} className="absolute -right-1 -top-1 text-muted-foreground" />
-            </span>
-          </Button>
-        </div>
-        <div className="flex items-center gap-1">
-          <Button variant="ghost" iconOnly aria-label="Add filter"><SlidersHorizontal size={14} /></Button>
-          <Button variant="ghost" iconOnly aria-label="Display options"><Settings size={14} /></Button>
-          <Button variant="ghost" iconOnly aria-label="View switcher"><Box size={14} /></Button>
+    <div className="flex min-h-screen flex-col bg-[#fcfcfc] dark:bg-[#161616]" data-testid="projects-page">
+      <div className="sticky top-0 z-10 bg-[#fcfcfc] dark:bg-[#161616]">
+        <div className="flex h-11 items-center justify-between border-b border-[#e5e5e5] px-5 dark:border-[#2d2d2d]">
+          <div className="flex items-center gap-1" aria-label="Project views">
+            <NavLink
+              className="inline-flex items-center gap-1.5 rounded-md border border-[#e5e5e5] bg-[#f4f4f3] px-2.5 py-1 text-[13px] font-medium text-[#1c1c1c] shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:border-[#2d2d2d] dark:bg-[#222222] dark:text-[#eeeeee]"
+              to={teamScoped ? `/team/${teamKey}/projects/all` : "/projects/all"}
+            >
+              <FolderKanban size={13} strokeWidth={2} className="text-[#6f6f6f] dark:text-[#7a7a7a]" />
+              All projects
+            </NavLink>
+            <Button
+              variant="ghost"
+              iconOnly
+              type="button"
+              aria-label="Add new view"
+              title="Add new view"
+              onClick={() => setCreateOpen(true)}
+              data-testid="create-project-button"
+              className="size-6 hover:bg-[#f4f4f3] dark:hover:bg-[#222222]"
+            >
+              <Layers3 size={13} className="text-[#6f6f6f] dark:text-[#7a7a7a]" />
+            </Button>
+          </div>
+          <div className="flex items-center gap-1">
+            <ProjectsFilterMenu filters={filters} onChange={setFilters} projects={projects}>
+              <Button
+                variant="ghost"
+                iconOnly
+                type="button"
+                aria-label="Add filter"
+                data-testid="projects-filter-button"
+                className={cn("relative size-6 hover:bg-[#f4f4f3] dark:hover:bg-[#222222]", activeFilterCount > 0 && "text-foreground")}
+              >
+                <Filter size={13} />
+                {activeFilterCount > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 grid size-3.5 place-items-center rounded-full bg-primary text-[9px] font-semibold text-primary-foreground">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </Button>
+            </ProjectsFilterMenu>
+            <ProjectsDisplayMenu
+              view={view}
+              onViewChange={setView}
+              displayProps={displayProps}
+              onDisplayPropsChange={setDisplayProps}
+            >
+              <Button
+                variant="ghost"
+                iconOnly
+                type="button"
+                aria-label="Display options"
+                data-testid="projects-display-button"
+                className={cn("relative size-6 hover:bg-[#f4f4f3] dark:hover:bg-[#222222]", hasCustomDisplay && "text-foreground")}
+              >
+                <SlidersHorizontal size={13} />
+                {hasCustomDisplay && (
+                  <span className="absolute right-1 top-1.5 size-1.5 rounded-full bg-primary" />
+                )}
+              </Button>
+            </ProjectsDisplayMenu>
+            <Button variant="ghost" iconOnly aria-label="Close sidebar" type="button" className="size-6 hover:bg-[#f4f4f3] dark:hover:bg-[#222222]">
+              <Box size={13} />
+            </Button>
+          </div>
         </div>
       </div>
       <ErrorBanner message={error} />
       <ProjectCreateComposer open={createOpen} onClose={() => setCreateOpen(false)} onCreated={load} />
-      {loading ? (
-        <Spinner label="Loading projects" />
-      ) : projects.length === 0 ? (
-        <EmptyState
-          title="No projects found"
-          description="Create a project or adjust filters."
-          action={<Button variant="primary" onClick={() => setCreateOpen(true)} data-testid="create-empty-project-button">New project</Button>}
-        />
-      ) : (
-        <div className="overflow-hidden bg-card" role="table" aria-label="Projects" data-testid="projects-table">
-          <div className="grid grid-cols-[minmax(20rem,1fr)_8rem_6rem_7rem_8rem_4rem_6rem] gap-3 px-9 py-2 text-xs font-medium text-muted-foreground" role="row">
-            <span>Name</span>
-            <span>Health</span>
-            <span>Priority</span>
-            <span>Lead</span>
-            <span>Target date</span>
-            <span>Issues</span>
-            <span>Status</span>
-          </div>
-          {projects.map((project) => (
-            <Link
-              key={project.id || project.key || projectTitle(project)}
-              className="grid min-h-12 grid-cols-[minmax(20rem,1fr)_8rem_6rem_7rem_8rem_4rem_6rem] items-center gap-3 px-9 py-2 text-sm transition-colors hover:bg-muted/60"
-              to={`/project/${project.id || project.key}/overview`}
-              role="row"
-              data-testid={`project-row-${project.id || project.key}`}
-            >
-              <span className="flex min-w-0 items-center gap-2">
-                <Box size={15} className="text-muted-foreground" />
-                <strong className="truncate font-medium">{projectTitle(project)}</strong>
-              </span>
-              <span className="flex items-center gap-2 text-muted-foreground"><span className="inline-block size-4 rounded-full border border-dashed border-muted-foreground/70" /> {project.health ? titleize(project.health) : "No updates"}</span>
-              <span className="text-muted-foreground">---</span>
-              <AvatarBubble>{initials(userName(project.lead || (project as Project & { lead_name?: string }).lead_name))}</AvatarBubble>
-              <span className="text-muted-foreground">{formatDate(project.target_date) || <Box size={15} />}</span>
-              <span>{String((project as Project & { issue_count?: number }).issue_count ?? project.issues?.length ?? 0)}</span>
-              <span className="flex items-center gap-2"><StatusGlyph state={project.state || project.status || "Backlog"} /> {project.progress ?? 0}%</span>
-            </Link>
-          ))}
-        </div>
-      )}
+      <div className="flex-1 px-5 py-3">
+        {loading ? (
+          <div className="py-6"><Spinner label="Loading projects" /></div>
+        ) : projects.length === 0 ? (
+          <EmptyState
+            title="No projects found"
+            description="Create a project or adjust filters."
+            action={<Button variant="primary" onClick={() => setCreateOpen(true)} data-testid="create-empty-project-button">New project</Button>}
+          />
+        ) : filteredProjects.length === 0 ? (
+          <EmptyState
+            title="No projects match these filters"
+            description="Try clearing filters or picking different values."
+            action={
+              <Button variant="default" onClick={() => setFilters(EMPTY_PROJECT_FILTERS)}>
+                Clear filters
+              </Button>
+            }
+          />
+        ) : view === "board" ? (
+          <ProjectsBoardView projects={filteredProjects} />
+        ) : (
+          <ProjectsListTable projects={filteredProjects} displayProps={displayProps} />
+        )}
+      </div>
     </div>
   );
+}
+
+function ProjectsListTable({
+  projects,
+  displayProps,
+}: {
+  projects: Project[];
+  displayProps: ProjectsDisplayProps;
+}) {
+  const columns = useMemo(() => {
+    const cols: Array<{ key: keyof ProjectsDisplayProps; label: string; width: string }> = [];
+    if (displayProps.health) cols.push({ key: "health", label: "Health", width: "9.5rem" });
+    if (displayProps.priority) cols.push({ key: "priority", label: "Priority", width: "6.5rem" });
+    if (displayProps.lead) cols.push({ key: "lead", label: "Lead", width: "4.5rem" });
+    if (displayProps.target_date) cols.push({ key: "target_date", label: "Target date", width: "8.5rem" });
+    if (displayProps.issues) cols.push({ key: "issues", label: "Issues", width: "4.5rem" });
+    if (displayProps.status) cols.push({ key: "status", label: "Status", width: "5.5rem" });
+    return cols;
+  }, [displayProps]);
+
+  const gridTemplate = ["minmax(20rem,1fr)", ...columns.map((c) => c.width)].join(" ");
+
+  return (
+    <div className="overflow-hidden rounded-lg bg-white dark:bg-[#202020]" role="table" aria-label="Projects" data-testid="projects-table">
+      <div
+        className="grid gap-6 border-b border-[#e5e5e5] bg-[#fafafa] px-5 py-2 text-[11px] font-medium text-[#6f6f6f] dark:border-[#2d2d2d] dark:bg-[#1a1a1a] dark:text-[#7a7a7a]"
+        role="row"
+        style={{ gridTemplateColumns: gridTemplate }}
+      >
+        <span>Name</span>
+        {columns.map((c) => (
+          <span key={c.key}>{c.label}</span>
+        ))}
+      </div>
+      {projects.map((project) => (
+        <Link
+          key={project.id || project.key || projectTitle(project)}
+          className="grid h-11 items-center gap-6 border-b border-[#e5e5e5] px-5 py-0 text-[13px] transition-colors last:border-b-0 hover:bg-[#f8f8f8] dark:border-[#2d2d2d] dark:hover:bg-[rgba(255,255,255,0.03)]"
+          to={`/project/${project.id || project.key}/overview`}
+          role="row"
+          data-testid={`project-row-${project.id || project.key}`}
+          style={{ gridTemplateColumns: gridTemplate }}
+        >
+          <span className="flex min-w-0 items-center gap-2">
+            <Box size={15} className="shrink-0 text-[#6f6f6f] dark:text-[#7a7a7a]" />
+            <strong className="truncate font-medium text-[#1c1c1c] dark:text-[#eeeeee]">{projectTitle(project)}</strong>
+          </span>
+          {columns.map((c) => (
+            <ProjectCell key={c.key} column={c.key} project={project} />
+          ))}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function ProjectCell({
+  column,
+  project,
+}: {
+  column: keyof ProjectsDisplayProps;
+  project: Project;
+}) {
+  switch (column) {
+    case "health":
+      return (
+        <span className="flex items-center gap-1.5 text-[13px] text-[#6f6f6f] dark:text-[#7a7a7a]">
+          <svg width="11" height="11" viewBox="0 0 11 11" className="shrink-0">
+            <circle
+              cx="5.5"
+              cy="5.5"
+              r="4.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeDasharray="1.5 1.5"
+              opacity="0.5"
+            />
+          </svg>
+          <span>{project.health && project.health !== "unknown" ? titleize(project.health) : "No updates"}</span>
+        </span>
+      );
+    case "priority": {
+      const raw = String((project as Project & { priority?: string }).priority || "").toLowerCase();
+      return (
+        <span className="text-[13px] text-[#6f6f6f] dark:text-[#7a7a7a]">
+          {raw && raw !== "none" && raw !== "no priority" ? titleize(raw) : "---"}
+        </span>
+      );
+    }
+    case "lead": {
+      const leadName = userName(project.lead || (project as Project & { lead_name?: string }).lead_name);
+      if (!leadName) {
+        return (
+          <span className="inline-grid size-[18px] shrink-0 place-items-center rounded-full border border-dashed border-[#b5b3ad]/50 text-[9px] text-[#6f6f6f] dark:border-[#555555]/50 dark:text-[#7a7a7a]">
+            ?
+          </span>
+        );
+      }
+      return (
+        <span className="inline-grid size-[18px] shrink-0 place-items-center rounded-full bg-[#d8d5d0] text-[9px] font-semibold text-[#47443f] dark:bg-[#2f2f2f] dark:text-[#f0f0f0]">
+          {initials(leadName)}
+        </span>
+      );
+    }
+    case "target_date": {
+      const dateStr = formatDate(project.target_date);
+      return (
+        <span className="flex items-center gap-1.5 text-[13px] text-[#6f6f6f] dark:text-[#7a7a7a]">
+          {dateStr ? (
+            <span>{dateStr}</span>
+          ) : (
+            <CalendarDays size={15} className="text-[#6f6f6f] dark:text-[#7a7a7a]" />
+          )}
+        </span>
+      );
+    }
+    case "issues":
+      return (
+        <span className="text-[13px] text-[#1c1c1c] tabular-nums dark:text-[#eeeeee]">
+          {String((project as Project & { issue_count?: number }).issue_count ?? project.issues?.length ?? 0)}
+        </span>
+      );
+    case "status":
+      return (
+        <span className="flex items-center gap-2">
+          <StatusGlyph state={project.state || project.status || "Backlog"} />
+          <span className="text-[13px] text-[#6f6f6f] tabular-nums dark:text-[#7a7a7a]">{project.progress ?? 0}%</span>
+        </span>
+      );
+    default:
+      return null;
+  }
 }
 
 function LinearProjectsReferencePage() {
@@ -1046,366 +2013,244 @@ function ProjectCreateComposer({ open, onClose, onCreated }: { open: boolean; on
   return <ProjectCreateModal open={open} onClose={onClose} onCreated={onCreated} />;
 }
 
-export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "overview" | "activity" | "issues" }) {
+type ProjectDetailTab = "overview" | "activity" | "issues" | "settings";
+
+export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: ProjectDetailTab }) {
   const { projectId } = useParams();
-  const [tab, setTab] = useState(initialTab);
-  const [linkedIssues, setLinkedIssues] = useState<Issue[]>([]);
-  const [addOpen, setAddOpen] = useState(false);
-  const [candidateIssues, setCandidateIssues] = useState<Issue[]>([]);
-  const [issueSearch, setIssueSearch] = useState("");
-  const [addError, setAddError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const [tab, setTab] = useState<ProjectDetailTab>(initialTab);
   const [project, setProject] = useState<Project | null>(null);
   const [issues, setIssues] = useState<Issue[]>([]);
-  const [updates, setUpdates] = useState<ProjectUpdate[]>([]);
-  const [updateBody, setUpdateBody] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const [focusActivityComposer, setFocusActivityComposer] = useState(false);
+
+  useEffect(() => {
+    setTab(initialTab);
+  }, [initialTab]);
 
   useEffect(() => {
     if (project) {
-      const title = `${projectTitle(project)} › ${titleize(tab)}`;
-      document.title = title;
+      document.title = `${projectTitle(project)} › ${titleize(tab)}`;
     }
   }, [project, tab]);
 
   const load = async () => {
+    if (!projectId) return;
     setLoading(true);
-    const response = await readTool("get_project", { project_id: projectId, id: projectId });
+    const response = await readTool("get_project", { id: projectId });
     const data = response.data as Record<string, unknown> | null;
     const current = (data?.project || data) as Project | null;
-    setProject(current);
+    if (current) {
+      const enriched = {
+        ...current,
+        milestones: (data?.milestones as unknown[]) || (current as Record<string, unknown>).milestones,
+        updates: (data?.updates as unknown[]) || (current as Record<string, unknown>).updates,
+        progress: (data?.progress as unknown) ?? current.progress,
+      };
+      setProject(enriched as Project);
+    } else {
+      setProject(null);
+    }
     setIssues(collectionFrom<Issue>(data, ["issues"]));
-    setUpdates(collectionFrom<ProjectUpdate>(data, ["updates", "project_updates"]));
     setError(response.error);
     setLoading(false);
   };
 
-  const loadCandidateIssues = async (query = issueSearch) => {
-    const response = await readTool("search_issues", { query: query || undefined, limit: 80 });
-    setCandidateIssues(collectionFrom<Issue>(response.data, ["issues", "results", "items"]));
-    setAddError(response.error);
-  };
-
   useEffect(() => {
-    load();
+    void load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
-  if (String(projectId || "").includes("constructing-linear-clone")) {
+  const handleTabChange = (next: ProjectDetailTab) => {
+    setTab(next);
+    if (projectId) {
+      navigate(`/project/${projectId}/${next}`);
+    }
+  };
+
+  const openActivityComposer = () => {
+    setFocusActivityComposer(true);
+    handleTabChange("activity");
+    window.setTimeout(() => setFocusActivityComposer(false), 250);
+  };
+
+  if (loading && !project) {
     return (
       <div className="linear-page-wide" data-testid="project-detail-page">
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
-            <Box size={15} />
-            <span className="truncate text-foreground">{referenceProject.name}</span>
-            <Star size={14} />
-            <MoreHorizontal size={15} />
-          </div>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" iconOnly aria-label="Copy page URL"><Paperclip size={14} /></Button>
-            <Button variant="ghost" iconOnly aria-label="Setup project notifications"><Clock3 size={14} /></Button>
-          </div>
-        </div>
-        <div className="mb-4 flex flex-wrap items-center gap-1" aria-label="Project tabs">
-          {(["overview", "activity", "issues"] as const).map((item) => (
-            <button
-              key={item}
-              className={cn(
-                "rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
-                tab === item && "bg-muted font-medium text-foreground",
-              )}
-              onClick={() => setTab(item)}
-              type="button"
-            >
-              {titleize(item)}
-            </button>
-          ))}
-          <Button variant="ghost" iconOnly type="button" aria-label="Add new view"><Layers3 size={14} /></Button>
-        </div>
-        {tab === "overview" && <ProjectOverviewReference />}
-        {tab === "activity" && <ProjectActivityReference />}
-        {tab === "issues" && (
-          <ProjectIssuesReference
-            issues={linkedIssues}
-            onRemove={(key) => setLinkedIssues((current) => current.filter((issue) => issueKey(issue) !== key))}
-            onAdd={(issue) => setLinkedIssues((current) => current.some((item) => issueKey(item) === issueKey(issue)) ? current : [...current, { ...issue, project: referenceProject.name }])}
-            addOpen={addOpen}
-            setAddOpen={setAddOpen}
-          />
-        )}
+        <Spinner label="Loading project" />
       </div>
     );
   }
 
-  const postUpdate = async (event: FormEvent) => {
-    event.preventDefault();
-    if (!updateBody.trim()) return;
-    const response = await readTool("post_project_update", {
-      project_id: projectId,
-      id: projectId,
-      body: updateBody,
-      text: updateBody,
-    });
-    if (response.error) setError(response.error);
-    setUpdateBody("");
-    await load();
-  };
-
-  const openAddIssues = async () => {
-    setIssueSearch("");
-    setAddOpen(true);
-    await loadCandidateIssues("");
-  };
-
-  const linkIssueToProject = async (issue: Issue) => {
-    const response = await readTool("update_issue", {
-      id: issue.id || issueKey(issue),
-      issue_key: issueKey(issue),
-      project_id: projectId,
-    });
-    if (response.error) {
-      setAddError(response.error);
-      return;
-    }
-    setAddOpen(false);
-    await load();
-  };
-
-  const removeIssueFromProject = async (issue: Issue) => {
-    const response = await readTool("update_issue", {
-      id: issue.id || issueKey(issue),
-      issue_key: issueKey(issue),
-      project_id: null,
-    });
-    if (response.error) setError(response.error);
-    await load();
-  };
-
-  if (loading) return <div className="linear-page"><Spinner label="Loading project" /></div>;
+  if (!project) {
+    return (
+      <div className="linear-page-wide" data-testid="project-detail-page">
+        <ErrorBanner message={error || "Project not found."} />
+        <EmptyState
+          title="Project unavailable"
+          description="The project could not be loaded. It may have been deleted."
+          action={<Button variant="primary" onClick={() => navigate("/projects/all")}>Back to projects</Button>}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="linear-page" data-testid="project-detail-page">
-      <PageHeader title={projectTitle(project)} subtitle={project?.description || `Project ${projectId}`} />
-      <ErrorBanner message={error} />
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
-        <section>
-          <div className="rounded-md border border-border bg-card">
-            <div className="flex items-center justify-between gap-3 border-b border-border p-3 last:border-b-0">
-              <h2 className="text-sm font-semibold text-foreground">Issues</h2>
-              <Button type="button" variant="ghost" className="gap-2" onClick={openAddIssues} data-testid="project-add-issue">
-                <Plus size={14} />
-                Add issues
-              </Button>
-            </div>
-            <div className="border-b border-border p-3 last:border-b-0">
-              {issues.length === 0 ? (
-                <EmptyState
-                  title="No linked issues"
-                  description="Add existing issues to this project or create a new issue from the global create modal."
-                  action={<Button variant="primary" onClick={openAddIssues} data-testid="project-add-empty-issue">Add issues</Button>}
-                />
-              ) : (
-                <div className="grid gap-0">
-                  {issues.map((issue) => (
-                    <div
-                      key={issueKey(issue)}
-                      className="flex min-h-9 items-center gap-2 border-b border-border px-2 text-sm last:border-b-0"
-                      data-testid={`project-issue-row-${issueKey(issue)}`}
-                    >
-                      <MiniIssueLink issue={issue} />
-                      <Button className="ml-auto" type="button" variant="ghost" onClick={() => removeIssueFromProject(issue)}>Remove</Button>
-                    </div>
-                  ))}
-                </div>
+    <div
+      className="flex h-full min-h-0 flex-1 flex-col"
+      data-testid="project-detail-page"
+    >
+      <div className="border-b border-border bg-background px-6 pt-4">
+        <ProjectHeader
+          project={project}
+          sidebarOpen={sidebarOpen}
+          onToggleSidebar={() => setSidebarOpen((value) => !value)}
+          onProjectDeleted={() => setProject(null)}
+        />
+        <div
+          className="-mb-px flex items-center gap-1 border-b border-transparent pb-2"
+          aria-label="Project tabs"
+          role="tablist"
+        >
+          {(["overview", "activity", "issues"] as const).map((item) => (
+            <button
+              key={item}
+              type="button"
+              role="tab"
+              aria-selected={tab === item}
+              data-testid={`project-tab-${item}`}
+              onClick={() => handleTabChange(item)}
+              className={cn(
+                "relative rounded-md px-2.5 py-1 text-sm font-normal transition-colors hover:bg-muted hover:text-foreground",
+                tab === item ? "bg-muted text-foreground" : "text-muted-foreground",
               )}
-            </div>
-          </div>
-        </section>
-        <aside className="rounded-md border border-border bg-card">
-          <div className="grid gap-1 border-b border-border p-3 last:border-b-0">
-            <Property label="Status" value={project?.status || project?.state || "Unknown"} />
-            <Property label="Lead" value={userName(project?.lead)} />
-            <Property label="Target" value={formatDate(project?.target_date)} />
-          </div>
-          <div className="border-b border-border p-3 last:border-b-0">
-            <h2 className="mb-2.5 text-sm font-semibold text-foreground">Updates</h2>
-            {updates.map((update) => (
-              <div key={update.id || update.created_at || update.body} className="rounded-md border border-border bg-muted/20 p-2 text-sm">
-                <div className="mb-1.5 flex items-center gap-2">
-                  <MessageSquare size={13} />
-                  <strong>{userName(update.author)}</strong>
-                  <span className="text-muted-foreground">{formatDate(update.created_at)}</span>
-                </div>
-                <div className="text-sm text-muted-foreground">{update.body || update.text}</div>
-              </div>
-            ))}
-            <form onSubmit={postUpdate} className="mt-2.5 grid gap-2">
-              <textarea
-                className="min-h-24 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
-                value={updateBody}
-                onChange={(event) => setUpdateBody(event.target.value)}
-                placeholder="Post a project update"
-                data-testid="project-update-input"
-              />
-              <Button type="submit" variant="primary" data-testid="post-project-update">
-                Post update
-              </Button>
-            </form>
-          </div>
-        </aside>
+            >
+              {titleize(item)}
+            </button>
+          ))}
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === "settings"}
+            className={cn(
+              "ml-0.5 inline-flex size-7 items-center justify-center rounded-md transition-colors hover:bg-muted hover:text-foreground",
+              tab === "settings" ? "bg-muted text-foreground" : "text-muted-foreground",
+            )}
+            aria-label="Project settings"
+            data-testid="project-settings-tab"
+            onClick={() => handleTabChange("settings")}
+          >
+            <Settings size={14} />
+          </button>
+        </div>
       </div>
-      {addOpen && (
-        <ModalShell title="Add issues to project" onClose={() => setAddOpen(false)} testId="project-add-issue-modal">
-          <div className="grid gap-3">
-            <Input
-              value={issueSearch}
-              onChange={(event) => {
-                const next = event.target.value;
-                setIssueSearch(next);
-                void loadCandidateIssues(next);
-              }}
-              placeholder="Search issues"
-              data-testid="project-issue-search"
-            />
-            <ErrorBanner message={addError} />
-            <div className="grid max-h-80 gap-1 overflow-y-auto">
-              {candidateIssues
-                .filter((candidate) => !issues.some((issue) => issueKey(issue) === issueKey(candidate)))
-                .map((issue) => (
-                  <button
-                    key={issue.id || issueKey(issue)}
-                    type="button"
-                    className="grid grid-cols-[5rem_auto_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-2 py-2 text-left text-sm transition-colors hover:bg-muted"
-                    onClick={() => linkIssueToProject(issue)}
-                    data-testid={`project-issue-option-${issueKey(issue)}`}
-                  >
-                    <span className="text-muted-foreground">{issueKey(issue)}</span>
-                    <StatusGlyph state={stateName(issue)} />
-                    <strong className="truncate">{issueTitle(issue)}</strong>
-                    <AvatarBubble>{initials(assigneeName(issue))}</AvatarBubble>
-                  </button>
-                ))}
-            </div>
-          </div>
-        </ModalShell>
-      )}
+
+      <ErrorBanner message={error} />
+
+      <div className="flex min-h-0 flex-1 overflow-hidden bg-background">
+        <div className="flex min-w-0 flex-1 overflow-y-auto">
+          {tab === "overview" && (
+            <ProjectOverviewTab project={project} onChange={load} onNavigateToActivity={openActivityComposer} />
+          )}
+          {tab === "activity" && <ProjectActivityTab project={project} onChange={load} focusComposer={focusActivityComposer} />}
+          {tab === "issues" && <ProjectIssuesTab project={project} onChange={load} />}
+          {tab === "settings" && <ProjectSettingsTab project={project} onChange={load} />}
+        </div>
+        {sidebarOpen && (
+          <ProjectPropertiesSidebar
+            project={project}
+            issues={issues}
+            onChange={load}
+            onClose={() => setSidebarOpen(false)}
+          />
+        )}
+      </div>
     </div>
   );
 }
 
-function ProjectOverviewReference() {
-  return (
-    <Card className="rounded-md" size="sm">
-      <CardContent className="space-y-5">
-        <div className="inline-grid size-10 place-items-center rounded-md bg-muted text-muted-foreground"><Box size={22} /></div>
-        <div className="space-y-1">
-          <h1 className="text-xl font-semibold tracking-tight text-foreground">{referenceProject.name}</h1>
-          <p className="text-sm text-muted-foreground">Add a short summary...</p>
-        </div>
-      <div className="grid gap-2 rounded-md border border-border bg-muted/20 p-3 text-sm text-muted-foreground sm:grid-cols-2 lg:grid-cols-4">
-        <span className="font-medium text-foreground">Properties</span>
-        <span className="flex items-center gap-2"><StatusGlyph state="Backlog" /> Backlog</span>
-        <span className="flex items-center gap-2"><PriorityIcon priority="Medium" /> Medium</span>
-        <span className="flex items-center gap-2"><AvatarBubble>PJ</AvatarBubble> {referenceProject.lead}</span>
-        <span>Target date</span>
-        <span className="flex items-center gap-2"><Badge variant="outline">E</Badge> Eltsuh</span>
-        <span>•••</span>
-      </div>
-      <div className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2 text-sm text-muted-foreground">
-        <span>Resources</span>
-        <Button type="button" variant="ghost">+ Add document or link...</Button>
-      </div>
-      <Button className="w-fit gap-2" variant="ghost" type="button"><MessageSquare size={16} /> Write first project update</Button>
-      <div className="space-y-2">
-        <h3 className="text-sm font-semibold text-foreground">Description</h3>
-        <p className="text-sm text-muted-foreground">Add description...</p>
-      </div>
-      <Button className="w-fit justify-start" variant="ghost" type="button">+ Milestone</Button>
-      </CardContent>
-    </Card>
-  );
-}
+function ProjectSettingsTab({
+  project,
+  onChange,
+}: {
+  project: Project;
+  onChange: () => Promise<void> | void;
+}) {
+  const projectId = project.id || "";
+  const [nameDraft, setNameDraft] = useState(projectTitle(project));
+  const [descriptionDraft, setDescriptionDraft] = useState(project.description || "");
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
-function ProjectActivityReference() {
-  return (
-    <Card className="rounded-md" size="sm">
-      <CardHeader>
-        <CardTitle>Activity</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        <div className="flex items-center gap-3 rounded-md border border-border bg-muted/20 px-3 py-2 text-sm text-muted-foreground">
-          <AvatarBubble>PJ</AvatarBubble>
-          <span>parikshit.joon@gmail.com created the project · Apr 29</span>
-        </div>
-        <div className="flex items-center gap-3 rounded-md border border-border bg-muted/20 px-3 py-2 text-sm text-muted-foreground">
-          <Clock3 size={16} />
-          <span>Linear updated project status to Backlog · Apr 29</span>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+  useEffect(() => {
+    setNameDraft(projectTitle(project));
+    setDescriptionDraft(project.description || "");
+  }, [project]);
 
-function ProjectIssuesReference({ issues, onRemove, onAdd, addOpen, setAddOpen }: { issues: Issue[]; onRemove: (key: string) => void; onAdd: (issue: Issue) => void; addOpen: boolean; setAddOpen: (open: boolean) => void }) {
-  const grouped = ["In Review", "In Progress", "Todo", "Backlog"].map((state) => [state, issues.filter((issue) => stateName(issue) === state)] as const);
+  const save = async () => {
+    if (!projectId || saving) return;
+    setSaving(true);
+    setMessage(null);
+    const response = await readTool("update_project", {
+      id: projectId,
+      name: nameDraft.trim() || projectTitle(project),
+      description: descriptionDraft.trim(),
+    });
+    setSaving(false);
+    if (response.error) {
+      setMessage(response.error);
+      return;
+    }
+    setMessage("Project settings saved.");
+    await onChange();
+  };
+
+  const dirty =
+    nameDraft.trim() !== projectTitle(project) ||
+    descriptionDraft.trim() !== (project.description || "").trim();
+
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-1">
-        <Button variant="ghost" iconOnly aria-label="Add filter"><SlidersHorizontal size={14} /></Button>
-        <Button variant="ghost" iconOnly aria-label="Display options"><Settings size={14} /></Button>
-        <Button variant="ghost" iconOnly aria-label="Open project details"><Box size={14} /></Button>
+    <div className="mx-auto w-full max-w-[720px] space-y-6 px-6 py-10" data-testid="project-settings-tab-panel">
+      <div className="space-y-1">
+        <h1 className="text-[22px] font-semibold text-foreground">Project settings</h1>
+        <p className="text-sm text-muted-foreground">Edit the project details used across overview, activity, issues, and the project list.</p>
       </div>
-      {issues.length > 0 && <Button variant="primary" onClick={() => setAddOpen(true)} data-testid="project-add-issue">Add issues</Button>}
-      {grouped.map(([state, rows]) => rows.length > 0 && (
-        <section key={state} className="overflow-hidden rounded-md border border-border bg-card">
-          <div className="flex items-center gap-2 border-b border-border bg-muted/30 px-3 py-2 text-sm font-medium">
-            <span>▾</span>
-            <StatusGlyph state={state} />
-            <span>{state}</span>
-            <Badge variant="outline">{rows.length}</Badge>
-            <Button className="ml-auto" type="button" variant="ghost" iconOnly onClick={() => setAddOpen(true)}><Plus size={14} /></Button>
-          </div>
-          {rows.map((issue) => (
-            <div className="grid grid-cols-[2rem_5rem_auto_minmax(0,1fr)_auto_auto] items-center gap-2 border-b border-border px-3 py-2 text-sm last:border-b-0" key={issueKey(issue)}>
-              <span className="font-medium text-muted-foreground">{Number(issue.priority) === 1 ? "!" : "▮▮"}</span>
-              <span className="text-muted-foreground">{issueKey(issue)}</span>
-              <StatusGlyph state={stateName(issue)} />
-              <strong className="truncate">{issueTitle(issue)}</strong>
-              <AvatarBubble>{initials(assigneeName(issue))}</AvatarBubble>
-              <Button type="button" variant="ghost" onClick={() => onRemove(issueKey(issue))}>Remove</Button>
-            </div>
-          ))}
-        </section>
-      ))}
-      {issues.length === 0 && (
-        <div className="grid min-h-80 place-items-center rounded-md border border-dashed border-border bg-card p-8 text-center">
-          <div className="mb-3 inline-grid size-12 place-items-center rounded-full bg-muted text-muted-foreground" aria-hidden="true">
-            <Plus size={20} />
-          </div>
-          <strong>Add issues to the project</strong>
-          <p>Start building your project by creating an issue.</p>
-          <p className="max-w-md text-sm text-muted-foreground">You can also add teams, team members, and project dates in the project sidebar with <Badge variant="outline">⌘</Badge><Badge variant="outline">I</Badge>.</p>
-          <Button variant="primary" onClick={() => setAddOpen(true)} data-testid="project-add-issue">Create new issue <Badge variant="outline">C</Badge></Button>
+
+      <section className="space-y-4 rounded-xl border border-border bg-background p-4 shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
+        <label className="grid gap-1.5 text-sm">
+          <span className="font-medium text-foreground">Name</span>
+          <Input
+            value={nameDraft}
+            onChange={(event) => setNameDraft(event.target.value)}
+            data-testid="project-settings-name"
+          />
+        </label>
+        <label className="grid gap-1.5 text-sm">
+          <span className="font-medium text-foreground">Description</span>
+          <textarea
+            value={descriptionDraft}
+            onChange={(event) => setDescriptionDraft(event.target.value)}
+            className="min-h-28 rounded-md border border-border bg-background px-3 py-2 text-sm leading-6 text-foreground outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            data-testid="project-settings-description"
+          />
+        </label>
+        <div className="flex items-center justify-between gap-3">
+          <span className={cn("text-xs", message?.includes("saved") ? "text-muted-foreground" : "text-destructive")}>
+            {message}
+          </span>
+          <Button
+            type="button"
+            size="sm"
+            onClick={() => void save()}
+            disabled={!dirty || saving}
+            data-testid="project-settings-save"
+          >
+            {saving ? "Saving..." : "Save changes"}
+          </Button>
         </div>
-      )}
-      {addOpen && (
-        <ModalShell title="Add issues to project" onClose={() => setAddOpen(false)}>
-          <div className="grid gap-1">
-            {candidateProjectIssues.map((issue) => (
-              <button
-                key={issueKey(issue)}
-                className="grid grid-cols-[5rem_auto_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-2 py-2 text-left text-sm transition-colors hover:bg-muted"
-                onClick={() => { onAdd(issue); setAddOpen(false); }}
-                type="button"
-              >
-                <span className="text-muted-foreground">{issueKey(issue)}</span>
-                <StatusGlyph state={stateName(issue)} />
-                <strong className="truncate">{issueTitle(issue)}</strong>
-                <AvatarBubble>{initials(assigneeName(issue))}</AvatarBubble>
-              </button>
-            ))}
-          </div>
-        </ModalShell>
-      )}
+      </section>
     </div>
   );
 }

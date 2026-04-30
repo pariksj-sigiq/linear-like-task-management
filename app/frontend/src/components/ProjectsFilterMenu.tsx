@@ -1,16 +1,27 @@
-import { useMemo, useState } from "react";
+import {
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type HTMLAttributes,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import {
   BarChart3,
   Check,
   ChevronRight,
   CircleDashed,
-  Sparkles,
   User,
 } from "lucide-react";
 import type { Project } from "../linearTypes";
 import { userName } from "../linearTypes";
 import { cn } from "../lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 export interface ProjectFilters {
   status: string[];
@@ -42,6 +53,11 @@ export const PROJECT_PRIORITY_OPTIONS = [
 
 type Panel = "root" | "status" | "priority" | "lead";
 
+type MenuTriggerProps = HTMLAttributes<HTMLElement> & {
+  onClick?: (event: ReactMouseEvent) => void;
+  onKeyDown?: (event: ReactKeyboardEvent) => void;
+};
+
 export function projectFiltersCount(filters: ProjectFilters) {
   return filters.status.length + filters.priority.length + filters.leadId.length;
 }
@@ -55,10 +71,34 @@ export function ProjectsFilterMenu({
   filters: ProjectFilters;
   onChange: (next: ProjectFilters) => void;
   projects: Project[];
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const [panel, setPanel] = useState<Panel>("root");
+  const menuId = useId();
+  const rootRef = useRef<HTMLSpanElement>(null);
+
+  const closeMenu = () => {
+    setOpen(false);
+    setPanel("root");
+  };
+
+  useEffect(() => {
+    if (!open) return;
+
+    const dismissOnOutsidePointer = (event: PointerEvent | MouseEvent) => {
+      const target = event.target instanceof Node ? event.target : null;
+      if (target && rootRef.current?.contains(target)) return;
+      closeMenu();
+    };
+
+    document.addEventListener("pointerdown", dismissOnOutsidePointer, true);
+    document.addEventListener("mousedown", dismissOnOutsidePointer, true);
+    return () => {
+      document.removeEventListener("pointerdown", dismissOnOutsidePointer, true);
+      document.removeEventListener("mousedown", dismissOnOutsidePointer, true);
+    };
+  }, [open]);
 
   const leads = useMemo(() => {
     const map = new Map<string, string>();
@@ -78,21 +118,42 @@ export function ProjectsFilterMenu({
     onChange({ ...filters, [key]: next });
   };
 
+  let trigger = children;
+  if (isValidElement(children)) {
+    const child = children as ReactElement<MenuTriggerProps>;
+    trigger = cloneElement(child, {
+      "aria-controls": open ? menuId : undefined,
+      "aria-expanded": open,
+      onClick: (event: ReactMouseEvent) => {
+        child.props.onClick?.(event);
+        if (!event.defaultPrevented) {
+          setOpen((value) => {
+            const next = !value;
+            if (!next) setPanel("root");
+            return next;
+          });
+        }
+      },
+      onKeyDown: (event: ReactKeyboardEvent) => {
+        child.props.onKeyDown?.(event);
+        if (event.key === "Escape") {
+          event.stopPropagation();
+          closeMenu();
+        }
+      },
+    });
+  }
+
   return (
-    <Popover
-      open={open}
-      onOpenChange={(value) => {
-        setOpen(value);
-        if (!value) setPanel("root");
-      }}
-    >
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent
-        align="end"
-        sideOffset={6}
-        className="w-[280px] p-0"
-        data-testid="projects-filter-menu"
-      >
+    <span ref={rootRef} className="relative inline-flex">
+      {trigger}
+      {open && (
+        <div
+          id={menuId}
+          role="dialog"
+          className="absolute right-0 top-[calc(100%+6px)] z-[70] w-[280px] overflow-hidden rounded-xl bg-popover p-0 text-popover-foreground shadow-[0_18px_54px_rgba(0,0,0,0.20)] ring-1 ring-foreground/10"
+          data-testid="projects-filter-menu"
+        >
         {panel === "root" && (
           <RootPanel
             onSelect={(next) => setPanel(next)}
@@ -132,8 +193,9 @@ export function ProjectsFilterMenu({
             icon={User}
           />
         )}
-      </PopoverContent>
-    </Popover>
+        </div>
+      )}
+    </span>
   );
 }
 
@@ -147,16 +209,6 @@ function RootPanel({ onSelect }: { onSelect: (panel: Panel) => void }) {
         </kbd>
       </div>
       <div className="py-1">
-        <button
-          type="button"
-          role="menuitem"
-          className="flex h-9 w-full items-center gap-2.5 px-3 text-left text-[13px] font-medium text-foreground hover:bg-muted/70"
-          disabled
-        >
-          <Sparkles size={15} className="shrink-0 text-muted-foreground" />
-          <span className="min-w-0 flex-1 truncate text-muted-foreground">AI filter</span>
-        </button>
-        <div className="my-1 h-px bg-border/70" />
         <FilterRow
           label="Status"
           icon={CircleDashed}
@@ -165,6 +217,7 @@ function RootPanel({ onSelect }: { onSelect: (panel: Panel) => void }) {
         <FilterRow
           label="Priority"
           icon={BarChart3}
+          iconOverride={<PriorityFilterIcon />}
           onClick={() => onSelect("priority")}
         />
         <FilterRow
@@ -180,10 +233,12 @@ function RootPanel({ onSelect }: { onSelect: (panel: Panel) => void }) {
 function FilterRow({
   label,
   icon: Icon,
+  iconOverride,
   onClick,
 }: {
   label: string;
   icon: typeof CircleDashed;
+  iconOverride?: ReactNode;
   onClick: () => void;
 }) {
   return (
@@ -194,10 +249,20 @@ function FilterRow({
       className="flex h-9 w-full items-center gap-2.5 px-3 text-left text-[13px] font-medium text-foreground hover:bg-muted/70"
       data-testid={`projects-filter-row-${label.toLowerCase()}`}
     >
-      <Icon size={15} strokeWidth={2} className="shrink-0 text-muted-foreground" />
+      {iconOverride || <Icon size={15} strokeWidth={2} className="shrink-0 text-muted-foreground" />}
       <span className="min-w-0 flex-1 truncate">{label}</span>
       <ChevronRight size={14} className="shrink-0 text-muted-foreground" />
     </button>
+  );
+}
+
+function PriorityFilterIcon() {
+  return (
+    <span className="flex size-[15px] shrink-0 items-end gap-[2px] text-muted-foreground">
+      <span className="h-[5px] w-[3px] rounded-[1px] bg-current" />
+      <span className="h-[8px] w-[3px] rounded-[1px] bg-current" />
+      <span className="h-[11px] w-[3px] rounded-[1px] bg-current" />
+    </span>
   );
 }
 

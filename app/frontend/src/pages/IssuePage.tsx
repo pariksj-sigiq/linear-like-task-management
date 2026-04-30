@@ -1,20 +1,25 @@
 import type { FormEvent, HTMLAttributes, ReactNode } from "react";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import {
   ChevronDown,
+  ChevronRight,
   GitBranch,
   ListFilter,
   Link2,
+  MoreHorizontal,
   Plus,
   Send,
   SmilePlus,
+  Star,
   Tag,
   Trash2,
 } from "lucide-react";
 import { collectionFrom, readTool } from "../api";
 import { MiniIssueLink, PriorityIcon, StatusGlyph } from "../components/IssueExplorer";
+import { SubIssueProgress } from "../components/SubIssueProgress";
+import { IssueProjectPicker } from "../components/issue/ProjectPicker";
 import { Button, EmptyState, ErrorBanner, PageHeader, Spinner } from "../components/ui";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
@@ -60,14 +65,29 @@ const PRIORITY_OPTIONS = [
   { label: "Low", value: "low" },
 ];
 
+interface IssueNavigationState {
+  source?: string;
+  from?: string;
+  fromLabel?: string;
+  fromPill?: string;
+  parentKey?: string;
+  parentTitle?: string;
+}
+
 export function IssuePage() {
   const { issueKey: routeIssueKey } = useParams();
+  const location = useLocation();
+  const navigationState = (location.state || {}) as IssueNavigationState;
   const [issue, setIssue] = useState<Issue | null>(null);
   const [states, setStates] = useState<WorkflowState[]>([]);
   const [users, setUsers] = useState<LinearUser[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [labels, setLabels] = useState<Label[]>([]);
   const [comment, setComment] = useState("");
+  const [subIssueTitle, setSubIssueTitle] = useState("");
+  const [subIssueDescription, setSubIssueDescription] = useState("");
+  const [subIssueOpen, setSubIssueOpen] = useState(false);
+  const [creatingSubIssue, setCreatingSubIssue] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -155,6 +175,49 @@ export function IssuePage() {
     await loadIssue();
   };
 
+  const createSubIssue = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!issue || !subIssueTitle.trim() || creatingSubIssue) return;
+
+    setCreatingSubIssue(true);
+    setError(null);
+    const parentKey = routeIssueKey || issueKey(issue);
+    const response = await readTool("create_sub_issue", {
+      parent_identifier: parentKey,
+      title: subIssueTitle.trim(),
+      description: subIssueDescription.trim() || undefined,
+      status_name: "Todo",
+      priority: issue.priority || "none",
+      assignee_id: issue.assignee_id,
+      project_id: issue.project_id,
+      cycle_id: issue.cycle_id,
+      creator_id: "user_001",
+    });
+
+    if (response.error) {
+      setError(response.error);
+      setCreatingSubIssue(false);
+      return;
+    }
+
+    const created = response.data as Issue | null;
+    if (created) {
+      setIssue((current) =>
+        current
+          ? mergeIssueOverride({
+              ...current,
+              subissues: [...(current.subissues || current.children || []), created],
+            })
+          : current,
+      );
+    }
+    setSubIssueTitle("");
+    setSubIssueDescription("");
+    setSubIssueOpen(false);
+    setCreatingSubIssue(false);
+    await loadIssue(false);
+  };
+
 
   if (loading) {
     return (
@@ -176,27 +239,35 @@ export function IssuePage() {
 
   const comments = (issue.comments || []) as Comment[];
   const subissues = issue.subissues || issue.children || [];
+  const parentIssue = issue.parent || parentIssueFromNavigation(navigationState);
   const issueLabels = (issue.labels || []) as Array<Label | string>;
   const createdBy = assigneeName(issue);
 
   return (
-    <div className="linear-page-wide relative" data-testid="issue-detail-page">
-      <ErrorBanner message={error} />
+    <div className="relative" data-testid="issue-detail-page">
+      <IssueDetailTopBar issue={issue} parentIssue={parentIssue} navigationState={navigationState} />
 
-      <div className="absolute right-2 top-2 hidden items-center gap-1 lg:flex" aria-label="Issue actions">
-        <IssueActionButton label="Copy link"><Link2 size={14} /></IssueActionButton>
-        <IssueActionButton label="Delete issue"><Trash2 size={14} /></IssueActionButton>
-        <IssueActionButton label="Add relation"><GitBranch size={14} /></IssueActionButton>
-        <IssueActionButton label="Activity filter"><ListFilter size={14} /></IssueActionButton>
-        <IssueActionButton label="More actions"><ChevronDown size={14} /></IssueActionButton>
-      </div>
+      <div className="linear-page-wide relative">
+        <ErrorBanner message={error} />
 
-      <div className="mx-auto grid max-w-[1128px] gap-14 lg:grid-cols-[minmax(0,744px)_318px] lg:items-start">
+        <div className="absolute right-2 top-2 hidden items-center gap-1 lg:flex" aria-label="Issue actions">
+          <IssueActionButton label="Copy link"><Link2 size={14} strokeWidth={1.7} /></IssueActionButton>
+          <IssueActionButton label="Delete issue"><Trash2 size={14} strokeWidth={1.7} /></IssueActionButton>
+          <IssueActionButton label="Add relation"><GitBranch size={14} strokeWidth={1.7} /></IssueActionButton>
+          <IssueActionButton label="Activity filter"><ListFilter size={14} strokeWidth={1.7} /></IssueActionButton>
+          <IssueActionButton label="More actions"><ChevronDown size={14} strokeWidth={1.7} /></IssueActionButton>
+        </div>
+
+        <div className="mx-auto grid max-w-[1128px] gap-14 lg:grid-cols-[minmax(0,744px)_318px] lg:items-start">
         <section className="min-w-0 pt-1 lg:pt-2">
           <div className="space-y-7">
             <div className="space-y-6">
               <div className="space-y-5">
                 <h1 className="text-[24px] font-semibold leading-[1.18] tracking-[-0.012em] text-foreground">{issueTitle(issue)}</h1>
+
+                {parentIssue && (
+                  <ParentIssueContext parent={parentIssue} navigationState={navigationState} />
+                )}
 
                 <p className="max-w-[700px] text-[16px] leading-7 text-foreground/90">
                   {issue.description || "The particular failure was a 500 internal service error from Azure foundry"}
@@ -213,16 +284,108 @@ export function IssuePage() {
               </div>
             </div>
 
-            <Button className="h-7 w-fit gap-2 px-1.5 text-[13px] font-normal text-muted-foreground" type="button" variant="ghost">
-              <Plus size={13} />
-              Add sub-issues
-            </Button>
+            <section className="space-y-2" data-testid="sub-issues-section">
+              {subissues.length > 0 ? (
+                <div className="flex min-h-8 items-center justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-2 text-[15px] font-medium text-muted-foreground">
+                    <ChevronDown size={14} />
+                    <span>Sub-issues</span>
+                    <SubIssueProgress issue={issue} childrenIssues={subissues} testId="subissue-section-progress" />
+                  </div>
+                  <Button
+                    className="size-8 rounded-full border border-border bg-background p-0 shadow-[0_1px_2px_rgb(0_0_0/0.08)]"
+                    type="button"
+                    variant="ghost"
+                    data-testid="create-sub-issue-button"
+                    aria-expanded={subIssueOpen}
+                    aria-label="Add sub-issue"
+                    onClick={() => setSubIssueOpen(true)}
+                  >
+                    <Plus size={15} />
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  className="h-7 w-fit gap-2 px-1.5 text-[13px] font-normal text-muted-foreground"
+                  type="button"
+                  variant="ghost"
+                  data-testid="create-sub-issue-button"
+                  aria-expanded={subIssueOpen}
+                  onClick={() => setSubIssueOpen(true)}
+                >
+                  <Plus size={13} />
+                  Add sub-issues
+                </Button>
+              )}
 
-            {subissues.length > 0 && (
-              <div className="grid gap-2 rounded-md border border-border bg-muted/20 p-2">
-                {subissues.map((child) => <MiniIssueLink key={issueKey(child)} issue={child} />)}
-              </div>
-            )}
+              {subIssueOpen && (
+                <form
+                  onSubmit={createSubIssue}
+                  className="rounded-lg border border-border bg-background p-2.5 shadow-[0_1px_2px_rgb(0_0_0/0.04)]"
+                  data-testid="sub-issue-composer"
+                >
+                  <div className="flex items-start gap-2">
+                    <span className="mt-2 grid size-5 shrink-0 place-items-center rounded-md bg-muted text-muted-foreground">
+                      <GitBranch size={13} />
+                    </span>
+                    <div className="min-w-0 flex-1 space-y-1.5">
+                      <input
+                        autoFocus
+                        className="h-8 w-full bg-transparent text-[14px] font-medium text-foreground outline-none placeholder:text-muted-foreground"
+                        data-testid="sub-issue-title-input"
+                        placeholder="Issue title"
+                        value={subIssueTitle}
+                        onChange={(event) => setSubIssueTitle(event.target.value)}
+                      />
+                      <textarea
+                        className="min-h-[52px] w-full resize-none bg-transparent text-[13px] leading-5 text-muted-foreground outline-none placeholder:text-muted-foreground/80"
+                        data-testid="sub-issue-description-input"
+                        placeholder="Add description..."
+                        value={subIssueDescription}
+                        onChange={(event) => setSubIssueDescription(event.target.value)}
+                      />
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[12px] text-muted-foreground">
+                          Starts in Todo and inherits project, priority, assignee, and cycle from {issueKey(issue)}.
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <Button
+                            className="h-7 px-2 text-[13px]"
+                            type="button"
+                            variant="ghost"
+                            onClick={() => {
+                              setSubIssueOpen(false);
+                              setSubIssueTitle("");
+                              setSubIssueDescription("");
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            className="h-7 px-2 text-[13px]"
+                            type="submit"
+                            data-testid="submit-sub-issue"
+                            disabled={!subIssueTitle.trim() || creatingSubIssue}
+                          >
+                            {creatingSubIssue ? "Adding..." : "Add"}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              )}
+
+              {subissues.length > 0 && (
+                <div className="grid gap-1">
+                  {subissues.map((child) => (
+                    <div key={issueKey(child)} data-testid={`sub-issue-row-${issueKey(child)}`}>
+                      <MiniIssueLink issue={child} state={childIssueNavigationState(navigationState, issue)} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
 
             <section className="space-y-5 border-t border-border pt-6">
               <div className="flex items-center justify-between gap-3">
@@ -268,7 +431,7 @@ export function IssuePage() {
         </section>
 
         <aside className="space-y-2 lg:sticky lg:top-20">
-          <Card className="rounded-lg border border-border/70 bg-background py-0 shadow-[0_1px_3px_rgb(0_0_0/0.04)] ring-0" size="sm">
+          <Card className="overflow-visible rounded-lg border border-border/70 bg-background py-0 shadow-[0_1px_3px_rgb(0_0_0/0.04)] ring-0" size="sm">
             <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 pb-2 pt-4">
               <CardTitle className="text-[13px] font-medium text-muted-foreground">Properties</CardTitle>
               <ChevronDown size={13} className="text-muted-foreground" />
@@ -396,46 +559,156 @@ export function IssuePage() {
                 <span>Project</span>
                 <ChevronDown size={13} />
               </div>
-              <PropertyPickerRow
-                testId="issue-project-display"
-                icon={<Plus size={14} />}
-                value={projectName(issue.project)}
-              >
-                {(closeMenu) => (
-                  <>
-                    <PropertyMenuItem
-                      onSelect={() => {
-                        closeMenu();
-                        void updateIssue({ project_id: null }, { project: null, project_id: null });
-                      }}
-                    >
-                      No project
-                    </PropertyMenuItem>
-                    {projects.map((project) => (
-                      <PropertyMenuItem
-                        key={project.id || project.name}
-                        onSelect={() => {
-                          closeMenu();
-                          void updateIssue({ project_id: project.id }, { project, project_id: project.id });
-                        }}
-                      >
-                        {projectName(project)}
-                      </PropertyMenuItem>
-                    ))}
-                  </>
-                )}
-              </PropertyPickerRow>
+              <IssueProjectPicker
+                issueId={routeIssueKey || issueKey(issue)}
+                currentProject={issue.project}
+                currentProjectId={issue.project_id}
+                onChanged={async (nextProjectId) => {
+                  const key = routeIssueKey || issueKey(issue);
+                  const nextProject = nextProjectId
+                    ? projects.find((project) => (project.id || project.key) === nextProjectId) || null
+                    : null;
+                  if (key) {
+                    saveIssueOverride(key, { project: nextProject, project_id: nextProjectId });
+                    setIssue((current) =>
+                      current
+                        ? mergeIssueOverride({ ...current, project: nextProject, project_id: nextProjectId })
+                        : current,
+                    );
+                  }
+                  await loadIssue(false);
+                }}
+              />
             </CardContent>
           </Card>
         </aside>
+      </div>
       </div>
     </div>
   );
 }
 
+function IssueDetailTopBar({
+  issue,
+  parentIssue,
+  navigationState,
+}: {
+  issue: Issue;
+  parentIssue: Issue | null;
+  navigationState: IssueNavigationState;
+}) {
+  const myIssuesReturn = myIssuesReturnTarget(navigationState);
+  const fallbackLabel = projectName(issue.project) !== "No project" ? projectName(issue.project) : teamKey(issue);
+
+  return (
+    <header className="sticky top-0 z-20 border-b border-border bg-background" data-testid="issue-detail-topbar">
+      <div className="flex h-[var(--topbar-height)] items-center justify-between gap-4 px-4">
+        <nav className="flex min-w-0 items-center gap-2 text-[15px] font-medium text-foreground">
+          {myIssuesReturn ? (
+            <Link to={myIssuesReturn.href} className="shrink-0 hover:text-foreground">
+              My issues
+            </Link>
+          ) : parentIssue ? (
+            <Link to={`/issue/${issueKey(parentIssue)}`} className="shrink-0 hover:text-foreground">
+              {issueKey(parentIssue)}
+            </Link>
+          ) : (
+            <span className="shrink-0 text-muted-foreground">{fallbackLabel}</span>
+          )}
+          <ChevronRight size={15} className="shrink-0 text-muted-foreground" />
+          <span className="min-w-0 truncate">
+            {issueKey(issue)} {issueTitle(issue)}
+          </span>
+          <Button type="button" variant="ghost" className="size-7 shrink-0 p-0 text-muted-foreground" aria-label="Favorite issue">
+            <Star size={16} />
+          </Button>
+          <Button type="button" variant="ghost" className="size-7 shrink-0 p-0 text-muted-foreground" aria-label="Issue actions">
+            <MoreHorizontal size={16} />
+          </Button>
+        </nav>
+      </div>
+      {myIssuesReturn && myIssuesReturn.pill !== "Activity" && (
+        <Link
+          to={myIssuesReturn.href}
+          className="absolute left-3 top-[calc(100%-0.65rem)] rounded-lg border border-border bg-background px-3 py-1.5 text-[14px] font-medium text-foreground shadow-[0_1px_3px_rgb(0_0_0/0.08)] hover:bg-muted"
+          data-testid="issue-origin-pill"
+        >
+          {myIssuesReturn.pill}
+        </Link>
+      )}
+    </header>
+  );
+}
+
+function ParentIssueContext({
+  parent,
+  navigationState,
+}: {
+  parent: Issue;
+  navigationState: IssueNavigationState;
+}) {
+  const state = myIssuesReturnTarget(navigationState)
+    ? {
+        ...navigationState,
+        parentKey: undefined,
+        parentTitle: undefined,
+      }
+    : undefined;
+
+  return (
+    <div className="flex flex-wrap items-center gap-2 text-[16px] text-muted-foreground" data-testid="issue-parent-context">
+      <span>Sub-issue of</span>
+      <Link
+        to={`/issue/${issueKey(parent)}`}
+        state={state}
+        className="inline-flex min-w-0 items-center gap-2 rounded-md text-foreground hover:bg-muted/60 hover:px-1"
+        data-testid="issue-parent-link"
+      >
+        <StatusGlyph state={stateName(parent)} />
+        <span className="shrink-0 tabular-nums text-muted-foreground">{issueKey(parent)}</span>
+        <span className="min-w-0 truncate font-medium">{issueTitle(parent)}</span>
+      </Link>
+      <SubIssueProgress issue={parent} testId="issue-parent-progress" />
+    </div>
+  );
+}
+
+function myIssuesReturnTarget(state: IssueNavigationState) {
+  if (state.source !== "my-issues") return null;
+  const href = typeof state.from === "string" && state.from.startsWith("/my-issues") ? state.from : "/my-issues/assigned";
+  return {
+    href,
+    pill: state.fromPill || "Assigned",
+  };
+}
+
+function parentIssueFromNavigation(state: IssueNavigationState): Issue | null {
+  if (!state.parentKey) return null;
+  return {
+    key: state.parentKey,
+    title: state.parentTitle || state.parentKey,
+  };
+}
+
+function childIssueNavigationState(state: IssueNavigationState, parent: Issue): IssueNavigationState {
+  const myIssuesReturn = myIssuesReturnTarget(state);
+  return {
+    ...(myIssuesReturn
+      ? {
+          source: "my-issues",
+          from: myIssuesReturn.href,
+          fromLabel: "My issues",
+          fromPill: myIssuesReturn.pill,
+        }
+      : {}),
+    parentKey: issueKey(parent),
+    parentTitle: issueTitle(parent),
+  };
+}
+
 function AvatarBubble({ children, accent = false }: { children: string; accent?: boolean }) {
   return (
-    <span className={`inline-grid size-5 shrink-0 place-items-center rounded-full text-[10px] font-medium ${accent ? "bg-cyan-500 text-white" : "bg-muted text-muted-foreground"}`}>
+    <span className={`inline-flex size-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold leading-none ${accent ? "bg-cyan-500 text-white" : "bg-muted text-muted-foreground"}`}>
       {children}
     </span>
   );
@@ -469,12 +742,36 @@ function PropertyPickerRow({
   testId: string;
 }) {
   const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
   const closeMenu = () => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    if (!open) return;
+
+    const dismissOnOutsidePointer = (event: PointerEvent | MouseEvent) => {
+      const target = event.target instanceof Node ? event.target : null;
+      if (target && rootRef.current?.contains(target)) return;
+      setOpen(false);
+    };
+
+    const dismissOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", dismissOnOutsidePointer, true);
+    document.addEventListener("mousedown", dismissOnOutsidePointer, true);
+    document.addEventListener("keydown", dismissOnEscape, true);
+    return () => {
+      document.removeEventListener("pointerdown", dismissOnOutsidePointer, true);
+      document.removeEventListener("mousedown", dismissOnOutsidePointer, true);
+      document.removeEventListener("keydown", dismissOnEscape, true);
+    };
+  }, [open]);
+
   return (
-    <div className="relative">
+    <div ref={rootRef} className="relative">
       <button
         type="button"
         data-testid={testId}
@@ -487,21 +784,13 @@ function PropertyPickerRow({
         <span className="min-w-0 truncate">{value}</span>
       </button>
       {open && (
-        <>
-          <button
-            type="button"
-            aria-label="Close property menu"
-            className="fixed inset-0 z-40 cursor-default bg-transparent"
-            onClick={closeMenu}
-          />
-          <div
-            role="menu"
-            aria-label={value}
-            className="absolute left-0 top-[calc(100%+4px)] z-50 w-64 overflow-hidden rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10"
-          >
-            {typeof children === "function" ? children(closeMenu) : children}
-          </div>
-        </>
+        <div
+          role="menu"
+          aria-label={value}
+          className="absolute left-0 top-[calc(100%+4px)] z-50 max-h-[min(320px,calc(100vh-12rem))] w-64 overflow-y-auto rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10"
+        >
+          {typeof children === "function" ? children(closeMenu) : children}
+        </div>
       )}
     </div>
   );
@@ -530,7 +819,7 @@ function IssueActionButton({ children, label }: { children: ReactNode; label: st
   return (
     <Button
       aria-label={label}
-      className="size-8 rounded-full border border-border bg-background p-0 text-muted-foreground shadow-[0_1px_2px_rgb(0_0_0/0.08)] hover:text-foreground"
+      className="size-7 rounded-full border border-border bg-background p-0 text-[#6f6f6f] shadow-[0_1px_2px_rgb(0_0_0/0.06)] hover:bg-muted hover:text-foreground"
       type="button"
       variant="ghost"
     >

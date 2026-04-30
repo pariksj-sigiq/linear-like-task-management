@@ -1,6 +1,18 @@
+import {
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+  type ReactElement,
+  type HTMLAttributes,
+  type ReactNode,
+} from "react";
 import { LayoutGrid, List } from "lucide-react";
 import { cn } from "../lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 export type ProjectsView = "list" | "board";
 
@@ -35,6 +47,11 @@ const PROPERTY_LABELS: Record<ProjectDisplayProperty, string> = {
   status: "Status",
 };
 
+type MenuTriggerProps = HTMLAttributes<HTMLElement> & {
+  onClick?: (event: ReactMouseEvent) => void;
+  onKeyDown?: (event: ReactKeyboardEvent) => void;
+};
+
 export function ProjectsDisplayMenu({
   view,
   onViewChange,
@@ -46,22 +63,64 @@ export function ProjectsDisplayMenu({
   onViewChange: (view: ProjectsView) => void;
   displayProps: ProjectsDisplayProps;
   onDisplayPropsChange: (next: ProjectsDisplayProps) => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
+  const [open, setOpen] = useState(false);
+  const menuId = useId();
+  const rootRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const dismissOnOutsidePointer = (event: PointerEvent | MouseEvent) => {
+      const target = event.target instanceof Node ? event.target : null;
+      if (target && rootRef.current?.contains(target)) return;
+      setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", dismissOnOutsidePointer, true);
+    document.addEventListener("mousedown", dismissOnOutsidePointer, true);
+    return () => {
+      document.removeEventListener("pointerdown", dismissOnOutsidePointer, true);
+      document.removeEventListener("mousedown", dismissOnOutsidePointer, true);
+    };
+  }, [open]);
+
+  let trigger = children;
+  if (isValidElement(children)) {
+    const child = children as ReactElement<MenuTriggerProps>;
+    trigger = cloneElement(child, {
+          "aria-controls": open ? menuId : undefined,
+          "aria-expanded": open,
+          onClick: (event: ReactMouseEvent) => {
+            child.props.onClick?.(event);
+            if (!event.defaultPrevented) setOpen((value) => !value);
+          },
+          onKeyDown: (event: ReactKeyboardEvent) => {
+            child.props.onKeyDown?.(event);
+            if (event.key === "Escape") {
+              event.stopPropagation();
+              setOpen(false);
+            }
+          },
+    });
+  }
+
   const toggle = (key: ProjectDisplayProperty) =>
     onDisplayPropsChange({ ...displayProps, [key]: !displayProps[key] });
 
   const reset = () => onDisplayPropsChange({ ...DEFAULT_PROJECT_DISPLAY_PROPS });
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent
-        align="end"
-        sideOffset={6}
-        className="w-[340px] p-0"
-        data-testid="projects-display-menu"
-      >
+    <span ref={rootRef} className="relative inline-flex">
+      {trigger}
+      {open && (
+        <div
+          id={menuId}
+          role="dialog"
+          className="absolute right-0 top-[calc(100%+6px)] z-[70] w-[340px] overflow-hidden rounded-xl bg-popover p-0 text-sm text-popover-foreground shadow-[0_18px_54px_rgba(0,0,0,0.22)] ring-1 ring-foreground/10"
+          data-testid="projects-display-menu"
+        >
         <div className="p-3">
           <div className="grid grid-cols-2 gap-1 rounded-lg border border-border/70 bg-muted/40 p-1">
             <ViewTab
@@ -116,8 +175,9 @@ export function ProjectsDisplayMenu({
             Reset
           </button>
         </div>
-      </PopoverContent>
-    </Popover>
+        </div>
+      )}
+    </span>
   );
 }
 

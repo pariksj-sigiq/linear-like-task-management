@@ -5,6 +5,7 @@ export interface LinearUser {
   display_name?: string;
   username?: string;
   email?: string | null;
+  role?: string;
   avatar_url?: string | null;
 }
 
@@ -18,6 +19,7 @@ export interface WorkflowState {
   id?: string;
   key?: string;
   name?: string;
+  category?: string;
   type?: string;
   color?: string;
   team_key?: string;
@@ -116,6 +118,7 @@ export interface Issue {
   relations?: Relation[];
   subissues?: Issue[];
   children?: Issue[];
+  parent?: Issue | null;
   parent_id?: string | null;
   created_at?: string | null;
   updated_at?: string | null;
@@ -159,6 +162,65 @@ export function issueKey(issue: Issue | null | undefined) {
 
 export function issueTitle(issue: Issue | null | undefined) {
   return issue?.title || issue?.name || "Untitled issue";
+}
+
+export function issueChildren(issue: Issue | null | undefined) {
+  return [...((issue?.subissues || issue?.children || []) as Issue[])]
+    .filter((child) => issueKey(child) !== issueKey(issue));
+}
+
+export function issueChildCount(issue: Issue | null | undefined) {
+  return issueChildren(issue).length;
+}
+
+export function isIssueCompleted(issue: Issue | null | undefined) {
+  const category =
+    typeof issue?.state === "object" && issue.state
+      ? issue.state.category || issue.state.type || ""
+      : typeof issue?.workflow_state === "object" && issue.workflow_state
+        ? issue.workflow_state.category || issue.workflow_state.type || ""
+        : "";
+  const state = `${category} ${stateName(issue)}`.toLowerCase();
+  return state.includes("completed") || state.includes("done") || state.includes("passed") || state.includes("cancel");
+}
+
+export function issueCompletion(issue: Issue | null | undefined, children: Issue[] = issueChildren(issue)) {
+  const total = children.length;
+  const completed = children.filter(isIssueCompleted).length;
+  return {
+    completed,
+    total,
+    ratio: total > 0 ? completed / total : 0,
+  };
+}
+
+export function splitIssueTree(issues: Issue[]) {
+  const byRef = new Map<string, Issue>();
+  for (const issue of issues) {
+    const refs = [issue.id, issue.key, issue.identifier, issue.issue_key].filter(Boolean) as string[];
+    for (const ref of refs) byRef.set(ref, issue);
+  }
+
+  const childrenByParent = new Map<string, Issue[]>();
+  const nestedKeys = new Set<string>();
+  for (const issue of issues) {
+    if (!issue.parent_id || !byRef.has(issue.parent_id) || issue.parent_id === issue.id) continue;
+    const children = childrenByParent.get(issue.parent_id) || [];
+    children.push(issue);
+    childrenByParent.set(issue.parent_id, children);
+    nestedKeys.add(issueKey(issue));
+  }
+
+  return issues
+    .filter((issue) => !nestedKeys.has(issueKey(issue)))
+    .map((issue) => {
+      const children = new Map<string, Issue>();
+      for (const child of issueChildren(issue)) children.set(issueKey(child), child);
+      for (const ref of [issue.id, issue.key, issue.identifier, issue.issue_key].filter(Boolean) as string[]) {
+        for (const child of childrenByParent.get(ref) || []) children.set(issueKey(child), child);
+      }
+      return { issue, children: [...children.values()] };
+    });
 }
 
 export function stateName(issue: Issue | null | undefined) {

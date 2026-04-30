@@ -19,10 +19,53 @@ CREATE TABLE sessions (
     expires_at TIMESTAMPTZ NOT NULL
 );
 
+CREATE TABLE user_preferences (
+    user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    default_home_view TEXT NOT NULL DEFAULT 'Active issues',
+    display_names TEXT NOT NULL DEFAULT 'Full name',
+    first_day_of_week TEXT NOT NULL DEFAULT 'Sunday',
+    convert_emoticons BOOLEAN NOT NULL DEFAULT TRUE,
+    send_comment_shortcut TEXT NOT NULL DEFAULT '⌘+Enter',
+    font_size TEXT NOT NULL DEFAULT 'Default',
+    theme TEXT NOT NULL DEFAULT 'System',
+    use_pointer_cursors BOOLEAN NOT NULL DEFAULT FALSE,
+    compact_issue_rows BOOLEAN NOT NULL DEFAULT FALSE,
+    sidebar_counts BOOLEAN NOT NULL DEFAULT TRUE,
+    open_at_login BOOLEAN NOT NULL DEFAULT TRUE,
+    default_workspace_id TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE workspaces (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     url_key TEXT UNIQUE NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE api_keys (
+    id TEXT PRIMARY KEY,
+    workspace_id TEXT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    token_prefix TEXT NOT NULL,
+    token_hash TEXT NOT NULL UNIQUE,
+    scopes TEXT NOT NULL DEFAULT 'read,write',
+    agent_name TEXT,
+    created_by TEXT REFERENCES users(id) ON DELETE SET NULL,
+    last_used_at TIMESTAMPTZ,
+    revoked_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE settings_actions (
+    id TEXT PRIMARY KEY,
+    page_key TEXT NOT NULL,
+    action TEXT NOT NULL,
+    value TEXT,
+    actor_id TEXT REFERENCES users(id) ON DELETE SET NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -91,6 +134,19 @@ CREATE TABLE project_milestones (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX idx_project_milestones_project ON project_milestones(project_id);
+
+CREATE TABLE project_statuses (
+    id TEXT PRIMARY KEY,
+    workspace_id TEXT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL DEFAULT 'active',
+    color TEXT NOT NULL DEFAULT '#5e6ad2',
+    position INTEGER NOT NULL DEFAULT 0,
+    is_default BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (workspace_id, name)
+);
 
 CREATE TABLE project_members (
     project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,

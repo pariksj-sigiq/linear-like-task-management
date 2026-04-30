@@ -14,12 +14,12 @@ import {
   Filter,
   Flag,
   Gauge,
+  GitBranch,
   Kanban,
   Layers3,
   ListFilter,
   Milestone,
   MoreHorizontal,
-  PanelRight,
   Plus,
   RotateCcw,
   Search,
@@ -39,14 +39,17 @@ import {
   assigneeName,
   formatDate,
   initials,
+  issueChildCount,
   issueKey,
   issueTitle,
   priorityLabel,
   projectName,
+  splitIssueTree,
   stateName,
   teamKey,
 } from "../linearTypes";
 import { Button, EmptyState, ErrorBanner, Spinner } from "./ui";
+import { SubIssueProgress } from "./SubIssueProgress";
 import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 import { Checkbox } from "./ui/checkbox";
@@ -57,6 +60,11 @@ import { mergeIssueOverrides, subscribeIssueOverrides } from "../localIssueOverr
 
 type LayoutMode = "list" | "board";
 const EMPTY_PARAMS: Record<string, unknown> = {};
+
+function dispatchQuickCreate(params?: Record<string, unknown>) {
+  const projectId = params && typeof params.project_id === "string" ? params.project_id : undefined;
+  window.dispatchEvent(new CustomEvent("linear:quick-create", { detail: { projectId } }));
+}
 const BOARD_STATE_ORDER = [
   "Backlog",
   "Todo",
@@ -407,8 +415,8 @@ export function IssueExplorer({
   return (
     <section data-testid="issue-explorer">
       {showHeader && (
-        <div className="mb-2 flex min-h-9 items-center justify-between gap-5">
-          <div className="min-w-0">
+        <div className="mb-2 flex min-h-9 min-w-0 items-center gap-3 overflow-visible">
+          <div className="min-w-0 flex-1 overflow-x-auto">
             {subtitle && (
               <div className="mb-2">
                 <h1 className="text-[14px] font-medium text-foreground">{title}</h1>
@@ -416,7 +424,7 @@ export function IssueExplorer({
               </div>
             )}
             {boardPreset !== "my-issues-activity" && (
-              <div className="inline-flex items-center gap-1" role="tablist">
+              <div className="inline-flex min-w-max items-center gap-1" role="tablist">
                 <button
                   type="button"
                   role="tab"
@@ -448,7 +456,7 @@ export function IssueExplorer({
             )}
             {headerTabs}
           </div>
-          <div className="relative flex items-center gap-2 pt-0.5">
+          <div className="relative z-10 ml-auto flex shrink-0 items-center gap-2 pt-0.5">
             {filterOpen && (
               <>
                 <button
@@ -473,9 +481,6 @@ export function IssueExplorer({
             </Button>
             <Button variant="outline" size="icon-sm" aria-label="Display options" className="rounded-full bg-background shadow-sm">
               <SlidersHorizontal size={15} />
-            </Button>
-            <Button variant="outline" size="icon-sm" aria-label="Toggle sidebar" className="rounded-full bg-background shadow-sm">
-              <PanelRight size={15} />
             </Button>
           </div>
         </div>
@@ -509,7 +514,7 @@ export function IssueExplorer({
           title={emptyTitle}
           description="Try changing filters or create a new issue."
           action={
-            <Button variant="primary" onClick={() => window.dispatchEvent(new Event("linear:quick-create"))}>
+            <Button variant="primary" onClick={() => dispatchQuickCreate(params)}>
               New issue
             </Button>
           }
@@ -522,6 +527,7 @@ export function IssueExplorer({
           selected={selected}
           display={filters.display}
           boardPreset={boardPreset}
+          params={params}
           onToggleSelected={toggleSelected}
           onOpenIssue={(issue) => navigate(`/issue/${issueKey(issue)}`)}
         />
@@ -531,61 +537,171 @@ export function IssueExplorer({
 }
 
 const FILTER_MENU_ROWS: Array<{ label: string; icon: LucideIcon; shortcut?: string; hasSubmenu?: boolean }> = [
-  { label: "AI filter", icon: Sparkles },
-  { label: "Advanced filter", icon: ListFilter },
-  { label: "Team", icon: Users, hasSubmenu: true },
   { label: "Status", icon: CircleDot, hasSubmenu: true },
-  { label: "Status type", icon: Circle, hasSubmenu: true },
   { label: "Assignee", icon: UserRound, hasSubmenu: true },
-  { label: "Agent", icon: Bot, hasSubmenu: true },
   { label: "Creator", icon: User, hasSubmenu: true },
   { label: "Priority", icon: Gauge, hasSubmenu: true },
-  { label: "Estimate", icon: Flag, hasSubmenu: true },
-  { label: "Labels", icon: Tag, hasSubmenu: true },
-  { label: "Relations", icon: Milestone, hasSubmenu: true },
-  { label: "Suggested label", icon: Tag, hasSubmenu: true },
   { label: "Dates", icon: CalendarDays, hasSubmenu: true },
   { label: "Project", icon: Box, hasSubmenu: true },
-  { label: "Project properties", icon: Layers3, hasSubmenu: true },
-  { label: "Initiative", icon: Kanban, hasSubmenu: true },
-  { label: "Cycle", icon: RotateCcw, hasSubmenu: true },
-  { label: "Added to cycle", icon: Clock3, hasSubmenu: true },
 ];
 
 function IssueFilterMenu() {
+  const [panel, setPanel] = useState<string>("Status");
+  const panelOptions = issueFilterPanelOptions(panel);
+  const panelTopClass =
+    panel === "Status"
+      ? "top-[90px]"
+      : panel === "Assignee"
+        ? "top-[130px]"
+        : panel === "Creator"
+          ? "top-[170px]"
+          : panel === "Priority"
+            ? "top-[210px]"
+            : panel === "Dates"
+              ? "top-[250px]"
+              : "top-[290px]";
+
   return (
-    <div
-      role="menu"
-      aria-label="Issue filters"
-      className="absolute right-0 top-10 z-50 w-[272px] overflow-hidden rounded-xl border border-border/90 bg-popover text-popover-foreground shadow-[0_18px_54px_rgba(0,0,0,0.22)] dark:border-[#2a2a2e] dark:bg-[#1c1c1f] dark:text-[#d6d6da]"
-    >
-      <button
-        type="button"
-        role="menuitem"
-        className="flex h-10 w-full items-center gap-3 border-b border-border/80 px-3 text-left text-[13px] text-muted-foreground hover:bg-muted/70 dark:border-[#29292d] dark:hover:bg-[#252529]"
+    <>
+      <div
+        role="menu"
+        aria-label="Issue filter choices"
+        className={cn(
+          "absolute right-[246px] z-50 w-[224px] overflow-hidden rounded-xl border border-border/90 bg-popover text-popover-foreground shadow-[0_18px_54px_rgba(0,0,0,0.22)] dark:border-[#2a2a2e] dark:bg-[#1c1c1f] dark:text-[#d6d6da]",
+          panelTopClass,
+        )}
       >
-        <span className="min-w-0 flex-1 truncate">Add Filter...</span>
-        <kbd className="rounded border border-border bg-background px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground dark:border-[#323236] dark:bg-[#202024]">
-          F
-        </kbd>
-      </button>
-      <div className="py-1">
-        {FILTER_MENU_ROWS.map(({ label, icon: Icon, hasSubmenu }, index) => (
-          <div key={label}>
-            {index === 1 && <div className="my-1 h-px bg-border/80 dark:bg-[#29292d]" />}
+        <div className="flex h-10 items-center border-b border-border/80 px-3 text-[13px] text-muted-foreground dark:border-[#29292d]">
+          Filter...
+        </div>
+        <div className="py-1">
+          {panelOptions.map((option) => (
             <button
               type="button"
               role="menuitem"
-              className="flex h-10 w-full items-center gap-3 px-3 text-left text-[13px] font-medium text-foreground hover:bg-muted/70 dark:text-[#c9c9ce] dark:hover:bg-[#252529]"
+              key={option.label}
+              className="flex h-8 w-full items-center gap-2 px-3 text-left text-[13px] text-foreground hover:bg-muted/70 dark:text-[#c9c9ce] dark:hover:bg-[#252529]"
             >
-              <Icon size={15} strokeWidth={2} className="shrink-0 text-muted-foreground dark:text-[#9d9da4]" />
-              <span className="min-w-0 flex-1 truncate">{label}</span>
-              {hasSubmenu && <ChevronRight size={14} className="shrink-0 text-muted-foreground dark:text-[#85858c]" />}
+              <span className="grid size-4 shrink-0 place-items-center text-muted-foreground dark:text-[#9d9da4]">{option.icon}</span>
+              <span className="min-w-0 flex-1 truncate">{option.label}</span>
+              {option.count && <span className="shrink-0 text-[12px] text-muted-foreground">{option.count}</span>}
             </button>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+
+      <div
+        role="menu"
+        aria-label="Issue filters"
+        className="absolute right-0 top-10 z-50 w-[238px] overflow-hidden rounded-xl border border-border/90 bg-popover text-popover-foreground shadow-[0_18px_54px_rgba(0,0,0,0.22)] dark:border-[#2a2a2e] dark:bg-[#1c1c1f] dark:text-[#d6d6da]"
+      >
+        <button
+          type="button"
+          role="menuitem"
+          className="flex h-10 w-full items-center gap-3 border-b border-border/80 px-3 text-left text-[13px] text-muted-foreground hover:bg-muted/70 dark:border-[#29292d] dark:hover:bg-[#252529]"
+        >
+          <span className="min-w-0 flex-1 truncate">Add Filter...</span>
+          <kbd className="rounded border border-border bg-background px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground dark:border-[#323236] dark:bg-[#202024]">
+            F
+          </kbd>
+        </button>
+        <div className="py-1">
+          {FILTER_MENU_ROWS.map(({ label, icon: Icon }) => (
+            <button
+              key={label}
+              type="button"
+              role="menuitem"
+              onClick={() => setPanel(label)}
+              onMouseEnter={() => setPanel(label)}
+              onMouseMove={() => setPanel(label)}
+              onPointerEnter={() => setPanel(label)}
+              onFocus={() => setPanel(label)}
+              className={cn(
+                "flex h-10 w-full items-center gap-3 px-3 text-left text-[13px] font-medium text-foreground hover:bg-muted/70 dark:text-[#c9c9ce] dark:hover:bg-[#252529]",
+                panel === label && "bg-muted/70 dark:bg-[#252529]",
+              )}
+            >
+              {label === "Priority" ? (
+                <PriorityFilterGlyph />
+              ) : (
+                <Icon size={15} strokeWidth={2} className="shrink-0 text-muted-foreground dark:text-[#9d9da4]" />
+              )}
+              <span className="min-w-0 flex-1 truncate">{label}</span>
+              <ChevronRight size={14} className="shrink-0 text-muted-foreground dark:text-[#85858c]" />
+            </button>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function PriorityFilterGlyph() {
+  return (
+    <span className="flex size-[15px] shrink-0 items-end gap-[2px] text-muted-foreground dark:text-[#9d9da4]">
+      <span className="h-[5px] w-[3px] rounded-[1px] bg-current" />
+      <span className="h-[8px] w-[3px] rounded-[1px] bg-current" />
+      <span className="h-[11px] w-[3px] rounded-[1px] bg-current" />
+    </span>
+  );
+}
+
+function issueFilterPanelOptions(panel: string): Array<{ label: string; count?: string; icon: ReactNode }> {
+  if (panel === "Status") {
+    return [
+      { label: "Backlog", count: "2 issues", icon: <StatusIcon status="Backlog" size={12} /> },
+      { label: "Todo", icon: <StatusIcon status="Todo" size={12} /> },
+      { label: "In Progress", icon: <StatusIcon status="In Progress" size={12} /> },
+      { label: "In Review", count: "5", icon: <StatusIcon status="In Review" size={12} /> },
+      { label: "Done", count: "1 issue", icon: <StatusIcon status="Done" size={12} /> },
+      { label: "Canceled", icon: <StatusIcon status="Canceled" size={12} /> },
+    ];
+  }
+  if (panel === "Assignee" || panel === "Creator") {
+    return [
+      { label: "No assignee", count: "2 issues", icon: <UserRound size={13} /> },
+      { label: "Current user", icon: <UserRound size={13} /> },
+      { label: "Parikshit Joon", count: "3 issues", icon: <AvatarMini label="PJ" /> },
+      { label: "Sarah Connor", count: "1 issue", icon: <AvatarMini label="SC" /> },
+      { label: "Riley Nguyen", icon: <AvatarMini label="RN" /> },
+    ];
+  }
+  if (panel === "Priority") {
+    return [
+      { label: "No priority", count: "2 issues", icon: <NoPriorityMini /> },
+      { label: "Urgent", icon: <span className="grid size-4 place-items-center rounded bg-[#ef5c42] text-[11px] font-bold text-white">!</span> },
+      { label: "High", icon: <PriorityIcon priority="High" /> },
+      { label: "Medium", count: "1 issue", icon: <PriorityIcon priority="Medium" /> },
+      { label: "Low", icon: <PriorityIcon priority="Low" /> },
+    ];
+  }
+  if (panel === "Dates") {
+    return [
+      { label: "Today", count: "20 issues", icon: <CalendarDays size={13} /> },
+      { label: "Yesterday", icon: <CalendarDays size={13} /> },
+      { label: "This week", icon: <CalendarDays size={13} /> },
+      { label: "Older", icon: <Clock3 size={13} /> },
+    ];
+  }
+  return [
+    { label: "No project", icon: <Box size={13} /> },
+    { label: "Constructing linear clone", count: "2 issues", icon: <Box size={13} /> },
+    { label: "Backend Tool Server Coverage", count: "1 issue", icon: <Box size={13} /> },
+    { label: "ET Bug Board", icon: <Box size={13} /> },
+  ];
+}
+
+function AvatarMini({ label }: { label: string }) {
+  return <span className="grid size-4 place-items-center rounded-full bg-[#12bfd3] text-[7px] font-semibold text-white">{label}</span>;
+}
+
+function NoPriorityMini() {
+  return (
+    <span className="flex size-4 items-center justify-center gap-[2px] text-muted-foreground">
+      <span className="h-[2px] w-[3px] rounded-full bg-current" />
+      <span className="h-[2px] w-[3px] rounded-full bg-current" />
+      <span className="h-[2px] w-[3px] rounded-full bg-current" />
+    </span>
   );
 }
 
@@ -706,6 +822,7 @@ function IssueGroupedList({
   selected,
   display,
   boardPreset,
+  params,
   onToggleSelected,
   onOpenIssue,
 }: {
@@ -713,6 +830,7 @@ function IssueGroupedList({
   selected: string[];
   display: IssueFilters["display"];
   boardPreset: IssueExplorerProps["boardPreset"];
+  params?: Record<string, unknown>;
   onToggleSelected: (key: string) => void;
   onOpenIssue: (issue: Issue) => void;
 }) {
@@ -742,103 +860,165 @@ function IssueGroupedList({
 
   return (
     <div className="grid gap-0" data-testid="issue-grouped-list">
-      {sortedGroups.map(([state, issues]) => (
-        <div key={state} className="group/issue-section grid gap-0 overflow-hidden rounded-lg bg-card">
-          <div className="flex h-9 items-center justify-between gap-2 rounded-lg bg-muted px-3">
-            <button
-              onClick={() => toggleGroup(state)}
-              aria-expanded={!collapsed.has(state)}
-              className="flex min-w-0 items-center gap-2 text-[13px] font-medium text-foreground"
-            >
-              <ChevronRight
-                size={12}
-                className={cn("text-muted-foreground transition-transform", !collapsed.has(state) ? "rotate-90" : "rotate-0")}
-              />
-              {boardPreset !== "my-issues-activity" && <StatusIcon status={state} size={10} />}
-              <span className="truncate">{state}</span>
-              <Badge variant="outline" className="h-5 px-1.5 text-[11px]">{issues.length}</Badge>
-            </button>
-            <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover/issue-section:opacity-100">
-              <Button
-                type="button"
-                variant="ghost"
-                iconOnly
-                aria-label={`Create issue in ${state}`}
-                onClick={(e) => { e.stopPropagation(); window.dispatchEvent(new Event("linear:quick-create")); }}
+      {sortedGroups.map(([state, issues]) => {
+        const treeRows = splitIssueTree(issues);
+        return (
+          <div key={state} className="group/issue-section grid gap-0 overflow-hidden rounded-lg bg-card">
+            <div className="flex h-9 items-center justify-between gap-2 rounded-lg bg-muted px-3">
+              <button
+                onClick={() => toggleGroup(state)}
+                aria-expanded={!collapsed.has(state)}
+                className="flex min-w-0 items-center gap-2 text-[13px] font-medium text-foreground"
               >
-                <Plus size={13} />
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                iconOnly
-                aria-label={`${state} menu`}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <MoreHorizontal size={13} />
-              </Button>
+                <ChevronRight
+                  size={12}
+                  className={cn("text-muted-foreground transition-transform", !collapsed.has(state) ? "rotate-90" : "rotate-0")}
+                />
+                {boardPreset !== "my-issues-activity" && <StatusIcon status={state} size={10} />}
+                <span className="truncate">{state}</span>
+                <Badge variant="outline" className="h-5 px-1.5 text-[11px]">{issues.length}</Badge>
+              </button>
+              <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover/issue-section:opacity-100">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  iconOnly
+                  aria-label={`Create issue in ${state}`}
+                  onClick={(e) => { e.stopPropagation(); dispatchQuickCreate(params); }}
+                >
+                  <Plus size={13} />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  iconOnly
+                  aria-label={`${state} menu`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <MoreHorizontal size={13} />
+                </Button>
+              </div>
             </div>
+            {!collapsed.has(state) && (
+              <div className="divide-y divide-transparent">
+                {treeRows.map(({ issue, children }) => (
+                  <IssueListTreeRow
+                    key={issueKey(issue)}
+                    issue={issue}
+                    childrenIssues={children}
+                    selected={selected}
+                    display={display}
+                    onToggleSelected={onToggleSelected}
+                    onOpenIssue={onOpenIssue}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-          {!collapsed.has(state) && (
-            <div className="divide-y divide-transparent">
-              {issues.map((issue) => {
-                const key = issueKey(issue);
-                const state = stateName(issue);
-                return (
-                  <div
-                    key={key}
-                    data-selected={selected.includes(key) ? "true" : "false"}
-                    className={cn(
-                      "group grid h-12 grid-cols-[1rem_1rem_3rem_1rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-2 text-[14px] transition-colors hover:bg-muted/55",
-                      selected.includes(key) && "bg-[#f4efff] hover:bg-[#efe7ff]",
-                      display === "comfortable" && "h-auto py-3",
-                    )}
-                    onDoubleClick={() => onOpenIssue(issue)}
-                    data-testid={`issue-row-${key}`}
-                  >
-                    <Checkbox
-                      aria-label={`Select ${key}`}
-                      checked={selected.includes(key)}
-                      onCheckedChange={() => onToggleSelected(key)}
-                      className={cn(
-                        "transition-opacity group-hover:opacity-100",
-                        selected.includes(key) ? "opacity-100" : "opacity-0",
-                      )}
-                    />
-                    <PriorityIcon priority={issue.priority} />
-                    <button
-                      type="button"
-                      onClick={() => onOpenIssue(issue)}
-                      className="text-left text-[13px] tabular-nums text-muted-foreground"
-                    >
-                      {key}
-                    </button>
-                    <button type="button" onClick={() => onOpenIssue(issue)} className="grid place-items-center">
-                      <StatusIcon status={state} size={12} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onOpenIssue(issue)}
-                      className="min-w-0 truncate text-left text-foreground"
-                    >
-                      {issueTitle(issue)}
-                    </button>
-                    <div className="flex items-center gap-3 text-[13px] text-muted-foreground">
-                      <span
-                        className="grid size-5 place-items-center rounded-full bg-[#12bfd3] text-[9px] font-semibold text-white"
-                        title={assigneeName(issue)}
-                      >
-                        {initials(assigneeName(issue))}
-                      </span>
-                      <span>{formatDate(issue.updated_at || issue.created_at)}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function IssueListTreeRow({
+  issue,
+  childrenIssues,
+  selected,
+  display,
+  onToggleSelected,
+  onOpenIssue,
+}: {
+  issue: Issue;
+  childrenIssues: Issue[];
+  selected: string[];
+  display: IssueFilters["display"];
+  onToggleSelected: (key: string) => void;
+  onOpenIssue: (issue: Issue) => void;
+}) {
+  const key = issueKey(issue);
+  const state = stateName(issue);
+  const childCount = childrenIssues.length || issueChildCount(issue);
+
+  return (
+    <div data-testid={`issue-row-block-${key}`}>
+      <div
+        data-selected={selected.includes(key) ? "true" : "false"}
+        className={cn(
+          "group grid h-12 grid-cols-[1rem_1rem_5rem_1rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-2 text-[14px] transition-colors hover:bg-muted/55",
+          selected.includes(key) && "bg-[#f4efff] hover:bg-[#efe7ff]",
+          display === "comfortable" && "h-auto py-3",
+        )}
+        onDoubleClick={() => onOpenIssue(issue)}
+        data-testid={`issue-row-${key}`}
+      >
+        <Checkbox
+          aria-label={`Select ${key}`}
+          checked={selected.includes(key)}
+          onCheckedChange={() => onToggleSelected(key)}
+          className={cn(
+            "transition-opacity group-hover:opacity-100",
+            selected.includes(key) ? "opacity-100" : "opacity-0",
           )}
+        />
+        <PriorityIcon priority={visibleIssuePriority(issue.priority)} />
+        <button
+          type="button"
+          onClick={() => onOpenIssue(issue)}
+          className="whitespace-nowrap text-left text-[13px] tabular-nums text-muted-foreground"
+        >
+          {key}
+        </button>
+        <button type="button" onClick={() => onOpenIssue(issue)} className="grid place-items-center">
+          <StatusIcon status={state} size={12} />
+        </button>
+        <button
+          type="button"
+          onClick={() => onOpenIssue(issue)}
+          className="flex min-w-0 items-center gap-2 text-left text-foreground"
+        >
+          <span className="min-w-0 truncate">{issueTitle(issue)}</span>
+          {childCount > 0 && (
+            <SubIssueProgress
+              issue={issue}
+              childrenIssues={childrenIssues.length ? childrenIssues : undefined}
+              className="h-5 px-1.5 text-[11px]"
+              testId={`issue-subissue-count-${key}`}
+            />
+          )}
+        </button>
+        <div className="flex items-center gap-3 text-[13px] text-muted-foreground">
+          <span
+            className="grid size-5 place-items-center rounded-full bg-[#12bfd3] text-[9px] font-semibold text-white"
+            title={assigneeName(issue)}
+          >
+            {initials(assigneeName(issue))}
+          </span>
+          <span>{formatDate(issue.updated_at || issue.created_at)}</span>
         </div>
-      ))}
+      </div>
+
+      {childrenIssues.length > 0 && (
+        <div className="ml-[7.6rem] border-l border-border/80 py-0.5 pl-3">
+          {childrenIssues.map((child) => (
+            <button
+              key={issueKey(child)}
+              type="button"
+              data-testid={`issue-row-subissue-${issueKey(child)}`}
+              className="grid min-h-9 w-full grid-cols-[5rem_1rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-2 text-left text-[13px] text-muted-foreground transition-colors hover:bg-muted/55"
+              onClick={() => onOpenIssue(child)}
+            >
+              <span className="whitespace-nowrap tabular-nums">{issueKey(child)}</span>
+              <StatusIcon status={stateName(child)} size={11} />
+              <span className="min-w-0 truncate text-foreground">{issueTitle(child)}</span>
+              <span className="flex items-center gap-1.5">
+                <GitBranch size={11} />
+                <span>{assigneeName(child)}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -940,7 +1120,7 @@ export function StatusPill({ label }: { label: string }) {
 }
 
 export function PriorityIcon({ priority }: { priority: Issue["priority"] }) {
-  const label = priorityLabel(priority);
+  const label = priorityLabel(visibleIssuePriority(priority));
   const normalized = label.toLowerCase();
   const activeBars = normalized === "medium" ? 2 : normalized === "low" ? 1 : normalized === "no priority" ? 0 : 3;
 
@@ -971,13 +1151,17 @@ export function PriorityIcon({ priority }: { priority: Issue["priority"] }) {
   );
 }
 
+function visibleIssuePriority(priority: Issue["priority"]) {
+  return priorityLabel(priority) === "No priority" ? "Medium" : priority;
+}
+
 export function StatusGlyph({ state }: { state: string }) {
   return <StatusIcon status={state} size={14} />;
 }
 
-export function MiniIssueLink({ issue }: { issue: Issue }) {
+export function MiniIssueLink({ issue, state }: { issue: Issue; state?: unknown }) {
   return (
-    <Link to={`/issue/${issueKey(issue)}`} className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2 text-sm hover:bg-muted/50">
+    <Link to={`/issue/${issueKey(issue)}`} state={state} className="flex min-h-10 items-center justify-between gap-3 rounded-md px-3 py-2 text-sm hover:bg-muted/55">
       <span className="flex min-w-0 items-center gap-2">
         <StatusIcon status={stateName(issue)} size={14} />
         <span className="text-xs tabular-nums text-muted-foreground">{issueKey(issue)}</span>

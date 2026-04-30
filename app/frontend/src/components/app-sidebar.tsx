@@ -1,5 +1,6 @@
 import * as React from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { createPortal } from "react-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   ChevronDownIcon,
   ChevronRightIcon,
@@ -9,17 +10,8 @@ import {
   UserRoundCheckIcon,
 } from "lucide-react";
 import * as Collapsible from "@radix-ui/react-collapsible";
+import { readTool, collectionFrom } from "../api";
 import type { LinearUser } from "../linearTypes";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -53,51 +45,134 @@ export function AppSidebar({
   const [workspaceOpen, setWorkspaceOpen] = React.useState(true);
   const [teamsOpen, setTeamsOpen] = React.useState(true);
   const [teamOpen, setTeamOpen] = React.useState(true);
+  const [workspaceMenuOpen, setWorkspaceMenuOpen] = React.useState(false);
+  const [workspaceSubmenuOpen, setWorkspaceSubmenuOpen] = React.useState(false);
+  const [workspaceName, setWorkspaceName] = React.useState("eltsuh");
+  const workspaceMenuRootRef = React.useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    readTool("search_workspaces", { limit: 1 }).then((response) => {
+      const workspace = collectionFrom<{ name?: string; url_key?: string }>(response.data, ["workspaces", "results"])[0];
+      if (workspace?.name || workspace?.url_key) setWorkspaceName(workspace.name || workspace.url_key || "eltsuh");
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (!workspaceMenuOpen) return;
+
+    const closeOnOutsidePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (workspaceMenuRootRef.current?.contains(target)) return;
+      if ((target as HTMLElement).closest?.("[data-workspace-menu-surface='true']")) return;
+      setWorkspaceMenuOpen(false);
+      setWorkspaceSubmenuOpen(false);
+    };
+
+    document.addEventListener("pointerdown", closeOnOutsidePointerDown, true);
+    return () => document.removeEventListener("pointerdown", closeOnOutsidePointerDown, true);
+  }, [workspaceMenuOpen]);
+
+  const workspaceMenu =
+    workspaceMenuOpen && typeof document !== "undefined"
+      ? createPortal(
+          <>
+            <div
+              aria-hidden="true"
+              className="fixed inset-0 z-[80]"
+              onPointerDown={() => {
+                setWorkspaceMenuOpen(false);
+                setWorkspaceSubmenuOpen(false);
+              }}
+            />
+            <div
+              role="menu"
+              data-workspace-menu-surface="true"
+              className="fixed left-3 top-12 z-[90] w-[228px] max-w-[calc(100vw-16px)] overflow-visible rounded-[10px] border border-[#d9d9d6] bg-[#fbfbfa] p-0 text-[13px] text-[#242424] shadow-[0_14px_32px_rgb(0_0_0/0.12),0_1px_2px_rgb(0_0_0/0.08)]"
+              data-testid="workspace-menu-content"
+            >
+              <WorkspaceMenuButton
+                onClick={() => {
+                  setWorkspaceMenuOpen(false);
+                  navigate("/settings/account/preferences");
+                }}
+              >
+                Settings
+              </WorkspaceMenuButton>
+              <WorkspaceMenuButton
+                onClick={() => {
+                  setWorkspaceMenuOpen(false);
+                  navigate("/settings/members");
+                }}
+              >
+                Invite and manage members
+              </WorkspaceMenuButton>
+              <WorkspaceMenuSeparator />
+              <WorkspaceMenuButton>Download desktop app</WorkspaceMenuButton>
+              <WorkspaceMenuSeparator />
+              <div
+                className="relative"
+                onPointerEnter={() => setWorkspaceSubmenuOpen(true)}
+                onPointerLeave={() => setWorkspaceSubmenuOpen(false)}
+                onFocus={() => setWorkspaceSubmenuOpen(true)}
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                    setWorkspaceSubmenuOpen(false);
+                  }
+                }}
+              >
+                <WorkspaceMenuButton>
+                  <span className="flex-1 text-left">Switch workspace</span>
+                  <ChevronRightIcon className="size-3.5 text-[#9a9a96]" />
+                </WorkspaceMenuButton>
+                {workspaceSubmenuOpen && (
+                  <div
+                    role="menu"
+                    data-workspace-menu-surface="true"
+                    className="absolute left-[calc(100%+4px)] top-[-5px] w-[192px] rounded-[10px] border border-[#d9d9d6] bg-[#fbfbfa] p-1.5 shadow-[0_14px_32px_rgb(0_0_0/0.12),0_1px_2px_rgb(0_0_0/0.08)]"
+                  >
+                    <WorkspaceMenuButton>Eltsuh</WorkspaceMenuButton>
+                  </div>
+                )}
+              </div>
+              <WorkspaceMenuButton
+                onClick={() => {
+                  setWorkspaceMenuOpen(false);
+                  void _onLogout();
+                }}
+                testId="logout-button"
+              >
+                Log out
+              </WorkspaceMenuButton>
+            </div>
+          </>,
+          document.body,
+        )
+      : null;
 
   return (
     <Sidebar collapsible="offcanvas" {...props} className="linear-sidebar" data-testid="linear-sidebar">
       <SidebarHeader className="px-3 pb-2 pt-4">
         <SidebarMenu>
           <SidebarMenuItem>
-            <div className="flex items-center gap-1.5 px-1">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton className="flex-1 px-1.5 py-1.5 hover:bg-sidebar-accent" data-testid="workspace-menu-trigger">
-                    <span className="flex size-5 items-center justify-center rounded-full bg-[#16b7d7] text-[10px] font-semibold text-white">
-                      EL
-                    </span>
-                    <span className="text-[14px] font-medium text-[#1f1f1f]">eltsuh</span>
-                    <ChevronDownIcon className="ml-auto size-4 text-sidebar-foreground/70" />
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" sideOffset={4} className="w-[228px] rounded-lg border-border bg-background p-0 text-[14px] shadow-[0_14px_36px_rgb(0_0_0/0.18)]">
-                  <DropdownMenuItem className="h-[39px] rounded-none px-3 text-[14px]" onClick={() => {}}>
-                    <span className="flex-1">Settings</span>
-                    <span className="text-muted-foreground">G then S</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="h-[39px] rounded-none px-3 text-[14px]" onClick={() => {}}>
-                    Invite and manage members
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator className="m-0" />
-                  <DropdownMenuItem className="h-[39px] rounded-none px-3 text-[14px]" onClick={() => {}}>
-                    Download desktop app
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator className="m-0" />
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger className="relative h-[39px] rounded-none px-3 pr-8 text-[14px]">
-                      <span className="shrink-0 whitespace-nowrap">Switch workspace</span>
-                      <span className="absolute right-10 text-muted-foreground">O then W</span>
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent className="min-w-48">
-                      <DropdownMenuItem>Eltsuh</DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
-                  <DropdownMenuItem className="h-[39px] rounded-none px-3 text-[14px]" onClick={_onLogout} data-testid="logout-button">
-                    <span className="flex-1">Log out</span>
-                    <span className="text-muted-foreground">⌥ ⇧ Q</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <div ref={workspaceMenuRootRef} className="flex min-w-0 items-center gap-1.5 px-1">
+              <SidebarMenuButton
+                className="h-8 min-w-0 flex-1 overflow-hidden rounded-lg px-1.5 py-1.5 text-[#262626] hover:bg-sidebar-accent data-[state=open]:bg-sidebar-accent"
+                data-state={workspaceMenuOpen ? "open" : "closed"}
+                data-testid="workspace-menu-trigger"
+                onClick={() => {
+                  setWorkspaceMenuOpen((open) => !open);
+                  setWorkspaceSubmenuOpen(false);
+                }}
+              >
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-[#111111] text-[10px] font-semibold text-white shadow-[inset_0_0_0_1px_rgb(255_255_255/0.08)]">
+                  {workspaceName.slice(0, 2).toUpperCase()}
+                </span>
+                <span className="min-w-0 flex-1 truncate whitespace-nowrap text-left text-[14px] font-medium text-[#1f1f1f]">{workspaceName}</span>
+                <ChevronDownIcon className="ml-auto size-4 shrink-0 text-sidebar-foreground/70" />
+              </SidebarMenuButton>
+              {workspaceMenu}
               <SidebarMenuButton
                 className="size-7 justify-center rounded-full p-0 hover:bg-sidebar-accent"
                 tooltip="Search workspace"
@@ -178,32 +253,6 @@ export function AppSidebar({
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={isPathActive(location.pathname, "/views", ["^/views"])}
-                  tooltip="Views"
-                  className="h-7 rounded-md px-2 text-[14px] font-medium"
-                >
-                  <NavLink to="/views" data-testid="nav-views">
-                    <ViewNavIcon />
-                    <span>Views</span>
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={isPathActive(location.pathname, "/roadmap", ["^/roadmap"])}
-                  tooltip="More"
-                  className="h-7 rounded-md px-2 text-[14px] font-medium"
-                >
-                  <NavLink to="/roadmap" data-testid="nav-roadmap">
-                    <MoreDotsIcon />
-                    <span>More</span>
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
             </Collapsible.Content>
@@ -262,18 +311,6 @@ export function AppSidebar({
                           </NavLink>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
-                      <SidebarMenuSubItem>
-                        <SidebarMenuSubButton
-                          asChild
-                          isActive={isPathActive(location.pathname, "/team/eng/views", ["^/team/eng/views"])}
-                          className="h-7 rounded-md px-2 text-[14px] font-medium"
-                        >
-                          <NavLink to="/team/eng/views" data-testid="team-eng-views-nav">
-                            <ViewNavIcon />
-                            <span>Views</span>
-                          </NavLink>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
                     </SidebarMenuSub>
                   </Collapsible.Content>
                 </SidebarMenuItem>
@@ -287,6 +324,32 @@ export function AppSidebar({
       </SidebarContent>
     </Sidebar>
   );
+}
+
+function WorkspaceMenuButton({
+  children,
+  onClick,
+  testId,
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  testId?: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="menuitem"
+      data-testid={testId}
+      className="flex h-[40px] w-full items-center px-3.5 text-left text-[13px] font-normal leading-none text-[#242424] outline-none hover:bg-[#f2f2f0] focus:bg-[#f2f2f0] focus:text-[#1f1f1f]"
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
+
+function WorkspaceMenuSeparator() {
+  return <div role="separator" className="h-px bg-[#e3e3e0]" />;
 }
 
 function isPathActive(pathname: string, url: string, patterns?: string[]): boolean {
@@ -316,23 +379,6 @@ function ProjectNavIcon() {
   return (
     <svg aria-hidden="true" className="size-4 shrink-0" viewBox="0 0 16 16" fill="currentColor" focusable="false">
       <path fillRule="evenodd" clipRule="evenodd" d="M7.331 1.07a3.2 3.2 0 0 1 1.338 0c.498.106.967.377 1.904.917l1.354.78c.937.541 1.406.812 1.747 1.19.301.334.53.728.669 1.156.157.484.157 1.025.157 2.107v1.56l-.003.718c-.007.63-.036 1.026-.154 1.389l-.057.158a3.2 3.2 0 0 1-.612.998l-.135.138c-.33.312-.792.578-1.612 1.051l-1.354.78-.623.357c-.55.309-.907.481-1.281.56l-.166.032a3.2 3.2 0 0 1-1.006 0l-.166-.031c-.374-.08-.73-.252-1.281-.561l-.623-.356-1.354-.78c-.82-.474-1.281-.74-1.612-1.052l-.135-.138a3.2 3.2 0 0 1-.612-.998l-.057-.158c-.118-.363-.147-.758-.154-1.39L1.5 8.78V7.22c0-.946 0-1.479.105-1.921l.052-.186c.122-.374.312-.723.56-1.028l.11-.128c.255-.284.583-.507 1.126-.83l.62-.36 1.354-.78c.82-.473 1.281-.739 1.718-.869zM3 7.22v1.56c0 1.183.018 1.439.084 1.643l.064.167q.11.246.292.449l.059.06c.151.143.427.318 1.323.835l1.354.78.632.36c.188.104.33.178.442.233V8.482l-4.247-1.93zm5.75 1.262v4.826c.212-.106.533-.282 1.074-.594l1.354-.78.628-.368c.499-.297.646-.407.754-.527l.113-.14q.158-.218.243-.476l.022-.081c.035-.144.051-.351.058-.835L13 8.78V7.22l-.004-.668zM7.82 2.51l-.177.027c-.159.034-.328.106-.835.39l-.632.359-1.354.78c-.896.517-1.172.692-1.323.834l-.059.06q-.046.051-.086.104l4.645 2.112 4.645-2.112-.084-.103c-.109-.12-.255-.23-.754-.528l-.628-.367-1.354-.78c-.897-.517-1.186-.668-1.386-.728l-.08-.021a1.7 1.7 0 0 0-.538-.027" />
-    </svg>
-  );
-}
-
-function ViewNavIcon() {
-  return (
-    <svg aria-hidden="true" className="size-4 shrink-0" viewBox="0 0 16 16" fill="currentColor" focusable="false">
-      <path d="M6.932 2.214a2.77 2.77 0 0 1 2.282.066l5.066 2.467c.944.46.964 1.812.034 2.3L9.287 9.683a2.77 2.77 0 0 1-2.574 0L1.686 7.047c-.93-.488-.91-1.84.034-2.3L6.786 2.28zm1.62 1.457a1.26 1.26 0 0 0-.97-.057l-.133.057-4.61 2.243 4.576 2.398c.367.193.803.193 1.17 0l4.574-2.398z" />
-      <path d="M13.905 10.077c.367-.173.82-.044 1.01.288s.048.74-.32.912L9.5 13.67a3.56 3.56 0 0 1-2.998 0l-5.097-2.392-.066-.034c-.318-.188-.432-.567-.253-.878s.588-.444.941-.317l.07.029 5.096 2.391.195.078c.461.156.978.13 1.42-.078z" />
-    </svg>
-  );
-}
-
-function MoreDotsIcon() {
-  return (
-    <svg aria-hidden="true" className="size-4 shrink-0" viewBox="0 0 16 16" fill="currentColor" focusable="false">
-      <path d="M3.25 8a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M9.25 8a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M15.25 8a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0" />
     </svg>
   );
 }
