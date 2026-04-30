@@ -59,6 +59,7 @@ import { cn } from "../lib/utils";
 import { mergeIssueOverrides, subscribeIssueOverrides } from "../localIssueOverrides";
 
 type LayoutMode = "list" | "board";
+type IssueExplorerTab = "all" | "active" | "backlog";
 const EMPTY_PARAMS: Record<string, unknown> = {};
 
 function dispatchQuickCreate(params?: Record<string, unknown>) {
@@ -201,6 +202,7 @@ interface IssueExplorerProps {
   showHeader?: boolean;
   showCreateAction?: boolean;
   defaultMode?: LayoutMode;
+  defaultTab?: IssueExplorerTab;
   headerTabs?: ReactNode;
   boardPreset?: "default" | "my-issues-activity";
 }
@@ -222,6 +224,7 @@ export function IssueExplorer({
   showHeader = true,
   showCreateAction = true,
   defaultMode = "list",
+  defaultTab = "active",
   headerTabs,
   boardPreset = "default",
 }: IssueExplorerProps) {
@@ -234,7 +237,7 @@ export function IssueExplorer({
   const [actionsOpen, setActionsOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [overrideVersion, setOverrideVersion] = useState(0);
-  const [activeTab, setActiveTab] = useState<'all' | 'active' | 'backlog'>('active');
+  const [activeTab, setActiveTab] = useState<IssueExplorerTab>(defaultTab);
   const [filters] = useState<IssueFilters>({
     query: "",
     state: "",
@@ -272,6 +275,10 @@ export function IssueExplorer({
     const timer = window.setTimeout(loadIssues, filters.query ? 220 : 0);
     return () => window.clearTimeout(timer);
   }, [loadIssues, filters.query]);
+
+  useEffect(() => {
+    setActiveTab(defaultTab);
+  }, [defaultTab]);
 
   useEffect(() => {
     return subscribeIssueOverrides(() => setOverrideVersion((version) => version + 1));
@@ -517,6 +524,18 @@ export function IssueExplorer({
             <Button variant="primary" onClick={() => dispatchQuickCreate(params)}>
               New issue
             </Button>
+          }
+        />
+      ) : filtered.length === 0 && boardPreset !== "my-issues-activity" ? (
+        <EmptyState
+          title="No matching issues"
+          description="Try switching views or changing filters."
+          action={
+            activeTab !== "all" ? (
+              <Button variant="primary" onClick={() => setActiveTab("all")}>
+                Show all issues
+              </Button>
+            ) : undefined
           }
         />
       ) : mode === "board" ? (

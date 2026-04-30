@@ -1709,7 +1709,7 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
-  const [view, setView] = useState<ProjectsView>("board");
+  const [view, setView] = useState<ProjectsView>("list");
   const [filters, setFilters] = useState<ProjectFilters>(EMPTY_PROJECT_FILTERS);
   const [displayProps, setDisplayProps] = useState<ProjectsDisplayProps>({ ...DEFAULT_PROJECT_DISPLAY_PROPS });
 
@@ -1747,8 +1747,15 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
         <div className="flex h-11 items-center justify-between border-b border-[#e5e5e5] px-5 dark:border-[#2d2d2d]">
           <div className="flex items-center gap-2" aria-label="Project views">
             <NavLink
-              className="inline-flex h-8 items-center rounded-full border border-[#e5e5e5] bg-[#f4f4f3] px-3 text-[13px] font-medium text-[#1c1c1c] shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:border-[#2d2d2d] dark:bg-[#222222] dark:text-[#eeeeee]"
+              className={cn(
+                "inline-flex h-8 items-center rounded-full border px-3 text-[13px] font-medium shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-colors",
+                view === "list"
+                  ? "border-[#e5e5e5] bg-[#f4f4f3] text-[#1c1c1c] dark:border-[#2d2d2d] dark:bg-[#222222] dark:text-[#eeeeee]"
+                  : "border-transparent bg-transparent text-[#6f6f6f] hover:bg-[#f4f4f3] dark:text-[#8f8f8f] dark:hover:bg-[#222222]",
+              )}
               to={teamScoped ? `/team/${teamKey}/projects/all` : "/projects/all"}
+              onClick={() => setView("list")}
+              aria-pressed={view === "list"}
             >
               All projects
             </NavLink>
@@ -1824,9 +1831,6 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
                 )}
               </Button>
             </ProjectsDisplayMenu>
-            <Button variant="ghost" iconOnly aria-label="Close sidebar" type="button" className="size-8 rounded-full border border-[#e5e5e5] bg-background shadow-[0_1px_2px_rgba(0,0,0,0.05)] hover:bg-[#f4f4f3] dark:border-[#2d2d2d] dark:hover:bg-[#222222]">
-              <Box size={13} />
-            </Button>
           </div>
         </div>
       </div>

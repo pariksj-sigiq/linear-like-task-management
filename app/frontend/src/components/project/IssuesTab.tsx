@@ -78,6 +78,7 @@ export function ProjectIssuesTab({ project, onChange }: ProjectIssuesTabProps) {
             title=""
             showHeader={false}
             showCreateAction={false}
+            defaultTab="all"
             params={{ project_id: projectId }}
           />
         </div>
