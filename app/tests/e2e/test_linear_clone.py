@@ -306,6 +306,33 @@ class TestPlanningAndUtilityPages:
         page.wait_for_load_state("networkidle")
         expect(page.get_by_test_id("project-detail-page")).to_be_visible()
 
+    def test_projects_toolbar_display_menu_and_create_modal_match_linear(self, page: Page) -> None:
+        login(page)
+        page.set_viewport_size({"width": 1440, "height": 900})
+        page.goto(f"{BASE_URL}/projects/all")
+        page.wait_for_load_state("networkidle")
+        expect(page.get_by_test_id("projects-page")).to_be_visible()
+        expect(page.get_by_role("link", name="All projects")).to_be_visible()
+        expect(page.get_by_test_id("projects-kanban-view-button")).to_contain_text("Kanban View")
+        expect(page.get_by_test_id("projects-board")).to_be_visible()
+
+        page.get_by_test_id("projects-display-button").click()
+        expect(page.get_by_test_id("projects-display-menu")).to_be_visible()
+        for label in ["List", "Board", "Timeline", "Columns", "Rows", "Ordering", "Show closed projects", "Board options"]:
+            expect(page.get_by_test_id("projects-display-menu")).to_contain_text(label)
+        expect(page.get_by_test_id("projects-view-board")).to_have_attribute("aria-pressed", "true")
+        expect(page.get_by_test_id("projects-display-toggle-milestones")).to_have_attribute("aria-pressed", "true")
+        expect(page.get_by_test_id("projects-display-toggle-status")).to_have_attribute("aria-pressed", "true")
+
+        page.keyboard.press("Escape")
+        page.get_by_test_id("create-project-button").click()
+        expect(page.get_by_test_id("create-project-modal")).to_be_visible()
+        expect(page.get_by_test_id("project-name-input")).to_have_attribute("placeholder", "Project name")
+        expect(page.get_by_test_id("project-summary-input")).to_have_attribute("placeholder", "Add a short summary...")
+        expect(page.get_by_test_id("status-chip")).to_contain_text("Backlog")
+        expect(page.get_by_test_id("priority-chip")).to_contain_text("No priority")
+        expect(page.get_by_test_id("create-project-modal")).to_contain_text("Milestones")
+
     def test_project_status_picker_matches_linear_project_menu(self, page: Page) -> None:
         login(page)
         page.set_viewport_size({"width": 1440, "height": 900})
