@@ -8,3 +8,4 @@ app/frontend/release/
 dist/
 .DS_Store
 *.zip
+.playwright-mcp/
