@@ -8,6 +8,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import uuid
 
 import requests
 
@@ -164,6 +165,30 @@ class TestIssues:
         assert "title" in obs["text"].lower()
 
 
+class TestProjects:
+    def test_create_project_tool_matches_inline_composer_contract(self):
+        name = f"API inline composer project {uuid.uuid4().hex[:8]}"
+        description = "Created by the tool API regression test."
+        project = step(
+            "create_project",
+            {
+                "name": name,
+                "description": description,
+                "state": "planned",
+                "health": "unknown",
+            },
+        )
+
+        assert project["name"] == name
+        assert project["description"] == description
+        assert project["state"] == "planned"
+        assert project["status"] == "planned"
+        assert project["health"] == "unknown"
+
+        projects = step("search_projects", {"query": name, "limit": 5})["projects"]
+        assert any(found["id"] == project["id"] and found["name"] == name for found in projects)
+
+
 class TestPlanningSurfaces:
     def test_project_progress_and_updates(self):
         project = step("search_projects", {"query": "Backend Tool Server Coverage"})["projects"][0]
@@ -196,6 +221,15 @@ class TestInboxSearchAndCustomers:
     def test_admin_login_has_assigned_my_issues(self):
         data = step("list_my_issues", {"query": "user_001", "limit": 10})
         assert data["count"] > 0
+
+    def test_my_issue_activity_lists_user_actions_with_issue_context(self):
+        data = step("list_my_issue_activity", {"query": "user_001", "limit": 10})
+        assert data["count"] > 0
+        event = data["activity"][0]
+        assert event["actor_id"] == "user_001"
+        assert event["issue"]["key"]
+        assert event["issue"]["title"]
+        assert event["action"]
 
     def test_global_search_returns_mixed_entities(self):
         data = step("global_search", {"query": "Backend", "limit": 10})

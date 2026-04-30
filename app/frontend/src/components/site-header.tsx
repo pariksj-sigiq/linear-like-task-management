@@ -1,4 +1,4 @@
-import { BellIcon, MoreHorizontalIcon, StarIcon } from "lucide-react";
+import { BellIcon, MoreHorizontalIcon } from "lucide-react";
 import { Button } from "./ui/button";
 
 export function SiteHeader({
@@ -26,15 +26,6 @@ export function SiteHeader({
             </span>
           )}
           <h1 className="truncate text-[14px] font-medium text-[var(--text-primary)]">{title}</h1>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            aria-label="Add to favorites"
-            className="text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-          >
-            <StarIcon className="size-[14px]" />
-          </Button>
           {isIssueDetail && (
             <Button
               type="button"

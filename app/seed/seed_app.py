@@ -822,6 +822,29 @@ def main() -> None:
     tool("create_initiative", {"name": "Deliver Linear clone assessment", "description": "Rolls up backend tools, deterministic data, QA automation, and task authoring.", "owner_id": "user_001", "state": "active", "target_date": "2026-08-15", "project_ids": [projects["prj-api"]["id"], projects["prj-onboarding"]["id"], projects["prj-ops-automation"]["id"]]})
     tool("create_initiative", {"name": "Polish evaluation workflows", "description": "UI fidelity, roadmap surfaces, and delivery docs for the final review.", "owner_id": "user_005", "state": "planned", "target_date": "2026-09-01", "project_ids": [projects["prj-design-system"]["id"], projects["prj-roadmap"]["id"]]})
 
+    milestone_specs = [
+        ("Scope & design", "Finalize scope and discovery docs.", 5, "completed"),
+        ("Beta milestone", "Ship internal beta and gather feedback.", 25, "in_progress"),
+        ("General availability", "Public release ready.", 55, "planned"),
+    ]
+    for slug, project in projects.items():
+        existing = tool("list_milestones", {"id": project["id"]}).get("milestones", [])
+        if existing:
+            continue
+        start_date = date(2026, 4, 15)
+        for idx, (name, description, offset_days, status) in enumerate(milestone_specs):
+            tool(
+                "create_milestone",
+                {
+                    "project_id": project["id"],
+                    "name": name,
+                    "description": description,
+                    "target_date": (start_date + timedelta(days=offset_days)).isoformat(),
+                    "status": status,
+                    "sort_order": idx,
+                },
+            )
+
     for user_id, issue in [("user_002", created_issues[0]), ("user_002", created_issues[11]), ("user_003", created_issues[22]), ("user_006", created_issues[33])]:
         tool("create_notification", {"recipient_id": user_id, "kind": "assigned", "actor_id": "user_001", "issue_id": issue["id"]})
     for user_id, project in [("user_002", projects["prj-api"]), ("user_005", projects["prj-design-system"]), ("user_001", projects["prj-roadmap"])]:

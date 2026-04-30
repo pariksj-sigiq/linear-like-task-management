@@ -67,6 +67,7 @@ CREATE TABLE projects (
     color TEXT NOT NULL DEFAULT '#5e6ad2',
     state TEXT NOT NULL DEFAULT 'planned',
     status TEXT NOT NULL DEFAULT 'planned',
+    priority TEXT NOT NULL DEFAULT 'none',
     lead_id TEXT REFERENCES users(id) ON DELETE SET NULL,
     start_date DATE,
     target_date DATE,
@@ -77,6 +78,19 @@ CREATE TABLE projects (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     archived_at TIMESTAMPTZ
 );
+
+CREATE TABLE project_milestones (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    description TEXT,
+    target_date DATE,
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'planned',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_project_milestones_project ON project_milestones(project_id);
 
 CREATE TABLE project_members (
     project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,

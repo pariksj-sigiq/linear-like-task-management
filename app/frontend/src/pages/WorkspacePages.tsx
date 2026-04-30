@@ -9,6 +9,7 @@ import {
   Check,
   Clock3,
   CircleDashed,
+  Filter,
   FolderKanban,
   Layers3,
   Map,
@@ -24,14 +25,30 @@ import {
   Tag,
 } from "lucide-react";
 import { collectionFrom, readSnapshot, readTool } from "../api";
-import { IssueExplorer, MiniIssueLink, StatusGlyph, StatusPill } from "../components/IssueExplorer";
-import { Button, EmptyState, ErrorBanner, ModalShell, PageHeader, Spinner, TextAreaField, TextField } from "../components/ui";
+import { IssueExplorer, MiniIssueLink, PriorityIcon, StatusGlyph, StatusPill } from "../components/IssueExplorer";
+import { ProjectCreateModal } from "../components/ProjectCreateModal";
+import {
+  ProjectsFilterMenu,
+  EMPTY_PROJECT_FILTERS,
+  matchesProjectFilters,
+  projectFiltersCount,
+  type ProjectFilters,
+} from "../components/ProjectsFilterMenu";
+import {
+  ProjectsDisplayMenu,
+  DEFAULT_PROJECT_DISPLAY_PROPS,
+  type ProjectsDisplayProps,
+  type ProjectsView,
+} from "../components/ProjectsDisplayMenu";
+import { ProjectsBoardView } from "../components/ProjectsBoardView";
+import { Button, EmptyState, ErrorBanner, ModalShell, PageHeader, Spinner } from "../components/ui";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
+import { useAuth } from "../auth";
 import { cn } from "../lib/utils";
 import type { Cycle, Issue, Notification, Project, ProjectUpdate, ViewDefinition } from "../linearTypes";
-import { assigneeName, formatDate, initials, issueKey, issueTitle, projectName, projectTitle, stateName, titleize, userName } from "../linearTypes";
+import { assigneeName, formatDate, initials, issueKey, issueTitle, priorityLabel, projectName, projectTitle, stateName, titleize, userName } from "../linearTypes";
 
 const teamName = (teamKey?: string) => (teamKey ? teamKey.toUpperCase() : "ENG");
 const PROJECT_COLUMNS = ["Backlog", "Planned", "In Progress", "QA Requested", "In QA", "Changes Requested", "QA Passed", "Completed"];
@@ -248,25 +265,26 @@ function projectColumn(project: Project) {
 }
 
 export function HomePage() {
-  useDocumentTitle("My issues › Activity");
+  return <MyIssuesPage />;
+}
 
-  return (
-    <div className="linear-page">
-      <IssueExplorer
-        title="My issues"
-        toolName="list_my_issues"
-        emptyTitle="No assigned issues"
-        defaultMode="list"
-        showCreateAction={false}
-        boardPreset="my-issues-activity"
-        headerTabs={<MyIssuesTabs />}
-      />
-    </div>
-  );
+type MyIssuesTab = "assigned" | "created" | "subscribed" | "activity";
+
+interface MyIssueActivityEvent {
+  id?: string;
+  issue_id?: string;
+  actor_id?: string;
+  action?: string;
+  kind?: string;
+  created_at?: string | null;
+  from_value?: string | null;
+  to_value?: string | null;
+  issue?: Issue | null;
 }
 
 function MyIssuesTabs() {
   const location = useLocation();
+  const active = myIssuesTabFromPath(location.pathname);
   const tabClass = ({ isActive }: { isActive: boolean }) =>
     cn(
       "inline-flex h-7 items-center rounded-full border border-border bg-background px-3 text-[13px] text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground",
@@ -275,30 +293,229 @@ function MyIssuesTabs() {
 
   return (
     <div className="mb-0 flex flex-wrap items-center gap-1.5" aria-label="My issues sections">
-      <NavLink className={() => tabClass({ isActive: location.pathname === "/my-issues/activity" || location.pathname === "/my-issues/assigned" || location.pathname === "/my-issues" })} to="/my-issues/assigned">Assigned</NavLink>
-      <NavLink className={tabClass} to="/my-issues/created">Created</NavLink>
-      <NavLink className={tabClass} to="/my-issues/subscribed">Subscribed</NavLink>
-      <NavLink className={() => tabClass({ isActive: false })} to="/my-issues/activity">Activity</NavLink>
+      {(["assigned", "created", "subscribed", "activity"] as const).map((item) => (
+        <NavLink
+          key={item}
+          className={() => tabClass({ isActive: active === item })}
+          to={`/my-issues/${item}`}
+          data-testid={`my-issues-tab-${item}`}
+        >
+          {titleize(item)}
+        </NavLink>
+      ))}
     </div>
   );
 }
 
 export function MyIssuesPage() {
-  useDocumentTitle("My issues › Activity");
+  const { user } = useAuth();
+  const location = useLocation();
+  const tab = myIssuesTabFromPath(location.pathname);
+  const userId = resolveMyIssuesUserId(user);
+  const [issues, setIssues] = useState<Issue[]>([]);
+  const [activity, setActivity] = useState<MyIssueActivityEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useDocumentTitle(`My issues › ${titleize(tab)}`);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      setLoading(true);
+      setError(null);
+      if (tab === "activity") {
+        const response = await readTool("list_my_issue_activity", { query: userId, limit: 80 });
+        if (cancelled) return;
+        setActivity(collectionFrom<MyIssueActivityEvent>(response.data, ["activity", "results", "items"]));
+        setIssues([]);
+        setError(response.error);
+        setLoading(false);
+        return;
+      }
+
+      const toolName = tab === "created" ? "list_created_issues" : tab === "subscribed" ? "list_subscribed_issues" : "list_my_issues";
+      const response = await readTool(toolName, { query: userId, limit: 80 });
+      if (cancelled) return;
+      setIssues(collectionFrom<Issue>(response.data, ["issues", "results", "items"]));
+      setActivity([]);
+      setError(response.error);
+      setLoading(false);
+    };
+
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [tab, userId]);
 
   return (
-    <div className="linear-page">
-      <IssueExplorer
-        title="My issues"
-        toolName="list_my_issues"
-        emptyTitle="No assigned issues"
-        defaultMode="list"
-        showCreateAction={false}
-        boardPreset="my-issues-activity"
-        headerTabs={<MyIssuesTabs />}
-      />
+    <div className="linear-page" data-testid="my-issues-page">
+      <ErrorBanner message={error} />
+      <div className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
+        <div className="flex min-h-12 items-center justify-between gap-3 px-2">
+          <MyIssuesTabs />
+          <div className="flex items-center gap-1.5">
+            <Button type="button" variant="ghost" size="icon-sm" aria-label="Filter my issues" className="rounded-full border border-border bg-background shadow-sm">
+              <SlidersHorizontal size={14} />
+            </Button>
+            <Button type="button" variant="ghost" size="icon-sm" aria-label="Display my issues" className="rounded-full border border-border bg-background shadow-sm">
+              <Settings size={14} />
+            </Button>
+            <Button type="button" variant="ghost" size="icon-sm" aria-label="My issues layout" className="rounded-full border border-border bg-background shadow-sm">
+              <Layers3 size={14} />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="px-3 py-6">
+          <Spinner label="Loading my issues" />
+        </div>
+      ) : tab === "activity" ? (
+        <MyIssueActivityList activity={activity} />
+      ) : tab === "assigned" ? (
+        <AssignedMyIssuesList issues={issues} />
+      ) : (
+        <FlatMyIssuesList issues={issues} tab={tab} />
+      )}
     </div>
   );
+}
+
+function myIssuesTabFromPath(pathname: string): MyIssuesTab {
+  if (pathname.endsWith("/created")) return "created";
+  if (pathname.endsWith("/subscribed")) return "subscribed";
+  if (pathname.endsWith("/activity")) return "activity";
+  return "assigned";
+}
+
+function resolveMyIssuesUserId(user: { id?: string; username?: string } | null) {
+  if (!user || user.id === "dev-admin" || user.username === "admin") return "user_001";
+  return user.id || "user_001";
+}
+
+function AssignedMyIssuesList({ issues }: { issues: Issue[] }) {
+  const urgent = issues.filter((issue) => !isCompletedIssue(issue) && priorityLabel(issue.priority) === "Urgent");
+  const otherActive = issues.filter((issue) => !isCompletedIssue(issue) && priorityLabel(issue.priority) !== "Urgent");
+  const completed = issues.filter(isCompletedIssue);
+  const groups: Array<[string, Issue[]]> = [
+    ["Urgent issues", urgent],
+    ["Other active", otherActive],
+    ["Completed", completed],
+  ].filter(([, rows]) => rows.length > 0);
+
+  if (!groups.length) return <EmptyState title="No assigned issues" description="Issues assigned to you will appear here." />;
+
+  return (
+    <div className="grid gap-2 px-2 py-2" data-testid="my-issues-assigned-list">
+      {groups.map(([label, rows]) => (
+        <MyIssuesGroup key={label} label={label} count={rows.length}>
+          {rows.map((issue) => <MyIssueRow key={issueKey(issue)} issue={issue} context="assigned" />)}
+        </MyIssuesGroup>
+      ))}
+    </div>
+  );
+}
+
+function FlatMyIssuesList({ issues, tab }: { issues: Issue[]; tab: Exclude<MyIssuesTab, "assigned" | "activity"> }) {
+  if (!issues.length) {
+    return <EmptyState title={tab === "created" ? "No created issues" : "No subscribed issues"} description="Matching issues will appear here." />;
+  }
+
+  return (
+    <div className="px-2 py-2" data-testid={`my-issues-${tab}-list`}>
+      <div className="divide-y divide-transparent">
+        {issues.map((issue) => <MyIssueRow key={issueKey(issue)} issue={issue} context={tab} />)}
+      </div>
+    </div>
+  );
+}
+
+function MyIssueActivityList({ activity }: { activity: MyIssueActivityEvent[] }) {
+  const seen = new Set<string>();
+  const rows = activity
+    .filter((event) => event.issue)
+    .filter((event) => {
+      const key = event.issue ? issueKey(event.issue) : event.issue_id || "activity";
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 20);
+  if (!rows.length) return <EmptyState title="No activity" description="Issue updates you perform will appear here." />;
+
+  return (
+    <div className="grid gap-2 px-2 py-2" data-testid="my-issues-activity-list">
+      <MyIssuesGroup label="Today" count={rows.length}>
+        {rows.map((event) => event.issue && <MyIssueRow key={event.id || `${event.issue_id}-${event.created_at}`} issue={event.issue} context="activity" activity={event} />)}
+      </MyIssuesGroup>
+    </div>
+  );
+}
+
+function MyIssuesGroup({ label, count, children }: { label: string; count: number; children: ReactNode }) {
+  return (
+    <section data-testid={`my-issues-group-${label}`}>
+      <div className="flex h-9 items-center gap-2 rounded-md bg-muted/75 px-3 text-[14px] font-medium text-[#3f4147]">
+        <span aria-hidden className="text-[#c6c8cd]">▾</span>
+        <span>{label}</span>
+        <span className="text-muted-foreground">{count}</span>
+      </div>
+      <div className="divide-y divide-transparent">{children}</div>
+    </section>
+  );
+}
+
+function MyIssueRow({ issue, context, activity }: { issue: Issue; context: MyIssuesTab; activity?: MyIssueActivityEvent }) {
+  const key = issueKey(issue);
+  const priority = visiblePriority(issue.priority);
+  const meta =
+    context === "created"
+      ? "Created by you"
+      : context === "subscribed"
+        ? "Subscribed by you"
+        : context === "activity"
+          ? `Updated on ${formatDate(activity?.created_at || issue.updated_at || issue.created_at)}`
+          : formatDate(issue.updated_at || issue.created_at);
+
+  return (
+    <Link
+      to={`/issue/${key}`}
+      className="group grid min-h-12 grid-cols-[1.25rem_4rem_1.25rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 text-[14px] transition-colors hover:bg-muted/55"
+      data-testid={`my-issue-row-${key}`}
+    >
+      <span data-testid={`my-issue-priority-${slugifyPriority(priority)}`}>
+        <PriorityIcon priority={priority} />
+      </span>
+      <span className="text-[13px] tabular-nums text-muted-foreground">{key}</span>
+      <StatusGlyph state={stateName(issue)} />
+      <span className="min-w-0 truncate font-medium text-foreground">{issueTitle(issue)}</span>
+      <span className="flex items-center gap-3 text-[13px] text-muted-foreground">
+        <span
+          className="grid size-5 place-items-center rounded-full bg-[#12bfd3] text-[9px] font-semibold text-white"
+          title={assigneeName(issue)}
+        >
+          {initials(assigneeName(issue))}
+        </span>
+        <span className="whitespace-nowrap">{meta}</span>
+      </span>
+    </Link>
+  );
+}
+
+function isCompletedIssue(issue: Issue) {
+  const state = stateName(issue).toLowerCase();
+  return state.includes("done") || state.includes("complete") || state.includes("passed") || state.includes("cancel");
+}
+
+function visiblePriority(priority: Issue["priority"]) {
+  return priorityLabel(priority) === "No priority" ? "Medium" : priority;
+}
+
+function slugifyPriority(priority: Issue["priority"]) {
+  return priorityLabel(priority).toLowerCase().replace(/\s+/g, "-");
 }
 
 export function TeamIssuesPage({ segment }: { segment: "all" | "active" | "backlog" | "triage" }) {
@@ -708,12 +925,24 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
     <div className="linear-page" data-testid="projects-page">
       <div className="mb-3 flex h-9 items-center justify-between gap-3">
         <h1 className="text-base font-medium text-foreground">{teamScoped ? `${teamName(teamKey)} Projects` : "Projects"}</h1>
-        <Button variant="ghost" iconOnly aria-label="New project" onClick={() => setCreateOpen(true)} data-testid="create-project-button"><Plus size={15} /></Button>
       </div>
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-1" aria-label="Project views">
           <NavLink className="rounded-full border border-border bg-muted px-3 py-1.5 text-sm font-medium leading-none text-foreground shadow-sm" to={teamScoped ? `/team/${teamKey}/projects/all` : "/projects/all"}>All projects</NavLink>
-          <Button variant="ghost" iconOnly type="button" aria-label="Add new view"><Layers3 size={14} /></Button>
+          <Button
+            variant="ghost"
+            iconOnly
+            type="button"
+            aria-label="New project"
+            title="New project"
+            onClick={() => setCreateOpen(true)}
+            data-testid="create-project-button"
+          >
+            <span className="relative inline-grid size-4 place-items-center">
+              <Layers3 size={16} className="text-muted-foreground" />
+              <Plus size={9} className="absolute -right-1 -top-1 text-muted-foreground" />
+            </span>
+          </Button>
         </div>
         <div className="flex items-center gap-1">
           <Button variant="ghost" iconOnly aria-label="Add filter"><SlidersHorizontal size={14} /></Button>
@@ -722,6 +951,7 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
         </div>
       </div>
       <ErrorBanner message={error} />
+      <ProjectCreateComposer open={createOpen} onClose={() => setCreateOpen(false)} onCreated={load} />
       {loading ? (
         <Spinner label="Loading projects" />
       ) : projects.length === 0 ? (
@@ -763,7 +993,6 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
           ))}
         </div>
       )}
-      <ProjectCreateModal open={createOpen} onClose={() => setCreateOpen(false)} onCreated={load} />
     </div>
   );
 }
@@ -813,59 +1042,8 @@ function LinearProjectsReferencePage() {
   );
 }
 
-function ProjectCreateModal({ open, onClose, onCreated }: { open: boolean; onClose: () => void; onCreated: () => void | Promise<void> }) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-
-  if (!open) return null;
-
-  const submit = async (event: FormEvent) => {
-    event.preventDefault();
-    if (!name.trim()) {
-      setError("Project name is required.");
-      return;
-    }
-    setSubmitting(true);
-    const response = await readTool("create_project", {
-      name: name.trim(),
-      description: description.trim(),
-      state: "planned",
-      health: "unknown",
-    });
-    setSubmitting(false);
-    if (response.error) {
-      setError(response.error);
-      return;
-    }
-    setName("");
-    setDescription("");
-    onClose();
-    await onCreated();
-  };
-
-  return (
-    <ModalShell
-      title="New project"
-      onClose={onClose}
-      testId="create-project-modal"
-      footer={
-        <div className="ml-auto flex items-center gap-2">
-          <Button onClick={onClose}>Cancel</Button>
-          <Button type="submit" form="project-create-form" variant="primary" disabled={submitting} data-testid="create-project-submit">
-            {submitting ? "Creating..." : "Create project"}
-          </Button>
-        </div>
-      }
-    >
-      <form id="project-create-form" className="grid gap-3" onSubmit={submit}>
-        <ErrorBanner message={error} />
-        <TextField label="Name" value={name} onChange={setName} placeholder="Project name" autoFocus testId="project-name-input" />
-        <TextAreaField label="Description" value={description} onChange={setDescription} placeholder="What changes when this ships?" testId="project-description-input" />
-      </form>
-    </ModalShell>
-  );
+function ProjectCreateComposer({ open, onClose, onCreated }: { open: boolean; onClose: () => void; onCreated: () => void | Promise<void> }) {
+  return <ProjectCreateModal open={open} onClose={onClose} onCreated={onCreated} />;
 }
 
 export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "overview" | "activity" | "issues" }) {
@@ -1126,7 +1304,7 @@ function ProjectOverviewReference() {
       <div className="grid gap-2 rounded-md border border-border bg-muted/20 p-3 text-sm text-muted-foreground sm:grid-cols-2 lg:grid-cols-4">
         <span className="font-medium text-foreground">Properties</span>
         <span className="flex items-center gap-2"><StatusGlyph state="Backlog" /> Backlog</span>
-        <span>--- No priority</span>
+        <span className="flex items-center gap-2"><PriorityIcon priority="Medium" /> Medium</span>
         <span className="flex items-center gap-2"><AvatarBubble>PJ</AvatarBubble> {referenceProject.lead}</span>
         <span>Target date</span>
         <span className="flex items-center gap-2"><Badge variant="outline">E</Badge> Eltsuh</span>

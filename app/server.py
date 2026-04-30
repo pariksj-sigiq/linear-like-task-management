@@ -51,6 +51,7 @@ from app.schema import IssueProjectArgs
 from app.schema import IssueStateArgs
 from app.schema import LabelArgs
 from app.schema import LoginRequest
+from app.schema import MilestoneArgs
 from app.schema import NotificationActionArgs
 from app.schema import NotificationArgs
 from app.schema import ProjectArgs
@@ -67,6 +68,7 @@ from app.schema import TemplateArgs
 from app.schema import UpdateCycleArgs
 from app.schema import UpdateIssueArgs
 from app.schema import UpdateLabelArgs
+from app.schema import UpdateMilestoneArgs
 from app.schema import UpdateProjectArgs
 from app.schema import UpdateViewArgs
 from app.schema import UpdateWorkflowStateArgs
@@ -694,8 +696,8 @@ def create_project(args: ProjectArgs) -> dict[str, Any]:
         project_id = _next_id(db, "projects", "prj")
         db.execute(
             text(
-                "INSERT INTO projects (id, workspace_id, name, description, icon, color, state, status, lead_id, start_date, target_date, health) "
-                "VALUES (:id, :workspace_id, :name, :description, :icon, :color, :state, :state, :lead_id, :start_date, :target_date, :health)"
+                "INSERT INTO projects (id, workspace_id, name, description, icon, color, state, status, priority, lead_id, start_date, target_date, health) "
+                "VALUES (:id, :workspace_id, :name, :description, :icon, :color, :state, :state, :priority, :lead_id, :start_date, :target_date, :health)"
             ),
             {"id": project_id, **args.model_dump()},
         )
@@ -740,16 +742,59 @@ def get_project(args: IdArgs) -> dict[str, Any]:
             raise ValueError(f"Project not found: {args.id}")
         progress = _project_progress(db, args.id)
         updates = _many(db, "SELECT pu.*, u.full_name AS author_name FROM project_updates pu LEFT JOIN users u ON u.id = pu.author_id WHERE project_id = :id ORDER BY pu.created_at DESC", {"id": args.id})
+        milestones = _many(db, "SELECT * FROM project_milestones WHERE project_id = :id ORDER BY sort_order, created_at", {"id": args.id})
         issues = search_issues(SearchIssuesArgs(project_id=args.id, limit=100))["issues"]
         db.commit()
-        return {"project": project, "progress": progress, "updates": updates, "issues": issues}
+        return {"project": project, "progress": progress, "updates": updates, "milestones": milestones, "issues": issues}
 
 
 def update_project(args: UpdateProjectArgs) -> dict[str, Any]:
     updates = args.model_dump(exclude={"id"}, exclude_none=True)
     if "state" in updates:
         updates["status"] = updates["state"]
-    return _update_record("projects", args.id, updates, ["name", "description", "state", "status", "health", "lead_id", "start_date", "target_date"])
+    return _update_record("projects", args.id, updates, ["name", "description", "state", "status", "health", "priority", "icon", "lead_id", "start_date", "target_date"])
+
+
+def delete_project(args: IdArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        db.execute(text("DELETE FROM projects WHERE id = :id"), {"id": args.id})
+        _audit(db, "project", args.id, "deleted")
+        db.commit()
+        return {"id": args.id, "deleted": True}
+
+
+def create_milestone(args: MilestoneArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        milestone_id = _next_id(db, "project_milestones", "pms")
+        db.execute(
+            text(
+                "INSERT INTO project_milestones (id, project_id, name, description, target_date, sort_order, status) "
+                "VALUES (:id, :project_id, :name, :description, :target_date, :sort_order, :status)"
+            ),
+            {"id": milestone_id, **args.model_dump()},
+        )
+        _audit(db, "project_milestone", milestone_id, "created", args.model_dump())
+        db.commit()
+        return _one(db, "SELECT * FROM project_milestones WHERE id = :id", {"id": milestone_id}) or {}
+
+
+def list_milestones(args: IdArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        rows = _many(db, "SELECT * FROM project_milestones WHERE project_id = :id ORDER BY sort_order, created_at", {"id": args.id})
+        return {"count": len(rows), "milestones": rows}
+
+
+def update_milestone(args: UpdateMilestoneArgs) -> dict[str, Any]:
+    updates = args.model_dump(exclude={"id"}, exclude_none=True)
+    return _update_record("project_milestones", args.id, updates, ["name", "description", "target_date", "status", "sort_order"])
+
+
+def delete_milestone(args: IdArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        db.execute(text("DELETE FROM project_milestones WHERE id = :id"), {"id": args.id})
+        _audit(db, "project_milestone", args.id, "deleted")
+        db.commit()
+        return {"id": args.id, "deleted": True}
 
 
 def archive_project(args: IdArgs) -> dict[str, Any]:
@@ -1394,6 +1439,39 @@ def list_subscribed_issues(args: SearchArgs) -> dict[str, Any]:
         return {"count": len(rows), "issues": [_hydrate_issue(db, r) for r in rows]}
 
 
+def list_my_issue_activity(args: SearchArgs) -> dict[str, Any]:
+    user_id = args.query or "user_001"
+    with DBSession(engine) as db:
+        rows = _many(
+            db,
+            """
+            SELECT a.*, a.kind AS action, u.username AS actor_username, u.full_name AS actor_name
+            FROM issue_activity a
+            LEFT JOIN users u ON u.id = a.actor_id
+            WHERE a.actor_id = :user_id
+            ORDER BY a.created_at DESC
+            LIMIT :limit
+            """,
+            {"user_id": user_id, "limit": args.limit},
+        )
+        hydrated = []
+        seen: set[str] = set()
+        for row in rows:
+            issue = _one(db, _issue_select() + " WHERE i.id = :id", {"id": row.get("issue_id")})
+            row["issue"] = _hydrate_issue(db, issue) if issue else None
+            row["actor"] = {
+                "id": row.get("actor_id"),
+                "username": row.get("actor_username"),
+                "full_name": row.get("actor_name"),
+            } if row.get("actor_id") else None
+            unique_key = str(row.get("issue_id") or "")
+            if unique_key in seen:
+                continue
+            seen.add(unique_key)
+            hydrated.append(row)
+        return {"count": len(hydrated), "activity": hydrated}
+
+
 def subscribe_issue(args: IssueAssigneeArgs) -> dict[str, Any]:
     user_id = args.assignee_id or "user_002"
     with DBSession(engine) as db:
@@ -1502,10 +1580,15 @@ TOOL_DEFS: list[tuple[str, str, type[Any], bool]] = [
     ("get_project", "Get project details.", IdArgs, False),
     ("update_project", "Update project.", UpdateProjectArgs, True),
     ("archive_project", "Archive project.", IdArgs, True),
+    ("delete_project", "Delete a project permanently.", IdArgs, True),
     ("set_project_lead", "Set project lead.", UpdateProjectArgs, True),
     ("post_project_update", "Post a project update.", ProjectUpdateArgs, True),
     ("list_project_updates", "List project updates.", IdArgs, False),
     ("get_project_progress", "Get project progress.", IdArgs, False),
+    ("create_milestone", "Create a project milestone.", MilestoneArgs, True),
+    ("list_milestones", "List milestones for a project.", IdArgs, False),
+    ("update_milestone", "Update a milestone.", UpdateMilestoneArgs, True),
+    ("delete_milestone", "Delete a milestone.", IdArgs, True),
     ("create_cycle", "Create cycle.", CycleArgs, True),
     ("search_cycles", "Search cycles.", SearchArgs, False),
     ("get_cycle", "Get cycle details.", IdArgs, False),
@@ -1523,6 +1606,7 @@ TOOL_DEFS: list[tuple[str, str, type[Any], bool]] = [
     ("list_my_issues", "List assigned issues.", SearchArgs, False),
     ("list_created_issues", "List created issues.", SearchArgs, False),
     ("list_subscribed_issues", "List subscribed issues.", SearchArgs, False),
+    ("list_my_issue_activity", "List issue activity performed by a user.", SearchArgs, False),
     ("subscribe_issue", "Subscribe to an issue.", IssueAssigneeArgs, True),
     ("unsubscribe_issue", "Unsubscribe from an issue.", IssueAssigneeArgs, True),
     ("create_notification", "Create notification.", NotificationArgs, True),
@@ -1985,6 +2069,16 @@ def call_tool(name: str, arguments: dict[str, Any]) -> ToolResult:
                 result = update_project(UpdateProjectArgs(**_legacy_project_args(arguments)))
             case "archive_project":
                 result = archive_project(IdArgs(**arguments))
+            case "delete_project":
+                result = delete_project(IdArgs(**arguments))
+            case "create_milestone":
+                result = create_milestone(MilestoneArgs(**arguments))
+            case "list_milestones":
+                result = list_milestones(IdArgs(**arguments))
+            case "update_milestone":
+                result = update_milestone(UpdateMilestoneArgs(**arguments))
+            case "delete_milestone":
+                result = delete_milestone(IdArgs(**arguments))
             case "set_project_lead":
                 a = UpdateProjectArgs(**arguments)
                 result = update_project(UpdateProjectArgs(id=a.id, lead_id=a.lead_id))
@@ -2030,6 +2124,8 @@ def call_tool(name: str, arguments: dict[str, Any]) -> ToolResult:
                 result = list_created_issues(SearchArgs(**arguments))
             case "list_subscribed_issues":
                 result = list_subscribed_issues(SearchArgs(**arguments))
+            case "list_my_issue_activity":
+                result = list_my_issue_activity(SearchArgs(**arguments))
             case "subscribe_issue":
                 result = subscribe_issue(IssueAssigneeArgs(**arguments))
             case "unsubscribe_issue":
@@ -2198,6 +2294,7 @@ async def reset() -> dict[str, Any]:
         "initiatives",
         "views",
         "project_updates",
+        "project_milestones",
         "issue_comments",
         "issue_activity",
         "issue_subscriptions",
@@ -2233,6 +2330,8 @@ async def snapshot() -> dict[str, Any]:
         "workflow_states",
         "labels",
         "projects",
+        "project_milestones",
+        "project_updates",
         "cycles",
         "issues",
         "issue_labels",

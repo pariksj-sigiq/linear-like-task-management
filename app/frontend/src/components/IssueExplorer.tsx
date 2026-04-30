@@ -279,12 +279,7 @@ export function IssueExplorer({
   }, [filterOpen]);
 
   const sourceIssues = useMemo(() => {
-    const baseIssues =
-      boardPreset === "my-issues-activity"
-        ? MY_ISSUES_REFERENCE
-        : params.status === "active" || params.state === "active"
-          ? ACTIVE_ISSUES_REFERENCE
-          : issues;
+    const baseIssues = issues;
     void overrideVersion;
     return mergeIssueOverrides(baseIssues);
   }, [boardPreset, issues, overrideVersion, params.state, params.status]);
@@ -996,7 +991,7 @@ export function MiniIssueLink({ issue }: { issue: Issue }) {
 export function StatusIcon({ status, size = 14 }: { status: string; size?: number }) {
   const key = status.toLowerCase();
   const isDone = key.includes("done") || key.includes("complete") || key.includes("passed");
-  const isCanceled = key.includes("cancel");
+  const isCanceled = key.includes("cancel") || key.includes("duplicate");
   const isQa = key.includes("qa");
   const isInReview = key.includes("review");
   const isInProgress = key.includes("progress") || key.includes("active") || key.includes("started");

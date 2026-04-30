@@ -53,7 +53,6 @@ export function AppSidebar({
   const [workspaceOpen, setWorkspaceOpen] = React.useState(true);
   const [teamsOpen, setTeamsOpen] = React.useState(true);
   const [teamOpen, setTeamOpen] = React.useState(true);
-  const [tryOpen, setTryOpen] = React.useState(true);
 
   return (
     <Sidebar collapsible="offcanvas" {...props} className="linear-sidebar" data-testid="linear-sidebar">
@@ -285,47 +284,6 @@ export function AppSidebar({
           </SidebarGroup>
         </Collapsible.Root>
 
-        {/* Try */}
-        <Collapsible.Root open={tryOpen} onOpenChange={setTryOpen} asChild>
-          <SidebarGroup className="p-0 pt-5">
-            <Collapsible.Trigger asChild>
-              <SidebarGroupLabel className="flex h-7 cursor-pointer items-center gap-1 px-2 pt-0 text-[13px] font-medium normal-case text-sidebar-foreground hover:text-sidebar-accent-foreground">
-                Try <ChevronDownIcon className={`size-3 transition-transform ${tryOpen ? "" : "-rotate-90"}`} />
-              </SidebarGroupLabel>
-            </Collapsible.Trigger>
-            <Collapsible.Content>
-              <SidebarGroupContent>
-                <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  tooltip="Import issues"
-                  className="h-7 rounded-md px-2 text-[14px] font-medium"
-                >
-                  <a href="#import">
-                    <IssueNavIcon />
-                    <span>Import issues</span>
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  tooltip="Cycles"
-                  className="h-7 rounded-md px-2 text-[14px] font-medium"
-                >
-                  <a href="#cycles">
-                    <CycleNavIcon />
-                    <span>Cycles</span>
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </Collapsible.Content>
-          </SidebarGroup>
-        </Collapsible.Root>
-
       </SidebarContent>
     </Sidebar>
   );
@@ -375,14 +333,6 @@ function MoreDotsIcon() {
   return (
     <svg aria-hidden="true" className="size-4 shrink-0" viewBox="0 0 16 16" fill="currentColor" focusable="false">
       <path d="M3.25 8a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M9.25 8a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M15.25 8a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0" />
-    </svg>
-  );
-}
-
-function CycleNavIcon() {
-  return (
-    <svg aria-hidden="true" className="size-4 shrink-0" viewBox="0 0 16 16" fill="currentColor" focusable="false">
-      <path fillRule="evenodd" clipRule="evenodd" d="M8 1.25A6.75 6.75 0 1 0 14.75 8a.75.75 0 0 0-1.5 0A5.25 5.25 0 1 1 8 2.75c1.3 0 2.49.472 3.407 1.254H9.75a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 .75-.75v-3.5a.75.75 0 0 0-1.5 0v1.475A6.72 6.72 0 0 0 8 1.25Zm.75 4.25a.75.75 0 0 0-1.5 0v2.74c0 .27.145.52.38.654l2.25 1.285a.75.75 0 1 0 .744-1.302L8.75 7.805V5.5Z" />
     </svg>
   );
 }

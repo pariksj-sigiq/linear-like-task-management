@@ -90,6 +90,7 @@ class ProjectArgs(BaseModel):
     color: str = "#5e6ad2"
     state: str = "planned"
     health: str = "unknown"
+    priority: str = "none"
     lead_id: str | None = None
     start_date: str | None = None
     target_date: str | None = None
@@ -102,9 +103,29 @@ class UpdateProjectArgs(BaseModel):
     description: str | None = None
     state: str | None = None
     health: str | None = None
+    priority: str | None = None
+    icon: str | None = None
     lead_id: str | None = None
     start_date: str | None = None
     target_date: str | None = None
+
+
+class MilestoneArgs(BaseModel):
+    project_id: str
+    name: str
+    description: str | None = None
+    target_date: str | None = None
+    status: str = "planned"
+    sort_order: int = 0
+
+
+class UpdateMilestoneArgs(BaseModel):
+    id: str
+    name: str | None = None
+    description: str | None = None
+    target_date: str | None = None
+    status: str | None = None
+    sort_order: int | None = None
 
 
 class ProjectUpdateArgs(BaseModel):

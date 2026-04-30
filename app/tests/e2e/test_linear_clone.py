@@ -43,6 +43,14 @@ class TestAuthAndShell:
         expect(page.get_by_test_id("command-palette")).to_be_visible()
         page.keyboard.press("Escape")
 
+    def test_shell_header_has_no_favorite_button(self, page: Page) -> None:
+        login(page)
+
+        for path in ["/projects/all", "/team/eng/active", "/views"]:
+            page.goto(f"{BASE_URL}{path}")
+            page.wait_for_load_state("networkidle")
+            expect(page.get_by_label("Add to favorites")).to_have_count(0)
+
 
 class TestIssues:
     def test_issue_list_and_board_render(self, page: Page) -> None:
@@ -80,6 +88,46 @@ class TestIssues:
         login(page)
         page.get_by_test_id("quick-create-button").click()
         expect(page.get_by_test_id("quick-create-modal")).to_be_visible()
+
+    def test_quick_create_property_menus_are_exclusive_and_linearized(self, page: Page) -> None:
+        login(page)
+        page.get_by_test_id("quick-create-button").click()
+        expect(page.get_by_test_id("quick-create-modal")).to_be_visible()
+        expect(page.get_by_text("Create more")).to_have_count(0)
+
+        page.get_by_test_id("create-issue-status").click()
+        expect(page.get_by_test_id("quick-create-status-menu")).to_be_visible()
+        expect(page.get_by_text("Change status...")).to_be_visible()
+        expect(page.get_by_role("menuitem", name="Duplicate")).to_be_visible()
+
+        page.get_by_test_id("create-issue-priority").click()
+        expect(page.get_by_test_id("quick-create-status-menu")).not_to_be_visible()
+        expect(page.get_by_test_id("quick-create-priority-menu")).to_be_visible()
+        expect(page.get_by_text("Set priority to...")).to_be_visible()
+
+        page.get_by_test_id("create-issue-assignee").click()
+        expect(page.get_by_test_id("quick-create-priority-menu")).not_to_be_visible()
+        expect(page.get_by_test_id("quick-create-assignee-menu")).to_be_visible()
+        expect(page.get_by_text("Assign to...")).to_be_visible()
+
+        page.get_by_test_id("create-issue-project").click()
+        expect(page.get_by_test_id("quick-create-assignee-menu")).not_to_be_visible()
+        expect(page.get_by_test_id("quick-create-project-menu")).to_be_visible()
+        expect(page.get_by_text("No project")).to_be_visible()
+
+        page.get_by_test_id("create-issue-labels").click()
+        expect(page.get_by_test_id("quick-create-project-menu")).not_to_be_visible()
+        expect(page.get_by_test_id("quick-create-labels-menu")).to_be_visible()
+        expect(page.get_by_text("Add labels...")).to_be_visible()
+        page.get_by_role("menuitem", name="Feature").click()
+        expect(page.get_by_test_id("quick-create-label-detail")).to_contain_text("Feature")
+
+        page.get_by_test_id("create-issue-more").click()
+        expect(page.get_by_test_id("quick-create-labels-menu")).not_to_be_visible()
+        expect(page.get_by_test_id("quick-create-more-menu")).to_be_visible()
+        expect(page.get_by_text("Set due date")).to_be_visible()
+        page.get_by_test_id("quick-create-due-date-trigger").hover()
+        expect(page.get_by_test_id("quick-create-due-date-menu")).to_be_visible()
 
     def test_quick_create_persists_issue_with_project_and_assignee(self, page: Page) -> None:
         login(page)
@@ -146,6 +194,36 @@ class TestIssues:
         expect(page.get_by_test_id("issue-assignee-display")).to_contain_text(assignee_target)
         expect(page.get_by_test_id("issue-priority-display")).to_contain_text(priority_target)
         expect(page.get_by_test_id("issue-project-display")).to_contain_text(project_target)
+
+    def test_my_issues_tabs_have_distinct_linear_workflows(self, page: Page) -> None:
+        login(page)
+        page.goto(f"{BASE_URL}/my-issues/assigned")
+        page.wait_for_load_state("networkidle")
+        expect(page.get_by_test_id("my-issues-page")).to_be_visible()
+        expect(page.get_by_test_id("my-issues-tab-assigned")).to_have_attribute("aria-current", "page")
+        expect(page.get_by_test_id("my-issues-group-Other active")).to_be_visible()
+        expect(page.get_by_test_id("my-issue-priority-no-priority")).to_have_count(0)
+
+        page.get_by_test_id("my-issues-tab-created").click()
+        page.wait_for_load_state("networkidle")
+        expect(page).to_have_url(re.compile(r"/my-issues/created$"))
+        expect(page.get_by_test_id("my-issues-tab-created")).to_have_attribute("aria-current", "page")
+        expect(page.get_by_test_id("my-issues-created-list")).to_be_visible()
+        expect(page.get_by_text("Created by you").first).to_be_visible()
+
+        page.get_by_test_id("my-issues-tab-subscribed").click()
+        page.wait_for_load_state("networkidle")
+        expect(page).to_have_url(re.compile(r"/my-issues/subscribed$"))
+        expect(page.get_by_test_id("my-issues-tab-subscribed")).to_have_attribute("aria-current", "page")
+        expect(page.get_by_test_id("my-issues-subscribed-list")).to_be_visible()
+        expect(page.get_by_text("Subscribed by you").first).to_be_visible()
+
+        page.get_by_test_id("my-issues-tab-activity").click()
+        page.wait_for_load_state("networkidle")
+        expect(page).to_have_url(re.compile(r"/my-issues/activity$"))
+        expect(page.get_by_test_id("my-issues-tab-activity")).to_have_attribute("aria-current", "page")
+        expect(page.get_by_test_id("my-issues-activity-list")).to_be_visible()
+        expect(page.get_by_text("Updated on").first).to_be_visible()
 
 
 class TestPlanningAndUtilityPages:
