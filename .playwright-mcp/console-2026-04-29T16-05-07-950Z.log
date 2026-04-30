@@ -1,0 +1,147 @@
+[    5359ms] [WARNING] Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://www.youtube.com') does not match the recipient window's origin ('https://www.google.com'). @ https://www.youtube.com/s/player/8456c9de/www-widgetapi.vflset/www-widgetapi.js:209
+[   28703ms] [WARNING] Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://www.youtube.com') does not match the recipient window's origin ('https://www.google.com'). @ https://www.youtube.com/s/player/8456c9de/www-widgetapi.vflset/www-widgetapi.js:209
+[   64061ms] [WARNING] Manifest: property 'scope' ignored. Start url should be within scope of scope URL. @ https://codesandbox.io/manifest.json:0
+[   72591ms] [ERROR] EntryNotFound (FileSystemError): File does not exist
+    at NP.create (https://codesandbox.io/p/assets/vendor-f6fee415.js:696:9585)
+    at yc (https://codesandbox.io/p/assets/vendor-f6fee415.js:696:9692)
+    at https://codesandbox.io/p/assets/vendor-f6fee415.js:961:38353 @ https://codesandbox.io/p/assets/vendor-f6fee415.js:1257
+[   72939ms] [WARNING] Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://q8cb0.csb.app') does not match the recipient window's origin ('https://codesandbox.io'). @ https://codesandbox.io/p/assets/Editor-2ff1b975.js:105
+[   73750ms] [WARNING] Mixed Content: The page at 'https://codesandbox.io/p/sandbox/linearapp-clone-q8cb0' was loaded over HTTPS, but requested an insecure element 'http://img.youtube.com/vi/XVAek-hE5X8/0.jpg'. This request was automatically upgraded to HTTPS, For more information see https://blog.chromium.org/2019/10/no-more-mixed-messages-about-https.html @ https://codesandbox.io/p/sandbox/linearapp-clone-q8cb0:0
+[   73793ms] Error: unsupported
+
+Error: unsupported
+    at Object.j (https://codesandbox.io/p/assets/vendor-f6fee415.js:702:1942)
+    at fpi.$registerTaskProvider (https://codesandbox.io/p/assets/vendor-f6fee415.js:1026:22087)
+    at lye._doInvokeHandler (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:32251)
+    at lye._invokeHandler (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:31993)
+    at lye._receiveRequest (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:30631)
+    at lye._receiveOneMessage (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:29421)
+    at v2e.value (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:27510)
+    at B._deliver (https://codesandbox.io/p/assets/vendor-f6fee415.js:95:2707)
+    at B.fire (https://codesandbox.io/p/assets/vendor-f6fee415.js:95:3076)
+    at rz.fire (https://codesandbox.io/p/assets/vendor-f6fee415.js:977:8870)
+    at t.send (https://codesandbox.io/p/assets/vendor-f6fee415.js:2532:1858)
+    at lye._remoteCall (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:32970)
+    at n.<computed>.r.charCodeAt.n.<computed> (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:28893)
+    at u$t.registerTaskProvider (https://codesandbox.io/p/assets/vendor-f6fee415.js:2523:6823)
+    at Proxy.registerTaskProvider (https://codesandbox.io/p/assets/vendor-f6fee415.js:2527:291252)
+    at Module.De (https://codesandbox.io/p/assets/extension-4b9fd8e2.js:2:22933)
+    at https://codesandbox.io/p/assets/index-b9ea2f0e.js:555:18559
+    at o (https://codesandbox.io/p/assets/index-b9ea2f0e.js:546:43044)
+    at go (https://codesandbox.io/p/assets/index-b9ea2f0e.js:546:43068)
+    at we (https://codesandbox.io/p/assets/index-b9ea2f0e.js:546:43125)
+    at Tp (https://codesandbox.io/p/assets/index-b9ea2f0e.js:555:18551)
+    at Object.j (https://codesandbox.io/p/assets/vendor-f6fee415.js:702:1942)
+    at fpi.$registerTaskProvider (https://codesandbox.io/p/assets/vendor-f6fee415.js:1026:22087)
+    at lye._doInvokeHandler (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:32251)
+    at lye._invokeHandler (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:31993)
+    at lye._receiveRequest (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:30631)
+    at lye._receiveOneMessage (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:29421)
+    at v2e.value (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:27510)
+    at B._deliver (https://codesandbox.io/p/assets/vendor-f6fee415.js:95:2707)
+    at B.fire (https://codesandbox.io/p/assets/vendor-f6fee415.js:95:3076)
+    at rz.fire (https://codesandbox.io/p/assets/vendor-f6fee415.js:977:8870)
+    at t.send (https://codesandbox.io/p/assets/vendor-f6fee415.js:2532:1858)
+    at lye._remoteCall (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:32970)
+    at n.<computed>.r.charCodeAt.n.<computed> (https://codesandbox.io/p/assets/vendor-f6fee415.js:963:28893)
+    at u$t.registerTaskProvider (https://codesandbox.io/p/assets/vendor-f6fee415.js:2523:6823)
+    at Proxy.registerTaskProvider (https://codesandbox.io/p/assets/vendor-f6fee415.js:2527:291252)
+    at Module.De (https://codesandbox.io/p/assets/extension-4b9fd8e2.js:2:22933)
+    at https://codesandbox.io/p/assets/index-b9ea2f0e.js:555:18559
+    at o (https://codesandbox.io/p/assets/index-b9ea2f0e.js:546:43044)
+    at go (https://codesandbox.io/p/assets/index-b9ea2f0e.js:546:43068)
+    at we (https://codesandbox.io/p/assets/index-b9ea2f0e.js:546:43125)
+    at Tp (https://codesandbox.io/p/assets/index-b9ea2f0e.js:555:18551)
+    at https://codesandbox.io/p/assets/vendor-f6fee415.js:73:12
+[   74142ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://codesandbox.io/api/v1/users/current/integrations:0
+[   74142ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://codesandbox.io/api/v1/users/current:0
+[   74159ms] Error: (401) 
+Could not sign in, please try to sign in again. (unauthenticated)
+    at https://codesandbox.io/p/assets/index-b9ea2f0e.js:529:300
+    at async $0.getUserGitHubToken (https://codesandbox.io/p/assets/index-b9ea2f0e.js:554:23586)
+    at async Promise.all (index 0)
+    at async $0.getCurrentSession (https://codesandbox.io/p/assets/index-b9ea2f0e.js:554:24055)
+[   74889ms] [LOG] l10n: No bundle configured. 0 [l10n: No bundle configured.] @ https://codesandbox.io/p/assets/workerMain-75e76672.js:1
+[   77210ms] [WARNING] [PackageManager] Failed to symlink a non-optional peer dependency of "%s@%s" from "%s@%s": dependency is not installed @popperjs/core ^2.0.0 react-popper 2.3.0 @ https://nodebox-runtime.codesandbox.io/runtime.kaks3iwdou7zahvjrlx9wddqu1cczz3.js:104
+[   77227ms] [WARNING] [PackageManager] Failed to symlink a non-optional peer dependency of "%s@%s" from "%s@%s": dependency is not installed @babel/core ^7.0.0-0 @babel/plugin-syntax-jsx 7.28.6 @ https://nodebox-runtime.codesandbox.io/runtime.kaks3iwdou7zahvjrlx9wddqu1cczz3.js:104
+[   77239ms] [WARNING] [PackageManager] Failed to symlink a non-optional peer dependency of "%s@%s" from "%s@%s": dependency is not installed tailwindcss >=2.0.0 || >=3.0.0-alpha.1 @tailwindcss/line-clamp 0.2.2 @ https://nodebox-runtime.codesandbox.io/runtime.kaks3iwdou7zahvjrlx9wddqu1cczz3.js:104
+[   77239ms] [WARNING] Skipping a symlink from "%s" to "%s": target already exists /nodebox/node_modules/.store/cosmiconfig@7.1.0/node_modules/cosmiconfig /nodebox/node_modules/.store/cosmiconfig-typescript-loader@1.0.9/node_modules/cosmiconfig @ https://nodebox-runtime.codesandbox.io/runtime.kaks3iwdou7zahvjrlx9wddqu1cczz3.js:104
+[   77241ms] [WARNING] [PackageManager] Failed to symlink a non-optional peer dependency of "%s@%s" from "%s@%s": dependency is not installed tailwindcss >=2.0.0 @tailwindcss/forms 0.3.4 @ https://nodebox-runtime.codesandbox.io/runtime.kaks3iwdou7zahvjrlx9wddqu1cczz3.js:104
+[   77243ms] [WARNING] [PackageManager] Failed to symlink a non-optional peer dependency of "%s@%s" from "%s@%s": dependency is not installed prosemirror-tables ^0.9.1 prosemirror-utils 0.9.6 @ https://nodebox-runtime.codesandbox.io/runtime.kaks3iwdou7zahvjrlx9wddqu1cczz3.js:104
+[   77247ms] [WARNING] [PackageManager] Failed to symlink a non-optional peer dependency of "%s@%s" from "%s@%s": dependency is not installed react ^0.14.0 || ^15.0.0 || ^16.0.1 react-contextmenu 2.14.0 @ https://nodebox-runtime.codesandbox.io/runtime.kaks3iwdou7zahvjrlx9wddqu1cczz3.js:104
+[   77247ms] [WARNING] [PackageManager] Failed to symlink a non-optional peer dependency of "%s@%s" from "%s@%s": dependency is not installed react-dom ^0.14.0 || ^15.0.0 || ^16.0.1 react-contextmenu 2.14.0 @ https://nodebox-runtime.codesandbox.io/runtime.kaks3iwdou7zahvjrlx9wddqu1cczz3.js:104
+[   77250ms] [WARNING] [PackageManager] Failed to symlink a non-optional peer dependency of "%s@%s" from "%s@%s": dependency is not installed react-scripts ^4.0.0 @craco/craco 6.4.5 @ https://nodebox-runtime.codesandbox.io/runtime.kaks3iwdou7zahvjrlx9wddqu1cczz3.js:104
+[   83507ms] [ERROR] Warning: Each child in a list should have a unique "key" prop.%s%s See https://reactjs.org/link/warning-keys for more information.%s 
+
+Check the render method of `IssueList`.  
+    at IssueRow (https://q8cb0.csb.app/src/pages/Home/IssueRow.tsx:22:5)
+    at IssueList (https://q8cb0.csb.app/src/pages/Home/IssueList.tsx:23:48)
+    at div
+    at div
+    at Home (https://q8cb0.csb.app/src/pages/Home/index.tsx:17:55)
+    at Route (https://q8cb0.csb.app/node_modules/react-router/esm/react-router.js:570:29)
+    at Switch (https://q8cb0.csb.app/node_modules/react-router/esm/react-router.js:710:29)
+    at App
+    at Router (https://q8cb0.csb.app/node_modules/react-router/esm/react-router.js:297:30)
+    at BrowserRouter (https://q8cb0.csb.app/node_modules/react-router-dom/esm/react-router-dom.js:156:35)
+    at Provider (https://q8cb0.csb.app/node_modules/react-redux/es/components/Provider.js:13:20) @ https://codesandbox.io/static/js/vendors~embed~sandbox-startup.94f8a764c.chunk.js:0
+[   83509ms] [ERROR] Warning: Each child in a list should have a unique "key" prop.%s%s See https://reactjs.org/link/warning-keys for more information.%s 
+
+Check the render method of `PriorityMenu`.  
+    at Item (https://q8cb0.csb.app/src/components/contextmenu/menu.tsx:22:5)
+    at PriorityMenu (https://q8cb0.csb.app/src/components/contextmenu/PriorityMenu.tsx:25:5)
+    at div
+    at div
+    at div
+    at ContextMenuTrigger (https://q8cb0.csb.app/node_modules/react-contextmenu/es6/ContextMenuTrigger.js:61:5)
+    at IssueRow (https://q8cb0.csb.app/src/pages/Home/IssueRow.tsx:22:5)
+    at div
+    at IssueList (https://q8cb0.csb.app/src/pages/Home/IssueList.tsx:23:48)
+    at div
+    at div
+    at Home (https://q8cb0.csb.app/src/pages/Home/index.tsx:17:55)
+    at Route (https://q8cb0.csb.app/node_modules/react-router/esm/react-router.js:570:29)
+    at Switch (https://q8cb0.csb.app/node_modules/react-router/esm/react-router.js:710:29)
+    at App
+    at Router (https://q8cb0.csb.app/node_modules/react-router/esm/react-router.js:297:30)
+    at BrowserRouter (https://q8cb0.csb.app/node_modules/react-router-dom/esm/react-router-dom.js:156:35)
+    at Provider (https://q8cb0.csb.app/node_modules/react-redux/es/components/Provider.js:13:20) @ https://codesandbox.io/static/js/vendors~embed~sandbox-startup.94f8a764c.chunk.js:0
+[   83510ms] [ERROR] Warning: Each child in a list should have a unique "key" prop.%s%s See https://reactjs.org/link/warning-keys for more information.%s 
+
+Check the render method of `StatusMenu`.  
+    at Item (https://q8cb0.csb.app/src/components/contextmenu/menu.tsx:22:5)
+    at StatusMenu (https://q8cb0.csb.app/src/components/contextmenu/StatusMenu.tsx:26:5)
+    at div
+    at div
+    at div
+    at ContextMenuTrigger (https://q8cb0.csb.app/node_modules/react-contextmenu/es6/ContextMenuTrigger.js:61:5)
+    at IssueRow (https://q8cb0.csb.app/src/pages/Home/IssueRow.tsx:22:5)
+    at div
+    at IssueList (https://q8cb0.csb.app/src/pages/Home/IssueList.tsx:23:48)
+    at div
+    at div
+    at Home (https://q8cb0.csb.app/src/pages/Home/index.tsx:17:55)
+    at Route (https://q8cb0.csb.app/node_modules/react-router/esm/react-router.js:570:29)
+    at Switch (https://q8cb0.csb.app/node_modules/react-router/esm/react-router.js:710:29)
+    at App
+    at Router (https://q8cb0.csb.app/node_modules/react-router/esm/react-router.js:297:30)
+    at BrowserRouter (https://q8cb0.csb.app/node_modules/react-router-dom/esm/react-router-dom.js:156:35)
+    at Provider (https://q8cb0.csb.app/node_modules/react-redux/es/components/Provider.js:13:20) @ https://codesandbox.io/static/js/vendors~embed~sandbox-startup.94f8a764c.chunk.js:0
+[   83562ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1057.jpg:0
+[   83562ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/984.jpg:0
+[   83562ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/189.jpg:0
+[   83562ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/884.jpg:0
+[   83562ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/819.jpg:0
+[   83562ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1184.jpg:0
+[   83902ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/493.jpg:0
+[   83902ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1142.jpg:0
+[   83902ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/156.jpg:0
+[   83902ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1215.jpg:0
+[   83902ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/661.jpg:0
+[   83902ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/425.jpg:0
+[   83902ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1202.jpg:0
+[   83902ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/13.jpg:0
+[   83902ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/10.jpg:0
+[   83902ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/423.jpg:0
+[   83902ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1037.jpg:0
+[   83902ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/57.jpg:0

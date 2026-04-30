@@ -1,0 +1,104 @@
+[     517ms] [LOG] %c __                                               _____          __          __           ______          v1.62870.0
+/\ \       __                                    /\  __`\       /\ \      __/\ \__       /\__  _\                       
+\ \ \     /\_\    ___      __     __     _ __    \ \ \/\ \  _ __\ \ \____/\_\ \ ,_\      \/_/\ \/     ___     ___       
+ \ \ \  __\/\ \ /' _ `\  /'__`\ /'__`\  /\`'__\   \ \ \ \ \/\`'__\ \ '__`\/\ \ \ \/         \ \ \   /' _ `\  /'___\     
+  \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \L\.\_\ \ \/     \ \ \_\ \ \ \/ \ \ \L\ \ \ \ \ \_  __     \_\ \__/\ \/\ \/\ \__/  __ 
+   \ \____/ \ \_\ \_\ \_\ \____\ \__/.\_\\ \_\      \ \_____\ \_\  \ \_,__/\ \_\ \__\/\ \    /\_____\ \_\ \_\ \____\/\_\
+    \/___/   \/_/\/_/\/_/\/____/\/__/\/_/ \/_/       \/_____/\/_/   \/___/  \/_/\/__/\ \/    \/_____/\/_/\/_/\/____/\/_/
+                                                                                      \/
+
+The product development system for teams and agents
+
+WE'RE HIRING: https://linear.app/careers
+CHANGELOG:    https://linear.app/changelog
+ 
+  font-family: monospace;
+  color: #282A30;
+   @ https://static.linear.app/client/assets/vendor-sentry.DUIRvFmS.js:5
+[ 5929972ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed:  @ https://static.linear.app/client/assets/SyncWebSocket.DeoSZMJF.js:6
+[18161446ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://constellation.linear.app/api/statuspage:0
+[18260605ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[18359762ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[18449778ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[18548942ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[18638962ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[18738125ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[18837280ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[18936437ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[19035587ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[19134749ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[19233900ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[19325946ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[19425095ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[19521304ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[19618433ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[19717569ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[19814697ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[19904715ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[20003882ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[20103039ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[20202196ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[20301356ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[20391370ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[20490522ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[20580539ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[20678880ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[20768898ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[20868049ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[20967196ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[21066345ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[21238511ms] [ERROR] Failed to load resource: net::ERR_ADDRESS_UNREACHABLE @ https://constellation.linear.app/api/statuspage:0
+[21328528ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[21427680ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[21526831ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[21625986ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[21682469ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://ornj730p.cms-cdn.linear.app/v2022-06-13/data/query/production?query=%0A++*%5B_type+%3D%3D+%22changelogPost%22+%26%26+publishedAt+%3C+now%28%29+%26%26+%21%28_id+in+path%28%22drafts.**%22%29%29%5D%7B+...+%7D%7Corder%28publishedAt+desc%29%5B0...10%5D%0A&returnQuery=false&perspective=published:0
+[21723105ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[21822255ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[21860068ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://ornj730p.cms-cdn.linear.app/v2022-06-13/data/query/production?query=%0A++*%5B_type+%3D%3D+%22changelogPost%22+%26%26+publishedAt+%3C+now%28%29+%26%26+%21%28_id+in+path%28%22drafts.**%22%29%29%5D%7B+...+%7D%7Corder%28publishedAt+desc%29%5B0...10%5D%0A&returnQuery=false&perspective=published:0
+[21870400ms] [ERROR] Failed to load resource: net::ERR_DNS_NO_MATCHING_SUPPORTED_ALPN @ https://ornj730p.cms-cdn.linear.app/v2022-06-13/data/query/production?query=%0A++*%5B_type+%3D%3D+%22changelogPost%22+%26%26+publishedAt+%3C+now%28%29+%26%26+%21%28_id+in+path%28%22drafts.**%22%29%29%5D%7B+...+%7D%7Corder%28publishedAt+desc%29%5B0...10%5D%0A&returnQuery=false&perspective=published:0
+[21919604ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[22018758ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[22020407ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://ornj730p.cms-cdn.linear.app/v2022-06-13/data/query/production?query=%0A++*%5B_type+%3D%3D+%22changelogPost%22+%26%26+publishedAt+%3C+now%28%29+%26%26+%21%28_id+in+path%28%22drafts.**%22%29%29%5D%7B+...+%7D%7Corder%28publishedAt+desc%29%5B0...10%5D%0A&returnQuery=false&perspective=published:0
+[22117911ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[22125881ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://ornj730p.cms-cdn.linear.app/v2022-06-13/data/query/production?query=%0A++*%5B_type+%3D%3D+%22changelogPost%22+%26%26+publishedAt+%3C+now%28%29+%26%26+%21%28_id+in+path%28%22drafts.**%22%29%29%5D%7B+...+%7D%7Corder%28publishedAt+desc%29%5B0...10%5D%0A&returnQuery=false&perspective=published:0
+[22191586ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://ornj730p.cms-cdn.linear.app/v2022-06-13/data/query/production?query=%0A++*%5B_type+%3D%3D+%22changelogPost%22+%26%26+publishedAt+%3C+now%28%29+%26%26+%21%28_id+in+path%28%22drafts.**%22%29%29%5D%7B+...+%7D%7Corder%28publishedAt+desc%29%5B0...10%5D%0A&returnQuery=false&perspective=published:0
+[22216208ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[22315365ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[22414521ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[22513679ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[22681016ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://constellation.linear.app/api/statuspage:0
+[22905175ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://constellation.linear.app/api/statuspage:0
+[22995197ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[23091308ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[23185396ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[23275415ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[23374567ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[23464587ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[23563747ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[23662911ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[23755985ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[23855141ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[23954295ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[24053453ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[24152612ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[24251758ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[24350920ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[24450071ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[24549221ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[24646340ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[24742513ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[25320177ms] [ERROR] Failed to load resource: net::ERR_NETWORK_CHANGED @ https://constellation.linear.app/api/statuspage:0
+[25573095ms] [ERROR] Failed to load resource: net::ERR_NETWORK_CHANGED @ https://constellation.linear.app/api/statuspage:0
+[25770877ms] [ERROR] Failed to load resource: net::ERR_NETWORK_CHANGED @ https://constellation.linear.app/api/statuspage:0
+[25779221ms] [ERROR] Failed to load resource: net::ERR_NETWORK_CHANGED @ https://constellation.linear.app/api/statuspage:0
+[25842554ms] [ERROR] Failed to load resource: net::ERR_NETWORK_CHANGED @ https://constellation.linear.app/api/statuspage:0
+[25926639ms] [ERROR] Failed to load resource: net::ERR_NETWORK_CHANGED @ https://constellation.linear.app/api/statuspage:0
+[26025325ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://constellation.linear.app/api/statuspage:0
+[26501745ms] [ERROR] Failed to load resource: net::ERR_NETWORK_CHANGED @ https://constellation.linear.app/api/statuspage:0
+[35700930ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.DeoSZMJF.js:6
+[35701867ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.DeoSZMJF.js:6
+[35703733ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.DeoSZMJF.js:6
+[35707553ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.DeoSZMJF.js:6
+[35714999ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.DeoSZMJF.js:6
+[36038492ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.DeoSZMJF.js:6

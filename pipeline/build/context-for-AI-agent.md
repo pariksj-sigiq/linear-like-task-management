@@ -1,16 +1,33 @@
 # Agent Skills — UI Fidelity & Clone Building
 
-Lessons learned from building the Zendesk clone. Follow these when building any new app clone.
+Lessons learned from building Zendesk + Linear clones. Follow these when building any new app clone.
 
 ---
 
 ## 1. Browser Verification (Non-Negotiable)
 
 - **Never claim something is fixed without checking it in the browser first.**
-- Open the real app and the clone side-by-side in two browser tabs.
+- Open the real app and the clone side-by-side in two browser tabs via Playwright MCP (`mcp__playwright__browser_tabs` with `action: "new"`).
 - Screenshot both after every change. Compare visually before moving on.
-- Use live browser control (Cursor browser MCP) — static screenshot comparison alone gets you to ~60% fidelity, never to 100%.
+- Use Playwright MCP (`mcp__playwright__browser_*`) — static screenshot comparison alone gets you to ~60% fidelity, never to 100%.
 - Only mark a page as done when there are **zero** visible differences from the original at the documented interactive states (default, hover, focus, active, disabled).
+
+### Canonical MCP call sequence (per page)
+
+```
+1. mcp__playwright__browser_tabs(action="select", index=<real-app-tab>)
+2. mcp__playwright__browser_navigate(url="<real app route>")
+3. mcp__playwright__browser_snapshot()   // accessibility tree, refs for every element
+4. mcp__playwright__browser_take_screenshot(filename="spec/screenshots/<app>/<page>-default.png")
+5. For each interactive element discovered in (3):
+     a. mcp__playwright__browser_hover(target=<ref>) → screenshot <page>-<elem>-hover.png
+     b. mcp__playwright__browser_press_key(key="Tab")  → screenshot <page>-<elem>-focus.png (if reachable)
+     c. mcp__playwright__browser_click(target=<ref>)  → screenshot <page>-<elem>-active.png (if opens menu/modal)
+6. Switch to clone tab, repeat steps 2-5 against localhost:3000.
+7. Diff screenshot pairs; list every delta with hex / px / element path.
+```
+
+**Rule:** every hex claim, every hover-state claim, every "the menu has X items" claim must trace back to a saved PNG captured via step 4. Memory / inference is not acceptable.
 
 ---
 
@@ -96,7 +113,46 @@ Always extract and apply these first — they have the highest visual impact:
 
 ---
 
-## 8. Verification Checklist Before Marking a Page Done
+## 8. Linear-Specific Fidelity Bar
+
+Linear is keyboard-first, dense, and has a specific aesthetic that's easy to miss if you copy generic SaaS conventions.
+
+### Design tokens (sample from Linear screenshots — do NOT guess)
+
+- **Theme:** light is default (`#ffffff` canvas, `#f4f5f8` panel); dark mode uses near-black (`#08090a`-ish). Sample actual hex from your captured PNGs before committing tokens.
+- **Accent:** Linear purple (`~#5e6ad2` for primary action / selected). Not Tailwind blue. Not Zendesk blue.
+- **Font:** Inter Variable + `"SF Pro Display"` fallback. Base size **13px**, not 14px.
+- **Row height:** issue rows are **~32px** with `padding: 0 12px`. Tight.
+- **Sidebar:** ~220px wide, neutral/slightly-warm gray background, NOT a dark rail. Icon+label rows, not icon-only.
+- **Borders:** 1px `rgba(0,0,0,0.07)` — near-invisible. Heavy 4px rounding is wrong; corners are 4-6px.
+- **Status icons:** per-state SVG glyph (not colored pills). Todo = empty circle, In Progress = partial arc, In Review = green ring, Done = filled check, Canceled = gray X, Backlog = dashed circle. Copy SVG paths exactly — the arc angle matters.
+
+### Linear layout quirks
+
+- **Sidebar is NOT a dark rail.** Primary nav is labelled rows (Inbox, My issues, Workspace, Projects, Views, More, then team groups). Icon-only sidebar = wrong app.
+- **Topbar is not generic.** It's a header inside the main panel with page title + star + filter/display/view-switch controls on the right. No separate full-width topbar.
+- **Issue rows** = `priority icon | ID (e.g. ELT-21) | status icon | title | labels | assignee avatar | date`. All one line. Hover shows extra actions on the right.
+- **Cmd+K (command palette)** is mandatory. Dim backdrop, centered modal, fuzzy search, grouped results.
+- **Quick create (`c`)** opens modal on top of whatever page. Not a route.
+- **Group headers** in issue list (In Review / In Progress / Todo / Backlog) have subtle gray bg + count + `+` on right.
+- **Right-side date** on issue rows is relative but short (`Apr 29`, not `Apr 29, 2026`, not `43 min ago`).
+
+### Linear-specific bugs to watch for
+
+| Bug | Fix |
+|---|---|
+| Sidebar dark rail instead of labelled nav | Rebuild as ~220px labelled column with section headers |
+| Status rendered as pill / badge | Replace with SVG status glyph; match Linear's exact 6 states |
+| Rows too tall / airy | Set row height 32px, font 13px, tighten padding |
+| Accent color blue instead of purple | Swap to `#5e6ad2` (confirm exact hex from screenshot) |
+| Issue IDs missing in list | ID goes between priority and status glyph, always visible |
+| No cmd+K palette | Implement `Cmd+K` global shortcut opening `<CommandPalette/>` |
+| Quick create is a route | Must be modal triggered by `c` from any page |
+| Group headers absent | Add collapsible group rows grouped by status with count |
+
+---
+
+## 9. Verification Checklist Before Marking a Page Done
 
 - [ ] Layout structure matches (columns, panels, widths)
 - [ ] Colors match (sidebar, topbar, accents, status badges)

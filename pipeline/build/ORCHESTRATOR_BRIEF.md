@@ -201,11 +201,22 @@ Minimum per-page set (capture each before moving on):
 For every element in the Target Elements list below, capture and document
 FOUR states: `default`, `hover`, `focus` (keyboard Tab), `active/pressed`.
 For inputs, dropdowns, and any button that can be disabled, also capture
-`disabled`. Hovering with a real cursor in Tab A is ground truth — do not
-infer from the default state. Record per-state deltas in RESEARCH.md §
-"Interactive state matrix" (one row per element × state) with columns:
-element, state, bg hex, border hex, text hex, icon hex, shadow, ring,
-source screenshot filename.
+`disabled`. State capture is Playwright-MCP-driven — inference from memory
+is banned. Record per-state deltas in RESEARCH.md § "Interactive state
+matrix" (one row per element × state) with columns: element, state, bg
+hex, border hex, text hex, icon hex, shadow, ring, source screenshot
+filename.
+
+Exact MCP sequence per element:
+1. `mcp__playwright__browser_snapshot()` — record the element's `ref`
+2. Default: `mcp__playwright__browser_take_screenshot({filename: "<elem>-default.png"})`
+3. Hover: `mcp__playwright__browser_hover({target: <ref>})` → screenshot `<elem>-hover.png`
+4. Focus: `mcp__playwright__browser_press_key({key: "Tab"})` repeatedly until the element is focused → screenshot `<elem>-focus.png`
+5. Active: `mcp__playwright__browser_click({target: <ref>})` (for buttons / dropdowns) → screenshot `<elem>-active.png`
+6. Disabled (when applicable): navigate to a state where element is disabled → screenshot `<elem>-disabled.png`
+
+Every row in the matrix must cite the filename produced by step 2-6. A
+row without a filename does not pass the Phase 1 exit gate.
 
 Target Elements (capture all; add app-specific ones you encounter):
 - Primary pill buttons (e.g. Share, Upgrade, Done, Save)
@@ -387,15 +398,24 @@ page) and task fidelity (per CUA task). Run both until every page and
 every task is approved.
 
 #### 4.UI — Per-page fidelity (read `spec/RESEARCH.md`)
-For every page a subagent reports done:
-  1. Navigate Tab A to the same page in {{APP_NAME}}. Screenshot.
-  2. Navigate Tab B to the clone page at http://localhost:3000. Screenshot.
-  3. Compare with vision. List EVERY difference — colors (exact hex), spacing,
-     typography, layout, components, icons, borders, shadows, interactive states.
+For every page a subagent reports done, run the MCP sequence below. Free-form
+"I looked at it" judgments are not accepted — every approval must be backed by
+a PNG pair on disk.
+
+  1. `mcp__playwright__browser_tabs({action: "select", index: <real-app-tab>})`
+     → `mcp__playwright__browser_navigate({url: "<real page>"})`
+     → `mcp__playwright__browser_take_screenshot({filename: "spec/screenshots/<app>/<page>-real.png"})`
+  2. `mcp__playwright__browser_tabs({action: "select", index: <clone-tab>})`
+     → `mcp__playwright__browser_navigate({url: "http://localhost:3000/<page>"})`
+     → `mcp__playwright__browser_take_screenshot({filename: "spec/screenshots/<app>/<page>-clone.png"})`
+  3. Compare the two PNGs with vision. List EVERY difference — colors (exact
+     hex), spacing, typography, layout, components, icons, borders, shadows,
+     interactive states. Cite both filenames in the diff.
   4. Walk the `RESEARCH.md` § "Interactive state matrix" row by row for every
-     element visible on this page. For each row, reproduce the state in Tab B
-     (hover with cursor, Tab-key focus, mouse-down for active, set disabled
-     where applicable), screenshot the clone in that state, and diff each
+     element visible on this page. For each row, reproduce the state in the
+     clone tab via `mcp__playwright__browser_hover` / `browser_press_key(Tab)`
+     / `browser_click`, capture with `browser_take_screenshot` into
+     `spec/screenshots/<app>/<page>-<elem>-<state>-clone.png`, and diff each
      field (bg / border / text / icon / shadow / ring) against the matrix.
      A page is not approved until every applicable matrix row passes.
      Spot-check list-level states too: empty, loading, error, scrolled,

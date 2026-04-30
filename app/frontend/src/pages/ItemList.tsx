@@ -4,6 +4,8 @@ import { Plus } from "lucide-react";
 import { DataTable, Column } from "@shared/DataTable";
 import { SearchBar } from "@shared/SearchBar";
 import { callTool } from "../api";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface Item {
   id: string;
@@ -21,15 +23,9 @@ const columns: Column<Item>[] = [
     header: "Status",
     width: "120px",
     render: (row) => (
-      <span
-        className={`inline-block px-2 py-0.5 text-xs rounded-full font-medium ${
-          row.status === "active"
-            ? "bg-green-100 text-green-700"
-            : "bg-slate-100 text-slate-500"
-        }`}
-      >
+      <Badge variant={row.status === "active" ? "default" : "secondary"}>
         {row.status}
-      </span>
+      </Badge>
     ),
   },
   { key: "owner", header: "Owner", width: "150px" },
@@ -60,18 +56,17 @@ export function ItemList() {
   return (
     <div data-testid="item-list-page">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold" style={{ color: "var(--text-primary)" }}>
+        <h1 className="text-xl font-semibold text-foreground">
           Items
         </h1>
-        <button
+        <Button
+          type="button"
           onClick={() => navigate("/items/new")}
-          className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium transition-colors"
-          style={{ backgroundColor: "var(--primary)", color: "var(--primary-text)" }}
           data-testid="create-item-button"
         >
           <Plus size={16} />
           New Item
-        </button>
+        </Button>
       </div>
 
       <div className="mb-4 max-w-sm">

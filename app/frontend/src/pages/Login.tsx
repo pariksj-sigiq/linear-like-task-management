@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { LogIn } from "lucide-react";
 import { useAuth } from "../auth";
+import { Button } from "../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 
 export function Login() {
   const { login } = useAuth();
@@ -9,7 +13,7 @@ export function Login() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
     setSubmitting(true);
@@ -19,70 +23,63 @@ export function Login() {
   };
 
   return (
-    <div className="linear-login" data-testid="login-page">
-      <div className="linear-login-panel">
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22 }}>
-          <div className="workspace-mark">C</div>
+    <div className="grid min-h-svh place-items-center bg-background p-6" data-testid="login-page">
+      <Card className="w-full max-w-sm">
+        <CardHeader className="flex-row items-center gap-3">
+          <div className="grid size-8 place-items-center rounded-md bg-primary text-sm font-semibold text-primary-foreground">C</div>
           <div>
-            <h1 className="page-title" style={{ fontSize: 18 }}>Collinear</h1>
-            <p className="page-subtitle">Sign in to the workspace</p>
+            <CardTitle>Collinear</CardTitle>
+            <p className="mt-1 text-sm text-muted-foreground">Sign in to the workspace</p>
           </div>
-        </div>
+        </CardHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="label">
-              Username
-            </label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="input"
-              placeholder="Enter username"
-              required
-              autoFocus
-              data-testid="login-username"
-            />
-          </div>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="grid gap-4">
+            <Label className="grid gap-1.5">
+              <span>Username</span>
+              <Input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter username"
+                required
+                autoFocus
+                data-testid="login-username"
+              />
+            </Label>
 
-          <div>
-            <label className="label">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input"
-              placeholder="Enter password"
-              required
-              data-testid="login-password"
-            />
-          </div>
+            <Label className="grid gap-1.5">
+              <span>Password</span>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
+                required
+                data-testid="login-password"
+              />
+            </Label>
 
-          {error && (
-            <p style={{ color: "var(--danger)" }} data-testid="login-error">
-              {error}
-            </p>
-          )}
+            {error && (
+              <p className="text-sm text-destructive" data-testid="login-error">
+                {error}
+              </p>
+            )}
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="btn btn-primary"
-            style={{ width: "100%", opacity: submitting ? 0.7 : 1 }}
-            data-testid="login-submit"
-          >
-            <LogIn size={15} />
-            {submitting ? "Signing in..." : "Sign In"}
-          </button>
-        </form>
+            <Button
+              type="submit"
+              disabled={submitting}
+              className="w-full"
+              data-testid="login-submit"
+            >
+              <LogIn size={15} />
+              {submitting ? "Signing in..." : "Sign In"}
+            </Button>
+          </form>
 
-        <p className="page-subtitle" style={{ textAlign: "center", marginTop: 18 }}>
-          Default: admin / admin
-        </p>
-      </div>
+          <p className="mt-5 text-center text-sm text-muted-foreground">Default: admin / admin</p>
+        </CardContent>
+      </Card>
     </div>
   );
 }

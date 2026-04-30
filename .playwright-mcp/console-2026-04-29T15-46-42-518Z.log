@@ -1,0 +1,24 @@
+[     119ms] [LOG] %c __                                               _____          __          __           ______          v1.62814.0
+/\ \       __                                    /\  __`\       /\ \      __/\ \__       /\__  _\                       
+\ \ \     /\_\    ___      __     __     _ __    \ \ \/\ \  _ __\ \ \____/\_\ \ ,_\      \/_/\ \/     ___     ___       
+ \ \ \  __\/\ \ /' _ `\  /'__`\ /'__`\  /\`'__\   \ \ \ \ \/\`'__\ \ '__`\/\ \ \ \/         \ \ \   /' _ `\  /'___\     
+  \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \L\.\_\ \ \/     \ \ \_\ \ \ \/ \ \ \L\ \ \ \ \ \_  __     \_\ \__/\ \/\ \/\ \__/  __ 
+   \ \____/ \ \_\ \_\ \_\ \____\ \__/.\_\\ \_\      \ \_____\ \_\  \ \_,__/\ \_\ \__\/\ \    /\_____\ \_\ \_\ \____\/\_\
+    \/___/   \/_/\/_/\/_/\/____/\/__/\/_/ \/_/       \/_____/\/_/   \/___/  \/_/\/__/\ \/    \/_____/\/_/\/_/\/____/\/_/
+                                                                                      \/
+
+The product development system for teams and agents
+
+WE'RE HIRING: https://linear.app/careers
+CHANGELOG:    https://linear.app/changelog
+ 
+  font-family: monospace;
+  color: #282A30;
+   @ https://static.linear.app/client/assets/vendor-sentry.DUIRvFmS.js:5
+[ 4792406ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.CjYHJsrp.js:6
+[ 4793360ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.CjYHJsrp.js:6
+[ 4795361ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.CjYHJsrp.js:6
+[ 4799571ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.CjYHJsrp.js:6
+[ 4805867ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.CjYHJsrp.js:6
+[ 4815542ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.CjYHJsrp.js:6
+[ 5049738ms] [ERROR] WebSocket connection to 'wss://sync.linear.app/?userAccountId=f004485f-b497-416b-9491-3923b8536452&userId=0476fb4f-a8b7-402f-b4f0-ac5e1fd0cd7f' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED @ https://static.linear.app/client/assets/SyncWebSocket.CjYHJsrp.js:6

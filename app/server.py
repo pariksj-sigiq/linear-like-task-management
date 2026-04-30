@@ -987,7 +987,12 @@ def get_issue(args: GetIssueArgs) -> dict[str, Any]:
 
 
 def update_issue(args: UpdateIssueArgs) -> dict[str, Any]:
-    return _update_issue(args.id, args.model_dump(exclude={"id"}, exclude_none=True))
+    updates = {
+        field: getattr(args, field)
+        for field in args.model_fields_set
+        if field != "id"
+    }
+    return _update_issue(args.id, updates)
 
 
 def _update_issue(issue_id: str, updates: dict[str, Any]) -> dict[str, Any]:

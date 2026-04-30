@@ -28,7 +28,6 @@ import { IssueExplorer, MiniIssueLink, StatusGlyph, StatusPill } from "../compon
 import { Button, EmptyState, ErrorBanner, ModalShell, PageHeader, Spinner, TextAreaField, TextField } from "../components/ui";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Checkbox } from "../components/ui/checkbox";
 import { Input } from "../components/ui/input";
 import { cn } from "../lib/utils";
 import type { Cycle, Issue, Notification, Project, ProjectUpdate, ViewDefinition } from "../linearTypes";
@@ -252,12 +251,12 @@ export function HomePage() {
   useDocumentTitle("My issues › Activity");
 
   return (
-    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12">
+    <div className="linear-page">
       <IssueExplorer
-        title="My Issues"
+        title="My issues"
         toolName="list_my_issues"
         emptyTitle="No assigned issues"
-        defaultMode="board"
+        defaultMode="list"
         showCreateAction={false}
         boardPreset="my-issues-activity"
         headerTabs={<MyIssuesTabs />}
@@ -267,35 +266,33 @@ export function HomePage() {
 }
 
 function MyIssuesTabs() {
+  const location = useLocation();
   const tabClass = ({ isActive }: { isActive: boolean }) =>
     cn(
-      "rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+      "inline-flex h-7 items-center rounded-full border border-border bg-background px-3 text-[13px] text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground",
       isActive && "bg-muted text-foreground",
     );
 
   return (
-    <div className="mt-4 flex flex-wrap items-center gap-2" aria-label="My issues sections">
-      <NavLink className={tabClass} to="/my-issues/assigned">Assigned</NavLink>
+    <div className="mb-0 flex flex-wrap items-center gap-1.5" aria-label="My issues sections">
+      <NavLink className={() => tabClass({ isActive: location.pathname === "/my-issues/activity" || location.pathname === "/my-issues/assigned" || location.pathname === "/my-issues" })} to="/my-issues/assigned">Assigned</NavLink>
       <NavLink className={tabClass} to="/my-issues/created">Created</NavLink>
       <NavLink className={tabClass} to="/my-issues/subscribed">Subscribed</NavLink>
-      <NavLink className={tabClass} to="/my-issues/activity">Activity</NavLink>
+      <NavLink className={() => tabClass({ isActive: false })} to="/my-issues/activity">Activity</NavLink>
     </div>
   );
 }
 
 export function MyIssuesPage() {
-  const location = useLocation();
-  const isActivity = location.pathname.endsWith("/activity");
-
   useDocumentTitle("My issues › Activity");
 
   return (
-    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12">
+    <div className="linear-page">
       <IssueExplorer
         title="My issues"
         toolName="list_my_issues"
         emptyTitle="No assigned issues"
-        defaultMode={isActivity ? "board" : "list"}
+        defaultMode="list"
         showCreateAction={false}
         boardPreset="my-issues-activity"
         headerTabs={<MyIssuesTabs />}
@@ -317,10 +314,9 @@ export function TeamIssuesPage({ segment }: { segment: "all" | "active" | "backl
   useDocumentTitle(pageTitle);
 
   return (
-    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12">
+    <div className="linear-page">
       <IssueExplorer
         title={`${teamName(teamKey)} ${titleize(segment)}`}
-        subtitle={`Team-scoped ${segment} work queue.`}
         params={{
           team_key: teamName(teamKey),
           teamKey: teamName(teamKey),
@@ -338,7 +334,7 @@ export function ArchivePage() {
   useDocumentTitle("Archive");
 
   return (
-    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12" data-testid="archive-page">
+    <div className="linear-page" data-testid="archive-page">
       <IssueExplorer
         title="Archive"
         subtitle="Closed and archived issues remain searchable here."
@@ -426,22 +422,28 @@ export function InboxPage() {
   };
 
   return (
-    <div className="min-w-0 p-4 pb-12" data-testid="inbox-page">
+    <div className="linear-page" data-testid="inbox-page">
       <ErrorBanner message={error} />
       {loading && !showLinearEmptyInbox ? (
         <Spinner label="Loading notifications" />
       ) : (
-        <div className="grid min-h-[calc(100svh-9rem)] overflow-hidden rounded-md border border-border bg-card lg:grid-cols-[22rem_minmax(0,1fr)]">
+        <div className="grid min-h-[calc(100svh-9rem)] overflow-hidden bg-card lg:grid-cols-[25rem_minmax(0,1fr)]">
           <aside className="min-w-0 border-b border-border lg:border-b-0 lg:border-r">
-            <div className="flex h-12 items-center gap-2 border-b border-border px-3">
-              <h1 className="text-sm font-semibold text-foreground">Inbox</h1>
-              <span className="text-muted-foreground">•••</span>
+            <div className="flex h-11 items-center gap-2 border-b border-border px-4">
+              <h1 className="text-sm font-medium text-foreground">Inbox</h1>
               <span className="flex-1" />
-              <Button variant="ghost" iconOnly aria-label="Filter inbox"><SlidersHorizontal size={15} /></Button>
-              <Button variant="ghost" iconOnly aria-label="Inbox display"><Settings size={15} /></Button>
+              <Button variant="ghost" iconOnly aria-label="Filter inbox"><SlidersHorizontal size={14} /></Button>
+              <Button variant="ghost" iconOnly aria-label="Inbox display"><Settings size={14} /></Button>
             </div>
             {showLinearEmptyInbox || notifications.length === 0 ? (
-              <div className="h-full min-h-64" />
+              <div className="px-1.5 py-2">
+                <div className="inline-flex h-7 items-center gap-1 rounded-md border border-border bg-background px-2 text-xs text-foreground shadow-sm">
+                  <span>Go to inbox</span>
+                  <Badge variant="outline" className="h-5 rounded px-1.5 text-[11px] font-normal text-muted-foreground">G</Badge>
+                  <span className="text-muted-foreground">then</span>
+                  <Badge variant="outline" className="h-5 rounded px-1.5 text-[11px] font-normal text-muted-foreground">I</Badge>
+                </div>
+              </div>
             ) : <div className="grid">
               {displayRows.map(({ notification, reference }, index) => {
                 const unread = !notification.read && !notification.read_at;
@@ -478,7 +480,14 @@ export function InboxPage() {
           <main className="min-w-0 overflow-auto bg-background">
             {showLinearEmptyInbox || notifications.length === 0 ? (
               <div className="grid min-h-full place-items-center p-8">
-                <EmptyState title="No notifications" description="Inbox updates will appear here." />
+                <div className="grid justify-items-center gap-3 text-center text-muted-foreground">
+                  <div className="relative h-24 w-28" aria-hidden="true">
+                    <div className="absolute left-5 top-8 h-14 w-20 rounded-[1.25rem] border-2 border-muted-foreground/80" />
+                    <div className="absolute left-7 top-3 h-20 w-16 rounded-xl border-2 border-muted-foreground/80 bg-background [clip-path:polygon(12%_0,88%_0,100%_82%,74%_82%,64%_96%,36%_96%,26%_82%,0_82%)]" />
+                    <div className="absolute left-9 top-[4.65rem] h-3 w-10 rounded-b-xl border-x-2 border-b-2 border-muted-foreground/80 bg-background" />
+                  </div>
+                  <p className="text-[13px] font-medium text-muted-foreground">No notifications</p>
+                </div>
               </div>
             ) : selectedIssue ? (
               <InboxIssuePreview
@@ -616,7 +625,7 @@ export function ViewsPage({ teamScoped = false }: { teamScoped?: boolean }) {
   }, [teamKey, teamScoped]);
 
   return (
-    <div className="mx-auto min-w-0 max-w-5xl rounded-md border border-border bg-card p-4 pb-12" data-testid="views-page">
+    <div className="linear-page" data-testid="views-page">
       <PageHeader
         title={teamScoped ? `${teamName(teamKey)} Views` : "Views"}
         subtitle="Saved filters for recurring team workflows."
@@ -651,7 +660,7 @@ export function ViewsPage({ teamScoped = false }: { teamScoped?: boolean }) {
 export function ViewDetailPage() {
   const { viewId } = useParams();
   return (
-    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12">
+    <div className="linear-page">
       <IssueExplorer
         title={`View ${viewId}`}
         subtitle="Issues matching this saved view."
@@ -695,116 +704,90 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
     load();
   }, [teamKey, teamScoped]);
 
-  if (!teamScoped || teamName(teamKey) === "ELT") {
-    return <LinearProjectsReferencePage />;
-  }
-
   return (
-    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12" data-testid="projects-page">
-      <PageHeader
-        title={teamScoped ? `${teamName(teamKey)} Projects` : "Projects"}
-        actions={
-          <Button variant="primary" onClick={() => setCreateOpen(true)} data-testid="create-project-button">
-            <Plus size={14} />
-            New project
-          </Button>
-        }
-      />
-      <div className="mb-3 flex flex-wrap items-center gap-1" aria-label="Project views">
-        <NavLink className="rounded-md px-2 py-1 text-sm text-muted-foreground hover:bg-muted hover:text-foreground" to={teamScoped ? `/team/${teamKey}/projects` : "/projects"}>All projects</NavLink>
-        <a className="inline-flex items-center gap-1.5 rounded-md bg-muted px-2 py-1 text-sm font-medium text-foreground" href="#project-board">
-          <FolderKanban size={13} />
-          Kanban View
-        </a>
+    <div className="linear-page" data-testid="projects-page">
+      <div className="mb-3 flex h-9 items-center justify-between gap-3">
+        <h1 className="text-base font-medium text-foreground">{teamScoped ? `${teamName(teamKey)} Projects` : "Projects"}</h1>
+        <Button variant="ghost" iconOnly aria-label="New project" onClick={() => setCreateOpen(true)} data-testid="create-project-button"><Plus size={15} /></Button>
       </div>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <Button>
-          <Search size={14} />
-          Find in view...
-        </Button>
-        <Button>
-          <SlidersHorizontal size={14} />
-          Add filter
-        </Button>
-        <Button>
-          <Settings size={14} />
-          Display options
-        </Button>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-1" aria-label="Project views">
+          <NavLink className="rounded-full border border-border bg-muted px-3 py-1.5 text-sm font-medium leading-none text-foreground shadow-sm" to={teamScoped ? `/team/${teamKey}/projects/all` : "/projects/all"}>All projects</NavLink>
+          <Button variant="ghost" iconOnly type="button" aria-label="Add new view"><Layers3 size={14} /></Button>
+        </div>
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" iconOnly aria-label="Add filter"><SlidersHorizontal size={14} /></Button>
+          <Button variant="ghost" iconOnly aria-label="Display options"><Settings size={14} /></Button>
+          <Button variant="ghost" iconOnly aria-label="View switcher"><Box size={14} /></Button>
+        </div>
       </div>
       <ErrorBanner message={error} />
       {loading ? (
         <Spinner label="Loading projects" />
       ) : projects.length === 0 ? (
-        <EmptyState title="No projects found" description="Create a project or adjust filters." />
+        <EmptyState
+          title="No projects found"
+          description="Create a project or adjust filters."
+          action={<Button variant="primary" onClick={() => setCreateOpen(true)} data-testid="create-empty-project-button">New project</Button>}
+        />
       ) : (
-        <div className="grid gap-3 overflow-x-auto lg:grid-flow-col lg:auto-cols-[18rem]" id="project-board" data-testid="projects-board">
-          {PROJECT_COLUMNS.map((column) => {
-            const columnProjects = projectsByColumn[column] || [];
-            return (
-              <Card className="rounded-md" size="sm" key={column} aria-label={`${column} projects`}>
-                <CardHeader className="flex flex-row items-center justify-between gap-3 border-b border-border">
-                  <span className="flex min-w-0 items-center gap-2 text-sm font-medium">
-                    <StatusGlyph state={column} />
-                    {column}
-                    <Badge variant="outline">{columnProjects.length}</Badge>
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Button type="button" variant="ghost" iconOnly aria-label={`Create project in ${column}`} onClick={() => setCreateOpen(true)}>
-                      <Plus size={13} />
-                    </Button>
-                  </span>
-                </CardHeader>
-                <CardContent className="grid gap-2">
-                  {columnProjects.map((project) => (
-                    <Link
-                      key={project.id || project.key || projectTitle(project)}
-                      className="grid gap-2 rounded-md border border-border bg-background p-3 text-sm transition-colors hover:bg-muted/60"
-                      to={`/projects/${project.id || project.key}`}
-                    >
-                      <span className="flex min-w-0 items-center gap-2">
-                        <FolderKanban size={14} />
-                        <strong className="truncate">{projectTitle(project)}</strong>
-                      </span>
-                      <span className="line-clamp-2 text-muted-foreground">{project.description || "No description"}</span>
-                      <span className="flex items-center justify-between gap-2 text-muted-foreground">
-                        <StatusPill label={project.status || project.state || column} />
-                        <span>{formatDate(project.updated_at || project.target_date)}</span>
-                      </span>
-                    </Link>
-                  ))}
-                  <Button className="justify-start gap-2 text-muted-foreground" variant="ghost" type="button" onClick={() => setCreateOpen(true)}>
-                    <Plus size={13} />
-                    Add new project
-                  </Button>
-                </CardContent>
-              </Card>
-            );
-          })}
+        <div className="overflow-hidden bg-card" role="table" aria-label="Projects" data-testid="projects-table">
+          <div className="grid grid-cols-[minmax(20rem,1fr)_8rem_6rem_7rem_8rem_4rem_6rem] gap-3 px-9 py-2 text-xs font-medium text-muted-foreground" role="row">
+            <span>Name</span>
+            <span>Health</span>
+            <span>Priority</span>
+            <span>Lead</span>
+            <span>Target date</span>
+            <span>Issues</span>
+            <span>Status</span>
+          </div>
+          {projects.map((project) => (
+            <Link
+              key={project.id || project.key || projectTitle(project)}
+              className="grid min-h-12 grid-cols-[minmax(20rem,1fr)_8rem_6rem_7rem_8rem_4rem_6rem] items-center gap-3 px-9 py-2 text-sm transition-colors hover:bg-muted/60"
+              to={`/project/${project.id || project.key}/overview`}
+              role="row"
+              data-testid={`project-row-${project.id || project.key}`}
+            >
+              <span className="flex min-w-0 items-center gap-2">
+                <Box size={15} className="text-muted-foreground" />
+                <strong className="truncate font-medium">{projectTitle(project)}</strong>
+              </span>
+              <span className="flex items-center gap-2 text-muted-foreground"><span className="inline-block size-4 rounded-full border border-dashed border-muted-foreground/70" /> {project.health ? titleize(project.health) : "No updates"}</span>
+              <span className="text-muted-foreground">---</span>
+              <AvatarBubble>{initials(userName(project.lead || (project as Project & { lead_name?: string }).lead_name))}</AvatarBubble>
+              <span className="text-muted-foreground">{formatDate(project.target_date) || <Box size={15} />}</span>
+              <span>{String((project as Project & { issue_count?: number }).issue_count ?? project.issues?.length ?? 0)}</span>
+              <span className="flex items-center gap-2"><StatusGlyph state={project.state || project.status || "Backlog"} /> {project.progress ?? 0}%</span>
+            </Link>
+          ))}
         </div>
       )}
-      <ProjectCreateModal open={createOpen} onClose={() => setCreateOpen(false)} onCreated={load} teamKey={teamScoped ? teamName(teamKey) : undefined} />
+      <ProjectCreateModal open={createOpen} onClose={() => setCreateOpen(false)} onCreated={load} />
     </div>
   );
 }
 
 function LinearProjectsReferencePage() {
   return (
-    <div className="min-w-0 p-4 pb-12" data-testid="projects-page">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <h1 className="text-base font-semibold text-foreground">Projects</h1>
+    <div className="linear-page" data-testid="projects-page">
+      <div className="mb-3 flex h-9 items-center justify-between gap-3">
+        <h1 className="text-base font-medium text-foreground">Projects</h1>
         <Button variant="ghost" iconOnly aria-label="New project"><Plus size={15} /></Button>
       </div>
-      <div className="mb-3 flex items-center gap-1" aria-label="Project views">
-        <NavLink className="rounded-md bg-muted px-2 py-1 text-sm font-medium text-foreground" to="/team/elt/projects/all">All projects</NavLink>
-        <Button variant="ghost" iconOnly type="button" aria-label="Add new view"><Layers3 size={14} /></Button>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-1" aria-label="Project views">
+          <NavLink className="rounded-full border border-border bg-muted px-3 py-1.5 text-sm font-medium leading-none text-foreground shadow-sm" to="/team/elt/projects/all">All projects</NavLink>
+          <Button variant="ghost" iconOnly type="button" aria-label="Add new view"><Layers3 size={14} /></Button>
+        </div>
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" iconOnly aria-label="Add filter"><SlidersHorizontal size={14} /></Button>
+          <Button variant="ghost" iconOnly aria-label="Display options"><Settings size={14} /></Button>
+          <Button variant="ghost" iconOnly aria-label="Close sidebar"><Box size={14} /></Button>
+        </div>
       </div>
-      <div className="mb-3 flex items-center gap-1">
-        <Button variant="ghost" iconOnly aria-label="Add filter"><SlidersHorizontal size={14} /></Button>
-        <Button variant="ghost" iconOnly aria-label="Display options"><Settings size={14} /></Button>
-        <Button variant="ghost" iconOnly aria-label="Close sidebar"><Box size={14} /></Button>
-      </div>
-      <div className="overflow-hidden rounded-md border border-border bg-card" role="table" aria-label="Projects">
-        <div className="grid grid-cols-[minmax(12rem,1fr)_6rem_7rem_8rem_8rem_5rem_6rem] gap-3 border-b border-border bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground" role="row">
+      <div className="overflow-hidden bg-card" role="table" aria-label="Projects">
+        <div className="grid grid-cols-[minmax(20rem,1fr)_8rem_6rem_5rem_8rem_4rem_5rem] gap-3 px-9 py-2 text-xs font-medium text-muted-foreground" role="row">
           <span>Name</span>
           <span>Health</span>
           <span>Priority</span>
@@ -813,25 +796,24 @@ function LinearProjectsReferencePage() {
           <span>Issues</span>
           <span>Status</span>
         </div>
-        <Link className="grid grid-cols-[minmax(12rem,1fr)_6rem_7rem_8rem_8rem_5rem_6rem] items-center gap-3 px-3 py-2 text-sm transition-colors hover:bg-muted/60" to="/project/constructing-linear-clone-f2edb81a4bb4/overview" role="row">
+        <Link className="grid min-h-12 grid-cols-[minmax(20rem,1fr)_8rem_6rem_5rem_8rem_4rem_5rem] items-center gap-3 px-9 py-2 text-sm transition-colors hover:bg-muted/60" to="/project/constructing-linear-clone-f2edb81a4bb4/overview" role="row">
           <span className="flex min-w-0 items-center gap-2">
-            <Checkbox aria-label="Select project" />
-            <Box size={15} />
-            <strong className="truncate">{referenceProject.name}</strong>
+            <Box size={15} className="text-muted-foreground" />
+            <strong className="truncate font-medium">{referenceProject.name}</strong>
           </span>
-          <span><span className="inline-block size-2 rounded-full border border-muted-foreground" /></span>
-          <span>---</span>
+          <span className="flex items-center gap-2 text-muted-foreground"><span className="inline-block size-4 rounded-full border border-dashed border-muted-foreground/70" /> No updates</span>
+          <span className="text-muted-foreground">---</span>
           <AvatarBubble>PJ</AvatarBubble>
-          <span>Target date</span>
+          <span className="text-muted-foreground"><Box size={15} /></span>
           <span>0</span>
-          <span className="flex items-center gap-2"><StatusGlyph state="Backlog" /> 0%</span>
+          <span className="flex items-center gap-2"><span className="inline-block size-3 rounded-full border border-orange-300" /> 0%</span>
         </Link>
       </div>
     </div>
   );
 }
 
-function ProjectCreateModal({ open, onClose, onCreated, teamKey }: { open: boolean; onClose: () => void; onCreated: () => void; teamKey?: string }) {
+function ProjectCreateModal({ open, onClose, onCreated }: { open: boolean; onClose: () => void; onCreated: () => void | Promise<void> }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -841,12 +823,16 @@ function ProjectCreateModal({ open, onClose, onCreated, teamKey }: { open: boole
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
+    if (!name.trim()) {
+      setError("Project name is required.");
+      return;
+    }
     setSubmitting(true);
     const response = await readTool("create_project", {
-      name,
-      title: name,
-      description,
-      team_key: teamKey,
+      name: name.trim(),
+      description: description.trim(),
+      state: "planned",
+      health: "unknown",
     });
     setSubmitting(false);
     if (response.error) {
@@ -856,7 +842,7 @@ function ProjectCreateModal({ open, onClose, onCreated, teamKey }: { open: boole
     setName("");
     setDescription("");
     onClose();
-    onCreated();
+    await onCreated();
   };
 
   return (
@@ -887,6 +873,9 @@ export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "o
   const [tab, setTab] = useState(initialTab);
   const [linkedIssues, setLinkedIssues] = useState<Issue[]>([]);
   const [addOpen, setAddOpen] = useState(false);
+  const [candidateIssues, setCandidateIssues] = useState<Issue[]>([]);
+  const [issueSearch, setIssueSearch] = useState("");
+  const [addError, setAddError] = useState<string | null>(null);
   const [project, setProject] = useState<Project | null>(null);
   const [issues, setIssues] = useState<Issue[]>([]);
   const [updates, setUpdates] = useState<ProjectUpdate[]>([]);
@@ -913,13 +902,19 @@ export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "o
     setLoading(false);
   };
 
+  const loadCandidateIssues = async (query = issueSearch) => {
+    const response = await readTool("search_issues", { query: query || undefined, limit: 80 });
+    setCandidateIssues(collectionFrom<Issue>(response.data, ["issues", "results", "items"]));
+    setAddError(response.error);
+  };
+
   useEffect(() => {
     load();
   }, [projectId]);
 
   if (String(projectId || "").includes("constructing-linear-clone")) {
     return (
-      <div className="min-w-0 p-4 pb-12" data-testid="project-detail-page">
+      <div className="linear-page-wide" data-testid="project-detail-page">
         <div className="mb-3 flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
             <Box size={15} />
@@ -977,28 +972,72 @@ export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "o
     await load();
   };
 
-  if (loading) return <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12"><Spinner label="Loading project" /></div>;
+  const openAddIssues = async () => {
+    setIssueSearch("");
+    setAddOpen(true);
+    await loadCandidateIssues("");
+  };
+
+  const linkIssueToProject = async (issue: Issue) => {
+    const response = await readTool("update_issue", {
+      id: issue.id || issueKey(issue),
+      issue_key: issueKey(issue),
+      project_id: projectId,
+    });
+    if (response.error) {
+      setAddError(response.error);
+      return;
+    }
+    setAddOpen(false);
+    await load();
+  };
+
+  const removeIssueFromProject = async (issue: Issue) => {
+    const response = await readTool("update_issue", {
+      id: issue.id || issueKey(issue),
+      issue_key: issueKey(issue),
+      project_id: null,
+    });
+    if (response.error) setError(response.error);
+    await load();
+  };
+
+  if (loading) return <div className="linear-page"><Spinner label="Loading project" /></div>;
 
   return (
-    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12" data-testid="project-detail-page">
+    <div className="linear-page" data-testid="project-detail-page">
       <PageHeader title={projectTitle(project)} subtitle={project?.description || `Project ${projectId}`} />
       <ErrorBanner message={error} />
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <section>
           <div className="rounded-md border border-border bg-card">
-            <div className="border-b border-border p-3 last:border-b-0">
+            <div className="flex items-center justify-between gap-3 border-b border-border p-3 last:border-b-0">
               <h2 className="text-sm font-semibold text-foreground">Issues</h2>
+              <Button type="button" variant="ghost" className="gap-2" onClick={openAddIssues} data-testid="project-add-issue">
+                <Plus size={14} />
+                Add issues
+              </Button>
             </div>
             <div className="border-b border-border p-3 last:border-b-0">
               {issues.length === 0 ? (
-                <IssueExplorer
-                  title="Project issues"
-                  showHeader={false}
-                  params={{ project_id: projectId, projectId }}
-                  emptyTitle="No linked issues"
+                <EmptyState
+                  title="No linked issues"
+                  description="Add existing issues to this project or create a new issue from the global create modal."
+                  action={<Button variant="primary" onClick={openAddIssues} data-testid="project-add-issue">Add issues</Button>}
                 />
               ) : (
-                issues.map((issue) => <MiniIssueLink key={issueKey(issue)} issue={issue} />)
+                <div className="grid gap-0">
+                  {issues.map((issue) => (
+                    <div
+                      key={issueKey(issue)}
+                      className="flex min-h-9 items-center gap-2 border-b border-border px-2 text-sm last:border-b-0"
+                      data-testid={`project-issue-row-${issueKey(issue)}`}
+                    >
+                      <MiniIssueLink issue={issue} />
+                      <Button className="ml-auto" type="button" variant="ghost" onClick={() => removeIssueFromProject(issue)}>Remove</Button>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           </div>
@@ -1036,6 +1075,41 @@ export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "o
           </div>
         </aside>
       </div>
+      {addOpen && (
+        <ModalShell title="Add issues to project" onClose={() => setAddOpen(false)} testId="project-add-issue-modal">
+          <div className="grid gap-3">
+            <Input
+              value={issueSearch}
+              onChange={(event) => {
+                const next = event.target.value;
+                setIssueSearch(next);
+                void loadCandidateIssues(next);
+              }}
+              placeholder="Search issues"
+              data-testid="project-issue-search"
+            />
+            <ErrorBanner message={addError} />
+            <div className="grid max-h-80 gap-1 overflow-y-auto">
+              {candidateIssues
+                .filter((candidate) => !issues.some((issue) => issueKey(issue) === issueKey(candidate)))
+                .map((issue) => (
+                  <button
+                    key={issue.id || issueKey(issue)}
+                    type="button"
+                    className="grid grid-cols-[5rem_auto_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-2 py-2 text-left text-sm transition-colors hover:bg-muted"
+                    onClick={() => linkIssueToProject(issue)}
+                    data-testid={`project-issue-option-${issueKey(issue)}`}
+                  >
+                    <span className="text-muted-foreground">{issueKey(issue)}</span>
+                    <StatusGlyph state={stateName(issue)} />
+                    <strong className="truncate">{issueTitle(issue)}</strong>
+                    <AvatarBubble>{initials(assigneeName(issue))}</AvatarBubble>
+                  </button>
+                ))}
+            </div>
+          </div>
+        </ModalShell>
+      )}
     </div>
   );
 }
@@ -1177,7 +1251,7 @@ export function CyclesPage() {
   }, [teamKey]);
 
   return (
-    <div className="mx-auto min-w-0 max-w-5xl rounded-md border border-border bg-card p-4 pb-12" data-testid="cycles-page">
+    <div className="linear-page" data-testid="cycles-page">
       <PageHeader title={`${teamName(teamKey)} Cycles`} subtitle="Active, upcoming, and completed cycles." />
       <ErrorBanner message={error} />
       {loading ? (
@@ -1209,7 +1283,7 @@ export function CyclesPage() {
 export function CycleDetailPage() {
   const { teamKey, cycleId } = useParams();
   return (
-    <div className="min-w-0 rounded-md border border-border bg-card p-4 pb-12">
+    <div className="linear-page">
       <IssueExplorer
         title={`${teamName(teamKey)} Cycle ${cycleId}`}
         subtitle="Issues planned for this cycle."
@@ -1238,7 +1312,7 @@ export function TeamSettingsPage() {
   }, [teamKey]);
 
   return (
-    <div className="mx-auto min-w-0 max-w-5xl rounded-md border border-border bg-card p-4 pb-12" data-testid="team-settings-page">
+    <div className="linear-page" data-testid="team-settings-page">
       <PageHeader title={`${teamName(teamKey)} Settings`} subtitle="Workflow and team configuration." />
       <ErrorBanner message={error} />
       <div className="rounded-md border border-border bg-card">
@@ -1278,7 +1352,7 @@ export function GlobalSearchPage() {
   }, [query]);
 
   return (
-    <div className="mx-auto min-w-0 max-w-5xl rounded-md border border-border bg-card p-4 pb-12" data-testid="search-page">
+    <div className="linear-page" data-testid="search-page">
       <PageHeader title="Search" subtitle="Global search across issues, projects, cycles, and views." />
       <div className="relative mb-4">
         <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -1315,7 +1389,7 @@ export function TierTwoPage({ kind }: { kind: string }) {
   useEffect(() => {
     readSnapshot().then((response) => {
       setSnapshot(response.data);
-      setError(response.error);
+      setError(response.data ? response.error : null);
     });
   }, []);
 
@@ -1356,7 +1430,7 @@ export function TierTwoPage({ kind }: { kind: string }) {
   }, [kind, snapshot]);
 
   return (
-    <div className="mx-auto min-w-0 max-w-5xl rounded-md border border-border bg-card p-4 pb-12" data-testid={`${kind}-page`}>
+    <div className="linear-page" data-testid={`${kind}-page`}>
       <PageHeader
         title={titleize(kind)}
         actions={

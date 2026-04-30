@@ -1,0 +1,212 @@
+- generic [active] [ref=e1] [box=0,0,1512,849]:
+  - generic [ref=e3] [box=0,0,1512,849]:
+    - generic [ref=e271] [box=0,0,255,810]:
+      - list [ref=e273] [box=8,8,239,32]:
+        - listitem [ref=e274] [box=8,8,239,32]:
+          - generic [ref=e275] [box=8,8,239,32]:
+            - link "Open workspace home" [ref=e276] [cursor=pointer] [box=8,8,159,32]:
+              - /url: /my-issues/activity
+              - generic [ref=e277] [box=14,14,20,20]: Σ
+              - generic [ref=e278] [box=42,12,40,24]: SigiQ
+            - button [ref=e279] [cursor=pointer] [box=175,8,32,32]:
+              - img [ref=e280] [box=183,16,16,16]
+            - button [ref=e283] [cursor=pointer] [box=215,8,32,32]:
+              - img [ref=e284] [box=223,16,16,16]
+      - generic [ref=e287] [box=0,48,255,698]:
+        - list [ref=e290] [box=8,56,239,64]:
+          - listitem [ref=e291] [box=8,56,239,32]:
+            - link "Inbox" [ref=e292] [cursor=pointer] [box=8,56,239,32]:
+              - /url: /inbox
+              - img [ref=e293] [box=16,64,16,16]
+              - generic [ref=e296] [box=40,62,35,20]: Inbox
+            - generic [box=212,62,31,20]: 99+
+          - listitem [ref=e297] [box=8,88,239,32]:
+            - link "My issues" [ref=e298] [cursor=pointer] [box=8,88,239,32]:
+              - /url: /my-issues/activity
+              - img [ref=e299] [box=16,96,16,16]
+              - generic [ref=e303] [box=40,94,64,20]: My issues
+        - generic [ref=e304] [box=0,128,255,176]:
+          - generic [ref=e305] [box=8,136,239,32]: Workspace
+          - list [ref=e306] [box=8,168,239,128]:
+            - listitem [ref=e307] [box=8,168,239,32]:
+              - link "Initiatives" [ref=e308] [cursor=pointer] [box=8,168,239,32]:
+                - /url: /initiatives
+                - img [ref=e309] [box=16,176,16,16]
+                - generic [ref=e311] [box=40,174,61,20]: Initiatives
+            - listitem [ref=e312] [box=8,200,239,32]:
+              - link "Projects" [ref=e313] [cursor=pointer] [box=8,200,239,32]:
+                - /url: /projects/all
+                - img [ref=e314] [box=16,208,16,16]
+                - generic [ref=e316] [box=40,206,53,20]: Projects
+            - listitem [ref=e317] [box=8,232,239,32]:
+              - link "Views" [ref=e318] [cursor=pointer] [box=8,232,239,32]:
+                - /url: /views
+                - img [ref=e319] [box=16,240,16,16]
+                - generic [ref=e320] [box=40,238,38,20]: Views
+            - listitem [ref=e321] [box=8,264,239,32]:
+              - link "More" [ref=e322] [cursor=pointer] [box=8,264,239,32]:
+                - /url: /roadmap
+                - img [ref=e323] [box=16,272,16,16]
+                - generic [ref=e333] [box=40,270,33,20]: More
+        - generic [ref=e334] [box=0,304,255,208]:
+          - generic [ref=e335] [box=8,312,239,32]: Teams
+          - list [ref=e336] [box=8,344,239,160]:
+            - listitem [ref=e337] [box=8,344,239,160]:
+              - link "Engg" [ref=e338] [cursor=pointer] [box=8,344,239,32]:
+                - /url: /team/engg/active
+                - img [ref=e339] [box=16,352,16,16]
+                - generic [ref=e344] [box=40,350,33,20]: Engg
+              - list [ref=e345] [box=23,376,211,128]:
+                - listitem [ref=e346] [box=34,378,190,28]:
+                  - link "Issues" [ref=e347] [cursor=pointer] [box=33,378,190,28]:
+                    - /url: /team/engg/active
+                    - generic [ref=e348] [box=41,382,41,20]: Issues
+                - listitem [ref=e349] [box=34,410,190,28]:
+                  - link "Cycles" [ref=e350] [cursor=pointer] [box=33,410,190,28]:
+                    - /url: /team/engg/cycles
+                    - generic [ref=e351] [box=41,414,43,20]: Cycles
+                - listitem [ref=e352] [box=34,442,190,28]:
+                  - link "Projects" [ref=e353] [cursor=pointer] [box=33,442,190,28]:
+                    - /url: /team/engg/projects
+                    - generic [ref=e354] [box=41,446,53,20]: Projects
+                - listitem [ref=e355] [box=34,474,190,28]:
+                  - link "Views" [ref=e356] [cursor=pointer] [box=33,474,190,28]:
+                    - /url: /team/engg/views
+                    - generic [ref=e357] [box=41,478,38,20]: Views
+        - list [ref=e360] [box=8,674,239,64]:
+          - listitem [ref=e361] [box=8,674,239,32]:
+            - link "Search" [ref=e362] [cursor=pointer] [box=8,674,239,32]:
+              - /url: /search
+              - img [ref=e363] [box=16,682,16,16]
+              - generic [ref=e366] [box=40,680,45,20]: Search
+          - listitem [ref=e367] [box=8,706,239,32]:
+            - link "Settings" [ref=e368] [cursor=pointer] [box=8,706,239,32]:
+              - /url: /settings/account
+              - img [ref=e369] [box=16,714,16,16]
+              - generic [ref=e372] [box=40,712,53,20]: Settings
+      - list [ref=e374] [box=8,754,239,48]:
+        - listitem [ref=e375] [box=8,754,239,48]:
+          - button "SA System Administrator admin" [ref=e376] [cursor=pointer] [box=8,754,239,48]:
+            - generic [ref=e378] [box=16,762,32,32]: SA
+            - generic [ref=e379] [box=56,761,159,34]:
+              - generic [ref=e380] [box=56,761,159,18]: System Administrator
+              - generic [ref=e381] [box=56,779,159,16]: admin
+            - img [ref=e382] [box=223,770,16,16]
+      - button "Toggle Sidebar" [ref=e386] [box=255,0,16,810]
+    - main [ref=e122] [box=256,0,1256,849]:
+      - generic [ref=e124] [box=256,8,1256,32]:
+        - button "Toggle Sidebar" [ref=e125] [cursor=pointer] [box=276,10,28,28]:
+          - img [box=282,16,16,16]
+          - generic [ref=e126] [box=290,23,1,1]: Toggle Sidebar
+        - heading "Team Engg" [level=1] [ref=e127] [box=337,12,1021,24]
+        - button "Search ⌘K" [ref=e129] [cursor=pointer] [box=1366,8,122,32]:
+          - img [box=1377,16,16,16]
+          - generic [ref=e130] [box=1399,14,46,20]: Search
+          - generic [ref=e131] [box=1451,13,26,22]: ⌘K
+      - generic [ref=e133] [box=273,65,1222,699]:
+        - generic [ref=e134] [box=273,65,1222,84]:
+          - generic [ref=e135] [box=273,65,232,84]:
+            - heading "ELT Active" [level=1] [ref=e136] [box=273,65,232,24]
+            - paragraph [ref=e137] [box=273,93,232,20]: Team-scoped active work queue.
+            - tablist [ref=e138] [box=273,121,232,28]:
+              - tab "All issues" [ref=e139] [cursor=pointer] [box=273,121,84,28]
+              - tab "Active" [selected] [ref=e140] [cursor=pointer] [box=361,121,64,28]
+              - tab "Backlog" [ref=e141] [cursor=pointer] [box=429,121,76,28]
+          - generic [ref=e142] [box=1395,65,100,28]:
+            - button "Filter" [ref=e143] [cursor=pointer] [box=1395,65,28,28]:
+              - img [box=1401,71,16,16]
+            - button "Display options" [ref=e144] [cursor=pointer] [box=1431,65,28,28]:
+              - img [box=1437,71,16,16]
+            - button "Toggle sidebar" [ref=e145] [cursor=pointer] [box=1467,65,28,28]:
+              - img [box=1473,71,16,16]
+        - generic [ref=e146] [box=273,161,1222,367]:
+          - generic [ref=e147] [box=273,161,1222,145]:
+            - generic [ref=e148] [box=273,161,300,145]:
+              - generic [ref=e149] [box=273,169,300,46]:
+                - generic [ref=e150] [box=285,169,276,20]: Visible
+                - generic [ref=e151] [box=285,193,276,22]:
+                  - text: "0"
+                  - generic "Stable" [ref=e152] [box=306,195,52,20]:
+                    - img [box=313,199,12,12]
+                    - text: Live
+              - generic [ref=e153] [box=273,239,300,67]:
+                - generic [ref=e154] [box=285,248,113,20]: Issues in this scope
+                - generic [ref=e155] [box=285,270,55,20]: ELT Active
+            - generic [ref=e156] [box=581,161,300,145]:
+              - generic [ref=e157] [box=581,169,300,46]:
+                - generic [ref=e158] [box=593,169,276,20]: Active
+                - generic [ref=e159] [box=593,193,276,22]:
+                  - text: "0"
+                  - generic "Stable" [ref=e160] [box=613,195,46,20]:
+                    - img [box=620,199,12,12]
+                    - text: OK
+              - generic [ref=e161] [box=581,239,300,67]:
+                - generic [ref=e162] [box=593,248,127,20]: Started, review, or QA
+                - generic [ref=e163] [box=593,270,125,20]: Needs current attention
+            - generic [ref=e164] [box=888,161,300,145]:
+              - generic [ref=e165] [box=888,169,300,46]:
+                - generic [ref=e166] [box=900,169,276,20]: Backlog
+                - generic [ref=e167] [box=900,193,276,22]:
+                  - text: "0"
+                  - generic "Stable" [ref=e168] [box=921,195,46,20]:
+                    - img [box=928,199,12,12]
+                    - text: OK
+              - generic [ref=e169] [box=888,239,300,67]:
+                - generic [ref=e170] [box=900,248,77,20]: Queued work
+                - generic [ref=e171] [box=900,270,124,20]: Todo, triage, or backlog
+            - generic [ref=e172] [box=1196,161,300,145]:
+              - generic [ref=e173] [box=1196,169,300,46]:
+                - generic [ref=e174] [box=1208,169,276,20]: Done
+                - generic [ref=e175] [box=1208,193,276,22]:
+                  - text: "0"
+                  - generic "Stable" [ref=e176] [box=1228,195,58,20]:
+                    - img [box=1235,199,12,12]
+                    - text: None
+              - generic [ref=e177] [box=1196,239,300,67]:
+                - generic [ref=e178] [box=1208,248,106,20]: Completed in view
+                - generic [ref=e179] [box=1208,270,80,20]: No visible work
+          - generic [ref=e180] [box=273,318,1222,210]:
+            - generic [ref=e181] [box=286,331,1196,44]:
+              - generic [ref=e182] [box=286,331,352,44]:
+                - heading "Issue flow" [level=2] [ref=e183] [box=286,331,352,20]
+                - paragraph [ref=e184] [box=286,355,352,20]: Opened and resolved issues in the selected workspace scope.
+              - generic [ref=e185] [box=1301,331,181,34]:
+                - button "7 days" [ref=e186] [cursor=pointer] [box=1304,334,53,28]
+                - button "14 days" [pressed] [ref=e187] [cursor=pointer] [box=1357,334,60,28]
+                - button "30 days" [ref=e188] [cursor=pointer] [box=1417,334,62,28]
+            - application [ref=e388] [box=286,387,1196,128]:
+              - generic [ref=e405] [box=275,388,1207,121]:
+                - generic [ref=e406] [box=371,496,1111,14]:
+                  - generic [ref=e408] [box=371,496,36,14]: Apr 17
+                  - generic [ref=e410] [box=461,496,37,14]: Apr 18
+                  - generic [ref=e412] [box=552,496,37,14]: Apr 19
+                  - generic [ref=e414] [box=642,496,38,14]: Apr 20
+                  - generic [ref=e416] [box=734,496,36,14]: Apr 21
+                  - generic [ref=e418] [box=824,496,38,14]: Apr 22
+                  - generic [ref=e420] [box=914,496,38,14]: Apr 23
+                  - generic [ref=e422] [box=1005,496,38,14]: Apr 24
+                  - generic [ref=e424] [box=1096,496,38,14]: Apr 25
+                  - generic [ref=e426] [box=1187,496,38,14]: Apr 26
+                  - generic [ref=e428] [box=1278,496,37,14]: Apr 27
+                  - generic [ref=e430] [box=1368,496,38,14]: Apr 28
+                  - generic [ref=e432] [box=1444,496,38,14]: Apr 29
+                - generic [ref=e433] [box=275,388,15,103]:
+                  - generic [ref=e435] [box=282,477,8,14]: "0"
+                  - generic [ref=e437] [box=277,432,13,14]: "10"
+                  - generic [ref=e439] [box=275,388,15,14]: "20"
+        - generic [ref=e264] [box=750,602,268,100]:
+          - generic [ref=e265] [box=750,602,268,24]: No issues found
+          - paragraph [ref=e266] [box=750,634,268,20]: Try changing filters or create a new issue.
+          - button "New issue" [ref=e268] [cursor=pointer] [box=839,670,89,32]
+      - generic [ref=e249] [box=256,813,1256,36]:
+        - generic [ref=e250] [box=268,817,106,28]:
+          - button "Help" [ref=e251] [cursor=pointer] [box=268,817,28,28]:
+            - img [box=274,823,16,16]
+          - generic [ref=e252] [box=304,818,70,26]: Free plan
+        - generic [ref=e253] [box=1351,815,149,32]:
+          - button "Ask Linear" [ref=e254] [cursor=pointer] [box=1351,815,113,32]:
+            - img [box=1362,823,16,16]
+            - text: Ask Linear
+          - button "History" [ref=e255] [cursor=pointer] [box=1472,817,28,28]:
+            - img [box=1478,823,16,16]
+  - generic [ref=e256] [box=0,-20000,8,18]: "0"

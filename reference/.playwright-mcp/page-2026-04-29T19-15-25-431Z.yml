@@ -1,0 +1,715 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4]:
+      - /url: "#skip-nav"
+    - generic [ref=e5]:
+      - generic [ref=e10]:
+        - navigation [ref=e11]:
+          - generic [ref=e13]:
+            - button "eltsuh Workspace Menu" [ref=e15]:
+              - generic [ref=e17]: EL
+              - generic [ref=e18]: eltsuh
+              - img [ref=e19]
+            - generic [ref=e21]:
+              - button "Search workspace" [ref=e23]:
+                - img [ref=e25]
+              - button "Create new issue" [ref=e30]:
+                - img [ref=e32]
+          - generic [ref=e35]:
+            - generic [ref=e36]:
+              - generic [ref=e38]:
+                - button "Inbox" [ref=e40]:
+                  - link "Inbox" [ref=e45]:
+                    - /url: /eltsuh/inbox
+                    - generic [ref=e46]:
+                      - img [ref=e48]
+                      - generic [ref=e51]: Inbox
+                - button "My issues" [ref=e53]:
+                  - link "My issues" [ref=e58]:
+                    - /url: /eltsuh/my-issues/assigned
+                    - generic [ref=e59]:
+                      - img [ref=e61]
+                      - text: My issues
+                - generic:
+                  - button
+                - status [ref=e63]
+              - generic [ref=e65]:
+                - button "Workspace" [expanded] [ref=e67]:
+                  - generic [ref=e68]: Workspace
+                  - img [ref=e69]
+                - generic [ref=e72]:
+                  - generic [ref=e73]:
+                    - button "Projects" [ref=e75]:
+                      - link "Projects" [ref=e80]:
+                        - /url: /eltsuh/projects/all
+                        - generic [ref=e81]:
+                          - img [ref=e83]
+                          - text: Projects
+                    - button "Views" [ref=e86]:
+                      - link "Views" [ref=e91]:
+                        - /url: /eltsuh/views
+                        - generic [ref=e92]:
+                          - img [ref=e94]
+                          - text: Views
+                    - generic:
+                      - button
+                    - generic:
+                      - button
+                    - status [ref=e97]
+                  - button "Show more links" [ref=e101]:
+                    - generic [ref=e102]:
+                      - img [ref=e104]
+                      - text: More
+            - generic [ref=e107]:
+              - generic [ref=e109]:
+                - generic [ref=e110]:
+                  - button "Your teams" [expanded] [ref=e111]:
+                    - generic [ref=e112]: Your teams
+                    - img [ref=e113]
+                  - button "Join a team" [ref=e116]:
+                    - img [ref=e118]
+                - list [ref=e124]:
+                  - button "Eltsuh Issues Projects Views" [ref=e125]:
+                    - generic [ref=e126]:
+                      - generic "Eltsuh" [ref=e127]:
+                        - button "Eltsuh Team menu" [expanded] [ref=e128]:
+                          - generic [ref=e130]:
+                            - img [ref=e132]
+                            - generic "Eltsuh" [ref=e137]
+                            - img [ref=e138]
+                          - generic "Team menu" [ref=e140]:
+                            - img [ref=e141]
+                      - generic [ref=e144]:
+                        - link "Issues" [ref=e149]:
+                          - /url: /eltsuh/team/ELT/all
+                          - generic [ref=e150]:
+                            - img [ref=e151]
+                            - text: Issues
+                        - link "Projects" [ref=e158]:
+                          - /url: /eltsuh/team/ELT/projects/all
+                          - generic [ref=e159]:
+                            - img [ref=e160]
+                            - text: Projects
+                        - link "Views" [ref=e166]:
+                          - /url: /eltsuh/team/ELT/views/issues
+                          - generic [ref=e167]:
+                            - img [ref=e168]
+                            - text: Views
+                    - generic:
+                      - generic:
+                        - list:
+                          - status [ref=e171]
+                  - status [ref=e172]
+              - generic [ref=e174]:
+                - button "Try" [expanded] [ref=e176]:
+                  - generic [ref=e177]: Try
+                  - img [ref=e178]
+                - generic [ref=e181]:
+                  - generic [ref=e182]:
+                    - link "Import issues" [ref=e187]:
+                      - /url: /eltsuh/settings/import-export
+                      - generic [ref=e188]:
+                        - img [ref=e190]
+                        - text: Import issues
+                    - button "Dismiss" [ref=e194]:
+                      - img "Dismiss" [ref=e195]
+                  - generic [ref=e197]:
+                    - generic "Enable cycles for team…" [ref=e199]:
+                      - img [ref=e201]:
+                        - img [ref=e202]
+                      - text: Cycles
+                    - button "Dismiss" [ref=e206]:
+                      - img "Dismiss" [ref=e207]
+        - generic:
+          - button "Open Help menu" [ref=e214]:
+            - img [ref=e216]
+          - generic "Your workspace is on a free plan. Upgrade to unlock more features." [ref=e220]:
+            - button "Free plan" [ref=e221]
+            - img [ref=e224]
+            - generic [ref=e227]: Free plan
+      - generic [ref=e229]:
+        - main [ref=e231]:
+          - generic [ref=e232]:
+            - generic [ref=e2685]:
+              - generic [ref=e2687]:
+                - generic [ref=e2688]:
+                  - generic [ref=e2692]:
+                    - img [ref=e2695]
+                    - heading "Issues" [level=2] [ref=e2697]:
+                      - generic [ref=e2698]: Issues
+                  - switch "Add to favorites" [ref=e2700]:
+                    - img [ref=e2702]
+                - button "Setup team notifications" [ref=e2706]:
+                  - generic [ref=e2708]:
+                    - img [ref=e2709]
+                    - img [ref=e2711]
+              - generic [ref=e2713]:
+                - generic [ref=e2716]:
+                  - link "All issues" [ref=e2721]:
+                    - /url: /eltsuh/team/ELT/all
+                    - generic [ref=e2722]: All issues
+                  - link "Active" [ref=e2727]:
+                    - /url: /eltsuh/team/ELT/active
+                    - generic [ref=e2728]: Active
+                  - link "Backlog" [ref=e2733]:
+                    - /url: /eltsuh/team/ELT/backlog
+                    - generic [ref=e2734]: Backlog
+                  - button "Add new view" [ref=e2738]:
+                    - img [ref=e2740]
+                  - status [ref=e2743]
+                - generic [ref=e2744]:
+                  - button "Add filter" [ref=e2747]:
+                    - img [ref=e2749]
+                  - button "Display options" [ref=e2752]:
+                    - img [ref=e2755]
+                - button "Open details" [ref=e2759]:
+                  - img [ref=e2761]
+            - generic [ref=e3831]:
+              - generic [ref=e3832]:
+                - generic [ref=e3833]:
+                  - generic [ref=e3835]:
+                    - generic [ref=e3837]:
+                      - generic [ref=e3839]:
+                        - img [ref=e3840]
+                        - generic [ref=e3843]: Backlog
+                        - button "5" [ref=e3846]:
+                          - generic [ref=e3848]: "5"
+                      - generic [ref=e3850]:
+                        - button "Open menu" [ref=e3852]:
+                          - img [ref=e3854]
+                        - button "Create new issue" [ref=e3857]:
+                          - img [ref=e3859]
+                    - generic [ref=e3862]:
+                      - generic [ref=e3864]:
+                        - img [ref=e3865]
+                        - generic [ref=e3868]: Todo
+                        - button "8" [ref=e3871]:
+                          - generic [ref=e3873]: "8"
+                      - generic [ref=e3875]:
+                        - button "Open menu" [ref=e3877]:
+                          - img [ref=e3879]
+                        - button "Create new issue" [ref=e3882]:
+                          - img [ref=e3884]
+                    - generic [ref=e3887]:
+                      - generic [ref=e3889]:
+                        - img [ref=e3890]
+                        - generic [ref=e3893]: In Progress
+                        - button "4" [ref=e3896]:
+                          - generic [ref=e3898]: "4"
+                      - generic [ref=e3900]:
+                        - button "Open menu" [ref=e3902]:
+                          - img [ref=e3904]
+                        - button "Create new issue" [ref=e3907]:
+                          - img [ref=e3909]
+                    - generic [ref=e3912]:
+                      - generic [ref=e3914]:
+                        - img [ref=e3915]
+                        - generic "Pull request is being reviewed" [ref=e3918]: In Review
+                        - button "4" [ref=e3921]:
+                          - generic [ref=e3923]: "4"
+                      - generic [ref=e3925]:
+                        - button "Open menu" [ref=e3927]:
+                          - img [ref=e3929]
+                        - button "Create new issue" [ref=e3932]:
+                          - img [ref=e3934]
+                    - generic [ref=e3937]:
+                      - generic [ref=e3939]:
+                        - img [ref=e3940]
+                        - generic [ref=e3944]: Done
+                        - button "6" [ref=e3947]:
+                          - generic [ref=e3949]: "6"
+                      - generic [ref=e3951]:
+                        - button "Open menu" [ref=e3953]:
+                          - img [ref=e3955]
+                        - button "Create new issue" [ref=e3958]:
+                          - img [ref=e3960]
+                    - generic [ref=e3963]:
+                      - generic [ref=e3965]:
+                        - img [ref=e3966]
+                        - generic [ref=e3970]: Canceled
+                        - button "1" [ref=e3973]:
+                          - generic [ref=e3975]: "1"
+                      - generic [ref=e3977]:
+                        - button "Open menu" [ref=e3979]:
+                          - img [ref=e3981]
+                        - button "Create new issue" [ref=e3984]:
+                          - img [ref=e3986]
+                  - generic [ref=e3996]:
+                    - generic [ref=e4000]:
+                      - button "ELT-24 Linear UI Fidelity Pass spacing regression rohanbojja@icloud.com Urgent Priority Created Apr 29" [ref=e4001]:
+                        - link "ELT-24 Linear UI Fidelity Pass spacing regression rohanbojja@icloud.com Urgent Priority Created Apr 29" [ref=e4005]:
+                          - /url: /eltsuh/issue/ELT-24/linear-ui-fidelity-pass-spacing-regression
+                          - generic [ref=e4006]:
+                            - generic [ref=e4007]:
+                              - generic [ref=e4008]:
+                                - generic [ref=e4010]: ELT-24
+                                - generic [ref=e4011]:
+                                  - img [ref=e4013]
+                                  - generic [ref=e4016]: Linear UI Fidelity Pass spacing regression
+                              - generic "rohanbojja@icloud.com" [ref=e4022]: RO
+                            - img "Urgent Priority" [ref=e4027]
+                            - generic [ref=e4032]: Created Apr 29
+                      - button "ELT-28 Activity board density pass rohanbojja@icloud.com High Priority Created Apr 29" [ref=e4033]:
+                        - link "ELT-28 Activity board density pass rohanbojja@icloud.com High Priority Created Apr 29" [ref=e4037]:
+                          - /url: /eltsuh/issue/ELT-28/activity-board-density-pass
+                          - generic [ref=e4038]:
+                            - generic [ref=e4039]:
+                              - generic [ref=e4040]:
+                                - generic [ref=e4042]: ELT-28
+                                - generic [ref=e4043]:
+                                  - img [ref=e4045]
+                                  - generic [ref=e4048]: Activity board density pass
+                              - generic "rohanbojja@icloud.com" [ref=e4054]: RO
+                            - img "High Priority" [ref=e4059]
+                            - generic [ref=e4066]: Created Apr 29
+                      - button "ELT-14 Add audit trail for workflow edits vishalsharma.gbpecdelhi@gmail.com High Priority Created Apr 29" [ref=e4067]:
+                        - link "ELT-14 Add audit trail for workflow edits vishalsharma.gbpecdelhi@gmail.com High Priority Created Apr 29" [ref=e4071]:
+                          - /url: /eltsuh/issue/ELT-14/add-audit-trail-for-workflow-edits
+                          - generic [ref=e4072]:
+                            - generic [ref=e4073]:
+                              - generic [ref=e4074]:
+                                - generic [ref=e4076]: ELT-14
+                                - generic [ref=e4077]:
+                                  - img [ref=e4079]
+                                  - generic [ref=e4082]: Add audit trail for workflow edits
+                              - generic "vishalsharma.gbpecdelhi@gmail.com" [ref=e4088]: VG
+                            - img "High Priority" [ref=e4093]
+                            - generic [ref=e4100]: Created Apr 29
+                      - button "ELT-15 Expose project health in snapshot minalgoel99@gmail.com Medium Priority Created Apr 29" [ref=e4101]:
+                        - link "ELT-15 Expose project health in snapshot minalgoel99@gmail.com Medium Priority Created Apr 29" [ref=e4105]:
+                          - /url: /eltsuh/issue/ELT-15/expose-project-health-in-snapshot
+                          - generic [ref=e4106]:
+                            - generic [ref=e4107]:
+                              - generic [ref=e4108]:
+                                - generic [ref=e4110]: ELT-15
+                                - generic [ref=e4111]:
+                                  - img [ref=e4113]
+                                  - generic [ref=e4116]: Expose project health in snapshot
+                              - generic "minalgoel99@gmail.com" [ref=e4122]: MI
+                            - img "Medium Priority" [ref=e4127]
+                            - generic [ref=e4134]: Created Apr 29
+                      - button "ELT-20 Clean up no-assignee backlog rohanbojja@icloud.com Low Priority Created Apr 29" [ref=e4135]:
+                        - link "ELT-20 Clean up no-assignee backlog rohanbojja@icloud.com Low Priority Created Apr 29" [ref=e4139]:
+                          - /url: /eltsuh/issue/ELT-20/clean-up-no-assignee-backlog
+                          - generic [ref=e4140]:
+                            - generic [ref=e4141]:
+                              - generic [ref=e4142]:
+                                - generic [ref=e4144]: ELT-20
+                                - generic [ref=e4145]:
+                                  - img [ref=e4147]
+                                  - generic [ref=e4150]: Clean up no-assignee backlog
+                              - generic "rohanbojja@icloud.com" [ref=e4156]: RO
+                            - img "Low Priority" [ref=e4161]
+                            - generic [ref=e4168]: Created Apr 29
+                      - button "Add new issue" [ref=e4173]:
+                        - img [ref=e4174]
+                    - generic [ref=e4179]:
+                      - button "ELT-25 QA Automation smoke checks need browser screenshots parikshit.joon@gmail.com High Priority Created Apr 29" [ref=e4180]:
+                        - link "ELT-25 QA Automation smoke checks need browser screenshots parikshit.joon@gmail.com High Priority Created Apr 29" [ref=e4184]:
+                          - /url: /eltsuh/issue/ELT-25/qa-automation-smoke-checks-need-browser-screenshots
+                          - generic [ref=e4185]:
+                            - generic [ref=e4186]:
+                              - generic [ref=e4187]:
+                                - generic [ref=e4189]: ELT-25
+                                - generic [ref=e4190]:
+                                  - img [ref=e4192]
+                                  - generic [ref=e4195]: QA Automation smoke checks need browser screenshots
+                              - generic "parikshit.joon@gmail.com" [ref=e4201]: PJ
+                            - img "High Priority" [ref=e4206]
+                            - generic [ref=e4213]: Created Apr 29
+                      - button "ELT-23 Issue Flow Implementation follow-up minalgoel99@gmail.com High Priority Created Apr 29" [ref=e4214]:
+                        - link "ELT-23 Issue Flow Implementation follow-up minalgoel99@gmail.com High Priority Created Apr 29" [ref=e4218]:
+                          - /url: /eltsuh/issue/ELT-23/issue-flow-implementation-follow-up
+                          - generic [ref=e4219]:
+                            - generic [ref=e4220]:
+                              - generic [ref=e4221]:
+                                - generic [ref=e4223]: ELT-23
+                                - generic [ref=e4224]:
+                                  - img [ref=e4226]
+                                  - generic [ref=e4229]: Issue Flow Implementation follow-up
+                              - generic "minalgoel99@gmail.com" [ref=e4235]: MI
+                            - img "High Priority" [ref=e4240]
+                            - generic [ref=e4247]: Created Apr 29
+                      - button "ELT-16 Repair notification read state rohanbojja@icloud.com High Priority Created Apr 29" [ref=e4248]:
+                        - link "ELT-16 Repair notification read state rohanbojja@icloud.com High Priority Created Apr 29" [ref=e4252]:
+                          - /url: /eltsuh/issue/ELT-16/repair-notification-read-state
+                          - generic [ref=e4253]:
+                            - generic [ref=e4254]:
+                              - generic [ref=e4255]:
+                                - generic [ref=e4257]: ELT-16
+                                - generic [ref=e4258]:
+                                  - img [ref=e4260]
+                                  - generic [ref=e4263]: Repair notification read state
+                              - generic "rohanbojja@icloud.com" [ref=e4269]: RO
+                            - img "High Priority" [ref=e4274]
+                            - generic [ref=e4281]: Created Apr 29
+                      - button "ELT-17 Design reviewer request empty state parikshit.joon@gmail.com Medium Priority Created Apr 29" [ref=e4282]:
+                        - link "ELT-17 Design reviewer request empty state parikshit.joon@gmail.com Medium Priority Created Apr 29" [ref=e4286]:
+                          - /url: /eltsuh/issue/ELT-17/design-reviewer-request-empty-state
+                          - generic [ref=e4287]:
+                            - generic [ref=e4288]:
+                              - generic [ref=e4289]:
+                                - generic [ref=e4291]: ELT-17
+                                - generic [ref=e4292]:
+                                  - img [ref=e4294]
+                                  - generic [ref=e4297]: Design reviewer request empty state
+                              - generic "parikshit.joon@gmail.com" [ref=e4303]: PJ
+                            - img "Medium Priority" [ref=e4308]
+                            - generic [ref=e4315]: Created Apr 29
+                      - button "ELT-1 Get familiar with Linear No Priority Created Mar 2" [ref=e4316]:
+                        - link "ELT-1 Get familiar with Linear No Priority Created Mar 2" [ref=e4320]:
+                          - /url: /eltsuh/issue/ELT-1/get-familiar-with-linear
+                          - generic [ref=e4321]:
+                            - generic [ref=e4322]:
+                              - generic [ref=e4323]:
+                                - generic [ref=e4325]: ELT-1
+                                - generic [ref=e4326]:
+                                  - img [ref=e4328]
+                                  - generic [ref=e4331]: Get familiar with Linear
+                              - img [ref=e4336]
+                            - img "No Priority" [ref=e4348]
+                            - generic [ref=e4355]: Created Mar 2
+                      - button "ELT-3 Connect your tools No Priority Created Mar 2" [ref=e4356]:
+                        - link "ELT-3 Connect your tools No Priority Created Mar 2" [ref=e4360]:
+                          - /url: /eltsuh/issue/ELT-3/connect-your-tools
+                          - generic [ref=e4361]:
+                            - generic [ref=e4362]:
+                              - generic [ref=e4363]:
+                                - generic [ref=e4365]: ELT-3
+                                - generic [ref=e4366]:
+                                  - img [ref=e4368]
+                                  - generic [ref=e4371]: Connect your tools
+                              - img [ref=e4376]
+                            - img "No Priority" [ref=e4388]
+                            - generic [ref=e4395]: Created Mar 2
+                      - button "ELT-2 Set up your teams No Priority Created Mar 2" [ref=e4396]:
+                        - link "ELT-2 Set up your teams No Priority Created Mar 2" [ref=e4400]:
+                          - /url: /eltsuh/issue/ELT-2/set-up-your-teams
+                          - generic [ref=e4401]:
+                            - generic [ref=e4402]:
+                              - generic [ref=e4403]:
+                                - generic [ref=e4405]: ELT-2
+                                - generic [ref=e4406]:
+                                  - img [ref=e4408]
+                                  - generic [ref=e4411]: Set up your teams
+                              - img [ref=e4416]
+                            - img "No Priority" [ref=e4428]
+                            - generic [ref=e4435]: Created Mar 2
+                      - button "ELT-4 Import your data No Priority Created Mar 2" [ref=e4436]:
+                        - link "ELT-4 Import your data No Priority Created Mar 2" [ref=e4440]:
+                          - /url: /eltsuh/issue/ELT-4/import-your-data
+                          - generic [ref=e4441]:
+                            - generic [ref=e4442]:
+                              - generic [ref=e4443]:
+                                - generic [ref=e4445]: ELT-4
+                                - generic [ref=e4446]:
+                                  - img [ref=e4448]
+                                  - generic [ref=e4451]: Import your data
+                              - img [ref=e4456]
+                            - img "No Priority" [ref=e4468]
+                            - generic [ref=e4475]: Created Mar 2
+                      - button "Add new issue" [ref=e4480]:
+                        - img [ref=e4481]
+                    - generic [ref=e4486]:
+                      - button "ELT-19 Audit picker keyboard states minalgoel99@gmail.com High Priority Created Apr 29" [ref=e4487]:
+                        - link "ELT-19 Audit picker keyboard states minalgoel99@gmail.com High Priority Created Apr 29" [ref=e4491]:
+                          - /url: /eltsuh/issue/ELT-19/audit-picker-keyboard-states
+                          - generic [ref=e4492]:
+                            - generic [ref=e4493]:
+                              - generic [ref=e4494]:
+                                - generic [ref=e4496]: ELT-19
+                                - generic [ref=e4497]:
+                                  - img [ref=e4499]
+                                  - generic [ref=e4502]: Audit picker keyboard states
+                              - generic "minalgoel99@gmail.com" [ref=e4508]: MI
+                            - img "High Priority" [ref=e4513]
+                            - generic [ref=e4520]: Created Apr 29
+                      - button "ELT-18 Polish project update composer vishalsharma.gbpecdelhi@gmail.com High Priority Created Apr 29" [ref=e4521]:
+                        - link "ELT-18 Polish project update composer vishalsharma.gbpecdelhi@gmail.com High Priority Created Apr 29" [ref=e4525]:
+                          - /url: /eltsuh/issue/ELT-18/polish-project-update-composer
+                          - generic [ref=e4526]:
+                            - generic [ref=e4527]:
+                              - generic [ref=e4528]:
+                                - generic [ref=e4530]: ELT-18
+                                - generic [ref=e4531]:
+                                  - img [ref=e4533]
+                                  - generic [ref=e4536]: Polish project update composer
+                              - generic "vishalsharma.gbpecdelhi@gmail.com" [ref=e4542]: VG
+                            - img "High Priority" [ref=e4547]
+                            - generic [ref=e4554]: Created Apr 29
+                      - button "ELT-5 Handle transient LLM failures parikshit.joon@gmail.com High Priority Created Apr 29" [ref=e4555]:
+                        - link "ELT-5 Handle transient LLM failures parikshit.joon@gmail.com High Priority Created Apr 29" [ref=e4559]:
+                          - /url: /eltsuh/issue/ELT-5/handle-transient-llm-failures
+                          - generic [ref=e4560]:
+                            - generic [ref=e4561]:
+                              - generic [ref=e4562]:
+                                - generic [ref=e4564]: ELT-5
+                                - generic [ref=e4565]:
+                                  - img [ref=e4567]
+                                  - generic [ref=e4570]: Handle transient LLM failures
+                              - generic "parikshit.joon@gmail.com" [ref=e4576]: PJ
+                            - img "High Priority" [ref=e4581]
+                            - generic [ref=e4588]: Created Apr 29
+                      - button "ELT-22 Alex loading-state polish candidate vishalsharma.gbpecdelhi@gmail.com Low Priority Created Apr 29" [ref=e4589]:
+                        - link "ELT-22 Alex loading-state polish candidate vishalsharma.gbpecdelhi@gmail.com Low Priority Created Apr 29" [ref=e4593]:
+                          - /url: /eltsuh/issue/ELT-22/alex-loading-state-polish-candidate
+                          - generic [ref=e4594]:
+                            - generic [ref=e4595]:
+                              - generic [ref=e4596]:
+                                - generic [ref=e4598]: ELT-22
+                                - generic [ref=e4599]:
+                                  - img [ref=e4601]
+                                  - generic [ref=e4604]: Alex loading-state polish candidate
+                              - generic "vishalsharma.gbpecdelhi@gmail.com" [ref=e4610]: VG
+                            - img "Low Priority" [ref=e4615]
+                            - generic [ref=e4622]: Created Apr 29
+                      - button "Add new issue" [ref=e4627]:
+                        - img [ref=e4628]
+                    - generic [ref=e4633]:
+                      - button "ELT-21 Task verifier zero-state scoring gap parikshit.joon@gmail.com Urgent Priority Created Apr 29" [ref=e4634]:
+                        - link "ELT-21 Task verifier zero-state scoring gap parikshit.joon@gmail.com Urgent Priority Created Apr 29" [ref=e4638]:
+                          - /url: /eltsuh/issue/ELT-21/task-verifier-zero-state-scoring-gap
+                          - generic [ref=e4639]:
+                            - generic [ref=e4640]:
+                              - generic [ref=e4641]:
+                                - generic [ref=e4643]: ELT-21
+                                - generic [ref=e4644]:
+                                  - img [ref=e4646]
+                                  - generic [ref=e4649]: Task verifier zero-state scoring gap
+                              - generic "parikshit.joon@gmail.com" [ref=e4655]: PJ
+                            - img "Urgent Priority" [ref=e4660]
+                            - generic [ref=e4665]: Created Apr 29
+                      - button "ELT-27 Inbox split-pane parity minalgoel99@gmail.com High Priority Created Apr 29" [ref=e4666]:
+                        - link "ELT-27 Inbox split-pane parity minalgoel99@gmail.com High Priority Created Apr 29" [ref=e4670]:
+                          - /url: /eltsuh/issue/ELT-27/inbox-split-pane-parity
+                          - generic [ref=e4671]:
+                            - generic [ref=e4672]:
+                              - generic [ref=e4673]:
+                                - generic [ref=e4675]: ELT-27
+                                - generic [ref=e4676]:
+                                  - img [ref=e4678]
+                                  - generic [ref=e4681]: Inbox split-pane parity
+                              - generic "minalgoel99@gmail.com" [ref=e4687]: MI
+                            - img "High Priority" [ref=e4692]
+                            - generic [ref=e4699]: Created Apr 29
+                      - button "ELT-7 Classroom and teacher identifiers are unclear in student detail drawers minalgoel99@gmail.com Medium Priority Created Apr 29" [ref=e4700]:
+                        - link "ELT-7 Classroom and teacher identifiers are unclear in student detail drawers minalgoel99@gmail.com Medium Priority Created Apr 29" [ref=e4704]:
+                          - /url: /eltsuh/issue/ELT-7/classroom-and-teacher-identifiers-are-unclear-in-student-detail
+                          - generic [ref=e4705]:
+                            - generic [ref=e4706]:
+                              - generic [ref=e4707]:
+                                - generic [ref=e4709]: ELT-7
+                                - generic [ref=e4710]:
+                                  - img [ref=e4712]
+                                  - generic [ref=e4715]: Classroom and teacher identifiers are unclear in student detail drawers
+                              - generic "minalgoel99@gmail.com" [ref=e4721]: MI
+                            - img "Medium Priority" [ref=e4726]
+                            - generic [ref=e4733]: Created Apr 29
+                      - button "ELT-6 Students and Teachers CTAs appear as filters but trigger bulk assignment vishalsharma.gbpecdelhi@gmail.com Medium Priority Created Apr 29" [ref=e4734]:
+                        - link "ELT-6 Students and Teachers CTAs appear as filters but trigger bulk assignment vishalsharma.gbpecdelhi@gmail.com Medium Priority Created Apr 29" [ref=e4738]:
+                          - /url: /eltsuh/issue/ELT-6/students-and-teachers-ctas-appear-as-filters-but-trigger-bulk
+                          - generic [ref=e4739]:
+                            - generic [ref=e4740]:
+                              - generic [ref=e4741]:
+                                - generic [ref=e4743]: ELT-6
+                                - generic [ref=e4744]:
+                                  - img [ref=e4746]
+                                  - generic [ref=e4749]: Students and Teachers CTAs appear as filters but trigger bulk assignment
+                              - generic "vishalsharma.gbpecdelhi@gmail.com" [ref=e4755]: VG
+                            - img "Medium Priority" [ref=e4760]
+                            - generic [ref=e4767]: Created Apr 29
+                      - button "Add new issue" [ref=e4772]:
+                        - img [ref=e4773]
+                    - generic [ref=e4778]:
+                      - button "ELT-11 FF unable to toggle services on rohanbojja@icloud.com Urgent Priority Created Apr 29" [ref=e4779]:
+                        - link "ELT-11 FF unable to toggle services on rohanbojja@icloud.com Urgent Priority Created Apr 29" [ref=e4783]:
+                          - /url: /eltsuh/issue/ELT-11/ff-unable-to-toggle-services-on
+                          - generic [ref=e4784]:
+                            - generic [ref=e4785]:
+                              - generic [ref=e4786]:
+                                - generic [ref=e4788]: ELT-11
+                                - generic [ref=e4789]:
+                                  - img [ref=e4791]
+                                  - generic [ref=e4795]: FF unable to toggle services on
+                              - generic "rohanbojja@icloud.com" [ref=e4801]: RO
+                            - img "Urgent Priority" [ref=e4806]
+                            - generic [ref=e4811]: Created Apr 29
+                      - button "ELT-10 WebSocket unauthorized errors when starting a lesson in dev and localhost parikshit.joon@gmail.com High Priority Created Apr 29" [ref=e4812]:
+                        - link "ELT-10 WebSocket unauthorized errors when starting a lesson in dev and localhost parikshit.joon@gmail.com High Priority Created Apr 29" [ref=e4816]:
+                          - /url: /eltsuh/issue/ELT-10/websocket-unauthorized-errors-when-starting-a-lesson-in-dev-and
+                          - generic [ref=e4817]:
+                            - generic [ref=e4818]:
+                              - generic [ref=e4819]:
+                                - generic [ref=e4821]: ELT-10
+                                - generic [ref=e4822]:
+                                  - img [ref=e4824]
+                                  - generic [ref=e4828]: WebSocket unauthorized errors when starting a lesson in dev and localhost
+                              - generic "parikshit.joon@gmail.com" [ref=e4834]: PJ
+                            - img "High Priority" [ref=e4839]
+                            - generic [ref=e4846]: Created Apr 29
+                      - button "ELT-9 QA validate shared-device SSO revocation flow and credential-login fallback rohanbojja@icloud.com High Priority Created Apr 29" [ref=e4847]:
+                        - link "ELT-9 QA validate shared-device SSO revocation flow and credential-login fallback rohanbojja@icloud.com High Priority Created Apr 29" [ref=e4851]:
+                          - /url: /eltsuh/issue/ELT-9/qa-validate-shared-device-sso-revocation-flow-and-credential-login
+                          - generic [ref=e4852]:
+                            - generic [ref=e4853]:
+                              - generic [ref=e4854]:
+                                - generic [ref=e4856]: ELT-9
+                                - generic [ref=e4857]:
+                                  - img [ref=e4859]
+                                  - generic [ref=e4863]: QA validate shared-device SSO revocation flow and credential-login fallback
+                              - generic "rohanbojja@icloud.com" [ref=e4869]: RO
+                            - img "High Priority" [ref=e4874]
+                            - generic [ref=e4881]: Created Apr 29
+                      - button "ELT-8 Clever read/write capabilities for LMSs parikshit.joon@gmail.com High Priority Created Apr 29" [ref=e4882]:
+                        - link "ELT-8 Clever read/write capabilities for LMSs parikshit.joon@gmail.com High Priority Created Apr 29" [ref=e4886]:
+                          - /url: /eltsuh/issue/ELT-8/clever-readwrite-capabilities-for-lmss
+                          - generic [ref=e4887]:
+                            - generic [ref=e4888]:
+                              - generic [ref=e4889]:
+                                - generic [ref=e4891]: ELT-8
+                                - generic [ref=e4892]:
+                                  - img [ref=e4894]
+                                  - generic [ref=e4898]: Clever read/write capabilities for LMSs
+                              - generic "parikshit.joon@gmail.com" [ref=e4904]: PJ
+                            - img "High Priority" [ref=e4909]
+                            - generic [ref=e4916]: Created Apr 29
+                      - button "ELT-26 Submission Packaging final README sweep vishalsharma.gbpecdelhi@gmail.com Medium Priority Created Apr 29" [ref=e4917]:
+                        - link "ELT-26 Submission Packaging final README sweep vishalsharma.gbpecdelhi@gmail.com Medium Priority Created Apr 29" [ref=e4921]:
+                          - /url: /eltsuh/issue/ELT-26/submission-packaging-final-readme-sweep
+                          - generic [ref=e4922]:
+                            - generic [ref=e4923]:
+                              - generic [ref=e4924]:
+                                - generic [ref=e4926]: ELT-26
+                                - generic [ref=e4927]:
+                                  - img [ref=e4929]
+                                  - generic [ref=e4933]: Submission Packaging final README sweep
+                              - generic "vishalsharma.gbpecdelhi@gmail.com" [ref=e4939]: VG
+                            - img "Medium Priority" [ref=e4944]
+                            - generic [ref=e4951]: Created Apr 29
+                      - button "ELT-12 Design Document minalgoel99@gmail.com Low Priority Created Apr 29" [ref=e4952]:
+                        - link "ELT-12 Design Document minalgoel99@gmail.com Low Priority Created Apr 29" [ref=e4956]:
+                          - /url: /eltsuh/issue/ELT-12/design-document
+                          - generic [ref=e4957]:
+                            - generic [ref=e4958]:
+                              - generic [ref=e4959]:
+                                - generic [ref=e4961]: ELT-12
+                                - generic [ref=e4962]:
+                                  - img [ref=e4964]
+                                  - generic [ref=e4968]: Design Document
+                              - generic "minalgoel99@gmail.com" [ref=e4974]: MI
+                            - img "Low Priority" [ref=e4979]
+                            - generic [ref=e4986]: Created Apr 29
+                      - button "Add new issue" [ref=e4991]:
+                        - img [ref=e4992]
+                    - generic [ref=e4997]:
+                      - button "ELT-13 Python Redis runtime per-call session reconstruction vishalsharma.gbpecdelhi@gmail.com Urgent Priority Created Apr 29" [ref=e4998]:
+                        - link "ELT-13 Python Redis runtime per-call session reconstruction vishalsharma.gbpecdelhi@gmail.com Urgent Priority Created Apr 29" [ref=e5002]:
+                          - /url: /eltsuh/issue/ELT-13/python-redis-runtime-per-call-session-reconstruction
+                          - generic [ref=e5003]:
+                            - generic [ref=e5004]:
+                              - generic [ref=e5005]:
+                                - generic [ref=e5007]: ELT-13
+                                - generic [ref=e5008]:
+                                  - img [ref=e5010]
+                                  - generic [ref=e5014]: Python Redis runtime per-call session reconstruction
+                              - generic "vishalsharma.gbpecdelhi@gmail.com" [ref=e5020]: VG
+                            - img "Urgent Priority" [ref=e5025]
+                            - generic [ref=e5030]: Created Apr 29
+                      - button "Add new issue" [ref=e5035]:
+                        - img [ref=e5036]
+                - generic [ref=e5038]:
+                  - button "Collapse group" [ref=e5041]:
+                    - img [ref=e5043]
+                    - text: Hidden columns
+                  - generic [ref=e5052]:
+                    - generic [ref=e5054]:
+                      - img [ref=e5056]
+                      - generic [ref=e5061]: Duplicate
+                    - button "0" [ref=e5065]:
+                      - generic [ref=e5067]: "0"
+              - status [ref=e5068]
+        - generic [ref=e938]:
+          - button "Ask Linear" [ref=e942]:
+            - img [ref=e944]
+            - generic [ref=e946]: Ask Linear
+          - button "Chat history" [ref=e949]:
+            - img [ref=e951]
+    - region "Notifications alt+T"
+  - generic [ref=e3735]:
+    - generic [ref=e3738]:
+      - tablist [ref=e3740]:
+        - tab "List" [ref=e3742]:
+          - img [ref=e3743]
+          - generic [ref=e3745]: List
+        - tab "Board" [active] [selected] [ref=e3747]:
+          - img [ref=e3748]
+          - generic [ref=e3750]: Board
+      - generic [ref=e3751]:
+        - generic "Columns" [ref=e5069]
+        - combobox [ref=e3755]:
+          - generic:
+            - generic: Status
+          - img [ref=e3757]
+      - generic [ref=e3759]:
+        - generic "Rows" [ref=e5070]
+        - combobox [ref=e3763]:
+          - generic:
+            - generic: No grouping
+          - img [ref=e3765]
+      - generic [ref=e3767]:
+        - generic "View ordering" [ref=e3769]: Ordering
+        - generic [ref=e3770]:
+          - combobox [ref=e3772]:
+            - generic:
+              - generic: Priority
+            - img [ref=e3774]
+          - button "Direction" [ref=e3777]:
+            - img [ref=e3779]
+      - generic [ref=e3784]:
+        - generic [ref=e3785]: Order completed by recency
+        - checkbox "Order completed by recency" [ref=e3787]
+    - generic [ref=e3790]:
+      - generic [ref=e3791]:
+        - generic [ref=e3792]: Completed issues
+        - combobox "Completed issues" [ref=e3794]:
+          - generic:
+            - generic: All
+          - img [ref=e3796]
+      - generic [ref=e3798]:
+        - generic [ref=e3799]: Show sub-issues
+        - checkbox "Show sub-issues" [checked] [ref=e3801]
+    - generic [ref=e3804]:
+      - generic [ref=e3805]: Board options
+      - generic [ref=e3810]:
+        - generic [ref=e3811]: Show empty columns
+        - checkbox "Show empty columns" [ref=e5071]
+      - generic [ref=e3814]:
+        - generic [ref=e3815]: Display properties
+        - generic [ref=e3816]:
+          - button "ID" [ref=e3817]
+          - button "Status" [ref=e3818]
+          - button "Assignee" [ref=e3819]
+          - button "Priority" [ref=e3820]
+          - button "Project" [ref=e3821]
+          - button "Due date" [ref=e5072]
+          - button "Milestone" [ref=e5073]
+          - button "Labels" [ref=e5074]
+          - button "Links" [ref=e5075]
+          - button "Time in status" [ref=e3826]
+          - button "Created" [ref=e5076]
+          - button "Updated" [ref=e5077]
+          - button "Pull requests" [ref=e3829]
+    - generic [ref=e5080]:
+      - button "Reset to team default" [ref=e5082]: Reset
+      - button "Save your view as team default" [ref=e5084]:
+        - generic [ref=e5085]: Set default for everyone
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic: Toggle layout view
+            - generic:
+              - generic "Command B":
+                - generic: ⌘
+                - generic: B

@@ -1,0 +1,4 @@
+[  127650ms] [ERROR] The final argument passed to %s changed size between renders. The order and size of this array must remain constant.
+
+Previous: %s
+Incoming: %s useEffect [() => setQuickCreateOpen(false), false] [() => setQuickCreateOpen(false), false, false, false, false, false] @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:5625

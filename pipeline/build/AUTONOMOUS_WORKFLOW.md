@@ -73,6 +73,26 @@ You are autonomous from here.
 
 ## Phase 3: The Comparison Loop (AI runs solo)
 
+### MCP tool mapping (non-negotiable — these exact calls)
+
+Abstract "browser control" wastes cycles. Use the Playwright MCP tools directly:
+
+| Step | MCP tool | Purpose |
+|------|----------|---------|
+| Open second tab | `mcp__playwright__browser_tabs` (`action: "new"`) | Real app in Tab A, clone in Tab B |
+| Switch tab | `mcp__playwright__browser_tabs` (`action: "select"`) | Alternate real/clone |
+| Load page | `mcp__playwright__browser_navigate` | URL per page |
+| Enumerate interactives | `mcp__playwright__browser_snapshot` | Accessibility tree + refs |
+| Default screenshot | `mcp__playwright__browser_take_screenshot` | Save to `spec/screenshots/<app>/<page>-default.png` |
+| Hover state | `mcp__playwright__browser_hover` → screenshot | Per element discovered in snapshot |
+| Focus state | `mcp__playwright__browser_press_key` (`Tab`) → screenshot | Keyboard reachable items |
+| Active state | `mcp__playwright__browser_click` → screenshot | Menus / modals opened |
+| Form state | `mcp__playwright__browser_type` / `browser_fill_form` → screenshot | Filled + error states |
+
+**Rule:** every diff claim in the loop below must reference a filename produced by these calls. If you wrote "hover bg is `#f4f5f8`" without a PNG on disk, the claim is invalid and the page is not approved.
+
+### The loop
+
 The AI executes this for every page:
 
 ```
@@ -197,7 +217,7 @@ If there are still issues across multiple pages:
 ## Key Rules (embed these in your system prompt or initial message)
 
 ### Rule 1: Screenshot Before Claiming Fixed
-Never trust code changes alone. CSS stacking contexts, overflow clipping, and font rendering issues only appear when rendered.
+Never trust code changes alone. CSS stacking contexts, overflow clipping, and font rendering issues only appear when rendered. Every claim must cite a PNG produced by `mcp__playwright__browser_take_screenshot`.
 
 ### Rule 2: Fix Then Verify, Don't Batch
 Fix one issue → screenshot → confirm → next issue. Don't batch 10 fixes and hope they all work.

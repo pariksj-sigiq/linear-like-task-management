@@ -1,0 +1,170 @@
+- generic [ref=e3]:
+  - generic [ref=e6]:
+    - list [ref=e8]:
+      - listitem [ref=e9]:
+        - generic [ref=e10]:
+          - link "Open workspace home" [ref=e11] [cursor=pointer]:
+            - /url: /my-issues/activity
+            - generic [ref=e12]: EL
+            - generic [ref=e13]: eltsuh
+            - img [ref=e14]
+          - button [ref=e16] [cursor=pointer]:
+            - img [ref=e17]
+          - button [ref=e20] [cursor=pointer]:
+            - img [ref=e21]
+    - generic [ref=e24]:
+      - list [ref=e27]:
+        - listitem [ref=e28]:
+          - link "Inbox" [ref=e29] [cursor=pointer]:
+            - /url: /inbox
+            - img [ref=e30]
+            - generic [ref=e33]: Inbox
+          - generic: 99+
+        - listitem [ref=e34]:
+          - link "My issues" [active] [ref=e35] [cursor=pointer]:
+            - /url: /my-issues/activity
+            - img [ref=e36]
+            - generic [ref=e40]: My issues
+      - generic [ref=e41]:
+        - generic [ref=e42]: Workspace
+        - list [ref=e44]:
+          - listitem [ref=e45]:
+            - link "Projects" [ref=e46] [cursor=pointer]:
+              - /url: /projects/all
+              - img [ref=e47]
+              - generic [ref=e49]: Projects
+          - listitem [ref=e50]:
+            - link "Views" [ref=e51] [cursor=pointer]:
+              - /url: /views
+              - img [ref=e52]
+              - generic [ref=e53]: Views
+          - listitem [ref=e54]:
+            - link "More" [ref=e55] [cursor=pointer]:
+              - /url: /roadmap
+              - img [ref=e56]
+              - generic [ref=e61]: More
+      - generic [ref=e62]:
+        - generic [ref=e63]: Your teams
+        - list [ref=e65]:
+          - listitem [ref=e66]:
+            - button "Eltsuh" [expanded] [ref=e67] [cursor=pointer]:
+              - img [ref=e69]
+              - generic [ref=e74]: Eltsuh
+              - img [ref=e75]
+            - list [ref=e78]:
+              - listitem [ref=e79]:
+                - link "Issues" [ref=e80] [cursor=pointer]:
+                  - /url: /team/elt/active
+                  - generic [ref=e81]: Issues
+              - listitem [ref=e82]:
+                - link "Projects" [ref=e83] [cursor=pointer]:
+                  - /url: /team/elt/projects
+                  - generic [ref=e84]: Projects
+              - listitem [ref=e85]:
+                - link "Views" [ref=e86] [cursor=pointer]:
+                  - /url: /team/elt/views
+                  - generic [ref=e87]: Views
+      - generic [ref=e88]:
+        - generic [ref=e89]: Try
+        - list [ref=e91]:
+          - listitem [ref=e92]:
+            - link "Import issues" [ref=e93] [cursor=pointer]:
+              - /url: "#import"
+              - img [ref=e94]
+              - generic [ref=e96]: Import issues
+          - listitem [ref=e97]:
+            - link "Cycles" [ref=e98] [cursor=pointer]:
+              - /url: "#cycles"
+              - img [ref=e99]
+              - generic [ref=e102]: Cycles
+    - button "Toggle Sidebar" [ref=e103]
+  - main [ref=e104]:
+    - generic [ref=e106]:
+      - generic [ref=e107]:
+        - heading "My issues" [level=1] [ref=e185]
+        - button "Add to favorites" [ref=e109] [cursor=pointer]:
+          - img
+      - generic [ref=e110]:
+        - button "Add filter" [ref=e111] [cursor=pointer]:
+          - img
+        - button "Display options" [ref=e112] [cursor=pointer]:
+          - img
+        - button "Open details" [ref=e113] [cursor=pointer]:
+          - img
+    - generic [ref=e187]:
+      - generic [ref=e188]:
+        - generic [ref=e189]:
+          - heading "My issues" [level=1] [ref=e190]
+          - generic "My issues sections" [ref=e191]:
+            - link "Assigned" [ref=e192] [cursor=pointer]:
+              - /url: /my-issues/assigned
+            - link "Created" [ref=e193] [cursor=pointer]:
+              - /url: /my-issues/created
+            - link "Subscribed" [ref=e194] [cursor=pointer]:
+              - /url: /my-issues/subscribed
+            - link "Activity" [ref=e195] [cursor=pointer]:
+              - /url: /my-issues/activity
+        - generic [ref=e196]:
+          - button "Filter" [ref=e197] [cursor=pointer]:
+            - img
+          - button "Display options" [ref=e198] [cursor=pointer]:
+            - img
+          - button "Toggle sidebar" [ref=e199] [cursor=pointer]:
+            - img
+      - generic [ref=e201]:
+        - generic [ref=e202]:
+          - button "In Progress 3" [expanded] [ref=e203] [cursor=pointer]:
+            - img [ref=e204]
+            - img [ref=e206]
+            - generic [ref=e208]: In Progress
+            - generic [ref=e209]: "3"
+          - generic [ref=e210]:
+            - button "Create issue in In Progress" [ref=e211] [cursor=pointer]:
+              - img
+            - button "In Progress menu" [ref=e212] [cursor=pointer]:
+              - img
+        - generic [ref=e213]:
+          - generic [ref=e214]:
+            - checkbox "Select OPS-10" [ref=e215] [cursor=pointer]
+            - button "No priority OPS-10 Draft cross-team submission checklist" [ref=e216] [cursor=pointer]:
+              - generic "No priority" [ref=e217]:
+                - img [ref=e218]
+              - generic [ref=e219]: OPS-10
+              - img [ref=e220]
+              - generic [ref=e222]: Draft cross-team submission checklist
+            - generic [ref=e223]:
+              - generic "Sarah Connor" [ref=e224]: SC
+              - generic [ref=e225]: Apr 29
+          - generic [ref=e226]:
+            - checkbox "Select DES-10" [ref=e227] [cursor=pointer]
+            - button "No priority DES-10 Prototype cycle progress chart" [ref=e228] [cursor=pointer]:
+              - generic "No priority" [ref=e229]:
+                - img [ref=e230]
+              - generic [ref=e231]: DES-10
+              - img [ref=e232]
+              - generic [ref=e234]: Prototype cycle progress chart
+            - generic [ref=e235]:
+              - generic "Sarah Connor" [ref=e236]: SC
+              - generic [ref=e237]: Apr 29
+          - generic [ref=e238]:
+            - checkbox "Select ENG-10" [ref=e239] [cursor=pointer]
+            - button "No priority ENG-10 Handle archived relation edge cases" [ref=e240] [cursor=pointer]:
+              - generic "No priority" [ref=e241]:
+                - img [ref=e242]
+              - generic [ref=e243]: ENG-10
+              - img [ref=e244]
+              - generic [ref=e246]: Handle archived relation edge cases
+            - generic [ref=e247]:
+              - generic "Sarah Connor" [ref=e248]: SC
+              - generic [ref=e249]: Apr 29
+    - generic [ref=e128]:
+      - generic [ref=e129]:
+        - button "Help" [ref=e130] [cursor=pointer]:
+          - img
+        - generic [ref=e131]: Free plan
+      - generic [ref=e132]:
+        - button "Ask Linear" [ref=e133] [cursor=pointer]:
+          - img
+          - text: Ask Linear
+        - button "History" [ref=e134] [cursor=pointer]:
+          - img

@@ -1,0 +1,238 @@
+- generic [ref=e3]:
+  - link "Skip to content" [ref=e4]:
+    - /url: "#skip-nav"
+  - generic [ref=e5]:
+    - generic [ref=e10]:
+      - navigation [ref=e11]:
+        - generic [ref=e13]:
+          - button "eltsuh Workspace Menu" [ref=e15]:
+            - generic [ref=e17]: EL
+            - generic [ref=e18]: eltsuh
+            - img [ref=e19]
+          - generic [ref=e21]:
+            - button "Search workspace" [ref=e23]:
+              - img [ref=e25]
+            - button "Create new issue" [ref=e30]:
+              - img [ref=e32]
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - generic [ref=e38]:
+              - button "Inbox" [ref=e40]:
+                - link "Inbox" [ref=e45]:
+                  - /url: /eltsuh/inbox
+                  - generic [ref=e46]:
+                    - img [ref=e48]
+                    - generic [ref=e51]: Inbox
+              - button "My issues" [ref=e53]:
+                - link "My issues" [ref=e58]:
+                  - /url: /eltsuh/my-issues/assigned
+                  - generic [ref=e59]:
+                    - img [ref=e61]
+                    - text: My issues
+              - generic:
+                - button
+              - status [ref=e63]
+            - generic [ref=e65]:
+              - button "Workspace" [expanded] [ref=e67]:
+                - generic [ref=e68]: Workspace
+                - img [ref=e69]
+              - generic [ref=e72]:
+                - generic [ref=e73]:
+                  - button "Projects" [ref=e75]:
+                    - link "Projects" [ref=e80]:
+                      - /url: /eltsuh/projects/all
+                      - generic [ref=e81]:
+                        - img [ref=e83]
+                        - text: Projects
+                  - button "Views" [ref=e86]:
+                    - link "Views" [ref=e91]:
+                      - /url: /eltsuh/views/issues
+                      - generic [ref=e92]:
+                        - img [ref=e94]
+                        - text: Views
+                  - generic:
+                    - button
+                  - generic:
+                    - button
+                  - status [ref=e97]
+                - button "Show more links" [ref=e101]:
+                  - generic [ref=e102]:
+                    - img [ref=e104]
+                    - text: More
+          - generic [ref=e107]:
+            - generic [ref=e109]:
+              - generic [ref=e110]:
+                - button "Your teams" [expanded] [ref=e111]:
+                  - generic [ref=e112]: Your teams
+                  - img [ref=e113]
+                - button "Join a team" [ref=e116]:
+                  - img [ref=e118]
+              - list [ref=e124]:
+                - button "Eltsuh Issues Projects Views" [ref=e125]:
+                  - generic [ref=e126]:
+                    - generic "Eltsuh" [ref=e127]:
+                      - button "Eltsuh Team menu" [expanded] [ref=e128]:
+                        - generic [ref=e130]:
+                          - img [ref=e132]
+                          - generic "Eltsuh" [ref=e137]
+                          - img [ref=e138]
+                        - generic "Team menu" [ref=e140]:
+                          - img [ref=e141]
+                    - generic [ref=e144]:
+                      - link "Issues" [ref=e149]:
+                        - /url: /eltsuh/team/ELT/active
+                        - generic [ref=e150]:
+                          - img [ref=e151]
+                          - text: Issues
+                      - link "Projects" [ref=e158]:
+                        - /url: /eltsuh/team/ELT/projects/all
+                        - generic [ref=e159]:
+                          - img [ref=e160]
+                          - text: Projects
+                      - link "Views" [ref=e166]:
+                        - /url: /eltsuh/team/ELT/views/issues
+                        - generic [ref=e167]:
+                          - img [ref=e168]
+                          - text: Views
+                  - generic:
+                    - generic:
+                      - list:
+                        - status [ref=e171]
+                - status [ref=e172]
+            - generic [ref=e174]:
+              - button "Try" [expanded] [ref=e176]:
+                - generic [ref=e177]: Try
+                - img [ref=e178]
+              - generic [ref=e181]:
+                - generic [ref=e182]:
+                  - link "Import issues" [ref=e187]:
+                    - /url: /eltsuh/settings/import-export
+                    - generic [ref=e188]:
+                      - img [ref=e190]
+                      - text: Import issues
+                  - button "Dismiss" [ref=e194]:
+                    - img "Dismiss" [ref=e195]
+                - generic [ref=e197]:
+                  - generic "Enable cycles for team…" [ref=e199]:
+                    - img [ref=e201]:
+                      - img [ref=e202]
+                    - text: Cycles
+                  - button "Dismiss" [ref=e206]:
+                    - img "Dismiss" [ref=e207]
+      - generic:
+        - button "Open Help menu" [ref=e214]:
+          - img [ref=e216]
+        - generic "Your workspace is on a free plan. Upgrade to unlock more features." [ref=e220]:
+          - button "Free plan" [ref=e221]
+          - img [ref=e224]
+          - generic [ref=e227]: Free plan
+    - generic [ref=e229]:
+      - main [ref=e231]:
+        - generic [ref=e235]:
+          - generic [ref=e239]:
+            - link "ELT-21 Task verifier zero-state scoring gap" [ref=e244]:
+              - /url: /eltsuh/issue/ELT-21/task-verifier-zero-state-scoring-gap
+              - generic [ref=e245]:
+                - generic [ref=e246]: ELT-21
+                - text: Task verifier zero-state scoring gap
+            - switch "Add to favorites" [ref=e248]:
+              - img [ref=e250]
+            - button "Issue options" [ref=e253]:
+              - img [ref=e255]
+          - generic [ref=e257]:
+            - generic [ref=e260]:
+              - generic [ref=e261]:
+                - textbox "Issue title" [ref=e264]:
+                  - paragraph [ref=e265]: Task verifier zero-state scoring gap
+                - textbox "Issue description" [ref=e272]:
+                  - paragraph [ref=e273]: Review-state issue for evaluation smoke-test language.
+              - generic [ref=e274]:
+                - button "Add reaction" [ref=e278]:
+                  - img [ref=e280]
+                - button "Attach images, files or videos" [ref=e283]:
+                  - img [ref=e285]
+              - button "Create new sub-issue" [ref=e292]:
+                - img [ref=e294]
+                - generic [ref=e296]: Add sub-issues
+              - generic [ref=e299]:
+                - generic [ref=e300]: Activity
+                - generic [ref=e301]:
+                  - generic [ref=e302]:
+                    - button "Unsubscribe from issue" [disabled]: Unsubscribe
+                  - button "Change subscribers" [ref=e304]:
+                    - generic "parikshit.joon@gmail.com" [ref=e310]: PJ
+              - generic [ref=e311]:
+                - generic [ref=e317]:
+                  - link "parikshit.joon@gmail.com" [ref=e320]:
+                    - /url: /eltsuh/profiles/parikshit.joon
+                    - generic "parikshit.joon@gmail.com" [ref=e322]: PJ
+                  - generic [ref=e324]:
+                    - link "parikshit.joon@gmail.com" [ref=e327]:
+                      - /url: /eltsuh/profiles/parikshit.joon
+                    - text: created the issue
+                    - generic [ref=e328]: ·
+                    - link "Wed Apr 29, 2026, 7:14:18 PM" [ref=e330]:
+                      - /url: https://linear.app/eltsuh/issue/ELT-21/task-verifier-zero-state-scoring-gap#update-48698ff2-7c55-4748-b2f0-91c45d3de07a-issue-created
+                      - text: 6h ago
+                - generic [ref=e335]:
+                  - generic [ref=e337]:
+                    - paragraph: Leave a comment…
+                  - generic [ref=e339]:
+                    - button "Submit comment" [ref=e342]:
+                      - img [ref=e344]
+                    - button "Attach images, files or videos" [ref=e347]:
+                      - img [ref=e349]
+            - generic [ref=e353]:
+              - generic [ref=e355]:
+                - button "Copy issue URL" [ref=e357]:
+                  - img [ref=e359]
+                - button "Copy issue ID" [ref=e362]:
+                  - img [ref=e364]
+                - button "Copy branch name" [ref=e368]:
+                  - img [ref=e370]
+                - generic [ref=e372]:
+                  - button "Copy as prompt" [ref=e374]:
+                    - img [ref=e376]
+                  - button "Work on issue" [ref=e382]:
+                    - img [ref=e384]
+              - generic [ref=e387]:
+                - generic [ref=e388]:
+                  - button "Properties" [expanded] [ref=e390]:
+                    - generic [ref=e391]: Properties
+                    - img [ref=e392]
+                  - generic [ref=e395]:
+                    - button "In Review" [ref=e399]:
+                      - img [ref=e400]
+                      - generic [ref=e403]: In Review
+                    - button "Urgent Priority Urgent" [ref=e406]:
+                      - img "Urgent Priority" [ref=e407]
+                      - generic [ref=e409]: Urgent
+                    - generic [ref=e412]:
+                      - button "parikshit.joon@gmail.com parikshit.joon@gmail.com" [ref=e414]:
+                        - generic "parikshit.joon@gmail.com" [ref=e416]: PJ
+                        - generic [ref=e418]: parikshit.joon@gmail.com
+                      - link "Go to user" [ref=e419]:
+                        - /url: /eltsuh/profiles/parikshit.joon
+                        - img "Go to user" [ref=e421]
+                - generic [ref=e423]:
+                  - button "Labels" [expanded] [ref=e425]:
+                    - generic [ref=e426]: Labels
+                    - img [ref=e427]
+                  - generic "Add labels" [ref=e432]:
+                    - button "Add labels" [ref=e435]:
+                      - img [ref=e436]
+                      - generic [ref=e439]: Add label
+                - generic [ref=e440]:
+                  - button "Project" [expanded] [ref=e442]:
+                    - generic [ref=e443]: Project
+                    - img [ref=e444]
+                  - button "Add to project" [ref=e450]:
+                    - img [ref=e451]
+                    - generic [ref=e453]: Add to project
+      - generic [ref=e463]:
+        - button "Ask Linear" [ref=e467]:
+          - img [ref=e469]
+          - generic [ref=e471]: Ask Linear
+        - button "Chat history" [ref=e474]:
+          - img [ref=e476]
+  - region "Notifications alt+T"

@@ -1,0 +1,172 @@
+- generic [ref=e3]:
+  - generic [ref=e6]:
+    - list [ref=e8]:
+      - listitem [ref=e9]:
+        - generic [ref=e10]:
+          - link "Open workspace home" [ref=e11] [cursor=pointer]:
+            - /url: /my-issues/activity
+            - generic [ref=e12]: EL
+            - generic [ref=e13]: eltsuh
+            - img [ref=e14]
+          - button [ref=e16] [cursor=pointer]:
+            - img [ref=e17]
+          - button [ref=e20] [cursor=pointer]:
+            - img [ref=e21]
+    - generic [ref=e24]:
+      - list [ref=e27]:
+        - listitem [ref=e28]:
+          - link "Inbox" [ref=e29] [cursor=pointer]:
+            - /url: /inbox
+            - img [ref=e30]
+            - generic [ref=e33]: Inbox
+          - generic: 99+
+        - listitem [ref=e34]:
+          - link "My issues" [ref=e35] [cursor=pointer]:
+            - /url: /my-issues/activity
+            - img [ref=e36]
+            - generic [ref=e40]: My issues
+      - generic [ref=e41]:
+        - generic [ref=e42]: Workspace
+        - list [ref=e44]:
+          - listitem [ref=e45]:
+            - link "Initiatives" [ref=e46] [cursor=pointer]:
+              - /url: /initiatives
+              - img [ref=e47]
+              - generic [ref=e49]: Initiatives
+          - listitem [ref=e50]:
+            - link "Projects" [ref=e51] [cursor=pointer]:
+              - /url: /projects/all
+              - img [ref=e52]
+              - generic [ref=e54]: Projects
+          - listitem [ref=e55]:
+            - link "Views" [ref=e56] [cursor=pointer]:
+              - /url: /views
+              - img [ref=e57]
+              - generic [ref=e58]: Views
+          - listitem [ref=e59]:
+            - link "More" [ref=e60] [cursor=pointer]:
+              - /url: /roadmap
+              - img [ref=e61]
+              - generic [ref=e66]: More
+      - generic [ref=e67]:
+        - generic [ref=e68]: Your teams
+        - list [ref=e70]:
+          - listitem [ref=e71]:
+            - button "Eltsuh" [expanded] [ref=e72] [cursor=pointer]:
+              - img [ref=e74]
+              - generic [ref=e79]: Eltsuh
+              - img [ref=e80]
+            - list [ref=e83]:
+              - listitem [ref=e84]:
+                - link "Issues" [ref=e85] [cursor=pointer]:
+                  - /url: /team/engg/active
+                  - generic [ref=e86]: Issues
+              - listitem [ref=e87]:
+                - link "Projects" [ref=e88] [cursor=pointer]:
+                  - /url: /team/engg/projects
+                  - generic [ref=e89]: Projects
+              - listitem [ref=e90]:
+                - link "Views" [ref=e91] [cursor=pointer]:
+                  - /url: /team/engg/views
+                  - generic [ref=e92]: Views
+      - generic [ref=e93]:
+        - generic [ref=e94]: Try
+        - list [ref=e96]:
+          - listitem [ref=e97]:
+            - link "Import issues" [ref=e98] [cursor=pointer]:
+              - /url: "#import"
+              - img [ref=e99]
+              - generic [ref=e101]: Import issues
+          - listitem [ref=e102]:
+            - link "Cycles" [ref=e103] [cursor=pointer]:
+              - /url: "#cycles"
+              - img [ref=e104]
+              - generic [ref=e107]: Cycles
+      - list [ref=e110]:
+        - listitem [ref=e111]:
+          - link "Search" [ref=e112] [cursor=pointer]:
+            - /url: /search
+            - img [ref=e113]
+            - generic [ref=e116]: Search
+        - listitem [ref=e117]:
+          - link "Settings" [ref=e118] [cursor=pointer]:
+            - /url: /settings/account
+            - img [ref=e119]
+            - generic [ref=e122]: Settings
+      - generic [ref=e123]:
+        - generic [ref=e124]:
+          - img [ref=e125]
+          - generic [ref=e127]: What's new
+        - paragraph [ref=e128]: Check out the latest features and improvements we've shipped.
+        - button "Learn more" [ref=e129] [cursor=pointer]
+    - list [ref=e131]:
+      - listitem [ref=e132]:
+        - button "SA System Administrator admin" [ref=e133] [cursor=pointer]:
+          - generic [ref=e135]: SA
+          - generic [ref=e136]:
+            - generic [ref=e137]: System Administrator
+            - generic [ref=e138]: admin
+          - img [ref=e139]
+    - button "Toggle Sidebar" [ref=e143]
+  - main [ref=e144]:
+    - generic [ref=e146]:
+      - heading "Projects" [level=1] [ref=e147]
+      - generic [ref=e148]:
+        - button "Search ⌘K" [ref=e149] [cursor=pointer]:
+          - img
+          - generic [ref=e150]: Search
+          - generic [ref=e151]: ⌘K
+        - button "New issue" [ref=e152] [cursor=pointer]:
+          - img
+          - generic [ref=e153]: New issue
+        - button "Inbox" [ref=e154] [cursor=pointer]:
+          - img
+        - button "Settings" [ref=e155] [cursor=pointer]:
+          - img
+    - generic [ref=e156]:
+      - generic [ref=e157]:
+        - heading "Projects" [level=1] [ref=e158]
+        - button "New project" [ref=e159] [cursor=pointer]:
+          - img
+      - generic "Project views" [ref=e160]:
+        - link "All projects" [ref=e161] [cursor=pointer]:
+          - /url: /team/elt/projects/all
+        - button "Add new view" [ref=e162] [cursor=pointer]:
+          - img
+      - generic [ref=e163]:
+        - button "Add filter" [ref=e164] [cursor=pointer]:
+          - img
+        - button "Display options" [ref=e165] [cursor=pointer]:
+          - img
+        - button "Close sidebar" [ref=e166] [cursor=pointer]:
+          - img
+      - table "Projects" [ref=e167]:
+        - row "Name Health Priority Lead Target date Issues Status" [ref=e168]:
+          - generic [ref=e169]: Name
+          - generic [ref=e170]: Health
+          - generic [ref=e171]: Priority
+          - generic [ref=e172]: Lead
+          - generic [ref=e173]: Target date
+          - generic [ref=e174]: Issues
+          - generic [ref=e175]: Status
+        - row "Select project Constructing linear clone --- PJ Target date 0 0%" [ref=e176] [cursor=pointer]:
+          - generic [ref=e177]:
+            - checkbox "Select project" [ref=e178]
+            - img [ref=e179]
+            - strong [ref=e182]: Constructing linear clone
+          - generic [ref=e185]: "---"
+          - generic [ref=e186]: PJ
+          - generic [ref=e187]: Target date
+          - generic [ref=e188]: "0"
+          - generic [ref=e189]: 0%
+    - generic [ref=e191]:
+      - generic [ref=e192]:
+        - button "Help" [ref=e193] [cursor=pointer]:
+          - img
+        - generic [ref=e194]: Free plan
+      - generic [ref=e195]:
+        - button "Ask Linear" [ref=e196] [cursor=pointer]:
+          - img
+          - text: Ask Linear
+        - button "History" [ref=e197] [cursor=pointer]:
+          - img

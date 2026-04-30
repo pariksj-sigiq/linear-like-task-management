@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export interface Column<T> {
   key: string;
@@ -25,8 +26,7 @@ export function DataTable<T extends Record<string, any>>({
   if (loading) {
     return (
       <div
-        className="flex items-center justify-center py-12 text-sm"
-        style={{ color: "var(--text-secondary)" }}
+        className="flex items-center justify-center py-12 text-sm text-muted-foreground"
         data-testid="table-loading"
       >
         Loading...
@@ -37,8 +37,7 @@ export function DataTable<T extends Record<string, any>>({
   if (data.length === 0) {
     return (
       <div
-        className="flex items-center justify-center py-12 text-sm"
-        style={{ color: "var(--text-secondary)" }}
+        className="flex items-center justify-center py-12 text-sm text-muted-foreground"
         data-testid="table-empty"
       >
         {emptyMessage}
@@ -47,39 +46,37 @@ export function DataTable<T extends Record<string, any>>({
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border" style={{ borderColor: "var(--border)" }}>
-      <table className="w-full text-sm" data-testid="data-table">
-        <thead>
-          <tr style={{ backgroundColor: "var(--content-bg)" }}>
+    <div className="overflow-x-auto rounded-lg border border-border">
+      <Table data-testid="data-table">
+        <TableHeader>
+          <TableRow className="bg-muted/40">
             {columns.map((col) => (
-              <th
+              <TableHead
                 key={col.key}
-                className="px-4 py-3 text-left font-medium text-xs uppercase tracking-wider"
-                style={{ color: "var(--text-secondary)", width: col.width }}
+                className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-muted-foreground"
               >
                 {col.header}
-              </th>
+              </TableHead>
             ))}
-          </tr>
-        </thead>
-        <tbody>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {data.map((row, i) => (
-            <tr
+            <TableRow
               key={i}
               onClick={() => onRowClick?.(row)}
-              className={`border-t ${onRowClick ? "cursor-pointer hover:bg-slate-50" : ""}`}
-              style={{ borderColor: "var(--border)", backgroundColor: "var(--card-bg)" }}
+              className={onRowClick ? "cursor-pointer hover:bg-muted/60" : ""}
               data-testid={`table-row-${i}`}
             >
               {columns.map((col) => (
-                <td key={col.key} className="px-4 py-3">
+                <TableCell key={col.key} className="px-4 py-3">
                   {col.render ? col.render(row) : row[col.key]}
-                </td>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 }

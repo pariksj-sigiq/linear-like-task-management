@@ -16,6 +16,7 @@ import { collectionFrom, readTool } from "../api";
 import type { SearchResult } from "../linearTypes";
 import { issueKey, issueTitle, projectTitle } from "../linearTypes";
 import { Button, Kbd, ModalShell } from "./ui";
+import { Input } from "./ui/input";
 
 interface CommandPaletteProps {
   open: boolean;
@@ -102,22 +103,23 @@ export function CommandPalette({ open, onClose, onQuickCreate }: CommandPaletteP
 
   return (
     <ModalShell title="Command menu" onClose={onClose} testId="command-palette">
-      <div className="field-stack">
-        <div style={{ position: "relative" }}>
-          <Search size={16} style={{ position: "absolute", left: 10, top: 9, color: "var(--text-muted)" }} />
-          <input
-            className="input"
+      <div className="grid gap-3">
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            className="pl-9"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search issues, projects, or commands"
             autoFocus
-            style={{ paddingLeft: 34 }}
             data-testid="command-palette-input"
           />
         </div>
-        <div className="command-list">
-          <button
-            className="command-item"
+        <div className="grid gap-1">
+          <Button
+            type="button"
+            variant="ghost"
+            className="justify-start gap-2"
             onClick={() => {
               onClose();
               onQuickCreate();
@@ -127,28 +129,36 @@ export function CommandPalette({ open, onClose, onQuickCreate }: CommandPaletteP
             <Plus size={16} />
             <span>New issue</span>
             <Kbd>C</Kbd>
-          </button>
+          </Button>
 
           {results.map((result) => (
-            <button
+            <Button
+              type="button"
               key={`${result.type || "result"}-${result.id || result.key || result.title || result.name}`}
-              className="command-item"
+              variant="ghost"
+              className="justify-start gap-2"
               onClick={() => openResult(result)}
             >
               <Bell size={16} />
-              <span className="truncate">
+              <span className="min-w-0 flex-1 truncate text-left">
                 {result.issue ? issueTitle(result.issue) : result.project ? projectTitle(result.project) : result.title || result.name || result.key || "Result"}
               </span>
-              <span className="issue-key">{result.type || "result"}</span>
-            </button>
+              <span className="text-xs text-muted-foreground">{result.type || "result"}</span>
+            </Button>
           ))}
 
           {filteredCommands.map((command) => (
-            <button key={command.path} className="command-item" onClick={() => go(command.path)}>
+            <Button
+              type="button"
+              key={command.path}
+              variant="ghost"
+              className="justify-start gap-2"
+              onClick={() => go(command.path)}
+            >
               <command.icon size={16} />
-              <span>{command.label}</span>
-              <span className="issue-key">{command.path}</span>
-            </button>
+              <span className="min-w-0 flex-1 truncate text-left">{command.label}</span>
+              <span className="text-xs text-muted-foreground">{command.path}</span>
+            </Button>
           ))}
         </div>
       </div>

@@ -1,0 +1,44 @@
+[     800ms] [LOG] %c __                                               _____          __          __           ______          v1.62870.0
+/\ \       __                                    /\  __`\       /\ \      __/\ \__       /\__  _\                       
+\ \ \     /\_\    ___      __     __     _ __    \ \ \/\ \  _ __\ \ \____/\_\ \ ,_\      \/_/\ \/     ___     ___       
+ \ \ \  __\/\ \ /' _ `\  /'__`\ /'__`\  /\`'__\   \ \ \ \ \/\`'__\ \ '__`\/\ \ \ \/         \ \ \   /' _ `\  /'___\     
+  \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \L\.\_\ \ \/     \ \ \_\ \ \ \/ \ \ \L\ \ \ \ \ \_  __     \_\ \__/\ \/\ \/\ \__/  __ 
+   \ \____/ \ \_\ \_\ \_\ \____\ \__/.\_\\ \_\      \ \_____\ \_\  \ \_,__/\ \_\ \__\/\ \    /\_____\ \_\ \_\ \____\/\_\
+    \/___/   \/_/\/_/\/_/\/____/\/__/\/_/ \/_/       \/_____/\/_/   \/___/  \/_/\/__/\ \/    \/_____/\/_/\/_/\/____/\/_/
+                                                                                      \/
+
+The product development system for teams and agents
+
+WE'RE HIRING: https://linear.app/careers
+CHANGELOG:    https://linear.app/changelog
+ 
+  font-family: monospace;
+  color: #282A30;
+   @ https://static.linear.app/client/assets/vendor-sentry.DUIRvFmS.js:5
+[    1611ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:44450/linear/check-url:0
+[    1640ms] [ERROR] Failed to launch 'linear://eltsuh/team/ELT/active' because the scheme does not have a registered handler. @ https://linear.app/eltsuh/team/ELT/active:0
+[    7265ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://accounts.google.com/v3/signin/identifier?opparams=%253F&dsh=S-569743573%3A1777489167854292&access_type=offline&client_id=463717515632-5f96ed9uaue5p206umg9toffdbfmsfbm.apps.googleusercontent.com&o2v=2&prompt=consent&redirect_uri=https%3A%2F%2Flinear.app%2Fauth%2Fgoogle%2Fcallback&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&service=lso&state=%7B%22key%22%3A%22wxpmzGEUDsoOMQN6SnaBICxDsoRiqDsw%22%2C%22isMobileAppLogin%22%3Afalse%7D&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hANXBTVClVjxsl5n2t_saxw3KN8pEgRiYPGcqDkg6HxSOYg_ZIhx32blZUJXxg4eLiK0SOhYKqla2NSdQclf52H9HiNGTrsO-Un1d-gR_fE_O9JYAH0elbX6Vw7cBCT9ykXtpgQxtgKzHRCy3rx_BDyPrDWR6MSsHkhcvISdCPw1H_M5_ZLZN8pFaGQce5_I9Fq7ujr97DGaf-Cn2lkybfR9RwP5fhYi0NCev5xwb7vCeuUkzNxTUa9E37uugCyCTlhQtZoyE5XgffcV49DqrYaMQzonzj9ddhdR8mOByXTDBNDUZn4XvFfpmunksJNN6paTqzX5UeyPvDaFKqjBNNUvty2O1jFDqJv6V6aB3ivskUng5wJEyWtqqpvoOuPUdIbX5OtF0NOAV-SYj2WEVk0qK5c0DUIv_4mZPkPIfnGHS_RFcnO2idJ1wqP25FyAOyWq9Lw5ioqVdpPrvYttLK39voXV8g%26flowName%3DGeneralOAuthFlow%26as%3DS-569743573%253A1777489167854292%26client_id%3D463717515632-5f96ed9uaue5p206umg9toffdbfmsfbm.apps.googleusercontent.com%26requestPath%3D%252Fsignin%252Foauth%252Fconsent%23&app_domain=https%3A%2F%2Flinear.app&rart=ANgoxccGSoXqX5riPAIDqtYxWqv3rEuZmnQC5WEjueYxwLd1gnhQ7Vk5XIJJ9PjlbjSu5b8SLzhbpg6o8g0h-UZTaSMy2qCxomV7rL9utL81ImIRPLUMzBs:0
+[    7269ms] [LOG] %c%s color: red; background: yellow; font-size: 24px; WARNING! @ https://www.gstatic.com/_/mss/boq-identity/_/js/k=boq-identity.AccountsSignInUi.en_US.uyRcdCkifhA.es5.O/am=Kd8AAAChCIQMAMb__w0AEABB1MDrWQCaQGQAAAAAAAAAAMAKAAA0Ag/d=1/excm=_b,_tp,identifierview/ed=1/dg=0/wt=2/ujg=1/rs=AOaEmlFQdFWbuOP1hkWGuu6vQ0kJfovosQ/dti=1/m=_b,_tp:541
+[    7269ms] [LOG] %c%s font-size: 18px; Using this console may allow attackers to impersonate you and steal your information using an attack called Self-XSS.
+Do not enter or paste code that you do not understand. @ https://www.gstatic.com/_/mss/boq-identity/_/js/k=boq-identity.AccountsSignInUi.en_US.uyRcdCkifhA.es5.O/am=Kd8AAAChCIQMAMb__w0AEABB1MDrWQCaQGQAAAAAAAAAAMAKAAA0Ag/d=1/excm=_b,_tp,identifierview/ed=1/dg=0/wt=2/ujg=1/rs=AOaEmlFQdFWbuOP1hkWGuu6vQ0kJfovosQ/dti=1/m=_b,_tp:541
+[    7265ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://accounts.google.com/v3/signin/identifier?opparams=%253F&dsh=S-569743573%3A1777489167854292&access_type=offline&client_id=463717515632-5f96ed9uaue5p206umg9toffdbfmsfbm.apps.googleusercontent.com&o2v=2&prompt=consent&redirect_uri=https%3A%2F%2Flinear.app%2Fauth%2Fgoogle%2Fcallback&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&service=lso&state=%7B%22key%22%3A%22wxpmzGEUDsoOMQN6SnaBICxDsoRiqDsw%22%2C%22isMobileAppLogin%22%3Afalse%7D&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hANXBTVClVjxsl5n2t_saxw3KN8pEgRiYPGcqDkg6HxSOYg_ZIhx32blZUJXxg4eLiK0SOhYKqla2NSdQclf52H9HiNGTrsO-Un1d-gR_fE_O9JYAH0elbX6Vw7cBCT9ykXtpgQxtgKzHRCy3rx_BDyPrDWR6MSsHkhcvISdCPw1H_M5_ZLZN8pFaGQce5_I9Fq7ujr97DGaf-Cn2lkybfR9RwP5fhYi0NCev5xwb7vCeuUkzNxTUa9E37uugCyCTlhQtZoyE5XgffcV49DqrYaMQzonzj9ddhdR8mOByXTDBNDUZn4XvFfpmunksJNN6paTqzX5UeyPvDaFKqjBNNUvty2O1jFDqJv6V6aB3ivskUng5wJEyWtqqpvoOuPUdIbX5OtF0NOAV-SYj2WEVk0qK5c0DUIv_4mZPkPIfnGHS_RFcnO2idJ1wqP25FyAOyWq9Lw5ioqVdpPrvYttLK39voXV8g%26flowName%3DGeneralOAuthFlow%26as%3DS-569743573%253A1777489167854292%26client_id%3D463717515632-5f96ed9uaue5p206umg9toffdbfmsfbm.apps.googleusercontent.com%26requestPath%3D%252Fsignin%252Foauth%252Fconsent%23&app_domain=https%3A%2F%2Flinear.app&rart=ANgoxccGSoXqX5riPAIDqtYxWqv3rEuZmnQC5WEjueYxwLd1gnhQ7Vk5XIJJ9PjlbjSu5b8SLzhbpg6o8g0h-UZTaSMy2qCxomV7rL9utL81ImIRPLUMzBs:0
+[   25436ms] [LOG] %c%s color: red; background: yellow; font-size: 24px; WARNING! @ https://www.gstatic.com/_/mss/boq-identity/_/js/k=boq-identity.OAuthUi.en_GB.WTcdyTvvFtw.es5.O/am=nh8AAAAQAAYA-P9_AwRRg-sZgAIBAAAAAAAAAGAAAIg/d=1/excm=_b,_tp,attributesview/ed=1/dg=0/wt=2/ujg=1/rs=AOaEmlGnxBvt7wRVxvgolNEY_gMl477KtA/dti=1/m=_b,_tp:504
+[   25436ms] [LOG] %c%s font-size: 18px; Using this console may allow attackers to impersonate you and steal your information using an attack called Self-XSS.
+Do not enter or paste code that you don't understand. @ https://www.gstatic.com/_/mss/boq-identity/_/js/k=boq-identity.OAuthUi.en_GB.WTcdyTvvFtw.es5.O/am=nh8AAAAQAAYA-P9_AwRRg-sZgAIBAAAAAAAAAGAAAIg/d=1/excm=_b,_tp,attributesview/ed=1/dg=0/wt=2/ujg=1/rs=AOaEmlGnxBvt7wRVxvgolNEY_gMl477KtA/dti=1/m=_b,_tp:504
+[   27660ms] [LOG] %c __                                               _____          __          __           ______          v1.62870.0
+/\ \       __                                    /\  __`\       /\ \      __/\ \__       /\__  _\                       
+\ \ \     /\_\    ___      __     __     _ __    \ \ \/\ \  _ __\ \ \____/\_\ \ ,_\      \/_/\ \/     ___     ___       
+ \ \ \  __\/\ \ /' _ `\  /'__`\ /'__`\  /\`'__\   \ \ \ \ \/\`'__\ \ '__`\/\ \ \ \/         \ \ \   /' _ `\  /'___\     
+  \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \L\.\_\ \ \/     \ \ \_\ \ \ \/ \ \ \L\ \ \ \ \ \_  __     \_\ \__/\ \/\ \/\ \__/  __ 
+   \ \____/ \ \_\ \_\ \_\ \____\ \__/.\_\\ \_\      \ \_____\ \_\  \ \_,__/\ \_\ \__\/\ \    /\_____\ \_\ \_\ \____\/\_\
+    \/___/   \/_/\/_/\/_/\/____/\/__/\/_/ \/_/       \/_____/\/_/   \/___/  \/_/\/__/\ \/    \/_____/\/_/\/_/\/____/\/_/
+                                                                                      \/
+
+The product development system for teams and agents
+
+WE'RE HIRING: https://linear.app/careers
+CHANGELOG:    https://linear.app/changelog
+ 
+  font-family: monospace;
+  color: #282A30;
+   @ https://static.linear.app/client/assets/vendor-sentry.DUIRvFmS.js:5

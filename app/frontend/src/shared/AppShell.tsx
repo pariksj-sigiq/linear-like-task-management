@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { LucideIcon, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export interface NavItem {
   label: string;
@@ -20,12 +21,7 @@ export function AppShell({ appName, navItems, children, user, onLogout }: AppShe
   return (
     <div className="flex h-screen overflow-hidden">
       <aside
-        className="flex flex-col shrink-0 overflow-y-auto"
-        style={{
-          width: "var(--sidebar-width)",
-          backgroundColor: "var(--sidebar-bg)",
-          color: "var(--sidebar-text)",
-        }}
+        className="flex w-56 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar text-sidebar-foreground"
         data-testid="sidebar"
       >
         <div className="px-5 py-4 text-lg font-semibold tracking-tight">
@@ -40,8 +36,8 @@ export function AppShell({ appName, navItems, children, user, onLogout }: AppShe
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
                   isActive
-                    ? "bg-white/10 text-white font-medium"
-                    : "text-slate-300 hover:bg-white/5 hover:text-white"
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 }`
               }
             >
@@ -55,27 +51,28 @@ export function AppShell({ appName, navItems, children, user, onLogout }: AppShe
           <div className="px-3 py-4 border-t border-white/10">
             <div className="flex items-center gap-3 px-3">
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium"
-                style={{ backgroundColor: "var(--sidebar-active)", color: "#fff" }}
+                className="flex size-8 items-center justify-center rounded-full bg-sidebar-accent text-xs font-medium text-sidebar-accent-foreground"
                 data-testid="user-avatar"
               >
                 {user.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate" data-testid="user-name">
+                <p className="truncate text-sm font-medium text-sidebar-accent-foreground" data-testid="user-name">
                   {user.full_name}
                 </p>
-                <p className="text-xs text-slate-400 truncate">{user.role}</p>
+                <p className="truncate text-xs text-muted-foreground">{user.role}</p>
               </div>
               {onLogout && (
-                <button
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
                   onClick={onLogout}
-                  className="p-1.5 rounded-md hover:bg-white/10 transition-colors"
                   title="Sign out"
                   data-testid="logout-button"
                 >
-                  <LogOut size={16} className="text-slate-400" />
-                </button>
+                  <LogOut size={16} />
+                </Button>
               )}
             </div>
           </div>
@@ -84,17 +81,12 @@ export function AppShell({ appName, navItems, children, user, onLogout }: AppShe
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header
-          className="shrink-0 flex items-center px-6 border-b"
-          style={{
-            height: "var(--topbar-height)",
-            backgroundColor: "var(--topbar-bg)",
-            borderColor: "var(--topbar-border)",
-          }}
+          className="flex h-12 shrink-0 items-center border-b border-border bg-background px-6"
           data-testid="topbar"
         >
           <div className="flex-1" />
           {user && (
-            <span className="text-sm" style={{ color: "var(--text-secondary)" }} data-testid="topbar-user">
+            <span className="text-sm text-muted-foreground" data-testid="topbar-user">
               {user.full_name}
             </span>
           )}

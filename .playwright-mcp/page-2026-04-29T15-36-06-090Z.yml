@@ -1,0 +1,99 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - button "Workspace menu" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: EL
+        - generic [ref=e8]: eltsuh
+        - img [ref=e9]
+      - button "Search workspace" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+      - button "Create issue" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+    - generic [ref=e19]:
+      - navigation "Primary" [ref=e20]:
+        - link "Inbox 99+" [ref=e21] [cursor=pointer]:
+          - /url: /inbox
+          - img [ref=e22]
+          - generic [ref=e25]: Inbox
+          - generic [ref=e26]: 99+
+        - link "My issues" [ref=e27] [cursor=pointer]:
+          - /url: /my-issues/activity
+          - img [ref=e28]
+          - generic [ref=e32]: My issues
+      - region "Workspace" [ref=e33]:
+        - generic [ref=e34]: Workspace
+        - link "Projects" [ref=e35] [cursor=pointer]:
+          - /url: /projects/all
+          - img [ref=e36]
+          - generic [ref=e38]: Projects
+        - link "Views" [ref=e39] [cursor=pointer]:
+          - /url: /views
+          - img [ref=e40]
+          - generic [ref=e45]: Views
+        - link "More" [ref=e46] [cursor=pointer]:
+          - /url: /roadmap
+          - img [ref=e47]
+          - generic [ref=e51]: More
+      - region "Teams" [ref=e52]:
+        - generic [ref=e53]: Your teams
+        - generic [ref=e54]:
+          - link "E Eltsuh" [ref=e55] [cursor=pointer]:
+            - /url: /team/elt/active
+            - generic [ref=e56]: E
+            - generic [ref=e57]: Eltsuh
+            - img [ref=e58]
+          - link "Issues" [ref=e60] [cursor=pointer]:
+            - /url: /team/elt/active
+            - img [ref=e61]
+            - generic [ref=e70]: Issues
+          - link "Projects" [ref=e71] [cursor=pointer]:
+            - /url: /team/elt/projects
+            - img [ref=e72]
+            - generic [ref=e74]: Projects
+          - link "Views" [ref=e75] [cursor=pointer]:
+            - /url: /team/elt/views
+            - img [ref=e76]
+            - generic [ref=e81]: Views
+      - region "Try" [ref=e82]:
+        - generic [ref=e83]: Try
+        - link "Import issues" [ref=e84] [cursor=pointer]:
+          - /url: /import
+          - img [ref=e85]
+          - generic [ref=e95]: Import issues
+    - generic [ref=e96]:
+      - generic [ref=e97]: What's new
+      - strong [ref=e98]: Linear Agent MCP support
+  - main [ref=e99]:
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - generic [ref=e105]: E
+            - heading "Issues" [level=1] [ref=e106]
+            - img [ref=e107]
+          - tablist [ref=e109]:
+            - tab "All issues" [ref=e110] [cursor=pointer]
+            - tab "Active" [selected] [ref=e111] [cursor=pointer]
+            - tab "Backlog" [ref=e112] [cursor=pointer]
+        - generic [ref=e113]:
+          - button "Filter" [ref=e114] [cursor=pointer]:
+            - img [ref=e115]
+          - button "Display options" [ref=e117] [cursor=pointer]:
+            - img [ref=e118]
+          - button "Toggle sidebar" [ref=e119] [cursor=pointer]:
+            - img [ref=e120]
+      - status [ref=e122]:
+        - generic [ref=e123]:
+          - img [ref=e124]
+          - generic [ref=e126]: Loading issues
+    - generic [ref=e127]:
+      - generic [ref=e128]:
+        - button "Help" [ref=e129] [cursor=pointer]:
+          - img [ref=e130]
+        - generic [ref=e133]: Free plan
+      - generic [ref=e134]:
+        - button "Ask Linear" [ref=e135] [cursor=pointer]:
+          - img [ref=e136]
+          - text: Ask Linear
+        - button "History" [ref=e138] [cursor=pointer]:
+          - img [ref=e139]

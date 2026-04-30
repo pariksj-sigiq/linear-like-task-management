@@ -1,0 +1,8 @@
+[      95ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[   77994ms] [ERROR] [vite] ReferenceError: FolderKanban is not defined
+    at http://localhost:3002/src/components/LinearShell.tsx?t=1777477684262:42:53 @ http://localhost:3002/@vite/client:881
+[   77995ms] [ERROR] [vite] Failed to reload /src/components/LinearShell.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:3002/@vite/client:881
+[   84465ms] [ERROR] [vite] ReferenceError: FolderKanban is not defined
+    at http://localhost:3002/src/components/LinearShell.tsx?t=1777477690750:50:51 @ http://localhost:3002/@vite/client:881
+[   84465ms] [ERROR] [vite] Failed to reload /src/components/LinearShell.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:3002/@vite/client:881
+[  129463ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100

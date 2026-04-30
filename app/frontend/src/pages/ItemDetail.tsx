@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { RecordDetail, FieldRow } from "@shared/RecordDetail";
 import { callTool } from "../api";
+import { Badge } from "@/components/ui/badge";
 
 interface Item {
   id: string;
@@ -27,11 +28,11 @@ export function ItemDetail() {
   }, [id]);
 
   if (loading) {
-    return <div className="text-sm" style={{ color: "var(--text-secondary)" }}>Loading...</div>;
+    return <div className="text-sm text-muted-foreground">Loading...</div>;
   }
 
   if (!item) {
-    return <div className="text-sm" style={{ color: "var(--text-secondary)" }}>Item not found.</div>;
+    return <div className="text-sm text-muted-foreground">Item not found.</div>;
   }
 
   return (
@@ -40,11 +41,9 @@ export function ItemDetail() {
         <FieldRow label="Name" value={item.name} />
         <FieldRow label="Description" value={item.description} />
         <FieldRow label="Status" value={
-          <span className={`inline-block px-2 py-0.5 text-xs rounded-full font-medium ${
-            item.status === "active" ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"
-          }`}>
+          <Badge variant={item.status === "active" ? "default" : "secondary"}>
             {item.status}
-          </span>
+          </Badge>
         } />
         <FieldRow label="Owner" value={item.owner} />
       </dl>

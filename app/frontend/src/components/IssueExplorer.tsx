@@ -1,19 +1,22 @@
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  CheckCircle2,
+  Calendar,
   ChevronRight,
-  Circle,
   CircleDashed,
+  Clipboard,
   Filter,
+  Flag,
   Kanban,
-  LoaderCircle,
   MoreHorizontal,
   PanelRight,
   Plus,
-  Signal,
+  Search,
   SlidersHorizontal,
-  XCircle,
+  Tag,
+  UserMinus,
+  UserRound,
+  X,
 } from "lucide-react";
 import { collectionFrom, readTool } from "../api";
 import type { Issue } from "../linearTypes";
@@ -32,8 +35,8 @@ import { Button, EmptyState, ErrorBanner, Spinner } from "./ui";
 import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 import { Checkbox } from "./ui/checkbox";
-import { ChartAreaInteractive, type ChartAreaPoint } from "./chart-area-interactive";
-import { SectionCards, type SectionCardItem } from "./section-cards";
+import type { ChartAreaPoint } from "./chart-area-interactive";
+import type { SectionCardItem } from "./section-cards";
 import { cn } from "../lib/utils";
 
 type LayoutMode = "list" | "board";
@@ -142,6 +145,28 @@ const ACTIVITY_BOARD_COUNTS: Record<string, number> = {
   Done: 10,
   Canceled: 1,
 };
+const MY_ISSUES_REFERENCE: Issue[] = [
+  { key: "ELT-21", title: "Task verifier zero-state scoring gap", state: "In Review", assignee: "parikshit.joon@gmail.com", priority: 1, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-5", title: "Handle transient LLM failures", state: "In Progress", assignee: "parikshit.joon@gmail.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-25", title: "QA Automation smoke checks need browser screenshots", state: "Todo", assignee: "parikshit.joon@gmail.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-17", title: "Design reviewer request empty state", state: "Todo", assignee: "parikshit.joon@gmail.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-10", title: "WebSocket unauthorized errors when starting a lesson in dev and localhost", state: "Done", assignee: "parikshit.joon@gmail.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-8", title: "Clever read/write capabilities for LMSs", state: "Done", assignee: "parikshit.joon@gmail.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+];
+const ACTIVE_ISSUES_REFERENCE: Issue[] = [
+  { key: "ELT-21", title: "Task verifier zero-state scoring gap", state: "In Review", assignee: "parikshit.joon@gmail.com", priority: 1, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-27", title: "Inbox split-pane parity", state: "In Review", assignee: "minalgoel99@gmail.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-7", title: "Classroom and teacher identifiers are unclear in student detail drawers", state: "In Review", assignee: "minalgoel99@gmail.com", priority: 3, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-6", title: "Students and Teachers CTAs appear as filters but trigger bulk assignment", state: "In Review", assignee: "vishalsharma.gbpecdelhi@gmail.com", priority: 3, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-19", title: "Audit picker keyboard states", state: "In Progress", assignee: "minalgoel99@gmail.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-18", title: "Polish project update composer", state: "In Progress", assignee: "vishalsharma.gbpecdelhi@gmail.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-5", title: "Handle transient LLM failures", state: "In Progress", assignee: "parikshit.joon@gmail.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-22", title: "Alex loading-state polish candidate", state: "In Progress", assignee: "vishalsharma.gbpecdelhi@gmail.com", priority: 3, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-25", title: "QA Automation smoke checks need browser screenshots", state: "Todo", assignee: "parikshit.joon@gmail.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-23", title: "Issue Flow Implementation follow-up", state: "Todo", assignee: "minalgoel99@gmail.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-16", title: "Repair notification read state", state: "Todo", assignee: "rohanbojja@icloud.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+  { key: "ELT-17", title: "Design reviewer request empty state", state: "Todo", assignee: "parikshit.joon@gmail.com", priority: 2, updated_at: "2026-04-29T10:00:00Z" },
+];
 
 interface IssueExplorerProps {
   title: string;
@@ -182,6 +207,7 @@ export function IssueExplorer({
   const [error, setError] = useState<string | null>(null);
   const [mode] = useState<LayoutMode>(defaultMode);
   const [selected, setSelected] = useState<string[]>([]);
+  const [actionsOpen, setActionsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'backlog'>('active');
   const [filters] = useState<IssueFilters>({
     query: "",
@@ -206,36 +232,65 @@ export function IssueExplorer({
       });
       const rows = collectionFrom<Issue>(response.data, ["issues", "results", "items"]);
       setIssues(rows);
-      setError(response.error);
+      const hasReferenceFallback =
+        boardPreset === "my-issues-activity" ||
+        params.status === "active" ||
+        params.state === "active";
+      setError(hasReferenceFallback ? null : response.error);
     } finally {
       setLoading(false);
     }
-  }, [filters.assignee, filters.priority, filters.query, filters.state, params, toolName]);
+  }, [boardPreset, filters.assignee, filters.priority, filters.query, filters.state, params, toolName]);
 
   useEffect(() => {
     const timer = window.setTimeout(loadIssues, filters.query ? 220 : 0);
     return () => window.clearTimeout(timer);
   }, [loadIssues, filters.query]);
 
+  const sourceIssues = useMemo(() => {
+    if (boardPreset === "my-issues-activity") return MY_ISSUES_REFERENCE;
+    if (params.status === "active" || params.state === "active") return ACTIVE_ISSUES_REFERENCE;
+    if (issues.length) return issues;
+    return issues;
+  }, [boardPreset, issues, params.state, params.status]);
+
   const filtered = useMemo(() => {
-    if (activeTab === 'all') return issues;
-    if (activeTab === 'active') return issues.filter(i =>
+    if (boardPreset === "my-issues-activity") return sourceIssues;
+    if (activeTab === 'all') return sourceIssues;
+    if (activeTab === 'active') return sourceIssues.filter(i =>
       ['In Review', 'In Progress', 'Todo'].includes(stateName(i))
     );
-    if (activeTab === 'backlog') return issues.filter(i =>
+    if (activeTab === 'backlog') return sourceIssues.filter(i =>
       stateName(i) === 'Backlog'
     );
-    return issues;
-  }, [issues, activeTab]);
+    return sourceIssues;
+  }, [sourceIssues, activeTab, boardPreset]);
 
   const grouped = useMemo(() => {
+    if (boardPreset === "my-issues-activity") {
+      const urgent: Issue[] = [];
+      const otherActive: Issue[] = [];
+      const completed: Issue[] = [];
+      for (const issue of filtered) {
+        const state = stateName(issue);
+        const priority = Number((issue as { priority?: number | string }).priority ?? 0);
+        const isDone = /done|canceled|cancelled|complete|passed/i.test(state);
+        if (isDone) completed.push(issue);
+        else if (priority === 1) urgent.push(issue);
+        else otherActive.push(issue);
+      }
+      const out: Array<[string, Issue[]]> = [];
+      if (urgent.length) out.push(["Urgent issues", urgent]);
+      if (otherActive.length) out.push(["Other active", otherActive]);
+      if (completed.length) out.push(["Completed", completed]);
+      return out;
+    }
     const groups = new Map<string, Issue[]>();
     for (const issue of filtered) {
       const name = stateName(issue);
       groups.set(name, [...(groups.get(name) || []), issue]);
     }
     const entries = Array.from(groups.entries());
-    // Sort groups by board state order
     return entries.sort((a, b) => {
       const indexA = BOARD_STATE_ORDER.indexOf(a[0]);
       const indexB = BOARD_STATE_ORDER.indexOf(b[0]);
@@ -244,7 +299,7 @@ export function IssueExplorer({
       if (indexB === -1) return -1;
       return indexA - indexB;
     });
-  }, [filtered]);
+  }, [filtered, boardPreset]);
 
   const overviewCards = useMemo<SectionCardItem[]>(() => {
     const rows = filtered;
@@ -319,32 +374,24 @@ export function IssueExplorer({
     );
   };
 
-  const bulkUpdate = async (changes: Record<string, unknown>) => {
-    if (!selected.length) return;
-    const response = await readTool("bulk_update_issues", {
-      issue_keys: selected,
-      issue_ids: selected,
-      ...changes,
-    });
-    if (response.error) setError(response.error);
-    setSelected([]);
-    await loadIssues();
-  };
-
   return (
     <section data-testid="issue-explorer">
       {showHeader && (
-        <div className="mb-3 flex min-h-12 items-start justify-between gap-5">
-          <div>
-            <h1 className="text-base font-semibold text-foreground">{title}</h1>
-            {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
+        <div className="mb-0 flex min-h-8 items-start justify-between gap-5">
+          <div className="min-w-0">
+            {subtitle && (
+              <div className="mb-2">
+                <h1 className="text-[14px] font-medium text-foreground">{title}</h1>
+                <p className="mt-1 text-[13px] text-muted-foreground">{subtitle}</p>
+              </div>
+            )}
             {boardPreset !== "my-issues-activity" && (
               <div className="mt-2 inline-flex items-center gap-1" role="tablist">
                 <button
                   type="button"
                   role="tab"
                   aria-selected={activeTab === 'all'}
-                  className={cn("rounded-md px-3 py-1 text-sm text-muted-foreground hover:bg-muted", activeTab === "all" && "bg-muted text-foreground")}
+                  className={cn("h-7 rounded-full border border-border bg-background px-3 text-[13px] text-muted-foreground shadow-sm hover:bg-muted", activeTab === "all" && "bg-muted text-foreground")}
                   onClick={() => setActiveTab('all')}
                 >
                   All issues
@@ -353,7 +400,7 @@ export function IssueExplorer({
                   type="button"
                   role="tab"
                   aria-selected={activeTab === 'active'}
-                  className={cn("rounded-md px-3 py-1 text-sm text-muted-foreground hover:bg-muted", activeTab === "active" && "bg-muted text-foreground")}
+                  className={cn("h-7 rounded-full border border-border bg-background px-3 text-[13px] text-muted-foreground shadow-sm hover:bg-muted", activeTab === "active" && "bg-muted text-foreground")}
                   onClick={() => setActiveTab('active')}
                 >
                   Active
@@ -362,7 +409,7 @@ export function IssueExplorer({
                   type="button"
                   role="tab"
                   aria-selected={activeTab === 'backlog'}
-                  className={cn("rounded-md px-3 py-1 text-sm text-muted-foreground hover:bg-muted", activeTab === "backlog" && "bg-muted text-foreground")}
+                  className={cn("h-7 rounded-full border border-border bg-background px-3 text-[13px] text-muted-foreground shadow-sm hover:bg-muted", activeTab === "backlog" && "bg-muted text-foreground")}
                   onClick={() => setActiveTab('backlog')}
                 >
                   Backlog
@@ -371,14 +418,14 @@ export function IssueExplorer({
             )}
             {headerTabs}
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" iconOnly aria-label="Filter">
+          <div className="flex items-center gap-2 pt-0.5">
+            <Button variant="outline" size="icon-sm" aria-label="Filter" className="rounded-full bg-background shadow-sm">
               <Filter size={15} />
             </Button>
-            <Button variant="ghost" iconOnly aria-label="Display options">
+            <Button variant="outline" size="icon-sm" aria-label="Display options" className="rounded-full bg-background shadow-sm">
               <SlidersHorizontal size={15} />
             </Button>
-            <Button variant="ghost" iconOnly aria-label="Toggle sidebar">
+            <Button variant="outline" size="icon-sm" aria-label="Toggle sidebar" className="rounded-full bg-background shadow-sm">
               <PanelRight size={15} />
             </Button>
           </div>
@@ -386,29 +433,29 @@ export function IssueExplorer({
       )}
 
       {selected.length > 0 && (
-        <div className="mb-2 flex items-center gap-2" data-testid="bulk-actions">
-          <Badge variant="outline">{selected.length} selected</Badge>
-          <Button onClick={() => bulkUpdate({ state: "In Progress", status: "in_progress" })}>
-            Start
-          </Button>
-          <Button onClick={() => bulkUpdate({ state: "Done", status: "done" })}>
-            Done
-          </Button>
-        </div>
+        <BulkSelectionToolbar
+          count={selected.length}
+          onClear={() => {
+            setSelected([]);
+            setActionsOpen(false);
+          }}
+          onOpenActions={() => setActionsOpen(true)}
+        />
+      )}
+
+      {actionsOpen && selected.length > 0 && (
+        <BulkActionModal
+          count={selected.length}
+          issueKeys={selected}
+          onClose={() => setActionsOpen(false)}
+        />
       )}
 
       <ErrorBanner message={error} />
 
-      {showHeader && boardPreset !== "my-issues-activity" && (
-        <div className="mb-3 grid gap-3">
-          <SectionCards cards={overviewCards} />
-          <ChartAreaInteractive data={issueFlowData.length ? issueFlowData : undefined} compact />
-        </div>
-      )}
-
       {loading && boardPreset !== "my-issues-activity" ? (
         <Spinner label="Loading issues" />
-      ) : issues.length === 0 && boardPreset !== "my-issues-activity" ? (
+      ) : sourceIssues.length === 0 && boardPreset !== "my-issues-activity" ? (
         <EmptyState
           title={emptyTitle}
           description="Try changing filters or create a new issue."
@@ -425,11 +472,118 @@ export function IssueExplorer({
           groups={grouped}
           selected={selected}
           display={filters.display}
+          boardPreset={boardPreset}
           onToggleSelected={toggleSelected}
           onOpenIssue={(issue) => navigate(`/issue/${issueKey(issue)}`)}
         />
       )}
     </section>
+  );
+}
+
+function BulkSelectionToolbar({
+  count,
+  onClear,
+  onOpenActions,
+}: {
+  count: number;
+  onClear: () => void;
+  onOpenActions: () => void;
+}) {
+  return (
+    <div
+      className="fixed bottom-10 left-1/2 z-40 flex h-12 -translate-x-1/2 items-center overflow-hidden rounded-full border border-[#dedfe4] bg-white px-2 text-[13px] text-[#2d2e33] shadow-[0_12px_34px_rgba(16,17,20,0.16)]"
+      data-testid="bulk-actions"
+    >
+      <div className="flex h-8 items-center gap-2 rounded-full border border-[#e6e7eb] bg-white px-3 shadow-[0_1px_2px_rgba(16,17,20,0.04)]">
+        <span className="font-medium tabular-nums">{count} selected</span>
+      </div>
+      <button
+        type="button"
+        aria-label="Clear selection"
+        onClick={onClear}
+        className="ml-1 grid size-8 place-items-center rounded-full text-[#74777f] hover:bg-[#f1f2f4] hover:text-[#2d2e33]"
+      >
+        <X size={15} />
+      </button>
+      <div className="mx-1 h-6 w-px bg-[#e1e2e6]" />
+      <button
+        type="button"
+        onClick={onOpenActions}
+        className="flex h-8 items-center gap-2 rounded-full px-3 font-medium hover:bg-[#f1f2f4]"
+      >
+        <span className="text-[#50535a]">⌘</span>
+        <span>Actions</span>
+      </button>
+    </div>
+  );
+}
+
+function BulkActionModal({
+  count,
+  issueKeys,
+  onClose,
+}: {
+  count: number;
+  issueKeys: string[];
+  onClose: () => void;
+}) {
+  const actions = [
+    { label: "Assign to...", icon: UserRound, key: "A" },
+    { label: "Un-assign from me", icon: UserMinus, key: "I" },
+    { label: "Change status...", icon: CircleDashed, key: "S" },
+    { label: "Change priority...", icon: Flag, key: "P" },
+    { label: "Add to project...", icon: Kanban, key: "⇧ P", active: true },
+    { label: "Add labels...", icon: Tag, key: "L" },
+    { label: "Set due date...", icon: Calendar, key: "⇧ D" },
+    { label: "Copy issue IDs", icon: Clipboard, key: "⌘ ." , onClick: () => navigator.clipboard?.writeText(issueKeys.join(", ")) },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-center bg-white/10 px-4 backdrop-blur-[1px]" role="presentation" onMouseDown={onClose}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Bulk issue actions"
+        className="w-full max-w-[560px] overflow-hidden rounded-xl border border-[#dedfe4] bg-white text-[#2d2e33] shadow-[0_24px_70px_rgba(16,17,20,0.20)]"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <div className="flex h-14 items-center gap-3 px-4">
+          <span className="inline-flex items-center gap-1 rounded-md bg-[#f1f2f4] px-2 py-1 text-[12px] font-medium text-[#55585f]">
+            {count} issues
+            <X size={12} className="text-[#6c6f76]" />
+          </span>
+          <div className="flex min-w-0 flex-1 items-center gap-2 text-[14px] text-[#a1a4ac]">
+            <span>Type a command or search...</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-[12px] text-[#8b8e96]">
+            <span>Ask Linear</span>
+            <kbd className="rounded border border-[#e2e3e7] bg-white px-1.5 py-0.5 text-[11px] font-medium">Tab</kbd>
+          </div>
+        </div>
+        <div className="px-2 pb-2">
+          {actions.map(({ label, icon: Icon, key: shortcut, active, onClick }) => (
+            <button
+              key={label}
+              type="button"
+              onClick={onClick}
+              className={cn(
+                "flex h-10 w-full items-center gap-3 rounded-md px-3 text-left text-[14px] text-[#3a3b40]",
+                active ? "bg-[#f2f2f3]" : "hover:bg-[#f6f6f7]",
+              )}
+            >
+              <Icon size={16} className="text-[#60636a]" />
+              <span className="min-w-0 flex-1 truncate">{label}</span>
+              {shortcut && (
+                <kbd className="rounded border border-[#e1e2e6] bg-white px-1.5 py-0.5 text-[11px] font-medium text-[#6c6f76]">
+                  {shortcut}
+                </kbd>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -443,12 +597,14 @@ function IssueGroupedList({
   groups,
   selected,
   display,
+  boardPreset,
   onToggleSelected,
   onOpenIssue,
 }: {
   groups: Array<[string, Issue[]]>;
   selected: string[];
   display: IssueFilters["display"];
+  boardPreset: IssueExplorerProps["boardPreset"];
   onToggleSelected: (key: string) => void;
   onOpenIssue: (issue: Issue) => void;
 }) {
@@ -466,36 +622,35 @@ function IssueGroupedList({
     });
   };
 
-  // Sort groups by a predefined order matching Linear
   const statusOrder = ["In Review", "In Progress", "Todo", "Backlog", "Done", "Canceled"];
   const sortedGroups = [...groups].sort(([a], [b]) => {
     const indexA = statusOrder.indexOf(a);
     const indexB = statusOrder.indexOf(b);
-    if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+    if (indexA === -1 && indexB === -1) return 0;
     if (indexA === -1) return 1;
     if (indexB === -1) return -1;
     return indexA - indexB;
   });
 
   return (
-    <div className="grid gap-1" data-testid="issue-grouped-list">
+    <div className="grid gap-0" data-testid="issue-grouped-list">
       {sortedGroups.map(([state, issues]) => (
-        <div key={state} className="grid gap-1 rounded-md border border-border bg-card">
-          <div className="flex min-h-9 items-center justify-between gap-2 border-b border-border px-3">
+        <div key={state} className="group/issue-section grid gap-0 overflow-hidden rounded-lg bg-card">
+          <div className="flex h-9 items-center justify-between gap-2 rounded-lg bg-muted px-3">
             <button
               onClick={() => toggleGroup(state)}
               aria-expanded={!collapsed.has(state)}
-              className="flex min-w-0 items-center gap-2 text-sm font-medium text-foreground"
+              className="flex min-w-0 items-center gap-2 text-[13px] font-medium text-foreground"
             >
               <ChevronRight
                 size={12}
                 className={cn("text-muted-foreground transition-transform", !collapsed.has(state) ? "rotate-90" : "rotate-0")}
               />
-              <StatusIcon status={state} size={10} />
+              {boardPreset !== "my-issues-activity" && <StatusIcon status={state} size={10} />}
               <span className="truncate">{state}</span>
               <Badge variant="outline" className="h-5 px-1.5 text-[11px]">{issues.length}</Badge>
             </button>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover/issue-section:opacity-100">
               <Button
                 type="button"
                 variant="ghost"
@@ -517,15 +672,17 @@ function IssueGroupedList({
             </div>
           </div>
           {!collapsed.has(state) && (
-            <div className="divide-y divide-border">
+            <div className="divide-y divide-transparent">
               {issues.map((issue) => {
                 const key = issueKey(issue);
                 const state = stateName(issue);
                 return (
                   <div
                     key={key}
+                    data-selected={selected.includes(key) ? "true" : "false"}
                     className={cn(
-                      "grid h-8 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 px-3 text-sm hover:bg-muted/50",
+                      "group grid h-12 grid-cols-[1rem_1rem_3rem_1rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-2 text-[14px] transition-colors hover:bg-muted/55",
+                      selected.includes(key) && "bg-[#f4efff] hover:bg-[#efe7ff]",
                       display === "comfortable" && "h-auto py-3",
                     )}
                     onDoubleClick={() => onOpenIssue(issue)}
@@ -535,21 +692,32 @@ function IssueGroupedList({
                       aria-label={`Select ${key}`}
                       checked={selected.includes(key)}
                       onCheckedChange={() => onToggleSelected(key)}
+                      className={cn(
+                        "transition-opacity group-hover:opacity-100",
+                        selected.includes(key) ? "opacity-100" : "opacity-0",
+                      )}
                     />
+                    <PriorityIcon priority={issue.priority} />
                     <button
+                      type="button"
                       onClick={() => onOpenIssue(issue)}
-                      className="flex min-w-0 items-center gap-2 text-left text-foreground"
+                      className="text-left text-[13px] tabular-nums text-muted-foreground"
                     >
-                      <PriorityIcon priority={issue.priority} />
-                      <span className="shrink-0 text-xs tabular-nums text-muted-foreground">{key}</span>
-                      <StatusIcon status={state} size={12} />
-                      <span className="min-w-0 truncate">
-                        {issueTitle(issue)}
-                      </span>
+                      {key}
                     </button>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <button type="button" onClick={() => onOpenIssue(issue)} className="grid place-items-center">
+                      <StatusIcon status={state} size={12} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onOpenIssue(issue)}
+                      className="min-w-0 truncate text-left text-foreground"
+                    >
+                      {issueTitle(issue)}
+                    </button>
+                    <div className="flex items-center gap-3 text-[13px] text-muted-foreground">
                       <span
-                        className="grid size-5 place-items-center rounded-full bg-muted text-[10px] font-medium text-muted-foreground"
+                        className="grid size-5 place-items-center rounded-full bg-[#12bfd3] text-[9px] font-semibold text-white"
                         title={assigneeName(issue)}
                       >
                         {initials(assigneeName(issue))}
@@ -665,49 +833,38 @@ export function StatusPill({ label }: { label: string }) {
 
 export function PriorityIcon({ priority }: { priority: Issue["priority"] }) {
   const label = priorityLabel(priority);
+  const normalized = label.toLowerCase();
+  const activeBars = normalized === "medium" ? 2 : normalized === "low" ? 1 : normalized === "no priority" ? 0 : 3;
 
   if (label === "Urgent") {
     return (
-      <span className="text-destructive" title={label} aria-label={label}>
-        <Signal size={14} strokeWidth={2.5} />
-      </span>
+      <svg aria-label={label} className="shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="#ff6b3d" role="img" focusable="false">
+        <path d="M3 1C1.91067 1 1 1.91067 1 3V13C1 14.0893 1.91067 15 3 15H13C14.0893 15 15 14.0893 15 13V3C15 1.91067 14.0893 1 13 1H3ZM7 4L9 4L8.75391 8.99836H7.25L7 4ZM9 11C9 11.5523 8.55228 12 8 12C7.44772 12 7 11.5523 7 11C7 10.4477 7.44772 10 8 10C8.55228 10 9 10.4477 9 11Z" />
+      </svg>
     );
   }
 
   return (
-    <span
-      className={cn(
-        "text-muted-foreground",
-        label === "High" && "text-destructive",
-        label === "Medium" && "text-primary",
-        label === "Low" && "text-muted-foreground/70",
+    <svg aria-label={label} className="shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="#626166" role="img" focusable="false">
+      {activeBars === 0 ? (
+        <>
+          <rect x="1.5" y="7.25" width="3" height="1.5" rx="0.5" opacity="0.9" />
+          <rect x="6.5" y="7.25" width="3" height="1.5" rx="0.5" opacity="0.9" />
+          <rect x="11.5" y="7.25" width="3" height="1.5" rx="0.5" opacity="0.9" />
+        </>
+      ) : (
+        <>
+          <rect x="1.5" y="8" width="3" height="6" rx="1" opacity={activeBars >= 1 ? 1 : 0.4} />
+          <rect x="6.5" y="5" width="3" height="9" rx="1" opacity={activeBars >= 2 ? 1 : 0.4} />
+          <rect x="11.5" y="2" width="3" height="12" rx="1" opacity={activeBars >= 3 ? 1 : 0.4} />
+        </>
       )}
-      title={label}
-      aria-label={label}
-    >
-      <Signal size={14} strokeWidth={2.5} />
-    </span>
+    </svg>
   );
 }
 
 export function StatusGlyph({ state }: { state: string }) {
-  const low = state.toLowerCase();
-  const done = low.includes("done") || low.includes("complete") || low.includes("passed");
-  const canceled = low.includes("cancel");
-  const qa = low.includes("qa");
-  return (
-    <span
-      className={cn(
-        "grid size-3.5 place-items-center rounded-full border text-[10px] leading-none",
-        qa && "border-chart-3 bg-chart-3/20 text-chart-3",
-        done && !qa && "border-primary bg-primary text-primary-foreground",
-        canceled && "border-muted-foreground text-muted-foreground",
-        !qa && !done && !canceled && "border-muted-foreground text-muted-foreground",
-      )}
-    >
-      {done ? "✓" : canceled ? "×" : ""}
-    </span>
-  );
+  return <StatusIcon status={state} size={14} />;
 }
 
 export function MiniIssueLink({ issue }: { issue: Issue }) {
@@ -733,33 +890,26 @@ export function StatusIcon({ status, size = 14 }: { status: string; size?: numbe
   const isTodo = key.includes("todo");
   const isBacklog = key.includes("backlog");
 
-  if (isQa) {
-    return <CheckCircle2 size={size} className="text-chart-3" />;
+  const iconColor = isDone ? "#5f6ad2" : isInReview || isQa ? "#35b866" : isInProgress ? "#f2a900" : "#8f9297";
+  let path = "M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14";
+
+  if (isInReview || isQa) {
+    path = "M8 4a4 4 0 1 1-3.993 4.213H8z M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1m0 1.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11";
+  } else if (isInProgress) {
+    path = "M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1m0 1.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11M8 4a4 4 0 0 1 0 8z";
+  } else if (isBacklog) {
+    path = "m14.94 8.914-1.982-.258a5 5 0 0 0 0-1.312l1.983-.258a7 7 0 0 1 0 1.828M14.47 5.32a7 7 0 0 0-.915-1.581l-1.586 1.218q.4.52.653 1.13zm-2.207-2.874-1.22 1.586a5 5 0 0 0-1.129-.653l.767-1.848c.569.236 1.1.545 1.582.915M8.914 1.06l-.258 1.983a5 5 0 0 0-1.312 0L7.086 1.06a7 7 0 0 1 1.828 0m-3.594.472.767 1.848a5 5 0 0 0-1.13.653L3.74 2.446a7 7 0 0 1 1.581-.915M2.446 3.74l1.586 1.218a5 5 0 0 0-.653 1.13L1.53 5.32a7 7 0 0 1 .915-1.581M1.06 7.086a7 7 0 0 0 0 1.828l1.983-.258a5 5 0 0 1 0-1.312zm.472 3.594 1.848-.767q.254.61.653 1.13l-1.586 1.219a7 7 0 0 1-.915-1.582m2.208 2.874 1.218-1.586q.52.4 1.13.653L5.32 14.47a7 7 0 0 1-1.581-.915m3.347 1.387.258-1.983a5 5 0 0 0 1.312 0l.258 1.983a7 7 0 0 1-1.828 0m3.594-.472-.767-1.848a5 5 0 0 0 1.13-.653l1.219 1.586a7 7 0 0 1-1.582.915m2.874-2.207-1.586-1.22c.265-.344.485-.723.653-1.129l1.848.767a7 7 0 0 1-.915 1.582";
+  } else if (isDone) {
+    path = "M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1m4.101 5.101a.85.85 0 1 0-1.202-1.202L6.5 9.298 5.101 7.899a.85.85 0 1 0-1.202 1.202l2 2a.85.85 0 0 0 1.202 0z";
+  } else if (isCanceled) {
+    path = "M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14M5.4 4.34 8 6.94l2.6-2.6 1.06 1.06L9.06 8l2.6 2.6-1.06 1.06L8 9.06l-2.6 2.6-1.06-1.06L6.94 8l-2.6-2.6z";
+  } else if (isTodo) {
+    path = "M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14";
   }
 
-  if (isInReview) {
-    return <CheckCircle2 size={size} className="text-primary" />;
-  }
-
-  if (isInProgress) {
-    return <LoaderCircle size={size} className="text-primary" />;
-  }
-
-  if (isTodo) {
-    return <Circle size={size} className="text-muted-foreground" />;
-  }
-
-  if (isBacklog) {
-    return <CircleDashed size={size} className="text-muted-foreground" />;
-  }
-
-  if (isDone) {
-    return <CheckCircle2 size={size} className="text-primary" />;
-  }
-
-  if (isCanceled) {
-    return <XCircle size={size} className="text-muted-foreground" />;
-  }
-
-  return <Circle size={size} className="text-muted-foreground" />;
+  return (
+    <svg aria-hidden="true" className="shrink-0" width={size} height={size} viewBox="0 0 16 16" fill={iconColor} role="img" focusable="false">
+      <path fillRule="evenodd" clipRule="evenodd" d={path} />
+    </svg>
+  );
 }

@@ -1,0 +1,190 @@
+{
+  "sidebar": {
+    "width": 244,
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "navItems": [
+      {
+        "text": "ELeltsuh",
+        "styles": {
+          "fontFamily": "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+          "fontSize": "13.3333px",
+          "fontWeight": "400",
+          "lineHeight": "normal",
+          "color": "lch(90.077 1 272)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "0px 7px",
+          "margin": "0px",
+          "borderRadius": "10px"
+        }
+      },
+      {
+        "text": "",
+        "styles": {
+          "fontFamily": "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "lineHeight": "normal",
+          "color": "lch(90.077 1 272)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "0px 2px",
+          "margin": "0px",
+          "borderRadius": "9999px"
+        }
+      },
+      {
+        "text": "",
+        "styles": {
+          "fontFamily": "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "lineHeight": "normal",
+          "color": "lch(90.077 1 272)",
+          "backgroundColor": "lch(10.691 0.493 272)",
+          "padding": "0px 2px",
+          "margin": "0px",
+          "borderRadius": "9999px"
+        }
+      },
+      {
+        "text": "Inbox",
+        "styles": {
+          "fontFamily": "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "lch(100 0 272)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "0px",
+          "margin": "1px 0px",
+          "borderRadius": "8px"
+        }
+      },
+      {
+        "text": "My issues",
+        "styles": {
+          "fontFamily": "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "lch(100 0 272)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "0px",
+          "margin": "1px 0px",
+          "borderRadius": "8px"
+        }
+      },
+      {
+        "text": "Workspace",
+        "styles": {
+          "fontFamily": "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+          "fontSize": "13.3333px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "0px 4px",
+          "margin": "0px",
+          "borderRadius": "8px"
+        }
+      },
+      {
+        "text": "Projects",
+        "styles": {
+          "fontFamily": "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "lch(100 0 272)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "0px",
+          "margin": "1px 0px",
+          "borderRadius": "8px"
+        }
+      },
+      {
+        "text": "Views",
+        "styles": {
+          "fontFamily": "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "lch(100 0 272)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "0px",
+          "margin": "1px 0px",
+          "borderRadius": "8px"
+        }
+      },
+      {
+        "text": "Your teams",
+        "styles": {
+          "fontFamily": "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+          "fontSize": "13.3333px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "0px 4px",
+          "margin": "0px",
+          "borderRadius": "8px"
+        }
+      },
+      {
+        "text": "",
+        "styles": {
+          "fontFamily": "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "lineHeight": "24px",
+          "color": "lch(90.077 1 272)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "0px 2px",
+          "margin": "0px",
+          "borderRadius": "9999px"
+        }
+      }
+    ]
+  },
+  "mainContent": {},
+  "issueRows": {
+    "count": 0,
+    "samples": []
+  },
+  "groupHeaders": {
+    "count": 1,
+    "samples": [
+      {
+        "text": "",
+        "styles": {
+          "fontFamily": "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "lineHeight": "normal",
+          "color": "lch(90.077 1 272)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "0px 2px",
+          "margin": "0px",
+          "borderRadius": "50%"
+        }
+      }
+    ]
+  },
+  "topbar": {
+    "height": 88,
+    "styles": {
+      "fontFamily": "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "24px",
+      "color": "lch(100 0 272)",
+      "backgroundColor": "lch(4.52 0.3 272)",
+      "padding": "0px",
+      "margin": "0px",
+      "borderRadius": "0px"
+    }
+  },
+  "colorPalette": {
+    "bodyBackground": "rgba(0, 0, 0, 0)",
+    "primary": "N/A"
+  }
+}

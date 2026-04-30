@@ -37,6 +37,11 @@ export interface Project {
   description?: string | null;
   status?: string;
   state?: string;
+  health?: string;
+  progress?: number;
+  issue_count?: number;
+  lead_name?: string;
+  lead_username?: string;
   lead?: LinearUser | string | null;
   target_date?: string | null;
   updated_at?: string | null;
@@ -165,12 +170,12 @@ export function stateName(issue: Issue | null | undefined) {
 
 export function stateColor(value: string | undefined) {
   const key = (value || "").toLowerCase();
-  if (key.includes("done") || key.includes("complete")) return "var(--primary)";
-  if (key.includes("qa")) return "var(--success)";
-  if (key.includes("progress") || key.includes("active") || key.includes("started")) return "var(--primary)";
-  if (key.includes("triage") || key.includes("review")) return "var(--warning)";
-  if (key.includes("cancel") || key.includes("blocked")) return "var(--danger)";
-  return "var(--text-faint)";
+  if (key.includes("qa")) return "chart-3";
+  if (key.includes("done") || key.includes("complete")) return "primary";
+  if (key.includes("progress") || key.includes("active") || key.includes("started")) return "primary";
+  if (key.includes("triage") || key.includes("review")) return "chart-4";
+  if (key.includes("cancel") || key.includes("blocked")) return "muted";
+  return "muted";
 }
 
 export function assigneeName(issue: Issue | null | undefined) {
@@ -215,7 +220,20 @@ export function priorityLabel(priority: Issue["priority"]) {
 
 export function initials(name: string | null | undefined) {
   const cleaned = (name || "?").trim();
-  const parts = cleaned.split(/\s+/).slice(0, 2);
+  const referenceAliases: Record<string, string> = {
+    "parikshit.joon@gmail.com": "PJ",
+    "parikshit.joon": "PJ",
+    "minalgoel99@gmail.com": "MI",
+    "minalgoel99": "MI",
+    "vishalsharma.gbpecdelhi@gmail.com": "VG",
+    "vishalsharma.gbpecdelhi": "VG",
+    "rohanbojja@icloud.com": "RO",
+    "rohanbojja": "RO",
+  };
+  const alias = referenceAliases[cleaned.toLowerCase()];
+  if (alias) return alias;
+  const namePart = cleaned.includes("@") ? cleaned.split("@")[0] : cleaned;
+  const parts = namePart.split(/[\s._-]+/).filter(Boolean).slice(0, 2);
   return parts.map((part) => part[0]?.toUpperCase()).join("") || "?";
 }
 

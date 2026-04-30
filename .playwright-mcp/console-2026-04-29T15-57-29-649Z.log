@@ -1,0 +1,286 @@
+[     103ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[  374648ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[  639607ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[ 1528565ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:20100
+[ 1537437ms] [ERROR] Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem. @ http://localhost:3002/node_modules/.vite/deps/chunk-XLDFFFII.js?v=0b94fcc7:391
+[ 1537443ms] [ERROR] Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem. @ http://localhost:3002/node_modules/.vite/deps/chunk-XLDFFFII.js?v=0b94fcc7:391
+[ 1537446ms] TypeError: Cannot read properties of null (reading 'useRef')
+    at exports.useRef (http://localhost:3002/node_modules/.vite/deps/chunk-XLDFFFII.js?v=0b94fcc7:956:35)
+    at TooltipProvider (http://localhost:3002/node_modules/.vite/deps/radix-ui.js?v=eff79aad:15361:36)
+    at Object.react_stack_bottom_frame (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:18507:20)
+    at renderWithHooks (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:5652:24)
+    at updateFunctionComponent (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:7473:21)
+    at beginWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:8523:20)
+    at runWithFiberInDEV (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:995:72)
+    at performUnitOfWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12559:98)
+    at workLoopSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12422:43)
+    at renderRootSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:12406:13)
+[ 1537444ms] [WARNING] %s
+
+%s
+ An error occurred in the <TooltipProvider> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=fec6fa77:6963
+[ 1538025ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=0b94fcc7:20102
+[ 1619340ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=0b94fcc7:20102
+[ 1645598ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=0b94fcc7:20102
+[ 1776881ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=0b94fcc7:20102
+[ 1785273ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=0b94fcc7:20102
+[ 1800204ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:20102
+[ 1913550ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:20102
+[ 1913839ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:20102
+[ 1948085ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:20102
+[ 2197960ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3002/src/components/ui.tsx?t=1777480447597:0
+[ 2197961ms] [ERROR] [vite] Failed to reload /src/components/ui.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:3002/@vite/client:881
+[ 2248972ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3002/src/components/QuickCreateModal.tsx?t=1777480498612:0
+[ 2248972ms] [ERROR] [vite] Failed to reload /src/components/QuickCreateModal.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:3002/@vite/client:881
+[ 2324356ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:20102
+[ 2326039ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2326039ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2348614ms] ReferenceError: stateColor is not defined
+    at http://localhost:3002/src/components/IssueExplorer.tsx?t=1777480598022:1065:88
+    at Array.map (<anonymous>)
+    at IssueBoard (http://localhost:3002/src/components/IssueExplorer.tsx?t=1777480598022:1060:116)
+    at Object.react_stack_bottom_frame (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:18509:20)
+    at renderWithHooks (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:5654:24)
+    at updateFunctionComponent (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:7475:21)
+    at beginWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:8525:20)
+    at runWithFiberInDEV (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:997:72)
+    at performUnitOfWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:12561:98)
+    at workLoopSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:12424:43)
+[ 2348609ms] [WARNING] %s
+
+%s
+ An error occurred in the <IssueBoard> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:6965
+[ 2362279ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2362279ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2362304ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2362304ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2362305ms] ReferenceError: stateColor is not defined
+    at http://localhost:3002/src/components/IssueExplorer.tsx?t=1777480611722:1067:88
+    at Array.map (<anonymous>)
+    at IssueBoard (http://localhost:3002/src/components/IssueExplorer.tsx?t=1777480611722:1062:116)
+    at Object.react_stack_bottom_frame (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:18509:20)
+    at renderWithHooks (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:5654:24)
+    at updateFunctionComponent (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:7475:21)
+    at beginWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:8525:20)
+    at runWithFiberInDEV (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:997:72)
+    at performUnitOfWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:12561:98)
+    at workLoopSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:12424:43)
+[ 2362305ms] [WARNING] %s
+
+%s
+ An error occurred in the <IssueBoard> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:6965
+[ 2373778ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2373778ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2373805ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2373805ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2373809ms] ReferenceError: stateColor is not defined
+    at http://localhost:3002/src/components/IssueExplorer.tsx?t=1777480623279:880:88
+    at Array.map (<anonymous>)
+    at IssueBoard (http://localhost:3002/src/components/IssueExplorer.tsx?t=1777480623279:875:116)
+    at Object.react_stack_bottom_frame (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:18509:20)
+    at renderWithHooks (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:5654:24)
+    at updateFunctionComponent (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:7475:21)
+    at beginWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:8525:20)
+    at runWithFiberInDEV (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:997:72)
+    at performUnitOfWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:12561:98)
+    at workLoopSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:12424:43)
+[ 2373805ms] [WARNING] %s
+
+%s
+ An error occurred in the <IssueBoard> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:6965
+[ 2392579ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2392579ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2392617ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2392617ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2392618ms] ReferenceError: stateColor is not defined
+    at http://localhost:3002/src/components/IssueExplorer.tsx?t=1777480642000:862:88
+    at Array.map (<anonymous>)
+    at IssueBoard (http://localhost:3002/src/components/IssueExplorer.tsx?t=1777480642000:857:116)
+    at Object.react_stack_bottom_frame (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:18509:20)
+    at renderWithHooks (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:5654:24)
+    at updateFunctionComponent (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:7475:21)
+    at beginWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:8525:20)
+    at runWithFiberInDEV (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:997:72)
+    at performUnitOfWork (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:12561:98)
+    at workLoopSync (http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:12424:43)
+[ 2392618ms] [WARNING] %s
+
+%s
+ An error occurred in the <IssueBoard> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:6965
+[ 2411525ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2411525ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2518201ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:20102
+[ 2518255ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2518255ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2524662ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2524662ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2526151ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3002/src/index.css?t=1777480775793:0
+[ 2526151ms] [ERROR] [vite] Failed to reload /src/index.css. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:3002/@vite/client:881
+[ 2534422ms] [WARNING] Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. @ http://localhost:3002/node_modules/.vite/deps/radix-ui.js?v=53ae43de:3304
+[ 2534423ms] [WARNING] Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. @ http://localhost:3002/node_modules/.vite/deps/radix-ui.js?v=53ae43de:3304
+[ 2540254ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2540254ms] [ERROR] [vite] Failed to reload /src/index.css. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:3002/@vite/client:881
+[ 2556310ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:20102
+[ 2556379ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2556379ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2559151ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:20102
+[ 2559213ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2559213ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2559958ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:20102
+[ 2559998ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2559999ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2595242ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:20102
+[ 2595301ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2595301ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:3002/node_modules/.vite/deps/recharts.js?v=53ae43de:9024
+[ 2633289ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2742032ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2748440ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2748462ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/pages/IssuePage.tsx?t=1777480997933:0
+[ 2771252ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2792609ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2814403ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2843343ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2859437ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2865244ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2881941ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2896826ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2906220ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2913885ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2948062ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2967343ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2969068ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2978227ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 2983245ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 3008594ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 3009107ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 3009333ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 3009524ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 3009713ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 3009907ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 3031060ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 3050960ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 3060159ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:3002/@vite/client:963
+[ 3060652ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 4910463ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 4935062ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777480789714:0
+[ 4947897ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 4972563ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 4979992ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 4986905ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 4993507ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5002547ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5014347ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5018807ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5029491ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5042064ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5052701ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5063652ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5076635ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5092397ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5099742ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5106626ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5127277ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5142840ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5149799ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5323493ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5332055ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5340131ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5363152ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/src/index.css?t=1777483197278:0
+[ 5564873ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3002/node_modules/.vite/deps/react-dom_client.js?v=53ae43de:20102

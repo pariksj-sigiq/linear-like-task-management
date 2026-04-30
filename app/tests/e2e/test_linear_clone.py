@@ -73,6 +73,60 @@ class TestIssues:
         page.get_by_test_id("quick-create-button").click()
         expect(page.get_by_test_id("quick-create-modal")).to_be_visible()
 
+    def test_quick_create_persists_issue_with_project_and_assignee(self, page: Page) -> None:
+        login(page)
+        title = "E2E quick create linked issue"
+        page.get_by_test_id("quick-create-button").click()
+        expect(page.get_by_test_id("quick-create-modal")).to_be_visible()
+        page.get_by_test_id("create-issue-title").fill(title)
+        page.get_by_role("button", name=re.compile(r"Priority|No priority")).click()
+        page.get_by_role("menuitem", name="High").click()
+        page.get_by_role("button", name=re.compile(r"Assignee|Unassigned")).click()
+        page.get_by_role("menuitem", name="Sarah Connor").click()
+        page.get_by_role("button", name=re.compile(r"Project|No project")).click()
+        page.get_by_role("menuitem", name="Issue Flow Implementation").click()
+        page.get_by_test_id("create-issue-submit").click()
+        page.wait_for_load_state("networkidle")
+        expect(page.get_by_test_id("issue-detail-page")).to_be_visible()
+        expect(page.get_by_role("heading", name=title)).to_be_visible()
+        expect(page.get_by_test_id("issue-assignee-display")).to_contain_text("Sarah Connor")
+        expect(page.get_by_test_id("issue-priority-display")).to_contain_text("High")
+        expect(page.get_by_test_id("issue-project-display")).to_contain_text("Issue Flow Implementation")
+
+        page.reload()
+        page.wait_for_load_state("networkidle")
+        expect(page.get_by_role("heading", name=title)).to_be_visible()
+        expect(page.get_by_test_id("issue-project-display")).to_contain_text("Issue Flow Implementation")
+
+    def test_issue_property_pickers_persist_changes(self, page: Page) -> None:
+        login(page)
+        page.goto(f"{BASE_URL}/issue/ENG-1")
+        page.wait_for_load_state("networkidle")
+        expect(page.get_by_test_id("issue-detail-page")).to_be_visible()
+
+        page.get_by_test_id("issue-status-display").click()
+        page.get_by_role("menuitem", name="In Review").click()
+        expect(page.get_by_test_id("issue-status-display")).to_contain_text("In Review")
+
+        page.get_by_test_id("issue-assignee-display").click()
+        page.get_by_role("menuitem", name="Sarah Connor").click()
+        expect(page.get_by_test_id("issue-assignee-display")).to_contain_text("Sarah Connor")
+
+        page.get_by_test_id("issue-priority-display").click()
+        page.get_by_role("menuitem", name="Urgent").click()
+        expect(page.get_by_test_id("issue-priority-display")).to_contain_text("Urgent")
+
+        page.get_by_test_id("issue-project-display").click()
+        page.get_by_role("menuitem", name="Issue Flow Implementation").click()
+        expect(page.get_by_test_id("issue-project-display")).to_contain_text("Issue Flow Implementation")
+
+        page.reload()
+        page.wait_for_load_state("networkidle")
+        expect(page.get_by_test_id("issue-status-display")).to_contain_text("In Review")
+        expect(page.get_by_test_id("issue-assignee-display")).to_contain_text("Sarah Connor")
+        expect(page.get_by_test_id("issue-priority-display")).to_contain_text("Urgent")
+        expect(page.get_by_test_id("issue-project-display")).to_contain_text("Issue Flow Implementation")
+
 
 class TestPlanningAndUtilityPages:
     def test_projects_and_project_detail_render(self, page: Page) -> None:
@@ -83,6 +137,34 @@ class TestPlanningAndUtilityPages:
         page.get_by_text("Backend Tool Server Coverage").first.click()
         page.wait_for_load_state("networkidle")
         expect(page.get_by_test_id("project-detail-page")).to_be_visible()
+
+    def test_project_create_and_link_issue_flow(self, page: Page) -> None:
+        login(page)
+        project_name = "E2E Workflow Closure"
+        page.goto(f"{BASE_URL}/projects/all")
+        page.wait_for_load_state("networkidle")
+        expect(page.get_by_test_id("projects-page")).to_be_visible()
+        page.get_by_test_id("create-project-button").click()
+        expect(page.get_by_test_id("create-project-modal")).to_be_visible()
+        page.get_by_test_id("project-name-input").fill(project_name)
+        page.get_by_test_id("project-description-input").fill("Created by the browser workflow regression test.")
+        page.get_by_test_id("create-project-submit").click()
+        page.wait_for_load_state("networkidle")
+        expect(page.get_by_text(project_name).first).to_be_visible()
+        page.get_by_text(project_name).first.click()
+        page.wait_for_load_state("networkidle")
+        expect(page.get_by_test_id("project-detail-page")).to_be_visible()
+        expect(page.get_by_role("heading", name=project_name)).to_be_visible()
+
+        page.get_by_test_id("project-add-issue").click()
+        expect(page.get_by_test_id("project-add-issue-modal")).to_be_visible()
+        page.get_by_test_id("project-issue-search").fill("Expose full /tools registry")
+        page.get_by_test_id("project-issue-option-ENG-1").click()
+        expect(page.get_by_test_id("project-issue-row-ENG-1")).to_be_visible()
+
+        page.reload()
+        page.wait_for_load_state("networkidle")
+        expect(page.get_by_test_id("project-issue-row-ENG-1")).to_be_visible()
 
     def test_inbox_settings_and_stubs_render(self, page: Page) -> None:
         login(page)

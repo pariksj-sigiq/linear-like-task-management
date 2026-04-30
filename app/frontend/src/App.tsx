@@ -26,6 +26,34 @@ function ProtectedApp() {
   const { user, loading, logout } = useAuth();
 
   useEffect(() => {
+    const applyTheme = () => {
+      const params = new URLSearchParams(window.location.search);
+      const queryTheme = params.get("theme");
+      const storedTheme = window.localStorage.getItem("linear-theme");
+      const preferredTheme =
+        queryTheme === "dark" || queryTheme === "light"
+          ? queryTheme
+          : storedTheme === "dark" || storedTheme === "light"
+            ? storedTheme
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+
+      document.documentElement.dataset.theme = preferredTheme;
+      document.documentElement.classList.toggle("linear-dark", preferredTheme === "dark");
+      document.documentElement.classList.toggle("dark", preferredTheme === "dark");
+      if (queryTheme === "dark" || queryTheme === "light") {
+        window.localStorage.setItem("linear-theme", preferredTheme);
+      }
+    };
+
+    applyTheme();
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    media.addEventListener("change", applyTheme);
+    return () => media.removeEventListener("change", applyTheme);
+  }, [location.search]);
+
+  useEffect(() => {
     if (!document.title || document.title === "Vite + React + TS") {
       document.title = "Eltsuh";
     }

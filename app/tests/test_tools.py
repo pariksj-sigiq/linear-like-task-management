@@ -92,6 +92,27 @@ class TestIssues:
         updated = step("set_priority", {"issue_id": issue["id"], "priority": "urgent"})
         assert updated["priority"] == "urgent"
 
+    def test_issue_assignee_and_project_can_be_cleared(self):
+        team_id = step("search_teams", {"query": "ENG"})["teams"][0]["id"]
+        project_id = step("search_projects", {"query": "Issue Flow Implementation"})["projects"][0]["id"]
+        issue = step(
+            "create_issue",
+            {
+                "team_id": team_id,
+                "title": "Unit test nullable issue properties",
+                "creator_id": "user_001",
+                "assignee_id": "user_002",
+                "project_id": project_id,
+            },
+        )
+        assert issue["assignee_id"] == "user_002"
+        assert issue["project_id"] == project_id
+
+        unassigned = step("assign_issue", {"issue_id": issue["id"], "assignee_id": None})
+        assert unassigned["assignee_id"] is None
+        unlinked = step("set_project", {"issue_id": issue["id"], "project_id": None})
+        assert unlinked["project_id"] is None
+
     def test_label_comment_relation_and_bulk_tools(self):
         issues = step("search_issues", {"team_key": "ENG", "limit": 3})["issues"]
         labels = step("search_labels", {"query": "P0"})["labels"]

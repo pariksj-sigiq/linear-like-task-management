@@ -97,11 +97,17 @@ The orchestrator **never fixes code.** It only does two things: **screenshot** a
 
 #### The orchestrator judge loop
 
+Use these Playwright MCP tools directly — do not paraphrase "take a screenshot":
+`mcp__playwright__browser_tabs`, `mcp__playwright__browser_navigate`,
+`mcp__playwright__browser_snapshot`, `mcp__playwright__browser_take_screenshot`,
+`mcp__playwright__browser_hover`, `mcp__playwright__browser_click`,
+`mcp__playwright__browser_press_key`, `mcp__playwright__browser_type`.
+
 ```
 For each key page:
-  1. Navigate to REAL app → screenshot
-  2. Navigate to CLONE → screenshot
-  3. Judge: is this at 100% fidelity?
+  1. browser_tabs(select, real) → browser_navigate(real URL) → browser_take_screenshot(<page>-real.png)
+  2. browser_tabs(select, clone) → browser_navigate(localhost URL) → browser_take_screenshot(<page>-clone.png)
+  3. Judge from the two PNGs: is this at 100% fidelity?
      │
      ├── YES → approve page, move to next
      │

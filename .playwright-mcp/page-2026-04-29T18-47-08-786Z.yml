@@ -1,0 +1,201 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - list [ref=e8]:
+        - listitem [ref=e9]:
+          - generic [ref=e10]:
+            - link "Open workspace home" [ref=e11] [cursor=pointer]:
+              - /url: /my-issues/activity
+              - generic [ref=e12]: EL
+              - generic [ref=e13]: eltsuh
+              - img [ref=e14]
+            - button [ref=e16] [cursor=pointer]:
+              - img [ref=e17]
+            - button [ref=e20] [cursor=pointer]:
+              - img [ref=e21]
+      - generic [ref=e24]:
+        - list [ref=e27]:
+          - listitem [ref=e28]:
+            - link "Inbox" [ref=e29] [cursor=pointer]:
+              - /url: /inbox
+              - img [ref=e30]
+              - generic [ref=e33]: Inbox
+            - generic: 99+
+          - listitem [ref=e34]:
+            - link "My issues" [ref=e35] [cursor=pointer]:
+              - /url: /my-issues/activity
+              - img [ref=e36]
+              - generic [ref=e40]: My issues
+        - generic [ref=e41]:
+          - generic [ref=e42]: Workspace
+          - list [ref=e44]:
+            - listitem [ref=e45]:
+              - link "Projects" [ref=e46] [cursor=pointer]:
+                - /url: /projects/all
+                - img [ref=e47]
+                - generic [ref=e49]: Projects
+            - listitem [ref=e50]:
+              - link "Views" [ref=e51] [cursor=pointer]:
+                - /url: /views
+                - img [ref=e52]
+                - generic [ref=e53]: Views
+            - listitem [ref=e54]:
+              - link "More" [ref=e55] [cursor=pointer]:
+                - /url: /roadmap
+                - img [ref=e56]
+                - generic [ref=e61]: More
+        - generic [ref=e62]:
+          - generic [ref=e63]: Your teams
+          - list [ref=e65]:
+            - listitem [ref=e66]:
+              - button "Eltsuh" [expanded] [ref=e67] [cursor=pointer]:
+                - img [ref=e69]
+                - generic [ref=e74]: Eltsuh
+                - img [ref=e75]
+              - list [ref=e78]:
+                - listitem [ref=e79]:
+                  - link "Issues" [ref=e80] [cursor=pointer]:
+                    - /url: /team/elt/active
+                    - generic [ref=e81]: Issues
+                - listitem [ref=e82]:
+                  - link "Projects" [ref=e83] [cursor=pointer]:
+                    - /url: /team/elt/projects
+                    - generic [ref=e84]: Projects
+                - listitem [ref=e85]:
+                  - link "Views" [ref=e86] [cursor=pointer]:
+                    - /url: /team/elt/views
+                    - generic [ref=e87]: Views
+        - generic [ref=e88]:
+          - generic [ref=e89]: Try
+          - list [ref=e91]:
+            - listitem [ref=e92]:
+              - link "Import issues" [ref=e93] [cursor=pointer]:
+                - /url: "#import"
+                - img [ref=e94]
+                - generic [ref=e96]: Import issues
+            - listitem [ref=e97]:
+              - link "Cycles" [ref=e98] [cursor=pointer]:
+                - /url: "#cycles"
+                - img [ref=e99]
+                - generic [ref=e102]: Cycles
+      - button "Toggle Sidebar" [ref=e103]
+    - main [ref=e104]:
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - heading "Team Engg" [level=1] [ref=e108]
+          - button "Add to favorites" [ref=e109] [cursor=pointer]:
+            - img
+        - generic [ref=e110]:
+          - button "Add filter" [ref=e111] [cursor=pointer]:
+            - img
+          - button "Display options" [ref=e112] [cursor=pointer]:
+            - img
+          - button "Open details" [ref=e113] [cursor=pointer]:
+            - img
+      - generic [ref=e115]:
+        - generic [ref=e116]:
+          - generic [ref=e117]:
+            - heading "ELT Active" [level=1] [ref=e118]
+            - paragraph [ref=e119]: Team-scoped active work queue.
+            - tablist [ref=e120]:
+              - tab "All issues" [ref=e121] [cursor=pointer]
+              - tab "Active" [selected] [ref=e122] [cursor=pointer]
+              - tab "Backlog" [ref=e123] [cursor=pointer]
+          - generic [ref=e124]:
+            - button "Filter" [ref=e125] [cursor=pointer]:
+              - img
+            - button "Display options" [ref=e126] [cursor=pointer]:
+              - img
+            - button "Toggle sidebar" [ref=e127] [cursor=pointer]:
+              - img
+        - generic [ref=e128]:
+          - generic [ref=e129]:
+            - generic [ref=e130]:
+              - generic [ref=e131]:
+                - generic [ref=e132]: Visible
+                - generic [ref=e133]:
+                  - text: "0"
+                  - generic "Stable" [ref=e134]:
+                    - img
+                    - text: Live
+              - generic [ref=e135]:
+                - generic [ref=e136]: Issues in this scope
+                - generic [ref=e137]: ELT Active
+            - generic [ref=e138]:
+              - generic [ref=e139]:
+                - generic [ref=e140]: Active
+                - generic [ref=e141]:
+                  - text: "0"
+                  - generic "Stable" [ref=e142]:
+                    - img
+                    - text: OK
+              - generic [ref=e143]:
+                - generic [ref=e144]: Started, review, or QA
+                - generic [ref=e145]: Needs current attention
+            - generic [ref=e146]:
+              - generic [ref=e147]:
+                - generic [ref=e148]: Backlog
+                - generic [ref=e149]:
+                  - text: "0"
+                  - generic "Stable" [ref=e150]:
+                    - img
+                    - text: OK
+              - generic [ref=e151]:
+                - generic [ref=e152]: Queued work
+                - generic [ref=e153]: Todo, triage, or backlog
+            - generic [ref=e154]:
+              - generic [ref=e155]:
+                - generic [ref=e156]: Done
+                - generic [ref=e157]:
+                  - text: "0"
+                  - generic "Stable" [ref=e158]:
+                    - img
+                    - text: None
+              - generic [ref=e159]:
+                - generic [ref=e160]: Completed in view
+                - generic [ref=e161]: No visible work
+          - generic [ref=e162]:
+            - generic [ref=e163]:
+              - generic [ref=e164]:
+                - heading "Issue flow" [level=2] [ref=e165]
+                - paragraph [ref=e166]: Opened and resolved issues in the selected workspace scope.
+              - generic [ref=e167]:
+                - button "7 days" [ref=e168] [cursor=pointer]
+                - button "14 days" [pressed] [ref=e169] [cursor=pointer]
+                - button "30 days" [ref=e170] [cursor=pointer]
+            - application [ref=e174]:
+              - generic [ref=e191]:
+                - generic [ref=e192]:
+                  - generic [ref=e194]: Apr 17
+                  - generic [ref=e196]: Apr 18
+                  - generic [ref=e198]: Apr 19
+                  - generic [ref=e200]: Apr 20
+                  - generic [ref=e202]: Apr 21
+                  - generic [ref=e204]: Apr 22
+                  - generic [ref=e206]: Apr 23
+                  - generic [ref=e208]: Apr 24
+                  - generic [ref=e210]: Apr 25
+                  - generic [ref=e212]: Apr 26
+                  - generic [ref=e214]: Apr 27
+                  - generic [ref=e216]: Apr 28
+                  - generic [ref=e218]: Apr 29
+                - generic [ref=e219]:
+                  - generic [ref=e221]: "0"
+                  - generic [ref=e223]: "10"
+                  - generic [ref=e225]: "20"
+        - status [ref=e226]:
+          - generic [ref=e227]:
+            - img [ref=e228]
+            - generic [ref=e230]: Loading issues
+      - generic [ref=e231]:
+        - generic [ref=e232]:
+          - button "Help" [ref=e233] [cursor=pointer]:
+            - img
+          - generic [ref=e234]: Free plan
+        - generic [ref=e235]:
+          - button "Ask Linear" [ref=e236] [cursor=pointer]:
+            - img
+            - text: Ask Linear
+          - button "History" [ref=e237] [cursor=pointer]:
+            - img
+  - generic [ref=e238]: "0"

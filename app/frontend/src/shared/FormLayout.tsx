@@ -1,4 +1,7 @@
 import { FormEvent, ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface FormLayoutProps {
   title: string;
@@ -17,7 +20,7 @@ export function FormLayout({
 }: FormLayoutProps) {
   return (
     <div data-testid="form-layout">
-      <h1 className="text-xl font-semibold mb-6" style={{ color: "var(--text-primary)" }}>
+      <h1 className="mb-6 text-xl font-semibold text-foreground">
         {title}
       </h1>
       <form
@@ -25,34 +28,27 @@ export function FormLayout({
           e.preventDefault();
           onSubmit(e);
         }}
-        className="rounded-lg border p-6 space-y-4"
-        style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--border)" }}
+        className="space-y-4 rounded-lg border border-border bg-card p-6"
       >
         {children}
 
-        <div className="flex justify-end gap-3 pt-4 border-t" style={{ borderColor: "var(--border)" }}>
+        <div className="flex justify-end gap-3 border-t border-border pt-4">
           {onCancel && (
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={onCancel}
-              className="px-4 py-2 text-sm rounded-md border hover:bg-slate-50 transition-colors"
-              style={{ borderColor: "var(--border)", color: "var(--text-primary)" }}
               data-testid="form-cancel"
             >
               Cancel
-            </button>
+            </Button>
           )}
-          <button
+          <Button
             type="submit"
-            className="px-4 py-2 text-sm rounded-md font-medium transition-colors"
-            style={{
-              backgroundColor: "var(--primary)",
-              color: "var(--primary-text)",
-            }}
             data-testid="form-submit"
           >
             {submitLabel}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
@@ -68,10 +64,10 @@ interface FormFieldProps {
 export function FormField({ label, required, children }: FormFieldProps) {
   return (
     <div>
-      <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-primary)" }}>
+      <Label className="mb-1.5 block text-sm font-medium text-foreground">
         {label}
-        {required && <span className="text-red-500 ml-0.5">*</span>}
-      </label>
+        {required && <span className="ml-0.5 text-destructive">*</span>}
+      </Label>
       {children}
     </div>
   );
@@ -87,14 +83,11 @@ interface TextInputProps {
 
 export function TextInput({ value, onChange, placeholder, required, testId }: TextInputProps) {
   return (
-    <input
-      type="text"
+    <Input
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       required={required}
-      className="w-full px-3 py-2 text-sm rounded-md border outline-none focus:ring-2"
-      style={{ borderColor: "var(--border)", color: "var(--text-primary)" }}
       data-testid={testId}
     />
   );
@@ -115,8 +108,7 @@ export function TextAreaInput({ value, onChange, placeholder, rows = 3, testId }
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       rows={rows}
-      className="w-full px-3 py-2 text-sm rounded-md border outline-none focus:ring-2"
-      style={{ borderColor: "var(--border)", color: "var(--text-primary)" }}
+      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
       data-testid={testId}
     />
   );

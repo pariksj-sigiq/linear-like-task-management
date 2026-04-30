@@ -136,7 +136,7 @@ If you are handing this template to an AI orchestrator to build a clone end-to-e
    - `{{APP_CREDENTIALS}}` (real login that can reach the app's internal surfaces)
 3. **Paste** the filled-in brief into an AI environment that has:
    - Filesystem access to the cloned repo (Cursor agent, Claude Code, Codex, etc.)
-   - A browser tool with screenshot + DOM inspection (Cursor browser MCP, Playwright)
+   - **Playwright MCP server** wired in (`mcp__playwright__browser_*` tools available — `browser_navigate`, `browser_snapshot`, `browser_take_screenshot`, `browser_hover`, `browser_click`, `browser_press_key`, `browser_tabs`, `browser_type`). Static screenshot comparison alone will not pass Phase 4.
    - Tab A already logged into the real app at `{{APP_URL}}`
 4. **Phase 0 bootstrap** runs automatically — the AI verifies it can read every reference file, drive a browser, and reach Tab A. If any precondition fails, it stops and escalates rather than improvising.
 5. **Phases 1 → 6** run end-to-end with hard checkbox gates between each:
