@@ -53,6 +53,7 @@ import { Checkbox } from "./ui/checkbox";
 import type { ChartAreaPoint } from "./chart-area-interactive";
 import type { SectionCardItem } from "./section-cards";
 import { cn } from "../lib/utils";
+import { mergeIssueOverrides, subscribeIssueOverrides } from "../localIssueOverrides";
 
 type LayoutMode = "list" | "board";
 const EMPTY_PARAMS: Record<string, unknown> = {};
@@ -224,6 +225,7 @@ export function IssueExplorer({
   const [selected, setSelected] = useState<string[]>([]);
   const [actionsOpen, setActionsOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [overrideVersion, setOverrideVersion] = useState(0);
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'backlog'>('active');
   const [filters] = useState<IssueFilters>({
     query: "",
@@ -264,6 +266,10 @@ export function IssueExplorer({
   }, [loadIssues, filters.query]);
 
   useEffect(() => {
+    return subscribeIssueOverrides(() => setOverrideVersion((version) => version + 1));
+  }, []);
+
+  useEffect(() => {
     if (!filterOpen) return;
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setFilterOpen(false);
@@ -273,11 +279,15 @@ export function IssueExplorer({
   }, [filterOpen]);
 
   const sourceIssues = useMemo(() => {
-    if (boardPreset === "my-issues-activity") return MY_ISSUES_REFERENCE;
-    if (params.status === "active" || params.state === "active") return ACTIVE_ISSUES_REFERENCE;
-    if (issues.length) return issues;
-    return issues;
-  }, [boardPreset, issues, params.state, params.status]);
+    const baseIssues =
+      boardPreset === "my-issues-activity"
+        ? MY_ISSUES_REFERENCE
+        : params.status === "active" || params.state === "active"
+          ? ACTIVE_ISSUES_REFERENCE
+          : issues;
+    void overrideVersion;
+    return mergeIssueOverrides(baseIssues);
+  }, [boardPreset, issues, overrideVersion, params.state, params.status]);
 
   const filtered = useMemo(() => {
     if (boardPreset === "my-issues-activity") return sourceIssues;

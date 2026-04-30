@@ -29,7 +29,12 @@
     background: rgb(var(--sidebar-rgb) / 1);
   }
 
+  .linear-sidebar {
+    border-color: var(--shell-divider);
+  }
+
   .linear-workspace-panel {
+    border-color: var(--panel-divider);
     min-height: calc(100svh - 3.125rem);
   }
 

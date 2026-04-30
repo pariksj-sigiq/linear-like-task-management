@@ -154,7 +154,7 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
         data-testid="quick-create-modal"
       >
         <DialogHeader className="h-12 flex-row items-center gap-2 px-2.5 py-0 pr-[76px]">
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button type="button" variant="outline" size="xs" className="h-7 gap-1.5 rounded-[9px] border-[#e0e1e5] bg-white px-2 text-[13px] font-medium text-[#62656c] shadow-none hover:bg-[#f7f7f8]">
                 <span className="flex size-4 items-center justify-center rounded-[5px] bg-[#eef1ff] text-[10px] font-semibold text-[#6d78e8]">
@@ -217,14 +217,14 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
           />
 
           <div className="mt-[53px] flex flex-wrap items-center gap-1.5">
-            <PropertyMenu icon={<StatusIcon status={status} size={14} />} label={status}>
+            <PropertyMenu icon={<StatusIcon status={status} size={14} />} label={status} testId="create-issue-status">
               {statuses.map((item) => (
                 <DropdownMenuItem key={item} onClick={() => setStatus(item)}>
                   {item}
                 </DropdownMenuItem>
               ))}
             </PropertyMenu>
-            <PropertyMenu icon={<PriorityIcon priority={priority || undefined} />} label={priority || "Priority"}>
+            <PropertyMenu icon={<PriorityIcon priority={priority || undefined} />} label={priority || "Priority"} testId="create-issue-priority">
               {priorities.map((item) => (
                 <DropdownMenuItem key={item} onClick={() => setPriority(item === "No priority" ? "" : item)}>
                   {item}
@@ -234,6 +234,7 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
             <PropertyMenu
               icon={<User />}
               label={assigneeId ? userName(users.find((user) => (user.id || user.username) === assigneeId)) || assigneeId : "Assignee"}
+              testId="create-issue-assignee"
             >
               <DropdownMenuItem onClick={() => setAssigneeId("")}>No assignee</DropdownMenuItem>
               {users.map((user) => {
@@ -248,6 +249,7 @@ export function QuickCreateModal({ open, onClose }: { open: boolean; onClose: ()
             <PropertyMenu
               icon={<Folder />}
               label={projectId ? projectTitle(projects.find((project) => (project.id || project.key) === projectId)) || projectId : "Project"}
+              testId="create-issue-project"
             >
               <DropdownMenuItem onClick={() => setProjectId("")}>No project</DropdownMenuItem>
               {projects.map((project) => {
@@ -290,15 +292,17 @@ function PropertyMenu({
   icon,
   label,
   children,
+  testId,
 }: {
   icon?: ReactNode;
   label: string;
   children: ReactNode;
+  testId?: string;
 }) {
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button type="button" variant="outline" size="sm" className="h-7 gap-1.5 rounded-full border-[#dfe0e4] bg-white px-2.5 text-[13px] font-medium text-[#575a62] shadow-none hover:bg-[#f6f6f7] [&_svg]:size-3.5 [&_svg]:text-[#6f727a]">
+        <Button type="button" variant="outline" size="sm" data-testid={testId} className="h-7 gap-1.5 rounded-full border-[#dfe0e4] bg-white px-2.5 text-[13px] font-medium text-[#575a62] shadow-none hover:bg-[#f6f6f7] [&_svg]:size-3.5 [&_svg]:text-[#6f727a]">
           {icon}
           {label}
         </Button>

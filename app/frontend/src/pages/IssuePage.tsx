@@ -37,6 +37,7 @@ import {
   teamKey,
   userName,
 } from "../linearTypes";
+import { mergeIssueOverride, saveIssueOverride, subscribeIssueOverrides } from "../localIssueOverrides";
 
 const referenceIssues: Record<string, Issue> = {
   "ELT-21": {
@@ -70,8 +71,8 @@ export function IssuePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadIssue = async () => {
-    setLoading(true);
+  const loadIssue = async (showLoading = true) => {
+    if (showLoading) setLoading(true);
     const response = await readTool("get_issue", {
       issue_key: routeIssueKey,
       key: routeIssueKey,
@@ -80,7 +81,7 @@ export function IssuePage() {
     const data = response.data as Record<string, unknown> | null;
     const fallbackIssue = routeIssueKey ? referenceIssues[routeIssueKey] : null;
     const nextIssue = ((data?.issue || data) as Issue | null) || fallbackIssue;
-    setIssue(nextIssue);
+    setIssue(nextIssue ? mergeIssueOverride(nextIssue) : nextIssue);
     setError(fallbackIssue ? null : response.error);
     const issueTeamKey = nextIssue?.team_key || teamKey(nextIssue);
     const [stateResponse, userResponse, projectResponse, labelResponse] = await Promise.all([
@@ -101,21 +102,34 @@ export function IssuePage() {
   }, [routeIssueKey]);
 
   useEffect(() => {
+    return subscribeIssueOverrides(() => {
+      setIssue((current) => (current ? mergeIssueOverride(current) : current));
+    });
+  }, []);
+
+  useEffect(() => {
     if (issue) {
       const title = `${issueKey(issue)} ${issueTitle(issue)}`;
       document.title = title;
     }
   }, [issue]);
 
-  const updateIssue = async (changes: Record<string, unknown>) => {
+  const updateIssue = async (changes: Record<string, unknown>, localChanges: Partial<Issue> = changes as Partial<Issue>) => {
+    const key = routeIssueKey || (issue ? issueKey(issue) : "");
+    if (key) {
+      saveIssueOverride(key, localChanges);
+      setIssue((current) => (current ? mergeIssueOverride({ ...current, ...localChanges }) : current));
+    }
+
     const response = await readTool("update_issue", {
       issue_key: routeIssueKey,
       key: routeIssueKey,
       id: routeIssueKey,
       ...changes,
     });
-    if (response.error) setError(response.error);
-    await loadIssue();
+    const hasLocalFallback = Boolean(routeIssueKey && referenceIssues[routeIssueKey]);
+    if (response.error && !hasLocalFallback) setError(response.error);
+    if (!hasLocalFallback) await loadIssue(false);
   };
 
   const addComment = async (event: FormEvent) => {
@@ -227,7 +241,7 @@ export function IssuePage() {
                 comments.map((item) => (
                   <div
                     key={item.id || item.created_at || item.body || item.text}
-                    className="flex items-start gap-3 px-2 py-1.5 text-[13px] text-muted-foreground"
+                    className="comment flex items-start gap-3 px-2 py-1.5 text-[13px] text-muted-foreground"
                   >
                     <AvatarBubble accent>{initials(userName(item.author))}</AvatarBubble>
                     <span><strong>{userName(item.author)}</strong> {item.body || item.text || item.content} · {formatDate(item.created_at)}</span>
@@ -265,18 +279,23 @@ export function IssuePage() {
                 icon={<StatusGlyph state={stateName(issue)} />}
                 value={stateName(issue)}
               >
-                {STATUS_OPTIONS.map((status) => {
-                  const matchingState = states.find((state) => state.name === status);
-                  return (
-                    <DropdownMenuItem
-                      key={status}
-                      onClick={() => updateIssue(matchingState?.id ? { state_id: matchingState.id } : { state: status })}
-                    >
-                      <StatusGlyph state={status} />
-                      {status}
-                    </DropdownMenuItem>
-                  );
-                })}
+                {(closeMenu) =>
+                  STATUS_OPTIONS.map((status) => {
+                    const matchingState = states.find((state) => state.name === status);
+                    return (
+                      <PropertyMenuItem
+                        key={status}
+                        onSelect={() => {
+                          closeMenu();
+                          void updateIssue(matchingState?.id ? { state_id: matchingState.id } : { state: status }, { state: status });
+                        }}
+                      >
+                        <StatusGlyph state={status} />
+                        {status}
+                      </PropertyMenuItem>
+                    );
+                  })
+                }
               </PropertyPickerRow>
 
               <PropertyPickerRow
@@ -284,12 +303,20 @@ export function IssuePage() {
                 icon={<PriorityIcon priority={issue.priority} />}
                 value={priorityLabel(issue.priority)}
               >
-                {PRIORITY_OPTIONS.map((priority) => (
-                  <DropdownMenuItem key={priority.value} onClick={() => updateIssue({ priority: priority.value })}>
-                    <PriorityIcon priority={priority.value} />
-                    {priority.label}
-                  </DropdownMenuItem>
-                ))}
+                {(closeMenu) =>
+                  PRIORITY_OPTIONS.map((priority) => (
+                    <PropertyMenuItem
+                      key={priority.value}
+                      onSelect={() => {
+                        closeMenu();
+                        void updateIssue({ priority: priority.value }, { priority: priority.value });
+                      }}
+                    >
+                      <PriorityIcon priority={priority.value} />
+                      {priority.label}
+                    </PropertyMenuItem>
+                  ))
+                }
               </PropertyPickerRow>
 
               <PropertyPickerRow
@@ -297,16 +324,31 @@ export function IssuePage() {
                 icon={<AvatarBubble accent>{initials(assigneeName(issue))}</AvatarBubble>}
                 value={assigneeName(issue)}
               >
-                <DropdownMenuItem onClick={() => updateIssue({ assignee_id: null })}>
-                  <AvatarBubble>?</AvatarBubble>
-                  Unassigned
-                </DropdownMenuItem>
-                {users.map((user) => (
-                  <DropdownMenuItem key={user.id || user.username} onClick={() => updateIssue({ assignee_id: user.id })}>
-                    <AvatarBubble>{initials(userName(user))}</AvatarBubble>
-                    {userName(user)}
-                  </DropdownMenuItem>
-                ))}
+                {(closeMenu) => (
+                  <>
+                    <PropertyMenuItem
+                      onSelect={() => {
+                        closeMenu();
+                        void updateIssue({ assignee_id: null }, { assignee: null, assignee_id: null });
+                      }}
+                    >
+                      <AvatarBubble>?</AvatarBubble>
+                      Unassigned
+                    </PropertyMenuItem>
+                    {users.map((user) => (
+                      <PropertyMenuItem
+                        key={user.id || user.username}
+                        onSelect={() => {
+                          closeMenu();
+                          void updateIssue({ assignee_id: user.id }, { assignee: user, assignee_id: user.id });
+                        }}
+                      >
+                        <AvatarBubble>{initials(userName(user))}</AvatarBubble>
+                        {userName(user)}
+                      </PropertyMenuItem>
+                    ))}
+                  </>
+                )}
               </PropertyPickerRow>
 
             </CardContent>
@@ -359,12 +401,29 @@ export function IssuePage() {
                 icon={<Plus size={14} />}
                 value={projectName(issue.project)}
               >
-                <DropdownMenuItem onClick={() => updateIssue({ project_id: null })}>No project</DropdownMenuItem>
-                {projects.map((project) => (
-                  <DropdownMenuItem key={project.id || project.name} onClick={() => updateIssue({ project_id: project.id })}>
-                    {projectName(project)}
-                  </DropdownMenuItem>
-                ))}
+                {(closeMenu) => (
+                  <>
+                    <PropertyMenuItem
+                      onSelect={() => {
+                        closeMenu();
+                        void updateIssue({ project_id: null }, { project: null, project_id: null });
+                      }}
+                    >
+                      No project
+                    </PropertyMenuItem>
+                    {projects.map((project) => (
+                      <PropertyMenuItem
+                        key={project.id || project.name}
+                        onSelect={() => {
+                          closeMenu();
+                          void updateIssue({ project_id: project.id }, { project, project_id: project.id });
+                        }}
+                      >
+                        {projectName(project)}
+                      </PropertyMenuItem>
+                    ))}
+                  </>
+                )}
               </PropertyPickerRow>
             </CardContent>
           </Card>
@@ -404,27 +463,66 @@ function PropertyPickerRow({
   value,
   testId,
 }: {
-  children: ReactNode;
+  children: ReactNode | ((closeMenu: () => void) => ReactNode);
   icon: ReactNode;
   value: string;
   testId: string;
 }) {
+  const [open, setOpen] = useState(false);
+  const closeMenu = () => {
+    setOpen(false);
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          data-testid={testId}
-          className="flex min-h-8 w-full items-center gap-2 rounded-md text-left text-[13px] text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <span className="grid size-5 shrink-0 place-items-center text-muted-foreground">{icon}</span>
-          <span className="min-w-0 truncate">{value}</span>
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-64">
-        {children}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="relative">
+      <button
+        type="button"
+        data-testid={testId}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        className="flex min-h-8 w-full items-center gap-2 rounded-md text-left text-[13px] text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+        onClick={() => setOpen((current) => !current)}
+      >
+        <span className="grid size-5 shrink-0 place-items-center text-muted-foreground">{icon}</span>
+        <span className="min-w-0 truncate">{value}</span>
+      </button>
+      {open && (
+        <>
+          <button
+            type="button"
+            aria-label="Close property menu"
+            className="fixed inset-0 z-40 cursor-default bg-transparent"
+            onClick={closeMenu}
+          />
+          <div
+            role="menu"
+            aria-label={value}
+            className="absolute left-0 top-[calc(100%+4px)] z-50 w-64 overflow-hidden rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10"
+          >
+            {typeof children === "function" ? children(closeMenu) : children}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function PropertyMenuItem({
+  children,
+  onSelect,
+}: {
+  children: ReactNode;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      role="menuitem"
+      className="flex w-full items-center gap-1.5 rounded-md px-1.5 py-1 text-left text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+      onClick={onSelect}
+    >
+      {children}
+    </button>
   );
 }
 

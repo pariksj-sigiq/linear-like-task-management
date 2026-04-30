@@ -56,7 +56,7 @@ export function AppSidebar({
   const [tryOpen, setTryOpen] = React.useState(true);
 
   return (
-    <Sidebar collapsible="offcanvas" {...props} className="linear-sidebar">
+    <Sidebar collapsible="offcanvas" {...props} className="linear-sidebar" data-testid="linear-sidebar">
       <SidebarHeader className="px-3 pb-2 pt-4">
         <SidebarMenu>
           <SidebarMenuItem>
@@ -93,7 +93,7 @@ export function AppSidebar({
                       <DropdownMenuItem>Eltsuh</DropdownMenuItem>
                     </DropdownMenuSubContent>
                   </DropdownMenuSub>
-                  <DropdownMenuItem className="h-[39px] rounded-none px-3 text-[14px]" onClick={_onLogout}>
+                  <DropdownMenuItem className="h-[39px] rounded-none px-3 text-[14px]" onClick={_onLogout} data-testid="logout-button">
                     <span className="flex-1">Log out</span>
                     <span className="text-muted-foreground">⌥ ⇧ Q</span>
                   </DropdownMenuItem>

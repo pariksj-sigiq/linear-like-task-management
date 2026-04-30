@@ -27,14 +27,7 @@ function ProtectedApp() {
 
   useEffect(() => {
     const applyTheme = () => {
-      const params = new URLSearchParams(window.location.search);
-      const queryTheme = params.get("theme");
-      const preferredTheme =
-        queryTheme === "dark" || queryTheme === "light"
-          ? queryTheme
-          : window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "dark"
-            : "light";
+      const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 
       document.documentElement.dataset.theme = preferredTheme;
       document.documentElement.classList.toggle("linear-dark", preferredTheme === "dark");
@@ -45,7 +38,7 @@ function ProtectedApp() {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     media.addEventListener("change", applyTheme);
     return () => media.removeEventListener("change", applyTheme);
-  }, [location.search]);
+  }, []);
 
   useEffect(() => {
     if (!document.title || document.title === "Vite + React + TS") {

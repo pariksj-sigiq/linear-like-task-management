@@ -113,6 +113,38 @@ class TestIssues:
         unlinked = step("set_project", {"issue_id": issue["id"], "project_id": None})
         assert unlinked["project_id"] is None
 
+    def test_update_issue_accepts_issue_key_identifiers(self):
+        team_id = step("search_teams", {"query": "ENG"})["teams"][0]["id"]
+        review_state = next(
+            state
+            for state in step("list_workflow_states", {"query": "ENG"})["states"]
+            if state["name"] == "In Review"
+        )
+        issue = step(
+            "create_issue",
+            {
+                "team_id": team_id,
+                "title": "Unit test update by issue key",
+                "creator_id": "user_001",
+            },
+        )
+
+        updated = step("update_issue", {"id": issue["key"], "state_id": review_state["id"], "priority": "urgent"})
+        assert updated["key"] == issue["key"]
+        assert updated["state_name"] == "In Review"
+        assert updated["priority"] == "urgent"
+
+    def test_reference_issue_keys_open_from_seed(self):
+        elt_issue = step("get_issue", {"id": "ELT-18"})["issue"]
+        assert elt_issue["key"] == "ELT-18"
+        assert elt_issue["title"] == "Polish project update composer"
+        assert elt_issue["project_name"] == "Constructing linear clone"
+
+        engg_issue = step("get_issue", {"id": "ENGG-1847"})["issue"]
+        assert engg_issue["key"] == "ENGG-1847"
+        assert engg_issue["title"] == "Handle transient LLM failures"
+        assert engg_issue["project_name"] == "ET Bug Board"
+
     def test_label_comment_relation_and_bulk_tools(self):
         issues = step("search_issues", {"team_key": "ENG", "limit": 3})["issues"]
         labels = step("search_labels", {"query": "P0"})["labels"]

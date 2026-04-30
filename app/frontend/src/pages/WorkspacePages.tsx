@@ -1023,7 +1023,7 @@ export function ProjectDetailPage({ initialTab = "overview" }: { initialTab?: "o
                 <EmptyState
                   title="No linked issues"
                   description="Add existing issues to this project or create a new issue from the global create modal."
-                  action={<Button variant="primary" onClick={openAddIssues} data-testid="project-add-issue">Add issues</Button>}
+                  action={<Button variant="primary" onClick={openAddIssues} data-testid="project-add-empty-issue">Add issues</Button>}
                 />
               ) : (
                 <div className="grid gap-0">

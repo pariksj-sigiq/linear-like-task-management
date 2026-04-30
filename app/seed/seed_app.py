@@ -351,6 +351,265 @@ def seed_task_fixtures() -> None:
     print("[seed] Seeded deterministic task fixtures.")
 
 
+def seed_reference_issue_fixtures(workspace_id: str) -> None:
+    """Seed exact issue keys used by the Linear reference-style UI surfaces."""
+
+    try:
+        import psycopg2
+    except ImportError:
+        print("[seed] psycopg2 unavailable; reference issue fixtures were not seeded.")
+        return
+
+    conn = psycopg2.connect(DATABASE_URL)
+    conn.autocommit = True
+    cur = conn.cursor()
+
+    reference_users = [
+        ("user_ref_parikshit", "parikshit.joon", "Parikshit Joon", "parikshit.joon@gmail.com"),
+        ("user_ref_minal", "minalgoel99", "Minal Goel", "minalgoel99@gmail.com"),
+        ("user_ref_vishal", "vishalsharma.gbpecdelhi", "Vishal Sharma", "vishalsharma.gbpecdelhi@gmail.com"),
+        ("user_ref_rohan", "rohanbojja", "Rohan Bojja", "rohanbojja@icloud.com"),
+        ("user_ref_jaikumar", "jaikumar.a", "Jaikumar A`", "jaikumar@example.com"),
+        ("user_ref_keita", "keita", "Keita", "keita@sigiq.ai"),
+        ("user_ref_jasper", "jasper.emhoff", "Jasper Emhoff", "jasper@example.com"),
+    ]
+    for user_id, username, full_name, email in reference_users:
+        cur.execute(
+            """
+            INSERT INTO users (id, username, password, full_name, email, role)
+            VALUES (%s, %s, 'password', %s, %s, 'standard')
+            ON CONFLICT (id) DO UPDATE SET
+                username = EXCLUDED.username,
+                full_name = EXCLUDED.full_name,
+                email = EXCLUDED.email
+            """,
+            (user_id, username, full_name, email),
+        )
+
+    teams = [
+        ("tm_ref_elt", "ELT", "Eltsuh", "sparkles", "#5e6ad2"),
+        ("tm_ref_engg", "ENGG", "Engineering Growth", "code", "#4d7bd6"),
+    ]
+    for team_id, key, name, icon, color in teams:
+        cur.execute(
+            """
+            INSERT INTO teams (id, workspace_id, key, name, icon, color)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            ON CONFLICT (id) DO UPDATE SET
+                workspace_id = EXCLUDED.workspace_id,
+                key = EXCLUDED.key,
+                name = EXCLUDED.name,
+                icon = EXCLUDED.icon,
+                color = EXCLUDED.color
+            """,
+            (team_id, workspace_id, key, name, icon, color),
+        )
+        for user_id, *_ in reference_users:
+            cur.execute(
+                """
+                INSERT INTO team_members (team_id, user_id, role)
+                VALUES (%s, %s, 'member')
+                ON CONFLICT (team_id, user_id) DO UPDATE SET role = EXCLUDED.role
+                """,
+                (team_id, user_id),
+            )
+
+    state_specs = [
+        ("backlog", "Backlog", "backlog", "#5e6066", 10),
+        ("todo", "Todo", "unstarted", "#8a8f98", 20),
+        ("progress", "In Progress", "started", "#5e6ad2", 30),
+        ("pr_review", "In PR Review", "started", "#d26ac2", 35),
+        ("review", "In Review", "started", "#d26ac2", 40),
+        ("qa_requested", "QA Requested", "started", "#f2a900", 45),
+        ("in_qa", "In QA", "started", "#f2a900", 50),
+        ("changes_requested", "Changes Requested", "started", "#eb5757", 55),
+        ("qa_passed", "QA Passed", "completed", "#4cb782", 60),
+        ("done", "Done", "completed", "#4cb782", 90),
+        ("canceled", "Canceled", "cancelled", "#95918c", 100),
+    ]
+    for team_id, key, *_ in teams:
+        for slug, name, category, color, position in state_specs:
+            cur.execute(
+                """
+                INSERT INTO workflow_states (id, team_id, name, category, color, position)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                ON CONFLICT (id) DO UPDATE SET
+                    name = EXCLUDED.name,
+                    category = EXCLUDED.category,
+                    color = EXCLUDED.color,
+                    position = EXCLUDED.position
+                """,
+                (f"ws_ref_{key.lower()}_{slug}", team_id, name, category, color, position),
+            )
+
+    projects = [
+        ("prj_ref_constructing_linear_clone", "Constructing linear clone", "Reference project backing the Linear clone project detail screenshots.", "started", "on_track", "user_ref_parikshit", "2026-04-01", "2026-06-15"),
+        ("prj_ref_et_bug_board", "ET Bug Board", "Reference inbox and QA issue board.", "started", "at_risk", "user_ref_parikshit", "2026-04-01", "2026-05-30"),
+        ("prj_ref_internal_dashboard_audit", "Internal dashboard product feature QA audit", "Internal dashboard QA audit issue collection.", "started", "on_track", "user_ref_jaikumar", "2026-04-01", "2026-05-30"),
+        ("prj_ref_clever_lms", "Clever LMS Integration (Canvas, Schoolology, Google Classroom)", "Clever LMS integration delivery work.", "completed", "on_track", "user_ref_parikshit", "2026-03-01", "2026-04-30"),
+        ("prj_ref_session_invalidation", "Invalidate Previous Sessions", "Shared-device SSO revocation and session invalidation.", "completed", "on_track", "user_ref_parikshit", "2026-03-01", "2026-04-30"),
+        ("prj_ref_api_security", "API Security Audit - IDOR & Access Control", "API security audit reference project.", "completed", "on_track", "user_ref_parikshit", "2026-03-01", "2026-04-30"),
+        ("prj_ref_internal_dashboard", "Internal dashboard", "Internal dashboard operations.", "completed", "on_track", "user_ref_rohan", "2026-03-01", "2026-04-30"),
+        ("prj_ref_prompt_assignment", "Improve prompt config assignment flow", "Prompt assignment flow design document.", "completed", "on_track", "user_ref_parikshit", "2026-03-01", "2026-04-30"),
+        ("prj_ref_live_tutor", "Re-architecting live-tutor", "Live tutor runtime architecture.", "canceled", "off_track", "user_ref_parikshit", "2026-02-01", "2026-03-15"),
+    ]
+    for project in projects:
+        cur.execute(
+            """
+            INSERT INTO projects (id, workspace_id, name, description, state, status, health, lead_id, start_date, target_date)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (id) DO UPDATE SET
+                workspace_id = EXCLUDED.workspace_id,
+                name = EXCLUDED.name,
+                description = EXCLUDED.description,
+                state = EXCLUDED.state,
+                status = EXCLUDED.status,
+                health = EXCLUDED.health,
+                lead_id = EXCLUDED.lead_id,
+                start_date = EXCLUDED.start_date,
+                target_date = EXCLUDED.target_date
+            """,
+            (project[0], workspace_id, project[1], project[2], project[3], project[3], project[4], project[5], project[6], project[7]),
+        )
+
+    cycles = [
+        ("cyc_ref_elt_30", "tm_ref_elt", 30, "Cycle 30", "2026-04-20", "2026-05-03", "active"),
+        ("cyc_ref_engg_30", "tm_ref_engg", 30, "Cycle 30", "2026-04-20", "2026-05-03", "active"),
+    ]
+    for cycle in cycles:
+        cur.execute(
+            """
+            INSERT INTO cycles (id, team_id, number, name, start_date, end_date, state)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (id) DO UPDATE SET
+                name = EXCLUDED.name,
+                start_date = EXCLUDED.start_date,
+                end_date = EXCLUDED.end_date,
+                state = EXCLUDED.state
+            """,
+            cycle,
+        )
+
+    assignee_by_text = {
+        "parikshit.joon@gmail.com": "user_ref_parikshit",
+        "parikshit joon": "user_ref_parikshit",
+        "parikshit.joon@sigiq.ai": "user_ref_parikshit",
+        "minalgoel99@gmail.com": "user_ref_minal",
+        "vishalsharma.gbpecdelhi@gmail.com": "user_ref_vishal",
+        "rohanbojja@icloud.com": "user_ref_rohan",
+        "Rohan B": "user_ref_rohan",
+        "Jaikumar A`": "user_ref_jaikumar",
+        "keita@sigiq.ai": "user_ref_keita",
+        "jasper emhoff": "user_ref_jasper",
+    }
+    state_slug_by_name = {
+        "Backlog": "backlog",
+        "Todo": "todo",
+        "In Progress": "progress",
+        "In PR Review": "pr_review",
+        "In Review": "review",
+        "QA Requested": "qa_requested",
+        "In QA": "in_qa",
+        "Changes Requested": "changes_requested",
+        "QA Passed": "qa_passed",
+        "Done": "done",
+        "Canceled": "canceled",
+    }
+    priority_by_rank = {1: "urgent", 2: "high", 3: "medium", 4: "low"}
+    project_by_name = {name: project_id for project_id, name, *_ in projects}
+
+    issue_specs = [
+        ("ELT-5", "Handle transient LLM failures", "In Progress", 2, 30, "parikshit.joon@gmail.com", "Constructing linear clone", "LLM transient failures need a retry-safe issue workflow."),
+        ("ELT-6", "Students and Teachers CTAs appear as filters but trigger bulk assignment", "In Review", 3, 30, "vishalsharma.gbpecdelhi@gmail.com", "Constructing linear clone", "CTA behavior needs review before assignment changes ship."),
+        ("ELT-7", "Classroom and teacher identifiers are unclear in student detail drawers", "In Review", 3, 30, "minalgoel99@gmail.com", "Constructing linear clone", "Student detail drawers need clearer classroom and teacher identifiers."),
+        ("ELT-8", "Clever read/write capabilities for LMSs", "Done", 2, 29, "parikshit.joon@gmail.com", "Constructing linear clone", "Clever read/write LMS capabilities are complete."),
+        ("ELT-10", "WebSocket unauthorized errors when starting a lesson in dev and localhost", "Done", 2, 28, "parikshit.joon@gmail.com", "Constructing linear clone", "Resolved websocket auth failures in dev and localhost."),
+        ("ELT-16", "Repair notification read state", "Todo", 2, 5, "rohanbojja@icloud.com", "Constructing linear clone", "Notification read state should persist across refresh."),
+        ("ELT-17", "Design reviewer request empty state", "Todo", 2, 8, "parikshit.joon@gmail.com", "Constructing linear clone", "Design reviewer requests need a better empty state."),
+        ("ELT-18", "Polish project update composer", "In Progress", 2, 8, "vishalsharma.gbpecdelhi@gmail.com", "Constructing linear clone", "Project update composer should match Linear's compact editing flow."),
+        ("ELT-19", "Audit picker keyboard states", "In Progress", 2, 13, "minalgoel99@gmail.com", "Constructing linear clone", "Picker keyboard and focus states need audit coverage."),
+        ("ELT-21", "Task verifier zero-state scoring gap", "In Review", 1, 21, "parikshit.joon@gmail.com", "Constructing linear clone", "Zero-state scoring gap should be visible in the issue detail."),
+        ("ELT-22", "Alex loading-state polish candidate", "In Progress", 3, 5, "vishalsharma.gbpecdelhi@gmail.com", "Constructing linear clone", "Loading-state polish candidate for my-issues activity."),
+        ("ELT-23", "Issue Flow Implementation follow-up", "Todo", 2, 8, "minalgoel99@gmail.com", "Constructing linear clone", "Follow-up work for issue flow implementation."),
+        ("ELT-24", "Linear UI Fidelity Pass spacing regression", "Backlog", 1, 13, "rohanbojja@icloud.com", "Constructing linear clone", "Spacing regression from Linear UI fidelity pass."),
+        ("ELT-25", "QA Automation smoke checks need browser screenshots", "Todo", 2, 8, "parikshit.joon@gmail.com", "Constructing linear clone", "QA smoke checks should capture browser screenshots."),
+        ("ELT-27", "Inbox split-pane parity", "In Review", 2, 13, "minalgoel99@gmail.com", "Constructing linear clone", "Inbox split-pane behavior should match the reference."),
+        ("ELT-28", "Activity board density pass", "Backlog", 2, 21, "rohanbojja@icloud.com", "Constructing linear clone", "Activity board density pass for reference parity."),
+        ("ENGG-1062", "P2-05: Python Redis runtime per-call session reconstruction", "Canceled", 4, 5, "parikshit joon", "Re-architecting live-tutor", "Canceled Redis runtime reconstruction work."),
+        ("ENGG-1626", "Design Document", "Done", 2, 26, "parikshit joon", "Improve prompt config assignment flow", "Design document is complete."),
+        ("ENGG-1631", "FF unable to toggle services on", "Done", 2, 27, "Rohan B", "Internal dashboard", "Feature flag service toggle issue is complete."),
+        ("ENGG-1671", "Clever read/write capabilities for LMSs", "Done", 2, 29, "parikshit joon", "Clever LMS Integration (Canvas, Schoolology, Google Classroom)", "Clever read/write capability task."),
+        ("ENGG-1757", "QA: validate shared-device SSO revocation flow and credential-login", "Done", 2, 29, "parikshit joon", "Invalidate Previous Sessions", "Shared-device SSO revocation QA validation."),
+        ("ENGG-1772", "WebSocket unauthorized errors when starting a lesson (dev + localhost)", "Done", 2, 28, "parikshit joon", "API Security Audit - IDOR & Access Control", "WebSocket unauthorized errors in dev and localhost."),
+        ("ENGG-1792", "Students and Teachers CTAs appear as filters but trigger bulk assignment actions", "In QA", 3, 30, "Jaikumar A`", "ET Bug Board", "Students and Teachers CTAs need corrected assignment behavior."),
+        ("ENGG-1795", "Classroom and teacher identifiers are unclear, and student details are not visible", "QA Passed", 3, 30, "Jaikumar A`", "Internal dashboard product feature QA audit", "Classroom and teacher identifiers need visibility."),
+        ("ENGG-1802", "Network Tab Audit [Keita]", "Backlog", 2, 13, "keita@sigiq.ai", "ET Bug Board", "Network tab audit task."),
+        ("ENGG-1840", "Students assignment name mismatch", "Backlog", 2, 8, "Jaikumar A`", "ET Bug Board", "Students assignment name mismatch."),
+        ("ENGG-1847", "Handle transient LLM failures", "In QA", 2, 30, "parikshit.joon@sigiq.ai", "ET Bug Board", "The particular failure was a 500 internal service error from Azure foundry."),
+    ]
+    for key, title, state_name, priority_rank, estimate, assignee, project_name, description in issue_specs:
+        team_key, number_text = key.split("-", 1)
+        number = int(number_text)
+        team_id = "tm_ref_elt" if team_key == "ELT" else "tm_ref_engg"
+        state_id = f"ws_ref_{team_key.lower()}_{state_slug_by_name[state_name]}"
+        project_id = project_by_name[project_name]
+        issue_id = f"iss_ref_{team_key.lower()}_{number}"
+        cycle_id = "cyc_ref_elt_30" if team_key == "ELT" else "cyc_ref_engg_30"
+        priority = priority_by_rank.get(priority_rank, "none")
+        assignee_id = assignee_by_text.get(assignee)
+        cur.execute(
+            """
+            INSERT INTO issues
+              (id, team_id, number, identifier, title, description, state_id, status_id, priority, estimate,
+               assignee_id, creator_id, project_id, cycle_id, due_date, is_archived)
+            VALUES
+              (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'user_001', %s, %s, '2026-05-08', false)
+            ON CONFLICT (id) DO UPDATE SET
+              team_id = EXCLUDED.team_id,
+              number = EXCLUDED.number,
+              identifier = EXCLUDED.identifier,
+              title = EXCLUDED.title,
+              description = EXCLUDED.description,
+              state_id = EXCLUDED.state_id,
+              status_id = EXCLUDED.status_id,
+              priority = EXCLUDED.priority,
+              estimate = EXCLUDED.estimate,
+              assignee_id = EXCLUDED.assignee_id,
+              project_id = EXCLUDED.project_id,
+              cycle_id = EXCLUDED.cycle_id,
+              due_date = EXCLUDED.due_date,
+              is_archived = false
+            """,
+            (issue_id, team_id, number, key, title, description, state_id, state_id, priority, estimate, assignee_id, project_id, cycle_id),
+        )
+        cur.execute(
+            """
+            INSERT INTO issue_activity (id, issue_id, actor_id, kind, to_value)
+            VALUES (%s, %s, 'user_001', 'created', %s)
+            ON CONFLICT (id) DO UPDATE SET to_value = EXCLUDED.to_value
+            """,
+            (f"act_ref_{team_key.lower()}_{number}_created", issue_id, title),
+        )
+
+    for comment_id, issue_id, author_id, body in [
+        ("cmt_ref_engg_1847", "iss_ref_engg_1847", "user_ref_jasper", "Assigned for QA because Azure Foundry returned a transient 500."),
+        ("cmt_ref_elt_18", "iss_ref_elt_18", "user_ref_vishal", "Composer polish is in progress and needs final picker checks."),
+        ("cmt_ref_elt_21", "iss_ref_elt_21", "user_ref_parikshit", "Zero-state verifier scoring gap is still under review."),
+    ]:
+        cur.execute(
+            """
+            INSERT INTO issue_comments (id, issue_id, author_id, body)
+            VALUES (%s, %s, %s, %s)
+            ON CONFLICT (id) DO UPDATE SET body = EXCLUDED.body
+            """,
+            (comment_id, issue_id, author_id, body),
+        )
+
+    cur.close()
+    conn.close()
+    print("[seed] Seeded reference issue fixtures for ELT and ENGG keys.")
+
+
 def main() -> None:
     print(f"[seed] Waiting for tool server at {TOOL_SERVER_URL}...")
     wait_for_health(f"{TOOL_SERVER_URL}/health")
@@ -576,6 +835,7 @@ def main() -> None:
         ]:
             tool("create_template", {"team_id": team["id"], "name": f"{key} {name}", "payload_json": payload, "created_by": "user_001"})
 
+    seed_reference_issue_fixtures(workspace["id"])
     seed_task_fixtures()
 
     print("[seed] Verifying seed...")

@@ -55,6 +55,8 @@
   --topbar-bg: #fcfcfc;
   --topbar-height: 44px;
   --topbar-border: #e6e6e6;
+  --shell-divider: #e5e5e5;
+  --panel-divider: #e5e5e5;
 
   /* Accent / Primary (Linear purple) */
   --primary: #5e6ad2;
@@ -195,7 +197,9 @@
     --sidebar-muted: #747474;
 
     --topbar-bg: #171717;
-    --topbar-border: #2a2a2a;
+    --topbar-border: #242424;
+    --shell-divider: #202020;
+    --panel-divider: #252525;
 
     --primary: #5e6ad2;
     --primary-hover: #7179db;

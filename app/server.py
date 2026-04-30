@@ -1001,8 +1001,9 @@ def _update_issue(issue_id: str, updates: dict[str, Any]) -> dict[str, Any]:
         before = _get_issue_by_ref(db, issue_id=issue_id)
         if not before:
             raise ValueError(f"Issue not found: {issue_id}")
+        resolved_issue_id = before["id"]
         sets = []
-        params = {"id": issue_id}
+        params = {"id": resolved_issue_id}
         for key in allowed:
             if key in updates:
                 sets.append(f"{key} = :{key}")
@@ -1020,10 +1021,10 @@ def _update_issue(issue_id: str, updates: dict[str, Any]) -> dict[str, Any]:
         db.execute(text(f"UPDATE issues SET {', '.join(sets)} WHERE id = :id"), params)
         for key, value in updates.items():
             if key in allowed and before.get(key) != value:
-                _activity(db, issue_id, f"{key}_change", from_value=before.get(key), to_value=value)
-        _audit(db, "issue", issue_id, "updated", updates)
+                _activity(db, resolved_issue_id, f"{key}_change", from_value=before.get(key), to_value=value)
+        _audit(db, "issue", resolved_issue_id, "updated", updates)
         db.commit()
-    return get_issue(GetIssueArgs(id=issue_id))["issue"]
+    return get_issue(GetIssueArgs(id=resolved_issue_id))["issue"]
 
 
 def _update_record(table: str, record_id: str, updates: dict[str, Any], allowed: list[str]) -> dict[str, Any]:

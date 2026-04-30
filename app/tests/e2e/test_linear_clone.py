@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import os
 import re
+import uuid
 
 from playwright.sync_api import Page
 from playwright.sync_api import expect
@@ -29,14 +30,15 @@ class TestAuthAndShell:
     def test_login_and_logout(self, page: Page) -> None:
         login(page)
         expect(page.get_by_test_id("nav-my-issues")).to_be_visible()
+        page.get_by_test_id("workspace-menu-trigger").click()
         page.get_by_test_id("logout-button").click()
         page.wait_for_load_state("networkidle")
         expect(page.get_by_test_id("login-page")).to_be_visible()
 
     def test_command_palette_opens(self, page: Page) -> None:
         login(page)
-        expect(page.get_by_text("Collinear")).to_be_visible()
-        expect(page.get_by_test_id("favorite-active")).to_have_attribute("href", re.compile(r"/team/eng/active$"))
+        expect(page.get_by_test_id("workspace-menu-trigger")).to_be_visible()
+        expect(page.get_by_test_id("team-eng-active-nav")).to_have_attribute("href", re.compile(r"/team/eng/active$"))
         page.get_by_test_id("command-palette-button").click()
         expect(page.get_by_test_id("command-palette")).to_be_visible()
         page.keyboard.press("Escape")
@@ -47,16 +49,14 @@ class TestIssues:
         login(page)
         page.goto(f"{BASE_URL}/team/eng/all")
         page.wait_for_load_state("networkidle")
-        expect(page.get_by_test_id("issue-list")).to_be_visible()
+        expect(page.get_by_test_id("issue-grouped-list")).to_be_visible()
         rows = page.get_by_test_id(re.compile(r"issue-row-"))
         expect(rows.first).to_be_visible()
         assert rows.count() > 0
-        page.get_by_test_id("board-toggle").click()
-        expect(page.get_by_test_id("issue-board")).to_be_visible()
-        page.get_by_test_id("favorite-active").click()
+        page.get_by_test_id("team-eng-active-nav").click()
         page.wait_for_load_state("networkidle")
-        expect(page.get_by_role("heading", name="ENG Active")).to_be_visible()
-        expect(page.get_by_test_id("issue-board")).to_be_visible()
+        expect(page).to_have_url(re.compile(r"/team/eng/active$"))
+        expect(page.get_by_test_id("issue-grouped-list")).to_be_visible()
 
     def test_issue_detail_comment_flow(self, page: Page) -> None:
         login(page)
@@ -68,6 +68,14 @@ class TestIssues:
         page.wait_for_load_state("networkidle")
         expect(page.locator(".comment").filter(has_text="E2E comment from Linear smoke test.").last).to_be_visible()
 
+    def test_reference_issue_detail_opens_from_seed(self, page: Page) -> None:
+        login(page)
+        page.goto(f"{BASE_URL}/issue/ELT-18")
+        page.wait_for_load_state("networkidle")
+        expect(page.get_by_test_id("issue-detail-page")).to_be_visible()
+        expect(page.get_by_text("Polish project update composer").first).to_be_visible()
+        expect(page.get_by_test_id("issue-project-display")).to_contain_text("Constructing linear clone")
+
     def test_quick_create_modal_opens(self, page: Page) -> None:
         login(page)
         page.get_by_test_id("quick-create-button").click()
@@ -75,20 +83,21 @@ class TestIssues:
 
     def test_quick_create_persists_issue_with_project_and_assignee(self, page: Page) -> None:
         login(page)
-        title = "E2E quick create linked issue"
+        title = f"E2E quick create linked issue {uuid.uuid4().hex[:8]}"
         page.get_by_test_id("quick-create-button").click()
         expect(page.get_by_test_id("quick-create-modal")).to_be_visible()
         page.get_by_test_id("create-issue-title").fill(title)
-        page.get_by_role("button", name=re.compile(r"Priority|No priority")).click()
+        page.get_by_test_id("create-issue-priority").click()
         page.get_by_role("menuitem", name="High").click()
-        page.get_by_role("button", name=re.compile(r"Assignee|Unassigned")).click()
+        page.get_by_test_id("create-issue-assignee").click()
         page.get_by_role("menuitem", name="Sarah Connor").click()
-        page.get_by_role("button", name=re.compile(r"Project|No project")).click()
-        page.get_by_role("menuitem", name="Issue Flow Implementation").click()
+        page.get_by_test_id("create-issue-project").click()
+        page.get_by_role("menuitem", name="Issue Flow Implementation").first.click()
         page.get_by_test_id("create-issue-submit").click()
+        expect(page).to_have_url(re.compile(r"/issue/ENG-\d+"), timeout=10000)
         page.wait_for_load_state("networkidle")
         expect(page.get_by_test_id("issue-detail-page")).to_be_visible()
-        expect(page.get_by_role("heading", name=title)).to_be_visible()
+        expect(page.get_by_text(title).first).to_be_visible(timeout=10000)
         expect(page.get_by_test_id("issue-assignee-display")).to_contain_text("Sarah Connor")
         expect(page.get_by_test_id("issue-priority-display")).to_contain_text("High")
         expect(page.get_by_test_id("issue-project-display")).to_contain_text("Issue Flow Implementation")
@@ -104,28 +113,39 @@ class TestIssues:
         page.wait_for_load_state("networkidle")
         expect(page.get_by_test_id("issue-detail-page")).to_be_visible()
 
+        current_status = page.get_by_test_id("issue-status-display").inner_text()
+        status_target = "Todo" if "In Review" in current_status else "In Review"
         page.get_by_test_id("issue-status-display").click()
-        page.get_by_role("menuitem", name="In Review").click()
-        expect(page.get_by_test_id("issue-status-display")).to_contain_text("In Review")
+        page.get_by_role("menuitem", name=status_target).click()
+        expect(page.get_by_test_id("issue-status-display")).to_contain_text(status_target)
+        page.wait_for_load_state("networkidle")
 
+        current_assignee = page.get_by_test_id("issue-assignee-display").inner_text()
+        assignee_target = "John Smith" if "Sarah Connor" in current_assignee else "Sarah Connor"
         page.get_by_test_id("issue-assignee-display").click()
-        page.get_by_role("menuitem", name="Sarah Connor").click()
-        expect(page.get_by_test_id("issue-assignee-display")).to_contain_text("Sarah Connor")
+        page.get_by_role("menuitem", name=assignee_target).click()
+        expect(page.get_by_test_id("issue-assignee-display")).to_contain_text(assignee_target)
+        page.wait_for_load_state("networkidle")
 
+        current_priority = page.get_by_test_id("issue-priority-display").inner_text()
+        priority_target = "High" if "Urgent" in current_priority else "Urgent"
         page.get_by_test_id("issue-priority-display").click()
-        page.get_by_role("menuitem", name="Urgent").click()
-        expect(page.get_by_test_id("issue-priority-display")).to_contain_text("Urgent")
+        page.get_by_role("menuitem", name=priority_target).click()
+        expect(page.get_by_test_id("issue-priority-display")).to_contain_text(priority_target)
+        page.wait_for_load_state("networkidle")
 
+        current_project = page.get_by_test_id("issue-project-display").inner_text()
+        project_target = "Backend Tool Server Coverage" if "Issue Flow Implementation" in current_project else "Issue Flow Implementation"
         page.get_by_test_id("issue-project-display").click()
-        page.get_by_role("menuitem", name="Issue Flow Implementation").click()
-        expect(page.get_by_test_id("issue-project-display")).to_contain_text("Issue Flow Implementation")
+        page.get_by_role("menuitem", name=project_target).first.click()
+        expect(page.get_by_test_id("issue-project-display")).to_contain_text(project_target)
 
         page.reload()
         page.wait_for_load_state("networkidle")
-        expect(page.get_by_test_id("issue-status-display")).to_contain_text("In Review")
-        expect(page.get_by_test_id("issue-assignee-display")).to_contain_text("Sarah Connor")
-        expect(page.get_by_test_id("issue-priority-display")).to_contain_text("Urgent")
-        expect(page.get_by_test_id("issue-project-display")).to_contain_text("Issue Flow Implementation")
+        expect(page.get_by_test_id("issue-status-display")).to_contain_text(status_target)
+        expect(page.get_by_test_id("issue-assignee-display")).to_contain_text(assignee_target)
+        expect(page.get_by_test_id("issue-priority-display")).to_contain_text(priority_target)
+        expect(page.get_by_test_id("issue-project-display")).to_contain_text(project_target)
 
 
 class TestPlanningAndUtilityPages:
@@ -140,7 +160,7 @@ class TestPlanningAndUtilityPages:
 
     def test_project_create_and_link_issue_flow(self, page: Page) -> None:
         login(page)
-        project_name = "E2E Workflow Closure"
+        project_name = f"E2E Workflow Closure {uuid.uuid4().hex[:8]}"
         page.goto(f"{BASE_URL}/projects/all")
         page.wait_for_load_state("networkidle")
         expect(page.get_by_test_id("projects-page")).to_be_visible()

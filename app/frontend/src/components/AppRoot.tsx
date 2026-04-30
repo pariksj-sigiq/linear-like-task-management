@@ -106,7 +106,7 @@ export function AppRoot({ user, onLogout, children }: AppRootProps) {
           onQuickCreate={() => setQuickCreateOpen(true)}
         />
         <SidebarInset className="min-w-0 bg-sidebar py-2 pl-0 pr-2 pb-0">
-          <div className="linear-workspace-panel flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-background shadow-[0_1px_2px_rgba(15,15,15,0.04),0_12px_28px_rgba(15,15,15,0.05)]">
+          <div className="linear-workspace-panel flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border bg-background shadow-[0_1px_2px_rgba(15,15,15,0.04),0_12px_28px_rgba(15,15,15,0.05)]">
             <SiteHeader
               title={pageTitle}
               hideNewIssueButton={hideNewIssueButton}
@@ -117,7 +117,7 @@ export function AppRoot({ user, onLogout, children }: AppRootProps) {
               {children}
             </div>
           </div>
-          <div className="fixed inset-x-0 bottom-0 z-20 flex h-9 shrink-0 items-center justify-between border-t border-border bg-background px-2">
+          <div className="fixed inset-x-0 bottom-0 z-20 flex h-9 shrink-0 items-center justify-between border-t border-[var(--shell-divider)] bg-background px-2">
             <div className="flex items-center gap-2">
               <Button type="button" variant="ghost" size="icon-sm" aria-label="Help">
                 <HelpCircleIcon />
