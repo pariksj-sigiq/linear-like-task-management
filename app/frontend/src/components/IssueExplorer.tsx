@@ -51,8 +51,8 @@ import {
 import { Button, EmptyState, ErrorBanner, Spinner } from "./ui";
 import { SubIssueProgress } from "./SubIssueProgress";
 import { Badge } from "./ui/badge";
-import { Card } from "./ui/card";
 import { Checkbox } from "./ui/checkbox";
+import { LinearBoard, LinearBoardCard, LinearBoardColumn } from "./LinearBoard";
 import type { ChartAreaPoint } from "./chart-area-interactive";
 import type { SectionCardItem } from "./section-cards";
 import { cn } from "../lib/utils";
@@ -1042,29 +1042,28 @@ function IssueBoard({ groups, boardPreset }: { groups: Array<[string, Issue[]]>;
   };
 
   return (
-    <div className="grid min-h-[calc(100svh-15rem)] gap-3 overflow-x-auto lg:grid-cols-4" data-testid="issue-board">
+    <LinearBoard
+      className="min-h-[calc(100svh-15rem)]"
+      testId="issue-board"
+      label="Issues board"
+    >
       {orderedStates.map((state) => {
         const issues = boardPreset === "my-issues-activity" ? activityIssuesFor(state) : groupedByState.get(state) || [];
+        const count = boardPreset === "my-issues-activity" ? ACTIVITY_BOARD_COUNTS[state] ?? issues.length : issues.length;
         return (
-          <div className="min-w-64 overflow-hidden rounded-md border border-border bg-background" key={state}>
-            <div className="flex min-h-10 items-center justify-between gap-2 border-b border-border px-3">
-              <span className="flex min-w-0 items-center gap-2 text-sm font-medium text-foreground">
-                <StatusIcon status={state} size={13} />
-                {state}
-              </span>
-              <span className="flex items-center gap-1">
-                <Badge variant="outline" className="h-5 px-1.5 text-[11px]">{boardPreset === "my-issues-activity" ? ACTIVITY_BOARD_COUNTS[state] ?? issues.length : issues.length}</Badge>
-                <Button type="button" variant="ghost" iconOnly aria-label={`Create issue in ${state}`}>
-                  <Plus size={13} />
-                </Button>
-                <Button type="button" variant="ghost" iconOnly aria-label={`${state} menu`}>
-                  <MoreHorizontal size={13} />
-                </Button>
-              </span>
-            </div>
+          <LinearBoardColumn
+            key={state}
+            testId={`issue-board-column-${state.toLowerCase().replace(/\s+/g, "-")}`}
+            icon={<StatusGlyph state={state} />}
+            label={state}
+            count={count}
+            menuLabel={`${state} menu`}
+            createLabel={`Create issue in ${state}`}
+            onCreate={() => dispatchQuickCreate(params)}
+          >
             {issues.map((issue) => (
-              <Card key={issueKey(issue)} className="m-2 rounded-md border border-border bg-card p-3 shadow-none transition-colors hover:bg-muted/40">
-                <Link to={`/issue/${issueKey(issue)}`} className="grid gap-2">
+              <LinearBoardCard key={issueKey(issue)} testId={`issue-board-card-${issueKey(issue)}`} className="p-0">
+                <Link to={`/issue/${issueKey(issue)}`} className="grid gap-2 px-3 py-2.5">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs tabular-nums text-muted-foreground">
                     {issueKey(issue)}
@@ -1095,18 +1094,18 @@ function IssueBoard({ groups, boardPreset }: { groups: Array<[string, Issue[]]>;
                   {state.toLowerCase().includes("done") && <Badge variant="outline">1/9</Badge>}
                 </div>
                 </Link>
-              </Card>
+              </LinearBoardCard>
             ))}
             {(issues.length === 0 || (boardPreset === "my-issues-activity" && state === "In QA")) && state !== "Backlog" && (
-              <Button className="m-2 w-[calc(100%-1rem)] justify-start" variant="ghost" type="button" onClick={() => window.dispatchEvent(new Event("linear:quick-create"))}>
+              <Button className="w-full justify-start" variant="ghost" type="button" onClick={() => window.dispatchEvent(new Event("linear:quick-create"))}>
                 <Plus size={13} />
                 {boardPreset === "my-issues-activity" ? "" : "Add new issue"}
               </Button>
             )}
-          </div>
+          </LinearBoardColumn>
         );
       })}
-    </div>
+    </LinearBoard>
   );
 }
 

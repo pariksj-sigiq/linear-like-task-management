@@ -225,7 +225,7 @@ function StatusRow({
         </PopoverTrigger>
         <PopoverContent
           align="start"
-          className="w-[304px] overflow-hidden rounded-[18px] border border-border/80 bg-popover p-0 text-popover-foreground shadow-[0_18px_54px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.04]"
+          className="w-[340px] overflow-hidden rounded-[18px] border border-border/80 bg-popover p-0 text-popover-foreground shadow-[0_18px_54px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.04]"
         >
           <ProjectStatusMenu
             onBack={() => setOpen(false)}

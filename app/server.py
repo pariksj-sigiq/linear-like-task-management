@@ -836,7 +836,57 @@ def search_projects(args: SearchArgs) -> dict[str, Any]:
             """,
             {"pattern": f"%{args.query or ''}%", "limit": args.limit},
         )
+        issues_by_project = _project_issue_previews(db, [row["id"] for row in rows])
+        for row in rows:
+            row["issues"] = issues_by_project.get(row["id"], [])
         return {"count": len(rows), "projects": rows}
+
+
+def _project_issue_previews(db: DBSession, project_ids: list[str], per_project: int = 20) -> dict[str, list[dict[str, Any]]]:
+    if not project_ids:
+        return {}
+    rows = _many(
+        db,
+        """
+        SELECT *
+        FROM (
+            SELECT
+                i.project_id,
+                i.id,
+                i.identifier,
+                i.number,
+                i.title,
+                ws.name AS state_name,
+                ws.category AS state_category,
+                ROW_NUMBER() OVER (PARTITION BY i.project_id ORDER BY i.number ASC, i.created_at ASC) AS project_issue_rank
+            FROM issues i
+            LEFT JOIN workflow_states ws ON ws.id = i.state_id
+            WHERE i.project_id = ANY(:project_ids)
+              AND i.archived_at IS NULL
+              AND i.is_archived = FALSE
+        ) ranked
+        WHERE project_issue_rank <= :per_project
+        ORDER BY project_id, number ASC, id ASC
+        """,
+        {"project_ids": project_ids, "per_project": per_project},
+    )
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        grouped.setdefault(row["project_id"], []).append(
+            {
+                "id": row["id"],
+                "key": row["identifier"] or row["id"],
+                "identifier": row["identifier"] or row["id"],
+                "number": row["number"],
+                "title": row["title"],
+                "status": row["state_name"],
+                "state": {
+                    "name": row["state_name"],
+                    "category": row["state_category"],
+                },
+            }
+        )
+    return grouped
 
 
 def get_project(args: IdArgs) -> dict[str, Any]:

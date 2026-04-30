@@ -48,6 +48,21 @@ class TestAuthAndShell:
         page.wait_for_load_state("networkidle")
         expect(page.get_by_test_id("login-page")).to_be_visible()
 
+    def test_workspace_menu_honors_dark_theme(self, page: Page) -> None:
+        page.emulate_media(color_scheme="dark")
+        login(page)
+
+        page.get_by_test_id("workspace-menu-trigger").click()
+        menu = page.get_by_test_id("workspace-menu-content")
+        expect(menu).to_be_visible()
+        expect(menu).to_contain_text("Settings")
+        expect(menu).to_contain_text("G then S")
+
+        background = menu.evaluate("node => getComputedStyle(node).backgroundColor")
+        color = menu.evaluate("node => getComputedStyle(node).color")
+        assert background in {"rgb(30, 30, 30)", "rgb(34, 34, 34)"}
+        assert color == "rgb(238, 238, 238)"
+
     def test_command_palette_opens(self, page: Page) -> None:
         login(page)
         expect(page.get_by_test_id("workspace-menu-trigger")).to_be_visible()
@@ -315,6 +330,7 @@ class TestPlanningAndUtilityPages:
         expect(page.get_by_role("link", name="All projects")).to_be_visible()
         expect(page.get_by_test_id("projects-kanban-view-button")).to_contain_text("Kanban View")
         expect(page.get_by_test_id("projects-board")).to_be_visible()
+        expect(page.get_by_test_id("projects-board")).to_contain_text("ELT-5")
 
         page.get_by_test_id("projects-display-button").click()
         expect(page.get_by_test_id("projects-display-menu")).to_be_visible()
@@ -326,12 +342,17 @@ class TestPlanningAndUtilityPages:
 
         page.keyboard.press("Escape")
         page.get_by_test_id("create-project-button").click()
-        expect(page.get_by_test_id("create-project-modal")).to_be_visible()
+        modal = page.get_by_test_id("create-project-modal")
+        expect(modal).to_be_visible()
+        modal_box = modal.bounding_box()
+        assert modal_box is not None
+        assert modal_box["width"] <= 700
+        assert modal_box["height"] <= 560
         expect(page.get_by_test_id("project-name-input")).to_have_attribute("placeholder", "Project name")
         expect(page.get_by_test_id("project-summary-input")).to_have_attribute("placeholder", "Add a short summary...")
         expect(page.get_by_test_id("status-chip")).to_contain_text("Backlog")
         expect(page.get_by_test_id("priority-chip")).to_contain_text("No priority")
-        expect(page.get_by_test_id("create-project-modal")).to_contain_text("Milestones")
+        expect(modal).to_contain_text("Milestones")
 
     def test_project_status_picker_matches_linear_project_menu(self, page: Page) -> None:
         login(page)
@@ -354,8 +375,22 @@ class TestPlanningAndUtilityPages:
 
         page.get_by_test_id("overview-state-chip").click()
         expect(page.get_by_test_id("overview-status-menu")).to_be_visible()
-        for status in ["Backlog", "Planned", "In Progress", "Completed", "Canceled"]:
+        for status in [
+            "Change status...",
+            "Backlog",
+            "Planned",
+            "In Progress",
+            "QA Requested",
+            "In QA",
+            "Changes Requested",
+            "QA Passed",
+            "Completed",
+            "Canceled",
+        ]:
             expect(page.get_by_test_id("overview-status-menu")).to_contain_text(status)
+        expect(page.get_by_test_id("overview-status-menu")).to_contain_text("P")
+        expect(page.get_by_test_id("overview-status-menu")).to_contain_text("then")
+        expect(page.get_by_test_id("overview-status-menu")).to_contain_text("9")
         expect(page.get_by_test_id("overview-status-option-planned")).to_have_attribute("aria-checked", "true")
         expect(page.get_by_test_id("overview-status-option-planned-check")).to_be_visible()
 

@@ -89,7 +89,7 @@ export function AppSidebar({
             <div
               role="menu"
               data-workspace-menu-surface="true"
-              className="fixed left-3 top-12 z-[90] w-[228px] max-w-[calc(100vw-16px)] overflow-visible rounded-[10px] border border-[#d9d9d6] bg-[#fbfbfa] p-0 text-[13px] text-[#242424] shadow-[0_14px_32px_rgb(0_0_0/0.12),0_1px_2px_rgb(0_0_0/0.08)]"
+              className="fixed left-3 top-12 z-[90] w-[228px] max-w-[calc(100vw-16px)] overflow-visible rounded-[10px] border border-border/80 bg-popover p-0 text-[13px] text-popover-foreground shadow-[0_14px_32px_rgb(0_0_0/0.18),0_1px_2px_rgb(0_0_0/0.12)] ring-1 ring-black/[0.03]"
               data-testid="workspace-menu-content"
             >
               <WorkspaceMenuButton
@@ -124,13 +124,13 @@ export function AppSidebar({
               >
                 <WorkspaceMenuButton>
                   <span className="flex-1 text-left">Switch workspace</span>
-                  <ChevronRightIcon className="size-3.5 text-[#9a9a96]" />
+                  <ChevronRightIcon className="size-3.5 text-muted-foreground" />
                 </WorkspaceMenuButton>
                 {workspaceSubmenuOpen && (
                   <div
                     role="menu"
                     data-workspace-menu-surface="true"
-                    className="absolute left-[calc(100%+4px)] top-[-5px] w-[192px] rounded-[10px] border border-[#d9d9d6] bg-[#fbfbfa] p-1.5 shadow-[0_14px_32px_rgb(0_0_0/0.12),0_1px_2px_rgb(0_0_0/0.08)]"
+                    className="absolute left-[calc(100%+4px)] top-[-5px] w-[192px] rounded-[10px] border border-border/80 bg-popover p-1.5 text-popover-foreground shadow-[0_14px_32px_rgb(0_0_0/0.18),0_1px_2px_rgb(0_0_0/0.12)] ring-1 ring-black/[0.03]"
                   >
                     <WorkspaceMenuButton>Eltsuh</WorkspaceMenuButton>
                   </div>
@@ -158,7 +158,7 @@ export function AppSidebar({
           <SidebarMenuItem>
             <div ref={workspaceMenuRootRef} className="flex min-w-0 items-center gap-1.5 px-1">
               <SidebarMenuButton
-                className="h-8 min-w-0 flex-1 overflow-hidden rounded-lg px-1.5 py-1.5 text-[#262626] hover:bg-sidebar-accent data-[state=open]:bg-sidebar-accent"
+                className="h-8 min-w-0 flex-1 overflow-hidden rounded-lg px-1.5 py-1.5 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 data-state={workspaceMenuOpen ? "open" : "closed"}
                 data-testid="workspace-menu-trigger"
                 onClick={() => {
@@ -169,7 +169,7 @@ export function AppSidebar({
                 <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-[#111111] text-[10px] font-semibold text-white shadow-[inset_0_0_0_1px_rgb(255_255_255/0.08)]">
                   {workspaceName.slice(0, 2).toUpperCase()}
                 </span>
-                <span className="min-w-0 flex-1 truncate whitespace-nowrap text-left text-[14px] font-medium text-[#1f1f1f]">{workspaceName}</span>
+                <span className="min-w-0 flex-1 truncate whitespace-nowrap text-left text-[14px] font-medium text-inherit">{workspaceName}</span>
                 <ChevronDownIcon className="ml-auto size-4 shrink-0 text-sidebar-foreground/70" />
               </SidebarMenuButton>
               {workspaceMenu}
@@ -340,7 +340,7 @@ function WorkspaceMenuButton({
       type="button"
       role="menuitem"
       data-testid={testId}
-      className="flex h-[40px] w-full items-center px-3.5 text-left text-[13px] font-normal leading-none text-[#242424] outline-none hover:bg-[#f2f2f0] focus:bg-[#f2f2f0] focus:text-[#1f1f1f]"
+      className="flex h-[40px] w-full items-center gap-3 px-3.5 text-left text-[13px] font-normal leading-none text-popover-foreground outline-none hover:bg-muted/75 focus:bg-muted/75 focus:text-foreground"
       onClick={onClick}
     >
       {children}
@@ -349,7 +349,7 @@ function WorkspaceMenuButton({
 }
 
 function WorkspaceMenuSeparator() {
-  return <div role="separator" className="h-px bg-[#e3e3e0]" />;
+  return <div role="separator" className="h-px bg-border/80" />;
 }
 
 function isPathActive(pathname: string, url: string, patterns?: string[]): boolean {

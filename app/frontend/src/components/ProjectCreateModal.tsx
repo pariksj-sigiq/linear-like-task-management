@@ -261,16 +261,16 @@ export function ProjectCreateModal({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="top-[6%] max-h-[88vh] min-h-[680px] w-[calc(100%-2rem)] max-w-[820px] translate-y-0 overflow-hidden rounded-[20px] border border-border/80 bg-popover p-0 shadow-[0_24px_80px_rgba(0,0,0,0.28)] sm:max-w-[820px]"
+        className="top-[9%] max-h-[78svh] w-[min(680px,calc(100vw-4rem))] max-w-[680px] translate-y-0 overflow-hidden rounded-[18px] border border-border/80 bg-popover p-0 shadow-[0_22px_68px_rgba(0,0,0,0.28)] sm:max-w-[680px]"
         data-testid="create-project-modal"
       >
         <VisuallyHidden.Root>
           <DialogTitle>New project</DialogTitle>
           <DialogDescription>Create a new project for your team.</DialogDescription>
         </VisuallyHidden.Root>
-        <form onSubmit={submit} className="flex min-h-[680px] flex-col">
+        <form onSubmit={submit} className="flex max-h-[78svh] flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between px-5 pb-1 pt-4">
+          <div className="flex items-center justify-between border-b border-border/55 px-5 py-3">
             <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
               <span className="inline-flex h-6 items-center gap-1.5 rounded-lg border border-[#e5e5e5] bg-background px-2 text-[12px] font-medium text-[#5e6ad2] shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:border-[#333333]">
                 <Box size={12} /> ELT
@@ -289,7 +289,7 @@ export function ProjectCreateModal({
           </div>
 
           {/* Body */}
-          <div className="flex-1 overflow-y-auto px-7 pt-6">
+          <div className="flex-1 overflow-y-auto px-6 py-5">
             <ErrorBanner message={error} />
             {warnings.length > 0 && (
               <div
@@ -303,8 +303,8 @@ export function ProjectCreateModal({
             )}
 
             {/* Icon placeholder */}
-            <div className="mb-5 inline-grid size-8 place-items-center rounded-md border border-border/60 bg-muted/40 text-muted-foreground">
-              <Box size={16} />
+            <div className="mb-4 inline-grid size-7 place-items-center rounded-md border border-border/60 bg-muted/40 text-muted-foreground">
+              <Box size={15} />
             </div>
 
             {/* Name */}
@@ -313,7 +313,7 @@ export function ProjectCreateModal({
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder="Project name"
-              className="mb-1 h-10 w-full border-0 bg-transparent px-0 text-[25px] font-semibold leading-tight text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:outline-none"
+              className="mb-1 h-8 w-full border-0 bg-transparent px-0 text-[22px] font-semibold leading-tight text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:outline-none"
               data-testid="project-name-input"
             />
 
@@ -322,12 +322,12 @@ export function ProjectCreateModal({
               value={summary}
               onChange={(event) => setSummary(event.target.value)}
               placeholder="Add a short summary..."
-              className="mb-4 h-7 w-full border-0 bg-transparent px-0 text-[15px] leading-tight text-foreground outline-none placeholder:text-muted-foreground focus-visible:outline-none"
+              className="mb-3 h-6 w-full border-0 bg-transparent px-0 text-[14px] leading-tight text-foreground outline-none placeholder:text-muted-foreground focus-visible:outline-none"
               data-testid="project-summary-input"
             />
 
             {/* Chips */}
-            <div className="mb-4 flex flex-wrap items-center gap-1.5">
+            <div className="mb-3 flex flex-wrap items-center gap-1.5">
               {/* Status */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -572,14 +572,14 @@ export function ProjectCreateModal({
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               placeholder="Write a description, a project brief, or collect ideas..."
-              className="mt-6 min-h-[240px] w-full resize-none border-0 bg-transparent px-0 text-[15px] leading-6 text-foreground outline-none placeholder:text-muted-foreground focus-visible:outline-none"
+              className="mt-4 min-h-[112px] w-full resize-y border-0 bg-transparent px-0 text-[14px] leading-6 text-foreground outline-none placeholder:text-muted-foreground focus-visible:outline-none"
               data-testid="project-description-input"
             />
           </div>
 
           {/* Milestones */}
-          <div className="mx-7 mb-5 overflow-hidden rounded-xl border border-border">
-            <div className="flex items-center justify-between px-4 py-3.5">
+          <div className="mx-6 mb-4 overflow-hidden rounded-xl border border-border/80">
+            <div className="flex items-center justify-between px-4 py-3">
               <span className="text-[13px] font-medium text-foreground">Milestones</span>
               <button
                 type="button"

@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { collectionFrom, readSnapshot, readTool } from "../api";
 import { IssueExplorer, PriorityIcon, StatusGlyph, StatusPill } from "../components/IssueExplorer";
+import { LinearBoard, LinearBoardCard, LinearBoardColumn } from "../components/LinearBoard";
 import { SubIssueProgress } from "../components/SubIssueProgress";
 import { ProjectCreateModal } from "../components/ProjectCreateModal";
 import { ProjectHeader } from "../components/project/ProjectHeader";
@@ -1070,34 +1071,43 @@ function MyIssuesBoard({ issues, display }: { issues: Issue[]; display: MyIssues
   const groups = ["Backlog", "Todo", "In Progress", "In QA", "Done"].map((label) => [
     label,
     issues.filter((issue) => boardBucketForIssue(issue) === label),
-  ] as [string, Issue[]]).filter(([, rows]) => rows.length > 0);
+  ] as [string, Issue[]]);
 
-  if (!groups.length) return <EmptyState title="No matching issues" description="Adjust filters to see more issues." />;
+  if (!issues.length) return <EmptyState title="No matching issues" description="Adjust filters to see more issues." />;
 
   return (
-    <div className="grid auto-cols-[minmax(220px,1fr)] grid-flow-col gap-3 overflow-x-auto px-2 py-2" data-testid="my-issues-board">
+    <LinearBoard
+      className="min-h-[calc(100svh-15rem)]"
+      testId="my-issues-board"
+      label="My issues board"
+    >
       {groups.map(([label, rows]) => (
-        <section key={label} className="min-w-[220px] rounded-lg bg-muted/55 p-2">
-          <div className="mb-2 flex items-center gap-2 px-1 text-[13px] font-medium text-muted-foreground">
-            <span>{label}</span>
-            <span>{rows.length}</span>
-          </div>
-          <div className="grid gap-1.5">
-            {rows.map((issue) => (
-              <Link key={issueKey(issue)} to={`/issue/${issueKey(issue)}`} className="rounded-md border border-border bg-background p-2 text-[13px] shadow-sm hover:bg-muted/45">
-                <div className="mb-1 flex items-center gap-2 text-muted-foreground">
+        <LinearBoardColumn
+          key={label}
+          testId={`my-issues-board-column-${label.toLowerCase().replace(/\s+/g, "-")}`}
+          icon={<StatusGlyph state={label} />}
+          label={label}
+          count={rows.length}
+          menuLabel={`${label} options`}
+          createLabel={`Create issue in ${label}`}
+          onCreate={() => window.dispatchEvent(new Event("linear:quick-create"))}
+        >
+          {rows.map((issue) => (
+            <LinearBoardCard key={issueKey(issue)} testId={`my-issues-board-card-${issueKey(issue)}`} className="p-0">
+              <Link to={`/issue/${issueKey(issue)}`} className="block px-3 py-2.5 text-[13px]">
+                <div className="mb-1.5 flex items-center gap-2 text-muted-foreground">
                   {display.priority && <PriorityIcon priority={visiblePriority(issue.priority)} />}
-                  <span>{issueKey(issue)}</span>
+                  <span className="tabular-nums">{issueKey(issue)}</span>
                   {display.status && <StatusGlyph state={stateName(issue)} />}
                 </div>
                 <div className="line-clamp-2 font-medium text-foreground">{issueTitle(issue)}</div>
                 {display.assignee && <div className="mt-2 text-[12px] text-muted-foreground">{assigneeName(issue)}</div>}
               </Link>
-            ))}
-          </div>
-        </section>
+            </LinearBoardCard>
+          ))}
+        </LinearBoardColumn>
       ))}
-    </div>
+    </LinearBoard>
   );
 }
 

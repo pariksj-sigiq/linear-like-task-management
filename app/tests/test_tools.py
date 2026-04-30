@@ -71,6 +71,14 @@ class TestIssues:
         assert data["count"] >= 10
         assert all("key" in issue for issue in data["issues"])
 
+    def test_search_projects_returns_linked_issue_keys(self):
+        data = step("search_projects", {"query": "Constructing linear clone", "limit": 1})
+        project = data["projects"][0]
+
+        assert project["issue_count"] >= 16
+        assert len(project["issues"]) <= project["issue_count"]
+        assert {issue["key"] for issue in project["issues"]} & {"ELT-5", "ELT-18", "ELT-28"}
+
     def test_create_and_update_issue_workflow(self):
         teams = step("search_teams", {"query": "ENG"})
         team_id = teams["teams"][0]["id"]

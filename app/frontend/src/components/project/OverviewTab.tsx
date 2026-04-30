@@ -93,8 +93,8 @@ function saveResources(projectId: string | undefined, resources: ResourceLink[])
 
 function chipClasses(active?: boolean) {
   return cn(
-    "inline-flex h-[32px] shrink-0 items-center gap-2 rounded-full border border-border/60 bg-background px-3.5 text-[15px] font-normal text-foreground shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-colors hover:bg-muted/45 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#5e6ad2]",
-    active && "border-[#5e6ad2] bg-background shadow-[0_0_0_1px_rgba(94,106,210,0.9)]",
+    "inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full border border-transparent bg-background px-2.5 text-[14px] font-normal text-foreground transition-colors hover:bg-muted/55 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#5e6ad2]",
+    active && "bg-muted/70",
   );
 }
 
@@ -394,7 +394,7 @@ export function ProjectOverviewTab({
               aria-expanded={openPropertyMenu === "status"}
               onClick={() => setOpenPropertyMenu((current) => (current === "status" ? null : "status"))}
             >
-              <ProjectStatusGlyph status={currentStateOption.value} size={16} />
+              <ProjectStatusGlyph status={currentStateOption.value} size={15} />
               <span>{stateText}</span>
             </button>
             <button
@@ -436,11 +436,12 @@ export function ProjectOverviewTab({
 
             {openPropertyMenu === "status" && (
               <ProjectStatusMenu
-                className="absolute left-0 top-[calc(100%+8px)] z-[70] w-[304px]"
+                className="absolute left-0 top-[calc(100%+7px)] z-[70] w-[340px]"
                 disabled={propertySaving}
                 onSelect={(option) => patchProject({ state: option.value })}
                 optionTestIdPrefix="overview-status-option"
                 selected={currentStateOption.value}
+                showCommandHeader
                 testId="overview-status-menu"
               />
             )}
