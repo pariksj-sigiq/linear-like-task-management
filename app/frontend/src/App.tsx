@@ -29,22 +29,16 @@ function ProtectedApp() {
     const applyTheme = () => {
       const params = new URLSearchParams(window.location.search);
       const queryTheme = params.get("theme");
-      const storedTheme = window.localStorage.getItem("linear-theme");
       const preferredTheme =
         queryTheme === "dark" || queryTheme === "light"
           ? queryTheme
-          : storedTheme === "dark" || storedTheme === "light"
-            ? storedTheme
-            : window.matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light";
+          : window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
 
       document.documentElement.dataset.theme = preferredTheme;
       document.documentElement.classList.toggle("linear-dark", preferredTheme === "dark");
       document.documentElement.classList.toggle("dark", preferredTheme === "dark");
-      if (queryTheme === "dark" || queryTheme === "light") {
-        window.localStorage.setItem("linear-theme", preferredTheme);
-      }
     };
 
     applyTheme();

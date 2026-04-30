@@ -1,23 +1,38 @@
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  Bot,
+  Box,
   Calendar,
+  CalendarDays,
   ChevronRight,
+  Clock3,
+  Circle,
+  CircleDot,
   CircleDashed,
   Clipboard,
   Filter,
   Flag,
+  Gauge,
   Kanban,
+  Layers3,
+  ListFilter,
+  Milestone,
   MoreHorizontal,
   PanelRight,
   Plus,
+  RotateCcw,
   Search,
   SlidersHorizontal,
+  Sparkles,
   Tag,
+  User,
   UserMinus,
   UserRound,
+  Users,
   X,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { collectionFrom, readTool } from "../api";
 import type { Issue } from "../linearTypes";
 import {
@@ -208,6 +223,7 @@ export function IssueExplorer({
   const [mode] = useState<LayoutMode>(defaultMode);
   const [selected, setSelected] = useState<string[]>([]);
   const [actionsOpen, setActionsOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'backlog'>('active');
   const [filters] = useState<IssueFilters>({
     query: "",
@@ -246,6 +262,15 @@ export function IssueExplorer({
     const timer = window.setTimeout(loadIssues, filters.query ? 220 : 0);
     return () => window.clearTimeout(timer);
   }, [loadIssues, filters.query]);
+
+  useEffect(() => {
+    if (!filterOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setFilterOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [filterOpen]);
 
   const sourceIssues = useMemo(() => {
     if (boardPreset === "my-issues-activity") return MY_ISSUES_REFERENCE;
@@ -377,7 +402,7 @@ export function IssueExplorer({
   return (
     <section data-testid="issue-explorer">
       {showHeader && (
-        <div className="mb-0 flex min-h-8 items-start justify-between gap-5">
+        <div className="mb-2 flex min-h-9 items-center justify-between gap-5">
           <div className="min-w-0">
             {subtitle && (
               <div className="mb-2">
@@ -386,7 +411,7 @@ export function IssueExplorer({
               </div>
             )}
             {boardPreset !== "my-issues-activity" && (
-              <div className="mt-2 inline-flex items-center gap-1" role="tablist">
+              <div className="inline-flex items-center gap-1" role="tablist">
                 <button
                   type="button"
                   role="tab"
@@ -418,8 +443,27 @@ export function IssueExplorer({
             )}
             {headerTabs}
           </div>
-          <div className="flex items-center gap-2 pt-0.5">
-            <Button variant="outline" size="icon-sm" aria-label="Filter" className="rounded-full bg-background shadow-sm">
+          <div className="relative flex items-center gap-2 pt-0.5">
+            {filterOpen && (
+              <>
+                <button
+                  type="button"
+                  aria-label="Close filters"
+                  className="fixed inset-0 z-40 cursor-default bg-transparent"
+                  onClick={() => setFilterOpen(false)}
+                />
+                <IssueFilterMenu />
+              </>
+            )}
+            <Button
+              variant="outline"
+              size="icon-sm"
+              aria-label="Filter"
+              aria-expanded={filterOpen}
+              aria-haspopup="menu"
+              className={cn("rounded-full bg-background shadow-sm", filterOpen && "bg-muted text-foreground")}
+              onClick={() => setFilterOpen((open) => !open)}
+            >
               <Filter size={15} />
             </Button>
             <Button variant="outline" size="icon-sm" aria-label="Display options" className="rounded-full bg-background shadow-sm">
@@ -478,6 +522,65 @@ export function IssueExplorer({
         />
       )}
     </section>
+  );
+}
+
+const FILTER_MENU_ROWS: Array<{ label: string; icon: LucideIcon; shortcut?: string; hasSubmenu?: boolean }> = [
+  { label: "AI filter", icon: Sparkles },
+  { label: "Advanced filter", icon: ListFilter },
+  { label: "Team", icon: Users, hasSubmenu: true },
+  { label: "Status", icon: CircleDot, hasSubmenu: true },
+  { label: "Status type", icon: Circle, hasSubmenu: true },
+  { label: "Assignee", icon: UserRound, hasSubmenu: true },
+  { label: "Agent", icon: Bot, hasSubmenu: true },
+  { label: "Creator", icon: User, hasSubmenu: true },
+  { label: "Priority", icon: Gauge, hasSubmenu: true },
+  { label: "Estimate", icon: Flag, hasSubmenu: true },
+  { label: "Labels", icon: Tag, hasSubmenu: true },
+  { label: "Relations", icon: Milestone, hasSubmenu: true },
+  { label: "Suggested label", icon: Tag, hasSubmenu: true },
+  { label: "Dates", icon: CalendarDays, hasSubmenu: true },
+  { label: "Project", icon: Box, hasSubmenu: true },
+  { label: "Project properties", icon: Layers3, hasSubmenu: true },
+  { label: "Initiative", icon: Kanban, hasSubmenu: true },
+  { label: "Cycle", icon: RotateCcw, hasSubmenu: true },
+  { label: "Added to cycle", icon: Clock3, hasSubmenu: true },
+];
+
+function IssueFilterMenu() {
+  return (
+    <div
+      role="menu"
+      aria-label="Issue filters"
+      className="absolute right-0 top-10 z-50 w-[272px] overflow-hidden rounded-xl border border-border/90 bg-popover text-popover-foreground shadow-[0_18px_54px_rgba(0,0,0,0.22)] dark:border-[#2a2a2e] dark:bg-[#1c1c1f] dark:text-[#d6d6da]"
+    >
+      <button
+        type="button"
+        role="menuitem"
+        className="flex h-10 w-full items-center gap-3 border-b border-border/80 px-3 text-left text-[13px] text-muted-foreground hover:bg-muted/70 dark:border-[#29292d] dark:hover:bg-[#252529]"
+      >
+        <span className="min-w-0 flex-1 truncate">Add Filter...</span>
+        <kbd className="rounded border border-border bg-background px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground dark:border-[#323236] dark:bg-[#202024]">
+          F
+        </kbd>
+      </button>
+      <div className="py-1">
+        {FILTER_MENU_ROWS.map(({ label, icon: Icon, hasSubmenu }, index) => (
+          <div key={label}>
+            {index === 1 && <div className="my-1 h-px bg-border/80 dark:bg-[#29292d]" />}
+            <button
+              type="button"
+              role="menuitem"
+              className="flex h-10 w-full items-center gap-3 px-3 text-left text-[13px] font-medium text-foreground hover:bg-muted/70 dark:text-[#c9c9ce] dark:hover:bg-[#252529]"
+            >
+              <Icon size={15} strokeWidth={2} className="shrink-0 text-muted-foreground dark:text-[#9d9da4]" />
+              <span className="min-w-0 flex-1 truncate">{label}</span>
+              {hasSubmenu && <ChevronRight size={14} className="shrink-0 text-muted-foreground dark:text-[#85858c]" />}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
