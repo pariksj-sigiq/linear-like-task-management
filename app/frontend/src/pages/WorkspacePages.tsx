@@ -12,7 +12,6 @@ import {
   CircleDashed,
   DiamondPlus,
   Filter,
-  FolderKanban,
   GitBranch,
   Layers3,
   Map,

@@ -38,15 +38,6 @@ export const DEFAULT_PROJECT_DISPLAY_PROPS: ProjectsDisplayProps = {
   status: true,
 };
 
-const PROPERTY_LABELS: Record<ProjectDisplayProperty, string> = {
-  health: "Health",
-  priority: "Priority",
-  lead: "Lead",
-  target_date: "Target date",
-  issues: "Issues",
-  status: "Status",
-};
-
 const DISPLAY_PROPERTY_OPTIONS = [
   { key: "milestones", label: "Milestones", defaultActive: true },
   { key: "description", label: "Description", defaultActive: true },
