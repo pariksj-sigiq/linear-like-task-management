@@ -55,3 +55,24 @@ The tool server exposes 118 tools including native and compatibility aliases. Ti
 - The frontend was retuned against the logged-in Linear light-theme My Issues activity surface; remaining proprietary data/content is represented with deterministic seeded clone data.
 - Tier 2 surfaces are rendered as navigable stubs with real shell context and seed-backed snapshot data.
 - The Docker build prints npm deprecation/audit warnings from dependency versions; these do not block build or tests.
+
+## Settings QA Addendum - 2026-04-30
+
+Health rating for settings: yellow.
+
+This addendum supersedes the earlier note that settings were only Tier 2 stubs. A focused settings pass is now tracked in [`SETTINGS_QA_REPORT.md`](./SETTINGS_QA_REPORT.md).
+
+Current settings state:
+
+- Fully connected settings: Preferences, Profile, Notifications, Workspace, Teams/workflow states, Members, Labels, Templates, Project statuses, API keys, AI agent keys.
+- Functional fallback settings: Security, Connected accounts, Agent personalization, SLAs, Project updates, Integrations, Billing, and remaining feature settings now have clickable controls persisted through `settings_actions` via `/step`.
+- Current risk: fallback settings are functional but not yet page-specific enough for hard CUA tasks unless their domain tables are promoted from `settings_actions` into first-class schema.
+- Required before final handoff: restart/reload the backend so `record_setting_action` and `list_setting_actions` are live, then run a settings smoke test that clicks a safe setting, refreshes, and verifies the value is read back from Postgres.
+
+Recommended next settings loop:
+
+1. Use real Linear screenshots in `spec/screenshots/settings-reference/` as page-by-page references.
+2. Capture current clone screenshots under `spec/screenshots/settings-current/`.
+3. For each page, compare visible layout and active states, then fix with Vite HMR.
+4. For each visible control, verify `click -> /step write -> refresh -> value persists`.
+5. Promote any fallback surface used by a task into a domain-specific table/tool/UI before task authoring.

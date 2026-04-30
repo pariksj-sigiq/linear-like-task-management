@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects List - Pixel Perfect Test</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Inter Variable", "SF Pro Display", -apple-system, "system-ui", "Segoe UI", Roboto, sans-serif;
+            background: #fcfcfc;
+            color: #1c1c1c;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid #e5e5e5;
+            background: #fcfcfc;
+            padding-bottom: 8px;
+        }
+
+        .header-top {
+            display: flex;
+            min-height: 44px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 24px 0;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1c1c1c;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-bottom {
+            display: flex;
+            min-height: 44px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 0 24px 8px;
+        }
+
+        .tabs {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 9999px;
+            border: 1px solid #e5e5e5;
+            background: #f2f2f2;
+            padding: 4px 10px;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.3;
+            color: #1c1c1c;
+            box-shadow: 0 1px 2px rgba(10, 10, 10, 0.05);
+            text-decoration: none;
+        }
+
+        .tab-pill svg {
+            color: #6f6f6f;
+        }
+
+        .icon-btn {
+            display: grid;
+            place-items: center;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #6f6f6f;
+        }
+
+        .icon-btn:hover {
+            background: #f2f2f2;
+        }
+
+        .table-container {
+            margin-top: 16px;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #ffffff;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: minmax(20rem, 1fr) 9.5rem 6.5rem 4.5rem 8.5rem 4.5rem 5.5rem;
+            gap: 24px;
+            border-bottom: 1px solid #e5e5e5;
+            background: #fefefe;
+            padding: 10px 24px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #6f6f6f;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: minmax(20rem, 1fr) 9.5rem 6.5rem 4.5rem 8.5rem 4.5rem 5.5rem;
+            gap: 24px;
+            min-height: 48px;
+            align-items: center;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 8px 24px;
+            font-size: 13px;
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 150ms;
+        }
+
+        .table-row:hover {
+            background: #f8f8f8;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .name-cell {
+            display: flex;
+            min-width: 0;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .name-cell svg {
+            flex-shrink: 0;
+            color: #6f6f6f;
+        }
+
+        .name-cell strong {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 500;
+            color: #1c1c1c;
+        }
+
+        .health-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #6f6f6f;
+        }
+
+        .priority-cell, .issues-cell, .target-cell {
+            font-size: 13px;
+            color: #6f6f6f;
+        }
+
+        .avatar {
+            display: inline-grid;
+            place-items: center;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            border-radius: 9999px;
+            background: #d8d5d0;
+            font-size: 9px;
+            font-weight: 600;
+            color: #47443f;
+        }
+
+        .status-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-cell span {
+            font-size: 13px;
+            font-variant-numeric: tabular-nums;
+            color: #6f6f6f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-top">
+                <h1 class="header-title">Projects</h1>
+                <div class="header-actions">
+                    <button class="icon-btn" aria-label="New project">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="header-bottom">
+                <div class="tabs">
+                    <a href="#" class="tab-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        All projects
+                    </a>
+                    <button class="icon-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </button>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                    </button>
+                    <button class="icon-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="4" y1="21" x2="4" y2="14"></line>
+                            <line x1="4" y1="10" x2="4" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12" y2="3"></line>
+                            <line x1="20" y1="21" x2="20" y2="16"></line>
+                            <line x1="20" y1="12" x2="20" y2="3"></line>
+                            <line x1="1" y1="14" x2="7" y2="14"></line>
+                            <line x1="9" y1="8" x2="15" y2="8"></line>
+                            <line x1="17" y1="16" x2="23" y2="16"></line>
+                        </svg>
+                    </button>
+                    <button class="icon-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="3" x2="9" y2="21"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <span>Name</span>
+                <span>Health</span>
+                <span>Priority</span>
+                <span>Lead</span>
+                <span>Target date</span>
+                <span>Issues</span>
+                <span>Status</span>
+            </div>
+
+            <a href="#" class="table-row">
+                <div class="name-cell">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="9" y1="3" x2="9" y2="21"></line>
+                    </svg>
+                    <strong>Linear UI Fidelity Pass</strong>
+                </div>
+                <div class="health-cell">
+                    <svg width="12" height="12" viewBox="0 0 12 12">
+                        <circle cx="6" cy="6" r="5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6"/>
+                    </svg>
+                    <span>No updates</span>
+                </div>
+                <div class="priority-cell">---</div>
+                <div class="avatar">PJ</div>
+                <div class="target-cell">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </div>
+                <div class="issues-cell">8</div>
+                <div class="status-cell">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="#f2a900">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1m0 1.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11M8 4a4 4 0 0 1 0 8z"/>
+                    </svg>
+                    <span>85%</span>
+                </div>
+            </a>
+
+            <a href="#" class="table-row">
+                <div class="name-cell">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="9" y1="3" x2="9" y2="21"></line>
+                    </svg>
+                    <strong>Inbox split-pane parity</strong>
+                </div>
+                <div class="health-cell">
+                    <svg width="12" height="12" viewBox="0 0 12 12">
+                        <circle cx="6" cy="6" r="5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6"/>
+                    </svg>
+                    <span>No updates</span>
+                </div>
+                <div class="priority-cell">---</div>
+                <div class="avatar">MG</div>
+                <div class="target-cell">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </div>
+                <div class="issues-cell">0</div>
+                <div class="status-cell">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="#8f9297">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14"/>
+                    </svg>
+                    <span>0%</span>
+                </div>
+            </a>
+
+            <a href="#" class="table-row">
+                <div class="name-cell">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="9" y1="3" x2="9" y2="21"></line>
+                    </svg>
+                    <strong>Activity board density pass</strong>
+                </div>
+                <div class="health-cell">
+                    <svg width="12" height="12" viewBox="0 0 12 12">
+                        <circle cx="6" cy="6" r="5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6"/>
+                    </svg>
+                    <span>No updates</span>
+                </div>
+                <div class="priority-cell">---</div>
+                <div class="avatar">RB</div>
+                <div class="target-cell">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </div>
+                <div class="issues-cell">0</div>
+                <div class="status-cell">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="#8f9297">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14"/>
+                    </svg>
+                    <span>0%</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,215 @@
+- link "Skip to content":
+  - /url: "#skip-nav"
+- navigation:
+  - link "Back to app":
+    - /url: /eltsuh
+    - text: Back to app
+  - link "Preferences":
+    - /url: /eltsuh/settings/account/preferences
+    - generic: Preferences
+  - link "Profile":
+    - /url: /eltsuh/settings/account/profile
+    - generic: Profile
+  - link "Notifications":
+    - /url: /eltsuh/settings/account/notifications
+    - generic: Notifications
+  - link "Security & access":
+    - /url: /eltsuh/settings/account/security
+    - generic: Security & access
+  - link "Connected accounts":
+    - /url: /eltsuh/settings/account/connections
+    - generic: Connected accounts
+  - link "Agent personalization":
+    - /url: /eltsuh/settings/account/agents
+    - generic: Agent personalization
+  - heading "Issues" [level=2]:
+    - generic: Issues
+  - link "Labels":
+    - /url: /eltsuh/settings/issue-labels
+    - generic: Labels
+  - link "Templates":
+    - /url: /eltsuh/settings/issue-templates
+    - generic: Templates
+  - link "SLAs":
+    - /url: /eltsuh/settings/sla
+    - generic: SLAs
+  - heading "Projects" [level=2]:
+    - generic: Projects
+  - link "Labels":
+    - /url: /eltsuh/settings/project-labels
+    - generic: Labels
+  - link "Templates":
+    - /url: /eltsuh/settings/project-templates
+    - generic: Templates
+  - link "Statuses":
+    - /url: /eltsuh/settings/project-statuses
+    - generic: Statuses
+  - link "Updates":
+    - /url: /eltsuh/settings/project-updates
+    - generic: Updates
+  - heading "Features" [level=2]:
+    - generic: Features
+  - link "AI & Agents":
+    - /url: /eltsuh/settings/ai
+    - generic: AI & Agents
+  - link "Initiatives":
+    - /url: /eltsuh/settings/initiatives
+    - generic: Initiatives
+  - link "Documents":
+    - /url: /eltsuh/settings/documents
+    - generic: Documents
+  - link "Customer requests":
+    - /url: /eltsuh/settings/customer-requests
+    - generic: Customer requests
+  - link "Pulse":
+    - /url: /eltsuh/settings/pulse
+    - generic: Pulse
+  - link "Asks":
+    - /url: /eltsuh/settings/asks
+    - generic: Asks
+  - link "Emojis":
+    - /url: /eltsuh/settings/emojis
+    - generic: Emojis
+  - link "Integrations":
+    - /url: /eltsuh/settings/integrations
+    - generic: Integrations
+  - heading "Administration" [level=2]:
+    - generic: Administration
+  - link "Workspace":
+    - /url: /eltsuh/settings/workspace
+    - generic: Workspace
+  - link "Teams":
+    - /url: /eltsuh/settings/teams
+    - generic: Teams
+  - link "Members":
+    - /url: /eltsuh/settings/members
+    - generic: Members
+  - link "Security":
+    - /url: /eltsuh/settings/security
+    - generic: Security
+  - link "API":
+    - /url: /eltsuh/settings/api
+    - generic: API
+  - link "Applications":
+    - /url: /eltsuh/settings/applications
+    - generic: Applications
+  - link "Billing":
+    - /url: /eltsuh/settings/billing
+    - generic: Billing
+  - link "Import & export":
+    - /url: /eltsuh/settings/import-export
+    - generic: Import & export
+  - heading "Your teams" [level=2]:
+    - generic: Your teams
+  - link "Eltsuh":
+    - /url: /eltsuh/settings/teams/ELT
+    - generic: Eltsuh
+  - generic "Create a team":
+    - text: Create a team
+- button "Open Help menu":
+- main:
+  - generic: Preferences
+  - heading "General" [level=3]
+  - list:
+    - generic: Default home view
+    - generic: Select which view to display when launching Linear
+    - combobox "Default home view":
+      - generic: Active issues
+    - generic: Display names
+    - generic: Select how names are displayed in the Linear interface
+    - combobox "Display names":
+      - generic: Full name
+    - generic: First day of the week
+    - generic: Used for date pickers
+    - combobox "First day of the week":
+      - generic: Sunday
+    - generic: Convert text emoticons into emojis
+    - text: Strings like :) will be converted to
+    - generic: 🙂
+    - checkbox "Convert text emoticons into emojis" [checked]
+    - generic: Send comment on…
+    - generic: Choose which key press is used to submit a comment
+    - combobox "Send comment on…":
+      - generic: ⌘+Enter
+  - heading "Interface and theme" [level=3]
+  - list:
+    - generic: App sidebar
+    - generic: Customize sidebar item visibility, ordering, and badge style
+    - button "Customize sidebar": Customize
+    - generic: Font size
+    - generic: Adjust the size of text across the app
+    - combobox "Font size":
+      - generic: Default
+    - generic: Use pointer cursors
+    - generic: Change the cursor to a pointer when hovering over any interactive elements
+    - checkbox "Use pointer cursors"
+  - generic: Interface theme
+  - generic: Select or customize your interface color scheme
+  - combobox "Interface theme":
+    - generic: • Aa
+    - generic: System preference
+  - list:
+    - generic: Light
+    - generic: Theme to use for light system appearance
+    - combobox "Light":
+      - generic: • Aa
+      - generic: Light
+    - generic: Dark
+    - generic: Theme to use for dark system appearance
+    - combobox "Dark":
+      - generic: • Aa
+      - generic: Dark
+  - list:
+    - generic: Code theme
+    - generic: Select the syntax highlighting theme used in code diffs and viewers
+    - combobox "Code theme":
+      - generic: Linear Light
+    - generic: Font size
+    - combobox:
+      - generic: 12px
+    - generic: Line height
+    - combobox:
+      - generic: Regular
+    - combobox:
+      - generic: TypeScript
+    - button:
+  - heading "Desktop application" [level=3]
+  - list:
+    - generic: Open in desktop app
+    - generic: Automatically open links in desktop app when possible
+    - checkbox "Open in desktop app"
+  - heading "Coding tools" [level=3]
+  - list:
+    - link "Configure coding tools settings":
+      - /url: /eltsuh/settings/account/preferences/coding-tools
+    - generic: Configure coding tools
+    - generic: Configure tools which can be opened from Linear
+  - heading "Automations and workflows" [level=3]
+  - list:
+    - generic: Auto-assign to self
+    - generic: When creating new issues, always assign them to yourself by default
+    - checkbox "Auto-assign to self"
+    - generic: Git attachment format
+    - generic: The format of GitHub/GitLab attachments on issues
+    - combobox "Git attachment format":
+      - generic: Title
+    - generic: On git branch copy, move issue to started status
+    - text: After copying the git branch name, issue status is moved to the team’s first started workflow status. Hold
+    - generic "Option":
+      - generic: ⌥
+    - text: to disable.
+    - checkbox "On git branch copy, move issue to started status"
+    - generic: On open in coding tool, move issue to started status
+    - text: After opening an issue in a coding tool or copying as prompt, issue status is moved to the team’s first started workflow status. Hold
+    - generic "Option":
+      - generic: ⌥
+    - text: to disable.
+    - checkbox "On open in coding tool, move issue to started status"
+    - generic: On move to started status, assign to yourself
+    - generic: When you move an unassigned issue to started, it will be automatically assigned to you
+    - checkbox "On move to started status, assign to yourself"
+    - generic: Auto-convert draft pull requests
+    - generic: Automatically mark draft pull requests as ready for review when a review is requested or the pull request is approved
+    - checkbox "Auto-convert draft pull requests"
+- region "Notifications alt+T"
+- generic: Loading…

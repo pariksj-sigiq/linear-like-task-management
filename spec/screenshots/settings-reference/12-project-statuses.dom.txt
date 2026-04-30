@@ -1,0 +1,154 @@
+- link "Skip to content":
+  - /url: "#skip-nav"
+- navigation:
+  - link "Back to app":
+    - /url: /eltsuh
+    - text: Back to app
+  - link "Preferences":
+    - /url: /eltsuh/settings/account/preferences
+    - generic: Preferences
+  - link "Profile":
+    - /url: /eltsuh/settings/account/profile
+    - generic: Profile
+  - link "Notifications":
+    - /url: /eltsuh/settings/account/notifications
+    - generic: Notifications
+  - link "Security & access":
+    - /url: /eltsuh/settings/account/security
+    - generic: Security & access
+  - link "Connected accounts":
+    - /url: /eltsuh/settings/account/connections
+    - generic: Connected accounts
+  - link "Agent personalization":
+    - /url: /eltsuh/settings/account/agents
+    - generic: Agent personalization
+  - heading "Issues" [level=2]:
+    - generic: Issues
+  - link "Labels":
+    - /url: /eltsuh/settings/issue-labels
+    - generic: Labels
+  - link "Templates":
+    - /url: /eltsuh/settings/issue-templates
+    - generic: Templates
+  - link "SLAs":
+    - /url: /eltsuh/settings/sla
+    - generic: SLAs
+  - heading "Projects" [level=2]:
+    - generic: Projects
+  - link "Labels":
+    - /url: /eltsuh/settings/project-labels
+    - generic: Labels
+  - link "Templates":
+    - /url: /eltsuh/settings/project-templates
+    - generic: Templates
+  - link "Statuses":
+    - /url: /eltsuh/settings/project-statuses
+    - generic: Statuses
+  - link "Updates":
+    - /url: /eltsuh/settings/project-updates
+    - generic: Updates
+  - heading "Features" [level=2]:
+    - generic: Features
+  - link "AI & Agents":
+    - /url: /eltsuh/settings/ai
+    - generic: AI & Agents
+  - link "Initiatives":
+    - /url: /eltsuh/settings/initiatives
+    - generic: Initiatives
+  - link "Documents":
+    - /url: /eltsuh/settings/documents
+    - generic: Documents
+  - link "Customer requests":
+    - /url: /eltsuh/settings/customer-requests
+    - generic: Customer requests
+  - link "Pulse":
+    - /url: /eltsuh/settings/pulse
+    - generic: Pulse
+  - link "Asks":
+    - /url: /eltsuh/settings/asks
+    - generic: Asks
+  - link "Emojis":
+    - /url: /eltsuh/settings/emojis
+    - generic: Emojis
+  - link "Integrations":
+    - /url: /eltsuh/settings/integrations
+    - generic: Integrations
+  - heading "Administration" [level=2]:
+    - generic: Administration
+  - link "Workspace":
+    - /url: /eltsuh/settings/workspace
+    - generic: Workspace
+  - link "Teams":
+    - /url: /eltsuh/settings/teams
+    - generic: Teams
+  - link "Members":
+    - /url: /eltsuh/settings/members
+    - generic: Members
+  - link "Security":
+    - /url: /eltsuh/settings/security
+    - generic: Security
+  - link "API":
+    - /url: /eltsuh/settings/api
+    - generic: API
+  - link "Applications":
+    - /url: /eltsuh/settings/applications
+    - generic: Applications
+  - link "Billing":
+    - /url: /eltsuh/settings/billing
+    - generic: Billing
+  - link "Import & export":
+    - /url: /eltsuh/settings/import-export
+    - generic: Import & export
+  - heading "Your teams" [level=2]:
+    - generic: Your teams
+  - link "Eltsuh":
+    - /url: /eltsuh/settings/teams/ELT
+    - generic: Eltsuh
+  - generic "Create a team":
+    - text: Create a team
+- button "Open Help menu":
+- main:
+  - generic: Project statuses
+  - generic: Project statuses define the workflow that projects go through from start to completion
+  - list:
+    - list:
+      - heading "Backlog" [level=3]
+      - button "Create new project status":
+      - button "Backlog View projects Open menu" [disabled]:
+        - generic: Backlog
+        - button "View projects" [disabled]: 1 project
+        - button "Open menu" [disabled]:
+      - status
+    - list:
+      - heading "Planned" [level=3]
+      - button "Create new project status":
+      - button "Planned Open menu" [disabled]:
+        - generic: Planned
+        - button "Open menu" [disabled]:
+      - status
+    - list:
+      - heading "In Progress" [level=3]
+      - button "Create new project status":
+      - button "In Progress Open menu" [disabled]:
+        - generic: In Progress
+        - button "Open menu" [disabled]:
+      - status
+    - list:
+      - heading "Completed" [level=3]
+      - button "Create new project status":
+      - button "Completed Open menu" [disabled]:
+        - generic: Completed
+        - button "Open menu" [disabled]:
+      - status
+    - list:
+      - heading "Canceled" [level=3]
+      - button "Create new project status":
+      - button "Canceled Open menu" [disabled]:
+        - generic: Canceled
+        - button "Open menu" [disabled]:
+      - status
+- button "Ask Linear":
+  - generic: Ask Linear
+- button "Chat history":
+- region "Notifications alt+T"
+- generic: Loading…

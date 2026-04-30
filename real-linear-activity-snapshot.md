@@ -1,0 +1,9 @@
+- generic [active] [ref=e1] [box=0,0,1512,808]:
+  - generic [box=0,0,1512,808]:
+    - generic [box=220,8,1284,764]:
+      - generic [box=646,358,440,64]:
+        - generic [box=834,358,64,64]:
+          - generic [box=834,358,64,64]:
+            - img [box=834,358,64,64]
+            - img [box=850,374,32,32]
+        - generic [box=835,430,62,20]: Loading…

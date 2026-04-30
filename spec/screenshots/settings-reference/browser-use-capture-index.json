@@ -1,0 +1,146 @@
+[
+  {
+    "name": "01-preferences",
+    "url": "https://linear.app/eltsuh/settings/account/preferences",
+    "expectedText": "Preferences",
+    "domChars": 7401,
+    "bytes": 59560,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/01-preferences.png"
+  },
+  {
+    "name": "02-profile",
+    "url": "https://linear.app/eltsuh/settings/account/profile",
+    "expectedText": "Profile",
+    "domChars": 3886,
+    "bytes": 44940,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/02-profile.png"
+  },
+  {
+    "name": "03-notifications",
+    "url": "https://linear.app/eltsuh/settings/account/notifications",
+    "expectedText": "Notifications",
+    "domChars": 5308,
+    "bytes": 58526,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/03-notifications.png"
+  },
+  {
+    "name": "04-security-access",
+    "url": "https://linear.app/eltsuh/settings/account/security",
+    "expectedText": "Security",
+    "domChars": 5161,
+    "bytes": 54794,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/04-security-access.png"
+  },
+  {
+    "name": "05-connected-accounts",
+    "url": "https://linear.app/eltsuh/settings/account/connections",
+    "expectedText": "Connected accounts",
+    "domChars": 4535,
+    "bytes": 58809,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/05-connected-accounts.png"
+  },
+  {
+    "name": "06-agent-personalization",
+    "url": "https://linear.app/eltsuh/settings/account/agents",
+    "expectedText": "Agent personalization",
+    "domChars": 4115,
+    "bytes": 53044,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/06-agent-personalization.png"
+  },
+  {
+    "name": "07-issue-labels",
+    "url": "https://linear.app/eltsuh/settings/issue-labels",
+    "expectedText": "Labels",
+    "domChars": 4539,
+    "bytes": 37703,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/07-issue-labels.png"
+  },
+  {
+    "name": "08-issue-templates",
+    "url": "https://linear.app/eltsuh/settings/issue-templates",
+    "expectedText": "Templates",
+    "domChars": 3732,
+    "bytes": 40815,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/08-issue-templates.png"
+  },
+  {
+    "name": "09-slas",
+    "url": "https://linear.app/eltsuh/settings/sla",
+    "expectedText": "SLAs",
+    "domChars": 3981,
+    "bytes": 49521,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/09-slas.png"
+  },
+  {
+    "name": "10-project-labels",
+    "url": "https://linear.app/eltsuh/settings/project-labels",
+    "expectedText": "Labels",
+    "domChars": 3414,
+    "bytes": 36512,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/10-project-labels.png"
+  },
+  {
+    "name": "11-project-templates",
+    "url": "https://linear.app/eltsuh/settings/project-templates",
+    "expectedText": "Templates",
+    "domChars": 3744,
+    "bytes": 41411,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/11-project-templates.png"
+  },
+  {
+    "name": "12-project-statuses",
+    "url": "https://linear.app/eltsuh/settings/project-statuses",
+    "expectedText": "Statuses",
+    "domChars": 4655,
+    "bytes": 47253,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/12-project-statuses.png"
+  },
+  {
+    "name": "13-project-updates",
+    "url": "https://linear.app/eltsuh/settings/project-updates",
+    "expectedText": "Updates",
+    "domChars": 4162,
+    "bytes": 57147,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/13-project-updates.png"
+  },
+  {
+    "name": "14-ai-agents",
+    "url": "https://linear.app/eltsuh/settings/ai",
+    "expectedText": "AI",
+    "domChars": 5646,
+    "bytes": 63725,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/14-ai-agents.png"
+  },
+  {
+    "name": "15-integrations",
+    "url": "https://linear.app/eltsuh/settings/integrations",
+    "expectedText": "Integrations",
+    "domChars": 22304,
+    "bytes": 49454,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/15-integrations.png"
+  },
+  {
+    "name": "16-workspace",
+    "url": "https://linear.app/eltsuh/settings/workspace",
+    "expectedText": "Workspace",
+    "domChars": 4342,
+    "bytes": 50189,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/16-workspace.png"
+  },
+  {
+    "name": "17-members",
+    "url": "https://linear.app/eltsuh/settings/members",
+    "expectedText": "Members",
+    "domChars": 5938,
+    "bytes": 55093,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/17-members.png"
+  },
+  {
+    "name": "18-api",
+    "url": "https://linear.app/eltsuh/settings/api",
+    "expectedText": "API",
+    "domChars": 4900,
+    "bytes": 62742,
+    "file": "/Users/pariksj/Desktop/saas-clone/spec/screenshots/settings-reference/18-api.png"
+  }
+]

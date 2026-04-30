@@ -1,0 +1,215 @@
+- generic [ref=e3] [box=0,0,1512,808]:
+  - generic [ref=e6] [box=0,0,243,808]:
+    - list [ref=e8] [box=12,16,219,32]:
+      - listitem [ref=e9] [box=12,16,219,32]:
+        - generic [ref=e10] [box=12,16,219,32]:
+          - button "CO Collinear Clone Studio" [ref=e119] [cursor=pointer] [box=16,16,143,32]:
+            - generic [ref=e12] [box=22,22,15,20]: CO
+            - generic [ref=e13] [box=45,2,84,60]: Collinear Clone Studio
+            - img [ref=e14] [box=137,24,16,16]
+          - button [ref=e16] [cursor=pointer] [box=165,18,28,28]:
+            - img [ref=e17] [box=171,24,16,16]
+          - button [ref=e20] [cursor=pointer] [box=199,18,28,28]:
+            - img [ref=e21] [box=205,24,16,16]
+    - generic [ref=e24] [box=0,56,243,752]:
+      - list [ref=e27] [box=12,56,219,56]:
+        - listitem [ref=e28] [box=12,56,219,28]:
+          - link "Inbox" [ref=e29] [cursor=pointer] [box=12,56,219,28]:
+            - /url: /inbox
+            - img [ref=e30] [box=20,62,16,16]
+            - generic [ref=e33] [box=44,60,36,20]: Inbox
+        - listitem [ref=e34] [box=12,84,219,28]:
+          - link "My issues" [ref=e35] [cursor=pointer] [box=12,84,219,28]:
+            - /url: /my-issues/activity
+            - img [ref=e36] [box=20,90,16,16]
+            - generic [ref=e40] [box=44,88,65,20]: My issues
+      - generic [ref=e41] [box=12,112,219,132]:
+        - generic [ref=e42] [cursor=pointer] [box=12,132,219,28]:
+          - text: Workspace
+          - img [ref=e43] [box=93,138,16,16]
+        - list [ref=e47] [box=12,160,219,84]:
+          - listitem [ref=e48] [box=12,160,219,28]:
+            - link "Projects" [ref=e49] [cursor=pointer] [box=12,160,219,28]:
+              - /url: /projects/all
+              - img [ref=e50] [box=20,166,16,16]
+              - generic [ref=e52] [box=44,164,54,20]: Projects
+          - listitem [ref=e53] [box=12,188,219,28]:
+            - link "Views" [ref=e54] [cursor=pointer] [box=12,188,219,28]:
+              - /url: /views
+              - img [ref=e55] [box=20,194,16,16]
+              - generic [ref=e58] [box=44,192,39,20]: Views
+          - listitem [ref=e59] [box=12,216,219,28]:
+            - link "More" [ref=e60] [cursor=pointer] [box=12,216,219,28]:
+              - /url: /roadmap
+              - img [ref=e61] [box=20,222,16,16]
+              - generic [ref=e63] [box=44,220,34,20]: More
+      - generic [ref=e64] [box=12,244,219,172]:
+        - generic [ref=e65] [cursor=pointer] [box=12,264,219,28]:
+          - text: Your teams
+          - img [ref=e66] [box=94,270,16,16]
+        - list [ref=e70] [box=12,292,219,124]:
+          - listitem [ref=e71] [box=12,292,219,124]:
+            - button "Eltsuh" [expanded] [ref=e72] [cursor=pointer] [box=12,292,219,28]:
+              - img [ref=e74] [box=20,298,16,16]
+              - generic [ref=e77] [box=44,296,41,20]: Eltsuh
+              - img [ref=e78] [box=207,298,16,16]
+            - list [ref=e81] [box=27,320,191,96]:
+              - listitem [ref=e82] [box=38,322,170,28]:
+                - link "Issues" [ref=e83] [cursor=pointer] [box=37,322,170,28]:
+                  - /url: /team/eng/active
+                  - img [ref=e84] [box=45,328,16,16]
+                  - generic [ref=e87] [box=69,326,42,20]: Issues
+              - listitem [ref=e88] [box=38,354,170,28]:
+                - link "Projects" [ref=e89] [cursor=pointer] [box=37,354,170,28]:
+                  - /url: /team/eng/projects
+                  - img [ref=e90] [box=45,360,16,16]
+                  - generic [ref=e92] [box=69,358,54,20]: Projects
+              - listitem [ref=e93] [box=38,386,170,28]:
+                - link "Views" [ref=e94] [cursor=pointer] [box=37,386,170,28]:
+                  - /url: /team/eng/views
+                  - img [ref=e95] [box=45,392,16,16]
+                  - generic [ref=e98] [box=69,390,39,20]: Views
+  - main [ref=e99] [box=244,0,1268,808]:
+    - generic [ref=e100] [box=244,8,1260,800]:
+      - heading "Projects" [level=1] [ref=e104] [box=261,20,54,21]
+      - generic [ref=e106] [box=245,53,1258,754]:
+        - generic [ref=e120] [box=245,53,1258,101]:
+          - generic [ref=e121] [box=269,69,1210,36]:
+            - generic [ref=e122] [box=269,75,328,24]:
+              - link "Projects" [ref=e123] [cursor=pointer] [box=269,77,54,20]:
+                - /url: /projects/all
+                - generic [ref=e124] [box=269,77,54,20]: Projects
+              - img [ref=e125] [box=329,79,16,16]
+              - img [ref=e127] [box=351,80,15,15]
+              - generic [ref=e130] [box=372,77,160,20]: QA Final Test 04302026
+              - button "Favorite project" [ref=e131] [cursor=pointer] [box=543,75,24,24]:
+                - img [ref=e132] [box=548,80,14,14]
+              - button "Project actions" [ref=e134] [cursor=pointer] [box=573,75,24,24]:
+                - img [ref=e135] [box=577,80,15,15]
+            - generic [ref=e139] [box=1387,73,92,28]:
+              - button "Copy page link" [ref=e140] [cursor=pointer] [box=1387,73,28,28]:
+                - img [box=1393,79,16,16]
+              - button "Project notifications" [ref=e141] [cursor=pointer] [box=1419,73,28,28]:
+                - img [box=1425,79,16,16]
+              - button "Close sidebar" [ref=e142] [cursor=pointer] [box=1451,73,28,28]:
+                - img [box=1457,79,16,16]
+          - tablist "Project tabs" [ref=e143] [box=269,117,1210,37]:
+            - tab "Overview" [ref=e144] [cursor=pointer] [box=269,117,80,28]
+            - tab "Activity" [selected] [ref=e145] [cursor=pointer] [box=353,117,70,28]
+            - tab "Issues" [ref=e146] [cursor=pointer] [box=427,117,61,28]
+        - generic [ref=e147] [box=245,154,1258,653]:
+          - generic [ref=e150] [box=378,178,672,269]:
+            - generic [ref=e151] [box=378,178,672,218]:
+              - generic [ref=e152] [box=379,179,670,47]:
+                - generic [ref=e153] [box=391,189,146,26]:
+                  - button "Comment" [ref=e154] [cursor=pointer] [box=394,192,76,20]
+                  - button "Update" [ref=e155] [cursor=pointer] [box=472,192,62,20]
+                - button "On track" [ref=e156] [cursor=pointer] [box=543,189,105,26]:
+                  - img [ref=e157] [box=552,195,14,14]
+                  - generic [ref=e159] [box=572,194,49,16]: On track
+                  - img [ref=e160] [box=628,196,12,12]
+              - textbox "Write a project update..." [ref=e162] [box=379,226,670,120]
+              - generic [ref=e163] [box=379,346,670,49]:
+                - button "Post update" [disabled] [box=922,357,115,28]:
+                  - img [box=933,364,14,14]
+                  - text: Post update
+            - generic [ref=e165] [box=378,420,672,27]:
+              - img [ref=e168] [box=383,427,14,14]
+              - generic [ref=e171] [box=412,420,638,20]:
+                - generic [ref=e172] [box=412,420,187,20]: Unknown created the project
+                - generic [ref=e173] [box=605,422,57,16]: · 30m ago
+          - complementary [ref=e174] [box=1183,154,320,653]:
+            - generic [ref=e175] [box=1196,170,295,24]:
+              - button "Properties" [ref=e176] [cursor=pointer] [box=1204,172,93,20]:
+                - img [ref=e177] [box=1204,176,12,12]
+                - text: Properties
+              - button "Add property" [ref=e180] [cursor=pointer] [box=1459,170,24,24]:
+                - img [ref=e181] [box=1464,175,14,14]
+            - generic [ref=e182] [box=1196,206,295,308]:
+              - generic [ref=e183] [box=1200,206,287,32]:
+                - generic [ref=e184] [box=1206,214,96,16]:
+                  - img [ref=e186] [box=1206,215,14,14]
+                  - generic [ref=e188] [box=1228,214,36,16]: Status
+                - button "Backlog" [ref=e190] [cursor=pointer] [box=1310,208,171,28]:
+                  - img [ref=e191] [box=1316,215,14,14]
+                  - generic [ref=e193] [box=1338,212,52,20]: Backlog
+              - generic [ref=e194] [box=1200,240,287,32]:
+                - generic [ref=e195] [box=1206,248,96,16]:
+                  - img "No priority" [ref=e197] [box=1206,248,16,16]
+                  - generic [ref=e201] [box=1230,248,41,16]: Priority
+                - button "No priority No priority" [ref=e203] [cursor=pointer] [box=1310,242,171,28]:
+                  - img "No priority" [ref=e204] [box=1316,248,16,16]
+                  - generic [ref=e208] [box=1340,246,68,20]: No priority
+              - generic [ref=e209] [box=1200,274,287,32]:
+                - generic [ref=e210] [box=1206,282,96,17]:
+                  - generic [ref=e212] [box=1206,283,16,16]: "?"
+                  - generic [ref=e213] [box=1230,282,27,16]: Lead
+                - button "Set lead" [ref=e215] [cursor=pointer] [box=1310,276,171,28]:
+                  - generic [ref=e216] [box=1316,280,53,20]: Set lead
+              - generic [ref=e217] [box=1200,308,287,32]:
+                - generic [ref=e218] [box=1206,316,96,16]:
+                  - img [ref=e220] [box=1206,317,14,14]
+                  - generic [ref=e225] [box=1228,316,53,16]: Members
+                - button "Add members" [ref=e227] [cursor=pointer] [box=1310,310,171,28]:
+                  - generic [ref=e228] [box=1316,314,90,20]: Add members
+              - generic [ref=e229] [box=1200,342,287,32]:
+                - generic [ref=e230] [box=1206,350,96,16]:
+                  - img [ref=e232] [box=1206,351,14,14]
+                  - generic [ref=e234] [box=1228,350,56,16]: Start date
+                - button "Set start date" [ref=e236] [cursor=pointer] [box=1310,344,171,28]:
+                  - generic [ref=e237] [box=1316,348,88,20]: Set start date
+              - generic [ref=e238] [box=1200,376,287,32]:
+                - generic [ref=e239] [box=1206,384,96,16]:
+                  - img [ref=e241] [box=1206,385,14,14]
+                  - generic [ref=e243] [box=1228,384,64,16]: Target date
+                - button "Set target date" [ref=e245] [cursor=pointer] [box=1310,378,171,28]:
+                  - generic [ref=e246] [box=1316,382,96,20]: Set target date
+              - generic [ref=e247] [box=1200,410,287,32]:
+                - generic [ref=e248] [box=1206,418,96,16]:
+                  - img [ref=e250] [box=1206,419,14,14]
+                  - generic [ref=e253] [box=1228,418,37,16]: Teams
+                - generic [ref=e254] [box=1310,416,171,20]: No team
+              - generic [ref=e255] [box=1200,444,287,36]:
+                - generic [ref=e256] [box=1206,446,96,32]:
+                  - img [ref=e258] [box=1206,455,14,14]
+                  - generic [ref=e267] [box=1228,446,74,32]: Slack channel
+                - generic [ref=e268] [box=1310,452,171,20]: Connect channel
+              - generic [ref=e269] [box=1200,482,287,32]:
+                - generic [ref=e270] [box=1206,490,96,16]:
+                  - img [ref=e272] [box=1206,491,14,14]
+                  - generic [ref=e275] [box=1228,490,37,16]: Labels
+                - generic [ref=e276] [box=1310,488,171,20]: Add label
+            - generic [ref=e277] [box=1196,526,295,77]:
+              - generic [ref=e278] [box=1196,539,295,24]:
+                - button "Milestones" [ref=e279] [cursor=pointer] [box=1204,541,247,20]:
+                  - img [ref=e280] [box=1204,545,12,12]
+                  - text: Milestones
+                - button "Add milestone" [ref=e282] [cursor=pointer] [box=1459,539,24,24]:
+                  - img [ref=e283] [box=1464,544,14,14]
+              - paragraph [ref=e285] [box=1204,571,279,32]: Add milestones to organize work within your project and break it into more granular stages.
+            - generic [ref=e286] [box=1196,615,295,155]:
+              - button "Progress" [ref=e287] [cursor=pointer] [box=1196,628,295,20]:
+                - img [ref=e288] [box=1204,632,12,12]
+                - text: Progress
+              - generic [ref=e290] [box=1196,656,295,114]:
+                - generic [ref=e291] [box=1204,656,279,54]:
+                  - img [ref=e292] [box=1213,665,36,36]:
+                    - generic [ref=e295] [box=1224,678,14,11]: 0%
+                  - generic [ref=e296] [box=1261,665,213,36]:
+                    - generic [ref=e297] [box=1261,665,213,16]: Scope
+                    - generic [ref=e298] [box=1261,681,213,20]: 0 issues · 0 done
+                - generic [ref=e299] [box=1204,718,279,28]:
+                  - button "Assignees" [ref=e300] [cursor=pointer] [box=1206,720,136,24]
+                  - button "Labels" [ref=e301] [cursor=pointer] [box=1346,720,136,24]
+                - generic [ref=e303] [box=1204,754,279,16]: No data yet.
+    - generic [ref=e112] [box=0,772,1512,36]:
+      - generic [ref=e113] [box=8,777,106,28]:
+        - button "Help" [ref=e114] [cursor=pointer] [box=8,777,28,28]:
+          - img [box=14,783,16,16]
+        - generic [ref=e115] [box=44,778,70,26]: Free plan
+      - generic [ref=e116] [box=1355,775,149,32]:
+        - button "Ask Linear" [ref=e117] [cursor=pointer] [box=1355,775,113,32]:
+          - img [box=1366,783,16,16]
+          - text: Ask Linear
+        - button "History" [ref=e118] [cursor=pointer] [box=1476,777,28,28]:
+          - img [box=1482,783,16,16]

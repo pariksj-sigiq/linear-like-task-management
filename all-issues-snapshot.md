@@ -1,0 +1,280 @@
+- generic [ref=e20]:
+  - generic [ref=e505]:
+    - list [ref=e507]:
+      - listitem [ref=e508]:
+        - generic [ref=e509]:
+          - button "EL eltsuh" [ref=e510] [cursor=pointer]:
+            - generic [ref=e511]: EL
+            - generic [ref=e512]: eltsuh
+            - img [ref=e513]
+          - button [ref=e515] [cursor=pointer]:
+            - img [ref=e516]
+          - button [ref=e519] [cursor=pointer]:
+            - img [ref=e520]
+    - generic [ref=e523]:
+      - list [ref=e526]:
+        - listitem [ref=e527]:
+          - link "Inbox" [ref=e528] [cursor=pointer]:
+            - /url: /inbox
+            - img [ref=e529]
+            - generic [ref=e532]: Inbox
+        - listitem [ref=e533]:
+          - link "My issues" [ref=e534] [cursor=pointer]:
+            - /url: /my-issues/activity
+            - img [ref=e535]
+            - generic [ref=e539]: My issues
+      - generic [ref=e540]:
+        - generic [ref=e541] [cursor=pointer]:
+          - text: Workspace
+          - img [ref=e542]
+        - list [ref=e546]:
+          - listitem [ref=e547]:
+            - link "Projects" [ref=e548] [cursor=pointer]:
+              - /url: /projects/all
+              - img [ref=e549]
+              - generic [ref=e551]: Projects
+          - listitem [ref=e552]:
+            - link "Views" [ref=e553] [cursor=pointer]:
+              - /url: /views
+              - img [ref=e554]
+              - generic [ref=e557]: Views
+          - listitem [ref=e558]:
+            - link "More" [ref=e559] [cursor=pointer]:
+              - /url: /roadmap
+              - img [ref=e560]
+              - generic [ref=e562]: More
+      - generic [ref=e563]:
+        - generic [ref=e564] [cursor=pointer]:
+          - text: Your teams
+          - img [ref=e565]
+        - list [ref=e569]:
+          - listitem [ref=e570]:
+            - button "Eltsuh" [expanded] [ref=e571] [cursor=pointer]:
+              - img [ref=e573]
+              - generic [ref=e576]: Eltsuh
+              - img [ref=e577]
+            - list [ref=e580]:
+              - listitem [ref=e581]:
+                - link "Issues" [ref=e582] [cursor=pointer]:
+                  - /url: /team/eng/active
+                  - img [ref=e583]
+                  - generic [ref=e586]: Issues
+              - listitem [ref=e587]:
+                - link "Projects" [ref=e588] [cursor=pointer]:
+                  - /url: /team/eng/projects
+                  - img [ref=e589]
+                  - generic [ref=e591]: Projects
+              - listitem [ref=e592]:
+                - link "Views" [ref=e593] [cursor=pointer]:
+                  - /url: /team/eng/views
+                  - img [ref=e594]
+                  - generic [ref=e597]: Views
+      - generic [ref=e598]:
+        - generic [ref=e599] [cursor=pointer]:
+          - text: Try
+          - img [ref=e600]
+        - list [ref=e604]:
+          - listitem [ref=e605]:
+            - link "Import issues" [ref=e606] [cursor=pointer]:
+              - /url: "#import"
+              - img [ref=e607]
+              - generic [ref=e610]: Import issues
+          - listitem [ref=e611]:
+            - link "Cycles" [ref=e612] [cursor=pointer]:
+              - /url: "#cycles"
+              - img [ref=e613]
+              - generic [ref=e615]: Cycles
+  - main [ref=e134]:
+    - generic [ref=e135]:
+      - generic [ref=e137]:
+        - generic [ref=e138]:
+          - img [ref=e279]
+          - heading "Issues" [level=1] [ref=e282]
+          - button "Add to favorites" [ref=e140] [cursor=pointer]:
+            - img
+        - button "Notifications" [ref=e284] [cursor=pointer]:
+          - img
+      - generic [ref=e286]:
+        - generic [ref=e287]:
+          - tablist [ref=e289]:
+            - tab "All issues" [active] [selected] [ref=e290] [cursor=pointer]
+            - tab "Active" [ref=e291] [cursor=pointer]
+            - tab "Backlog" [ref=e292] [cursor=pointer]
+          - generic [ref=e293]:
+            - button "Filter" [ref=e294] [cursor=pointer]:
+              - img
+            - button "Display options" [ref=e295] [cursor=pointer]:
+              - img
+            - button "Toggle sidebar" [ref=e296] [cursor=pointer]:
+              - img
+        - generic [ref=e297]:
+          - generic [ref=e298]:
+            - generic [ref=e299]:
+              - button "In Review 4" [expanded] [ref=e300] [cursor=pointer]:
+                - img [ref=e301]
+                - img [ref=e303]
+                - generic [ref=e305]: In Review
+                - generic [ref=e306]: "4"
+              - generic [ref=e307]:
+                - button "Create issue in In Review" [ref=e308] [cursor=pointer]:
+                  - img
+                - button "In Review menu" [ref=e309] [cursor=pointer]:
+                  - img
+            - generic [ref=e310]:
+              - generic [ref=e311]:
+                - checkbox "Select ELT-21" [ref=e312] [cursor=pointer]
+                - img "Urgent" [ref=e313]
+                - button "ELT-21" [ref=e315] [cursor=pointer]
+                - button [ref=e316] [cursor=pointer]:
+                  - img [ref=e317]
+                - button "Task verifier zero-state scoring gap" [ref=e319] [cursor=pointer]
+                - generic [ref=e320]:
+                  - generic "parikshit.joon@gmail.com" [ref=e321]: PJ
+                  - generic [ref=e322]: Apr 29
+              - generic [ref=e323]:
+                - checkbox "Select ELT-27" [ref=e324] [cursor=pointer]
+                - img "High" [ref=e325]
+                - button "ELT-27" [ref=e329] [cursor=pointer]
+                - button [ref=e330] [cursor=pointer]:
+                  - img [ref=e331]
+                - button "Inbox split-pane parity" [ref=e333] [cursor=pointer]
+                - generic [ref=e334]:
+                  - generic "minalgoel99@gmail.com" [ref=e335]: MI
+                  - generic [ref=e336]: Apr 29
+              - generic [ref=e337]:
+                - checkbox "Select ELT-7" [ref=e338] [cursor=pointer]
+                - img "Medium" [ref=e339]
+                - button "ELT-7" [ref=e343] [cursor=pointer]
+                - button [ref=e344] [cursor=pointer]:
+                  - img [ref=e345]
+                - button "Classroom and teacher identifiers are unclear in student detail drawers" [ref=e347] [cursor=pointer]
+                - generic [ref=e348]:
+                  - generic "minalgoel99@gmail.com" [ref=e349]: MI
+                  - generic [ref=e350]: Apr 29
+              - generic [ref=e351]:
+                - checkbox "Select ELT-6" [ref=e352] [cursor=pointer]
+                - img "Medium" [ref=e353]
+                - button "ELT-6" [ref=e357] [cursor=pointer]
+                - button [ref=e358] [cursor=pointer]:
+                  - img [ref=e359]
+                - button "Students and Teachers CTAs appear as filters but trigger bulk assignment" [ref=e361] [cursor=pointer]
+                - generic [ref=e362]:
+                  - generic "vishalsharma.gbpecdelhi@gmail.com" [ref=e363]: VG
+                  - generic [ref=e364]: Apr 29
+          - generic [ref=e365]:
+            - generic [ref=e366]:
+              - button "In Progress 4" [expanded] [ref=e367] [cursor=pointer]:
+                - img [ref=e368]
+                - img [ref=e370]
+                - generic [ref=e372]: In Progress
+                - generic [ref=e373]: "4"
+              - generic [ref=e374]:
+                - button "Create issue in In Progress" [ref=e375] [cursor=pointer]:
+                  - img
+                - button "In Progress menu" [ref=e376] [cursor=pointer]:
+                  - img
+            - generic [ref=e377]:
+              - generic [ref=e378]:
+                - checkbox "Select ELT-19" [ref=e379] [cursor=pointer]
+                - img "High" [ref=e380]
+                - button "ELT-19" [ref=e384] [cursor=pointer]
+                - button [ref=e385] [cursor=pointer]:
+                  - img [ref=e386]
+                - button "Audit picker keyboard states" [ref=e388] [cursor=pointer]
+                - generic [ref=e389]:
+                  - generic "minalgoel99@gmail.com" [ref=e390]: MI
+                  - generic [ref=e391]: Apr 29
+              - generic [ref=e392]:
+                - checkbox "Select ELT-18" [ref=e393] [cursor=pointer]
+                - img "High" [ref=e394]
+                - button "ELT-18" [ref=e398] [cursor=pointer]
+                - button [ref=e399] [cursor=pointer]:
+                  - img [ref=e400]
+                - button "Polish project update composer" [ref=e402] [cursor=pointer]
+                - generic [ref=e403]:
+                  - generic "vishalsharma.gbpecdelhi@gmail.com" [ref=e404]: VG
+                  - generic [ref=e405]: Apr 29
+              - generic [ref=e406]:
+                - checkbox "Select ELT-5" [ref=e407] [cursor=pointer]
+                - img "High" [ref=e408]
+                - button "ELT-5" [ref=e412] [cursor=pointer]
+                - button [ref=e413] [cursor=pointer]:
+                  - img [ref=e414]
+                - button "Handle transient LLM failures" [ref=e416] [cursor=pointer]
+                - generic [ref=e417]:
+                  - generic "parikshit.joon@gmail.com" [ref=e418]: PJ
+                  - generic [ref=e419]: Apr 29
+              - generic [ref=e420]:
+                - checkbox "Select ELT-22" [ref=e421] [cursor=pointer]
+                - img "Medium" [ref=e422]
+                - button "ELT-22" [ref=e426] [cursor=pointer]
+                - button [ref=e427] [cursor=pointer]:
+                  - img [ref=e428]
+                - button "Alex loading-state polish candidate" [ref=e430] [cursor=pointer]
+                - generic [ref=e431]:
+                  - generic "vishalsharma.gbpecdelhi@gmail.com" [ref=e432]: VG
+                  - generic [ref=e433]: Apr 29
+          - generic [ref=e434]:
+            - generic [ref=e435]:
+              - button "Todo 4" [expanded] [ref=e436] [cursor=pointer]:
+                - img [ref=e437]
+                - img [ref=e439]
+                - generic [ref=e441]: Todo
+                - generic [ref=e442]: "4"
+              - generic [ref=e443]:
+                - button "Create issue in Todo" [ref=e444] [cursor=pointer]:
+                  - img
+                - button "Todo menu" [ref=e445] [cursor=pointer]:
+                  - img
+            - generic [ref=e446]:
+              - generic [ref=e447]:
+                - checkbox "Select ELT-25" [ref=e448] [cursor=pointer]
+                - img "High" [ref=e449]
+                - button "ELT-25" [ref=e453] [cursor=pointer]
+                - button [ref=e454] [cursor=pointer]:
+                  - img [ref=e455]
+                - button "QA Automation smoke checks need browser screenshots" [ref=e457] [cursor=pointer]
+                - generic [ref=e458]:
+                  - generic "parikshit.joon@gmail.com" [ref=e459]: PJ
+                  - generic [ref=e460]: Apr 29
+              - generic [ref=e461]:
+                - checkbox "Select ELT-23" [ref=e462] [cursor=pointer]
+                - img "High" [ref=e463]
+                - button "ELT-23" [ref=e467] [cursor=pointer]
+                - button [ref=e468] [cursor=pointer]:
+                  - img [ref=e469]
+                - button "Issue Flow Implementation follow-up" [ref=e471] [cursor=pointer]
+                - generic [ref=e472]:
+                  - generic "minalgoel99@gmail.com" [ref=e473]: MI
+                  - generic [ref=e474]: Apr 29
+              - generic [ref=e475]:
+                - checkbox "Select ELT-16" [ref=e476] [cursor=pointer]
+                - img "High" [ref=e477]
+                - button "ELT-16" [ref=e481] [cursor=pointer]
+                - button [ref=e482] [cursor=pointer]:
+                  - img [ref=e483]
+                - button "Repair notification read state" [ref=e485] [cursor=pointer]
+                - generic [ref=e486]:
+                  - generic "rohanbojja@icloud.com" [ref=e487]: RO
+                  - generic [ref=e488]: Apr 29
+              - generic [ref=e489]:
+                - checkbox "Select ELT-17" [ref=e490] [cursor=pointer]
+                - img "High" [ref=e491]
+                - button "ELT-17" [ref=e495] [cursor=pointer]
+                - button [ref=e496] [cursor=pointer]:
+                  - img [ref=e497]
+                - button "Design reviewer request empty state" [ref=e499] [cursor=pointer]
+                - generic [ref=e500]:
+                  - generic "parikshit.joon@gmail.com" [ref=e501]: PJ
+                  - generic [ref=e502]: Apr 29
+    - generic [ref=e271]:
+      - generic [ref=e272]:
+        - button "Help" [ref=e273] [cursor=pointer]:
+          - img
+        - generic [ref=e274]: Free plan
+      - generic [ref=e275]:
+        - button "Ask Linear" [ref=e276] [cursor=pointer]:
+          - img
+          - text: Ask Linear
+        - button "History" [ref=e277] [cursor=pointer]:
+          - img

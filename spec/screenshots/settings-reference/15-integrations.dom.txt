@@ -1,0 +1,579 @@
+- link "Skip to content":
+  - /url: "#skip-nav"
+- navigation:
+  - link "Back to app":
+    - /url: /eltsuh
+    - text: Back to app
+  - link "Preferences":
+    - /url: /eltsuh/settings/account/preferences
+    - generic: Preferences
+  - link "Profile":
+    - /url: /eltsuh/settings/account/profile
+    - generic: Profile
+  - link "Notifications":
+    - /url: /eltsuh/settings/account/notifications
+    - generic: Notifications
+  - link "Security & access":
+    - /url: /eltsuh/settings/account/security
+    - generic: Security & access
+  - link "Connected accounts":
+    - /url: /eltsuh/settings/account/connections
+    - generic: Connected accounts
+  - link "Agent personalization":
+    - /url: /eltsuh/settings/account/agents
+    - generic: Agent personalization
+  - heading "Issues" [level=2]:
+    - generic: Issues
+  - link "Labels":
+    - /url: /eltsuh/settings/issue-labels
+    - generic: Labels
+  - link "Templates":
+    - /url: /eltsuh/settings/issue-templates
+    - generic: Templates
+  - link "SLAs":
+    - /url: /eltsuh/settings/sla
+    - generic: SLAs
+  - heading "Projects" [level=2]:
+    - generic: Projects
+  - link "Labels":
+    - /url: /eltsuh/settings/project-labels
+    - generic: Labels
+  - link "Templates":
+    - /url: /eltsuh/settings/project-templates
+    - generic: Templates
+  - link "Statuses":
+    - /url: /eltsuh/settings/project-statuses
+    - generic: Statuses
+  - link "Updates":
+    - /url: /eltsuh/settings/project-updates
+    - generic: Updates
+  - heading "Features" [level=2]:
+    - generic: Features
+  - link "AI & Agents":
+    - /url: /eltsuh/settings/ai
+    - generic: AI & Agents
+  - link "Initiatives":
+    - /url: /eltsuh/settings/initiatives
+    - generic: Initiatives
+  - link "Documents":
+    - /url: /eltsuh/settings/documents
+    - generic: Documents
+  - link "Customer requests":
+    - /url: /eltsuh/settings/customer-requests
+    - generic: Customer requests
+  - link "Pulse":
+    - /url: /eltsuh/settings/pulse
+    - generic: Pulse
+  - link "Asks":
+    - /url: /eltsuh/settings/asks
+    - generic: Asks
+  - link "Emojis":
+    - /url: /eltsuh/settings/emojis
+    - generic: Emojis
+  - link "Integrations":
+    - /url: /eltsuh/settings/integrations
+    - generic: Integrations
+  - heading "Administration" [level=2]:
+    - generic: Administration
+  - link "Workspace":
+    - /url: /eltsuh/settings/workspace
+    - generic: Workspace
+  - link "Teams":
+    - /url: /eltsuh/settings/teams
+    - generic: Teams
+  - link "Members":
+    - /url: /eltsuh/settings/members
+    - generic: Members
+  - link "Security":
+    - /url: /eltsuh/settings/security
+    - generic: Security
+  - link "API":
+    - /url: /eltsuh/settings/api
+    - generic: API
+  - link "Applications":
+    - /url: /eltsuh/settings/applications
+    - generic: Applications
+  - link "Billing":
+    - /url: /eltsuh/settings/billing
+    - generic: Billing
+  - link "Import & export":
+    - /url: /eltsuh/settings/import-export
+    - generic: Import & export
+  - heading "Your teams" [level=2]:
+    - generic: Your teams
+  - link "Eltsuh":
+    - /url: /eltsuh/settings/teams/ELT
+    - generic: Eltsuh
+  - generic "Create a team":
+    - text: Create a team
+- button "Open Help menu":
+- main:
+  - generic: Integrations
+  - generic: Enhance your Linear experience with a wide variety of add-ons and integrations
+  - generic: Search integrations
+  - textbox "Search integrations"
+  - heading "Enabled" [level=3]
+  - list:
+    - link "GitHub":
+      - /url: /eltsuh/settings/integrations/github
+    - generic: GitHub
+    - generic: Enabled
+  - tabpanel "Slack":
+    - figure:
+      - img "Linear’s \"Create a new issue\" dialog inside Slack with fields for issue metadata"
+    - generic: Essentials
+    - generic: Slack
+    - generic: Create issues from Slack messages and sync threads
+    - link "Slack":
+      - /url: /eltsuh/settings/integrations/slack
+  - tablist:
+    - tab "Linear Asks for Slack":
+      - generic: Linear Asks for Slack
+    - tab "Slack" [selected]:
+      - generic: Slack
+    - tab "GitHub":
+      - generic: GitHub
+    - tab "Figma":
+      - generic: Figma
+    - tab "Intercom":
+      - generic: Intercom
+    - tab "GitLab":
+      - generic: GitLab
+    - tab "Zapier":
+      - generic: Zapier
+    - tab "Jira":
+      - generic: Jira
+  - button "Scroll left" [disabled]:
+  - button "Scroll right":
+  - heading "Essentials" [level=3]
+  - list:
+    - link "GitHub":
+      - /url: /eltsuh/settings/integrations/github
+    - generic: GitHub
+    - generic: Enabled
+    - generic: Automate your pull request and commit workflows and keep issues synced both ways
+    - link "Slack":
+      - /url: /eltsuh/settings/integrations/slack
+    - generic: Slack
+    - generic: Create issues from Slack messages and sync threads
+    - link "GitLab":
+      - /url: /eltsuh/settings/integrations/gitlab
+    - generic: GitLab
+    - generic: Automate your Merge Request workflow
+    - link "Figma":
+      - /url: /eltsuh/settings/integrations/figma
+    - generic: Figma
+    - generic: Create and link issues directly from Figma
+    - link "Intercom":
+      - /url: /eltsuh/settings/integrations/intercom
+    - generic: Intercom
+    - generic: Keep a tight feedback loop with customers and streamline bug reports
+    - link "Google Sheets":
+      - /url: /eltsuh/settings/integrations/google-sheets
+    - generic: Google Sheets
+    - generic: Build custom dashboards and analytics from issue and project data
+  - heading "Agents" [level=3]
+  - list:
+    - link "Codex":
+      - /url: /eltsuh/settings/integrations/codex
+    - generic: Codex
+    - generic: Delegate issues to Codex directly from Linear
+    - link "Cursor":
+      - /url: /eltsuh/settings/integrations/cursor
+    - generic: Cursor
+    - generic: Turn issues into pull requests with Cursor cloud agents
+    - link "GitHub Copilot":
+      - /url: /eltsuh/settings/integrations/github-copilot
+    - generic: GitHub Copilot
+    - generic: Turn Linear issues into code with GitHub Copilot coding agent
+    - link "Factory":
+      - /url: /eltsuh/settings/integrations/factory
+    - generic: Factory
+    - generic: Assign issues from your backlog to Droids
+    - link "Sentry Agent":
+      - /url: /eltsuh/settings/integrations/sentry-agent
+    - generic: Sentry Agent
+    - generic: Resolve Linear Issues with Seer by Sentry
+    - link "Devin":
+      - /url: /eltsuh/settings/integrations/devin
+    - generic: Devin
+    - generic: Automate work from issue to tested PR with Devin
+    - link "ChatPRD":
+      - /url: /eltsuh/settings/integrations/chatprd
+    - generic: ChatPRD
+    - generic: Writes requirements, manages issues, and gives feedback on your product work
+    - link "Charlie":
+      - /url: /eltsuh/settings/integrations/charlie
+    - generic: Charlie
+    - generic: Plans, implements, and reviews your TypeScript PRs
+    - button "View all"
+    - generic: Show all
+  - heading "AI clients" [level=3]
+  - list:
+    - link "Cursor MCP":
+      - /url: /eltsuh/settings/integrations/cursor-mcp
+    - generic: Cursor MCP
+    - generic: Connect Cursor to the Linear MCP server
+    - link "ChatGPT":
+      - /url: /eltsuh/settings/integrations/chatgpt
+    - generic: ChatGPT
+    - generic: Connect ChatGPT deep research to Linear
+    - link "Claude":
+      - /url: /eltsuh/settings/integrations/claude
+    - generic: Claude
+    - generic: Connect Claude to the Linear MCP server
+    - link "v0 by Vercel MCP connector":
+      - /url: /eltsuh/settings/integrations/v0
+    - generic: v0 by Vercel MCP connector
+    - generic: Connect v0 and Linear through MCP
+    - link "Windsurf":
+      - /url: /eltsuh/settings/integrations/windsurf
+    - generic: Windsurf
+    - generic: Connect Windsurf to the Linear MCP server
+    - link "Replit":
+      - /url: /eltsuh/settings/integrations/replit
+    - generic: Replit
+    - generic: Build Apps & Automations
+    - link "Dust":
+      - /url: /eltsuh/settings/integrations/dust
+    - generic: Dust
+    - generic: Build AI workflows with Linear issues
+    - link "ADK":
+      - /url: /eltsuh/settings/integrations/google-adk
+    - generic: ADK
+    - generic: Connect your Google ADK agents to Linear
+    - button "View all"
+    - generic: Show all
+  - heading "Engineering" [level=3]
+  - list:
+    - link "GitHub":
+      - /url: /eltsuh/settings/integrations/github
+    - generic: GitHub
+    - generic: Enabled
+    - generic: Automate your pull request and commit workflows and keep issues synced both ways
+    - link "GitLab":
+      - /url: /eltsuh/settings/integrations/gitlab
+    - generic: GitLab
+    - generic: Automate your Merge Request workflow
+    - link "PagerDuty Triage Responsibility":
+      - /url: /eltsuh/settings/integrations/pagerduty-triage
+    - generic: PagerDuty Triage Responsibility
+    - generic: Automate the rotation of triage responsibility with PagerDuty schedules
+    - link "Sentry":
+      - /url: /eltsuh/settings/integrations/sentry
+    - generic: Sentry
+    - generic: Create and link issues with Sentry and automate issue creation
+    - link "VS Code":
+      - /url: /eltsuh/settings/integrations/vs-code
+    - generic: VS Code
+    - generic: Easily build VS Code extensions with Linear Connect
+    - link "Datadog":
+      - /url: /eltsuh/settings/integrations/datadog
+    - generic: Datadog
+    - generic: Create Linear issues from Datadog Cases and Monitors
+    - link "incident.io":
+      - /url: /eltsuh/settings/integrations/incident-io
+    - generic: incident.io
+    - generic: Manage incidents and triage responsibility directly in Linear
+    - link "Raycast":
+      - /url: /eltsuh/settings/integrations/raycast
+    - generic: Raycast
+    - generic: Create, search, and modify your issues from anywhere
+    - button "View all"
+    - generic: Show all
+  - heading "Linear crafted" [level=3]
+  - list:
+    - link "GitHub":
+      - /url: /eltsuh/settings/integrations/github
+    - generic: GitHub
+    - generic: Enabled
+    - generic: Automate your pull request and commit workflows and keep issues synced both ways
+    - link "Slack":
+      - /url: /eltsuh/settings/integrations/slack
+    - generic: Slack
+    - generic: Create issues from Slack messages and sync threads
+    - link "GitLab":
+      - /url: /eltsuh/settings/integrations/gitlab
+    - generic: GitLab
+    - generic: Automate your Merge Request workflow
+    - link "Figma":
+      - /url: /eltsuh/settings/integrations/figma
+    - generic: Figma
+    - generic: Create and link issues directly from Figma
+    - link "Linear Asks for Slack":
+      - /url: /eltsuh/settings/integrations/linear-asks
+    - generic: Linear Asks for Slack
+    - generic: Turn requests from Slack or email into actionable issues and enable helpdesk workflows
+    - link "Notion":
+      - /url: /eltsuh/settings/integrations/notion
+    - generic: Notion
+    - generic: Previews of Linear issues, views and projects and query Notion AI
+    - link "PagerDuty Triage Responsibility":
+      - /url: /eltsuh/settings/integrations/pagerduty-triage
+    - generic: PagerDuty Triage Responsibility
+    - generic: Automate the rotation of triage responsibility with PagerDuty schedules
+    - link "Zapier":
+      - /url: /eltsuh/settings/integrations/zapier
+    - generic: Zapier
+    - generic: Build custom automations to create or update Linear issues
+    - button "View all"
+    - generic: Show all
+  - heading "Bug Reporting" [level=3]
+  - list:
+    - link "Linear Asks for Slack":
+      - /url: /eltsuh/settings/integrations/linear-asks
+    - generic: Linear Asks for Slack
+    - generic: Turn requests from Slack or email into actionable issues and enable helpdesk workflows
+    - link "Sentry":
+      - /url: /eltsuh/settings/integrations/sentry
+    - generic: Sentry
+    - generic: Create and link issues with Sentry and automate issue creation
+    - link "incident.io":
+      - /url: /eltsuh/settings/integrations/incident-io
+    - generic: incident.io
+    - generic: Manage incidents and triage responsibility directly in Linear
+    - link "Bird Eats Bug":
+      - /url: /eltsuh/settings/integrations/bird-eats-bug
+    - generic: Bird Eats Bug
+    - generic: Speed up your bug reporting workflow with Bird Eats Bug
+    - link "Honeybadger":
+      - /url: /eltsuh/settings/integrations/honeybadger
+    - generic: Honeybadger
+    - generic: Manage Honeybadger errors via Linear issues
+    - link "Jam":
+      - /url: /eltsuh/settings/integrations/jam
+    - generic: Jam
+    - generic: Create Linear issues with all the details developers need to resolve bugs faster
+    - link "Vercel":
+      - /url: /eltsuh/settings/integrations/vercel
+    - generic: Vercel
+    - generic: Turn Vercel Preview Deployment comments into action items
+    - link "Arc":
+      - /url: /eltsuh/settings/integrations/arc
+    - generic: Arc
+    - generic: Pre-installed
+    - generic: Create new issues right from your browser command bar
+    - button "View all"
+    - generic: Show all
+  - heading "Automations" [level=3]
+  - list:
+    - link "Zapier":
+      - /url: /eltsuh/settings/integrations/zapier
+    - generic: Zapier
+    - generic: Build custom automations to create or update Linear issues
+    - link "Create issues via email":
+      - /url: /eltsuh/settings/integrations/create-issues-via-email
+    - generic: Create issues via email
+    - generic: Pre-installed
+    - generic: Set up email addresses for teams or templates to create issues via email
+    - link "Jira":
+      - /url: /eltsuh/settings/integrations/jira
+    - generic: Jira
+    - generic: Smoothly transition from Jira to Linear
+    - link "Raycast":
+      - /url: /eltsuh/settings/integrations/raycast
+    - generic: Raycast
+    - generic: Create, search, and modify your issues from anywhere
+    - link "Fivetran":
+      - /url: /eltsuh/settings/integrations/fivetran
+    - generic: Fivetran
+    - generic: Sync your Linear data with the Fivetran connector
+    - link "Axolo":
+      - /url: /eltsuh/settings/integrations/axolo
+    - generic: Axolo
+    - generic: Make code reviews easier by syncing your pull request channels with your Linear issues
+    - link "Capybara":
+      - /url: /eltsuh/settings/integrations/capybara
+    - generic: Capybara
+    - generic: Create Linear issues and comments based on Jira tasks
+    - link "Circleback":
+      - /url: /eltsuh/settings/integrations/circleback
+    - generic: Circleback
+    - generic: Automatically create Linear issues from meeting action items
+    - button "View all"
+    - generic: Show all
+  - heading "Customer Experience" [level=3]
+  - list:
+    - link "Zendesk":
+      - /url: /eltsuh/settings/integrations/zendesk
+    - generic: Zendesk
+    - generic: Keep a tight feedback loop with customers and streamline bug reports
+    - link "Intercom":
+      - /url: /eltsuh/settings/integrations/intercom
+    - generic: Intercom
+    - generic: Keep a tight feedback loop with customers and streamline bug reports
+    - link "Front":
+      - /url: /eltsuh/settings/integrations/front
+    - generic: Front
+    - generic: Keep a tight feedback loop with customers and streamline bug reports
+    - link "Canny":
+      - /url: /eltsuh/settings/integrations/canny
+    - generic: Canny
+    - generic: Sync Canny posts to Linear issues to keep customers in the loop
+    - link "Productlane":
+      - /url: /eltsuh/settings/integrations/productlane
+    - generic: Productlane
+    - generic: Helpdesk, customer requests portal, public roadmap, and changelog built on Linear
+    - link "Index":
+      - /url: /eltsuh/settings/integrations/index
+    - generic: Index
+    - generic: The Productboard and Jira Product Discovery alternative for Product Management on Linear
+    - link "Salesforce":
+      - /url: /eltsuh/settings/integrations/salesforce
+    - generic: Salesforce
+    - generic: Create Linear issues from Salesforce cases
+    - link "Atlas Support":
+      - /url: /eltsuh/settings/integrations/atlas-support
+    - generic: Atlas Support
+    - generic: Keep a tight feedback loop with customers and streamline customer requests
+    - button "View all"
+    - generic: Show all
+  - heading "Collaboration" [level=3]
+  - list:
+    - link "Slack":
+      - /url: /eltsuh/settings/integrations/slack
+    - generic: Slack
+    - generic: Create issues from Slack messages and sync threads
+    - link "Linear Asks for Slack":
+      - /url: /eltsuh/settings/integrations/linear-asks
+    - generic: Linear Asks for Slack
+    - generic: Turn requests from Slack or email into actionable issues and enable helpdesk workflows
+    - link "Notion":
+      - /url: /eltsuh/settings/integrations/notion
+    - generic: Notion
+    - generic: Previews of Linear issues, views and projects and query Notion AI
+    - link "Microsoft Teams":
+      - /url: /eltsuh/settings/integrations/microsoft-teams
+    - generic: Microsoft Teams
+    - generic: Drive work forward by turning conversations into issues, projects, and documents
+    - link "Discord":
+      - /url: /eltsuh/settings/integrations/discord
+    - generic: Discord
+    - generic: Create issues, share updates, and keep everyone in sync
+    - link "Glean":
+      - /url: /eltsuh/settings/integrations/glean
+    - generic: Glean
+    - generic: Search Linear for instant insights
+    - link "Productlane":
+      - /url: /eltsuh/settings/integrations/productlane
+    - generic: Productlane
+    - generic: Helpdesk, customer requests portal, public roadmap, and changelog built on Linear
+    - link "Range":
+      - /url: /eltsuh/settings/integrations/range
+    - generic: Range
+    - generic: Pull Linear issues into async check-ins to keep your software development team in sync
+    - button "View all"
+    - generic: Show all
+  - heading "Media & Design" [level=3]
+  - list:
+    - link "Figma":
+      - /url: /eltsuh/settings/integrations/figma
+    - generic: Figma
+    - generic: Create and link issues directly from Figma
+    - link "Canva AI Connector":
+      - /url: /eltsuh/settings/integrations/canva-connector
+    - generic: Canva AI Connector
+    - generic: Create and link Linear workflow content directly within Canva
+    - link "Claap":
+      - /url: /eltsuh/settings/integrations/claap
+    - generic: Claap
+    - generic: Record bugs and directly create issues in Linear
+    - link "Descript":
+      - /url: /eltsuh/settings/integrations/descript
+    - generic: Descript
+    - generic: Pre-installed
+    - generic: Embed Descript share URLs in Linear issues and documents
+    - link "Loom":
+      - /url: /eltsuh/settings/integrations/loom
+    - generic: Loom
+    - generic: Pre-installed
+    - generic: Embed Loom videos in Linear issues and documents
+    - link "Miro":
+      - /url: /eltsuh/settings/integrations/miro
+    - generic: Miro
+    - generic: Import, create and manage issues directly in Miro
+    - link "Screenpresso":
+      - /url: /eltsuh/settings/integrations/screenpresso
+    - generic: Screenpresso
+    - generic: Effectively report an issue with embedded screenshots and videos
+    - link "Tella":
+      - /url: /eltsuh/settings/integrations/tella
+    - generic: Tella
+    - generic: Embed Tella videos in Linear
+    - link "YouTube":
+      - /url: /eltsuh/settings/integrations/youtube
+    - generic: YouTube
+    - generic: Pre-installed
+    - generic: Embed YouTube videos in Linear issues and documents
+  - heading "Analytics" [level=3]
+  - list:
+    - link "Airbyte":
+      - /url: /eltsuh/settings/integrations/airbyte
+    - generic: Airbyte
+    - generic: Connect Linear to Airbyte and consolidate data in data warehouses, lakes, and databases
+    - link "Google Sheets":
+      - /url: /eltsuh/settings/integrations/google-sheets
+    - generic: Google Sheets
+    - generic: Build custom dashboards and analytics from issue and project data
+    - link "Fivetran":
+      - /url: /eltsuh/settings/integrations/fivetran
+    - generic: Fivetran
+    - generic: Sync your Linear data with the Fivetran connector
+    - link "Retool":
+      - /url: /eltsuh/settings/integrations/retool
+    - generic: Retool
+    - generic: Create, update, and analyze Linear issues in custom internal tools
+    - link "Span":
+      - /url: /eltsuh/settings/integrations/span
+    - generic: Span
+    - generic: See how work translates into engineering impact
+    - link "Jellyfish":
+      - /url: /eltsuh/settings/integrations/jellyfish
+    - generic: Jellyfish
+    - generic: Developer productivity insights and AI impact signals in one dashboard
+    - link "Coda by Packs4Coda":
+      - /url: /eltsuh/settings/integrations/packs4coda
+    - generic: Coda by Packs4Coda
+    - generic: Analyze your team's performance, project lifecycles, issues and more with the Linear Pack for Coda
+    - link "Cycle Report":
+      - /url: /eltsuh/settings/integrations/cycle-report
+    - generic: Cycle Report
+    - generic: Create reports of your cycles that your clients can review and sign off on
+    - button "View all"
+    - generic: Show all
+  - heading "Security & Compliance" [level=3]
+  - list:
+    - link "Aikido Security":
+      - /url: /eltsuh/settings/integrations/aikido
+    - generic: Aikido Security
+    - generic: Put your application security on autopilot
+    - link "Cloudback":
+      - /url: /eltsuh/settings/integrations/cloudback
+    - generic: Cloudback
+    - generic: Automated daily backups of your Linear workspace with on-demand restore
+    - link "Drata":
+      - /url: /eltsuh/settings/integrations/drata
+    - generic: Drata
+    - generic: Simplify risk and managing frameworks like SOC 2, ISO 27001, PCI and more
+    - link "Fencer":
+      - /url: /eltsuh/settings/integrations/fencer
+    - generic: Fencer
+    - generic: Create and link issues directly from Fencer
+    - link "Kawach AI":
+      - /url: /eltsuh/settings/integrations/kawach-ai
+    - generic: Kawach AI
+    - generic: Keep your workspace compliant with org policies using Kawach.AI
+    - link "Orca Security":
+      - /url: /eltsuh/settings/integrations/orca-security
+    - generic: Orca Security
+    - generic: Streamline security fixes by sharing relevant context with the right people
+    - link "SecureSlate":
+      - /url: /eltsuh/settings/integrations/secureslate
+    - generic: SecureSlate
+    - generic: Create and link SecureSlate security tickets to Linear
+    - link "Vanta":
+      - /url: /eltsuh/settings/integrations/vanta
+    - generic: Vanta
+    - generic: Automate compliance. Simplify security. Demonstrate trust.
+- region "Notifications alt+T"
+- generic: Loading…
