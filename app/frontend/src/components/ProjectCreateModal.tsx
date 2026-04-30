@@ -27,7 +27,8 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Input } from "./ui/input";
-import { PriorityIcon, StatusIcon } from "./IssueExplorer";
+import { PriorityIcon } from "./IssueExplorer";
+import { ProjectStatusGlyph } from "./project/ProjectStatusPicker";
 import { ErrorBanner } from "./ui";
 import { cn } from "../lib/utils";
 import type { LinearUser } from "../linearTypes";
@@ -51,8 +52,8 @@ const PRIORITY_OPTIONS: { label: string; value: string; shortcut: string }[] = [
 
 function chipClasses(active?: boolean) {
   return cn(
-    "inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full border border-border bg-transparent px-2.5 text-xs font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
-    active && "bg-muted",
+    "inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full border border-[#e5e5e5] bg-background px-2.5 text-[13px] font-medium text-foreground shadow-[0_1px_2px_rgba(0,0,0,0.03)] transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#5e6ad2] dark:border-[#333333]",
+    active && "bg-muted/70",
   );
 }
 
@@ -260,18 +261,18 @@ export function ProjectCreateModal({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="top-[8%] max-h-[88vh] w-[calc(100%-2rem)] max-w-[820px] translate-y-0 overflow-visible rounded-2xl bg-popover p-0 sm:max-w-[820px]"
+        className="top-[6%] max-h-[88vh] min-h-[680px] w-[calc(100%-2rem)] max-w-[820px] translate-y-0 overflow-hidden rounded-[20px] border border-border/80 bg-popover p-0 shadow-[0_24px_80px_rgba(0,0,0,0.28)] sm:max-w-[820px]"
         data-testid="create-project-modal"
       >
         <VisuallyHidden.Root>
           <DialogTitle>New project</DialogTitle>
           <DialogDescription>Create a new project for your team.</DialogDescription>
         </VisuallyHidden.Root>
-        <form onSubmit={submit} className="flex h-full flex-col">
+        <form onSubmit={submit} className="flex min-h-[680px] flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-border/60 px-5 py-3.5">
+          <div className="flex items-center justify-between px-5 pb-1 pt-4">
             <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
-              <span className="inline-flex h-5 items-center gap-1.5 rounded-md bg-[#5e6ad2]/15 px-1.5 text-[11px] font-semibold text-[#5e6ad2]">
+              <span className="inline-flex h-6 items-center gap-1.5 rounded-lg border border-[#e5e5e5] bg-background px-2 text-[12px] font-medium text-[#5e6ad2] shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:border-[#333333]">
                 <Box size={12} /> ELT
               </span>
               <ChevronRight size={14} className="text-muted-foreground" />
@@ -288,7 +289,7 @@ export function ProjectCreateModal({
           </div>
 
           {/* Body */}
-          <div className="flex-1 overflow-y-auto px-5 pt-5">
+          <div className="flex-1 overflow-y-auto px-7 pt-6">
             <ErrorBanner message={error} />
             {warnings.length > 0 && (
               <div
@@ -302,7 +303,7 @@ export function ProjectCreateModal({
             )}
 
             {/* Icon placeholder */}
-            <div className="mb-3 inline-grid size-8 place-items-center rounded-md border border-border/60 bg-muted/40 text-muted-foreground">
+            <div className="mb-5 inline-grid size-8 place-items-center rounded-md border border-border/60 bg-muted/40 text-muted-foreground">
               <Box size={16} />
             </div>
 
@@ -312,7 +313,7 @@ export function ProjectCreateModal({
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder="Project name"
-              className="mb-1 h-9 w-full border-0 bg-transparent px-0 text-2xl font-semibold leading-tight text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:outline-none"
+              className="mb-1 h-10 w-full border-0 bg-transparent px-0 text-[25px] font-semibold leading-tight text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:outline-none"
               data-testid="project-name-input"
             />
 
@@ -321,7 +322,7 @@ export function ProjectCreateModal({
               value={summary}
               onChange={(event) => setSummary(event.target.value)}
               placeholder="Add a short summary..."
-              className="mb-3 h-7 w-full border-0 bg-transparent px-0 text-sm leading-tight text-foreground outline-none placeholder:text-muted-foreground focus-visible:outline-none"
+              className="mb-4 h-7 w-full border-0 bg-transparent px-0 text-[15px] leading-tight text-foreground outline-none placeholder:text-muted-foreground focus-visible:outline-none"
               data-testid="project-summary-input"
             />
 
@@ -331,7 +332,7 @@ export function ProjectCreateModal({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button type="button" className={chipClasses()} data-testid="status-chip">
-                    <StatusIcon status={selectedStatus.label} size={12} />
+                    <ProjectStatusGlyph status={selectedStatus.value} size={14} />
                     <span>{selectedStatus.label}</span>
                   </button>
                 </DropdownMenuTrigger>
@@ -350,7 +351,7 @@ export function ProjectCreateModal({
                       onSelect={() => setStatus(option.value)}
                       className="flex items-center gap-2"
                     >
-                      <StatusIcon status={option.label} size={14} />
+                      <ProjectStatusGlyph status={option.value} size={14} />
                       <span className="flex-1">{option.label}</span>
                       {option.value === status && <Check size={14} />}
                       <span className="text-xs text-muted-foreground">{option.shortcut}</span>
@@ -571,15 +572,15 @@ export function ProjectCreateModal({
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               placeholder="Write a description, a project brief, or collect ideas..."
-              className="mt-4 min-h-[160px] w-full resize-none border-0 bg-transparent px-0 text-sm leading-6 text-foreground outline-none placeholder:text-muted-foreground focus-visible:outline-none"
+              className="mt-6 min-h-[240px] w-full resize-none border-0 bg-transparent px-0 text-[15px] leading-6 text-foreground outline-none placeholder:text-muted-foreground focus-visible:outline-none"
               data-testid="project-description-input"
             />
           </div>
 
           {/* Milestones */}
-          <div className="mx-5 mb-3 overflow-hidden rounded-xl border border-border">
-            <div className="flex items-center justify-between px-4 py-3">
-              <span className="text-sm text-foreground">Milestones</span>
+          <div className="mx-7 mb-5 overflow-hidden rounded-xl border border-border">
+            <div className="flex items-center justify-between px-4 py-3.5">
+              <span className="text-[13px] font-medium text-foreground">Milestones</span>
               <button
                 type="button"
                 onClick={addMilestone}
@@ -630,7 +631,7 @@ export function ProjectCreateModal({
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-end gap-2 border-t border-border/60 px-5 py-3">
+          <div className="flex items-center justify-end gap-2 border-t border-border/60 px-4 py-3">
             <Button
               type="button"
               variant="ghost"

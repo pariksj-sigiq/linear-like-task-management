@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Clock3,
   CircleDashed,
+  DiamondPlus,
   Filter,
   FolderKanban,
   GitBranch,
@@ -1699,7 +1700,7 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
-  const [view, setView] = useState<ProjectsView>("list");
+  const [view, setView] = useState<ProjectsView>("board");
   const [filters, setFilters] = useState<ProjectFilters>(EMPTY_PROJECT_FILTERS);
   const [displayProps, setDisplayProps] = useState<ProjectsDisplayProps>({ ...DEFAULT_PROJECT_DISPLAY_PROPS });
 
@@ -1735,25 +1736,39 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
     <div className="flex min-h-screen flex-col bg-[#fcfcfc] dark:bg-[#161616]" data-testid="projects-page">
       <div className="sticky top-0 z-10 bg-[#fcfcfc] dark:bg-[#161616]">
         <div className="flex h-11 items-center justify-between border-b border-[#e5e5e5] px-5 dark:border-[#2d2d2d]">
-          <div className="flex items-center gap-1" aria-label="Project views">
+          <div className="flex items-center gap-2" aria-label="Project views">
             <NavLink
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#e5e5e5] bg-[#f4f4f3] px-2.5 py-1 text-[13px] font-medium text-[#1c1c1c] shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:border-[#2d2d2d] dark:bg-[#222222] dark:text-[#eeeeee]"
+              className="inline-flex h-8 items-center rounded-full border border-[#e5e5e5] bg-[#f4f4f3] px-3 text-[13px] font-medium text-[#1c1c1c] shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:border-[#2d2d2d] dark:bg-[#222222] dark:text-[#eeeeee]"
               to={teamScoped ? `/team/${teamKey}/projects/all` : "/projects/all"}
             >
-              <FolderKanban size={13} strokeWidth={2} className="text-[#6f6f6f] dark:text-[#7a7a7a]" />
               All projects
             </NavLink>
+            <button
+              type="button"
+              aria-pressed={view === "board"}
+              className={cn(
+                "inline-flex h-8 items-center gap-2 rounded-full border px-3 text-[13px] font-medium shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-colors",
+                view === "board"
+                  ? "border-[#e2e2e2] bg-background text-[#5f6368] dark:border-[#333333] dark:text-[#c9c9c9]"
+                  : "border-transparent bg-transparent text-[#6f6f6f] hover:bg-[#f4f4f3] dark:text-[#8f8f8f] dark:hover:bg-[#222222]",
+              )}
+              onClick={() => setView("board")}
+              data-testid="projects-kanban-view-button"
+            >
+              <Layers3 size={15} strokeWidth={2} className="text-[#8b8f96]" />
+              <span>Kanban View</span>
+            </button>
             <Button
               variant="ghost"
               iconOnly
               type="button"
-              aria-label="Add new view"
-              title="Add new view"
+              aria-label="New project"
+              title="New project"
               onClick={() => setCreateOpen(true)}
               data-testid="create-project-button"
-              className="size-6 hover:bg-[#f4f4f3] dark:hover:bg-[#222222]"
+              className="size-8 rounded-full text-[#8b8f96] hover:bg-[#f4f4f3] dark:hover:bg-[#222222]"
             >
-              <Layers3 size={13} className="text-[#6f6f6f] dark:text-[#7a7a7a]" />
+              <DiamondPlus size={17} strokeWidth={2} />
             </Button>
           </div>
           <div className="flex items-center gap-1">
@@ -1764,7 +1779,10 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
                 type="button"
                 aria-label="Add filter"
                 data-testid="projects-filter-button"
-                className={cn("relative size-6 hover:bg-[#f4f4f3] dark:hover:bg-[#222222]", activeFilterCount > 0 && "text-foreground")}
+                className={cn(
+                  "relative size-8 rounded-full border border-[#e5e5e5] bg-background shadow-[0_1px_2px_rgba(0,0,0,0.05)] hover:bg-[#f4f4f3] dark:border-[#2d2d2d] dark:hover:bg-[#222222]",
+                  activeFilterCount > 0 && "text-foreground",
+                )}
               >
                 <Filter size={13} />
                 {activeFilterCount > 0 && (
@@ -1786,15 +1804,18 @@ export function ProjectsPage({ teamScoped = false }: { teamScoped?: boolean }) {
                 type="button"
                 aria-label="Display options"
                 data-testid="projects-display-button"
-                className={cn("relative size-6 hover:bg-[#f4f4f3] dark:hover:bg-[#222222]", hasCustomDisplay && "text-foreground")}
+                className={cn(
+                  "relative size-8 rounded-full border border-[#e5e5e5] bg-background shadow-[0_1px_2px_rgba(0,0,0,0.05)] hover:bg-[#f4f4f3] dark:border-[#2d2d2d] dark:hover:bg-[#222222]",
+                  hasCustomDisplay && "text-foreground",
+                )}
               >
                 <SlidersHorizontal size={13} />
                 {hasCustomDisplay && (
-                  <span className="absolute right-1 top-1.5 size-1.5 rounded-full bg-primary" />
+                  <span className="absolute right-1 top-1 size-1.5 rounded-full bg-primary" />
                 )}
               </Button>
             </ProjectsDisplayMenu>
-            <Button variant="ghost" iconOnly aria-label="Close sidebar" type="button" className="size-6 hover:bg-[#f4f4f3] dark:hover:bg-[#222222]">
+            <Button variant="ghost" iconOnly aria-label="Close sidebar" type="button" className="size-8 rounded-full border border-[#e5e5e5] bg-background shadow-[0_1px_2px_rgba(0,0,0,0.05)] hover:bg-[#f4f4f3] dark:border-[#2d2d2d] dark:hover:bg-[#222222]">
               <Box size={13} />
             </Button>
           </div>
