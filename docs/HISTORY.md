@@ -116,24 +116,18 @@ Status: **22 files modified, 2855 insertions, 865 deletions** not yet committed.
 
 - Full settings tree with real backend backing where possible; `record_setting_action` fallback for Tier 2 surfaces.
 - Demo-grade test suite: every UI feature has an API equivalent exercised in `test_demo_api_parity.py` + `test_workflows_api.py`; MCP contract guarded in `test_mcp_contract.py`.
-- Seed counts per demo doc: 23 users, 7 teams, 143 issues, 18 projects, 14 cycles, 231 audit rows, 137 tools — **newer than the 16/5/116/9/12/118 counts in README.md and FEATURE_INVENTORY.md**. Docs still need a refresh pass.
+- Seed counts per submitted docs: 23 users, 7 teams, 143 issues, 18 projects, 14 cycles, and 139 tools.
 
-### Known gaps from the demo plan (`docs/superpowers/plans/2026-04-30-...`)
+### Demo-plan follow-up notes
 
-1. `/inbox` renders but `notification-row` hidden while `list_notifications` returns 9.
-2. Quick create modal can stay open after navigation — needs always-close-on-success.
-3. Project names duplicated (`Backend Tool Server Coverage` ×2) — ambiguous for unscoped menus.
-4. Label names duplicated across teams (`P0` ×3) — picker tests need team scoping.
-5. `/settings/workspace` can stick on `Loading...` on direct navigation.
-6. Older seed counts still in README + FEATURE_INVENTORY.
+The final submission pass refreshed the demo data, filters, API key auth, project/issue pickers, README delivery status, and stable zip packaging. The stable submitted task pack is T01-T15.
 
-## Seed-count drift
+## Seed counts
 
-Two distinct snapshots exist in the tree:
+Current submitted snapshot:
 
-| Source | Users | Teams | Issues | Projects | Cycles | Tools |
-|---|---|---|---|---|---|---|
-| `README.md`, `FEATURE_INVENTORY.md`, `QA_REPORT.md` | 16 | 5 | 116 | 9 | 12 | 118 |
-| `docs/superpowers/plans/2026-04-30-...` | 23 | 7 | 143 | 18 | 14 | 137 |
+| Users | Teams | Issues | Projects | Cycles | Tools |
+|---|---|---|---|---|---|
+| 23 | 7 | 143 | 18 | 14 | 139 |
 
 Always re-count after `make seed` before quoting numbers.

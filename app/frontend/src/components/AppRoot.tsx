@@ -45,6 +45,7 @@ export function AppRoot({ user, onLogout, children }: AppRootProps) {
   const isSettingsRoute = location.pathname.startsWith("/settings");
   const isProjectRoute = location.pathname.startsWith("/project/");
   const isIssueRoute = location.pathname.startsWith("/issue/");
+  const isMyIssuesRoute = location.pathname === "/" || location.pathname.startsWith("/my-issues");
   useEffect(() => {
     const openQuickCreate = (event: Event) => {
       const detail = (event as CustomEvent<{ projectId?: string }>).detail;
@@ -138,7 +139,7 @@ export function AppRoot({ user, onLogout, children }: AppRootProps) {
             children
           ) : (
             <div className="linear-workspace-panel flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border bg-background shadow-[0_1px_2px_rgba(15,15,15,0.04),0_12px_28px_rgba(15,15,15,0.05)]">
-              {!isProjectRoute && !isIssueRoute && (
+              {!isProjectRoute && !isIssueRoute && !isMyIssuesRoute && (
                 <SiteHeader
                   title={pageTitle}
                   hideNewIssueButton={hideNewIssueButton}

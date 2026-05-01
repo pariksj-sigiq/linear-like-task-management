@@ -1,0 +1,24 @@
+version = "1.0"
+
+[metadata]
+id = "linear-T20"
+name = "Customer request linkage"
+author_name = "Collinear AI"
+category = "linear-clone"
+tags = ["cua", "linear", "gui-only", "customers", "requests", "issues"]
+difficulty = "L3"
+difficulty_explanation = "Requires creating a customer request and attaching it to the correct existing issue as an important request."
+features = ["customers", "customer-requests", "issue-links"]
+tools = ["create_customer_request", "mark_customer_request_important"]
+failure_modes = ["wrong_issue_link", "importance_flag"]
+
+[environment]
+template = "cua-eval-linear-clone"
+allow_internet = false
+cpus = 4
+memory_mb = 6144
+storage_mb = 15360
+
+[verifier]
+timeout_sec = 90
+command = "python tests/verify.py"

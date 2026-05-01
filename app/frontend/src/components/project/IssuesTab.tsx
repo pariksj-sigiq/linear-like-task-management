@@ -3,6 +3,7 @@ import { Filter, PanelRight, Plus, SlidersHorizontal } from "lucide-react";
 import { IssueExplorer } from "../IssueExplorer";
 import { Button } from "../ui/button";
 import type { Project } from "../../linearTypes";
+import { projectTitle } from "../../linearTypes";
 
 interface ProjectIssuesTabProps {
   project: Project;
@@ -79,6 +80,11 @@ export function ProjectIssuesTab({ project, onChange }: ProjectIssuesTabProps) {
             showHeader={false}
             showCreateAction={false}
             defaultTab="all"
+            issueNavigationState={() => ({
+              source: "project",
+              from: `/project/${projectId}/issues`,
+              fromLabel: projectTitle(project),
+            })}
             params={{ project_id: projectId }}
           />
         </div>

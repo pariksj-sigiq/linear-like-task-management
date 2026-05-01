@@ -322,6 +322,11 @@ class IssueLabelArgs(BaseModel):
     label_id: str
 
 
+class ProjectLabelArgs(BaseModel):
+    project_id: str
+    label_id: str
+
+
 class BulkIssueArgs(BaseModel):
     issue_ids: list[str]
     state_id: str | None = None

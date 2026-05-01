@@ -20,6 +20,7 @@ from typing import Any
 
 from fastapi import Cookie
 from fastapi import FastAPI
+from fastapi import Header
 from fastapi import Response
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -57,6 +58,7 @@ from app.schema import MilestoneArgs
 from app.schema import NotificationActionArgs
 from app.schema import NotificationArgs
 from app.schema import ProjectArgs
+from app.schema import ProjectLabelArgs
 from app.schema import ProjectStatusArgs
 from app.schema import ProjectUpdateArgs
 from app.schema import RelationArgs
@@ -259,6 +261,35 @@ def _hash_token(token: str) -> str:
     return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
 
+def _authenticate_api_key(authorization: str | None) -> ToolResult | None:
+    if not authorization:
+        return None
+    scheme, _, token = authorization.partition(" ")
+    if scheme.lower() != "bearer" or not token:
+        return ToolResult(is_error=True, text="Invalid Authorization header. Use Bearer <api-key>.")
+    with DBSession(engine) as db:
+        _ensure_settings_tables(db)
+        key = _one(
+            db,
+            """
+            SELECT id, scopes, revoked_at
+            FROM api_keys
+            WHERE token_hash = :token_hash
+            """,
+            {"token_hash": _hash_token(token)},
+        )
+        if not key:
+            return ToolResult(is_error=True, text="Invalid API key.")
+        if key.get("revoked_at"):
+            return ToolResult(is_error=True, text="API key has been revoked.")
+        db.execute(
+            text("UPDATE api_keys SET last_used_at = NOW(), updated_at = NOW() WHERE id = :id"),
+            {"id": key["id"]},
+        )
+        db.commit()
+    return None
+
+
 def _audit(db: DBSession, entity_type: str, entity_id: str, action: str, details: dict[str, Any] | None = None) -> None:
     db.execute(
         text(
@@ -336,6 +367,35 @@ def _labels_for_issue(db: DBSession, issue_id: str) -> list[dict[str, Any]]:
         ORDER BY l.name
         """,
         {"issue_id": issue_id},
+    )
+
+
+def _ensure_project_labels_table(db: DBSession) -> None:
+    db.execute(
+        text(
+            """
+            CREATE TABLE IF NOT EXISTS project_labels (
+                project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+                label_id TEXT NOT NULL REFERENCES labels(id) ON DELETE CASCADE,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                PRIMARY KEY (project_id, label_id)
+            )
+            """
+        )
+    )
+
+
+def _labels_for_project(db: DBSession, project_id: str) -> list[dict[str, Any]]:
+    _ensure_project_labels_table(db)
+    return _many(
+        db,
+        """
+        SELECT l.* FROM labels l
+        JOIN project_labels pl ON pl.label_id = l.id
+        WHERE pl.project_id = :project_id
+        ORDER BY l.name
+        """,
+        {"project_id": project_id},
     )
 
 
@@ -839,6 +899,7 @@ def search_projects(args: SearchArgs) -> dict[str, Any]:
         issues_by_project = _project_issue_previews(db, [row["id"] for row in rows])
         for row in rows:
             row["issues"] = issues_by_project.get(row["id"], [])
+            row["labels"] = _labels_for_project(db, row["id"])
         return {"count": len(rows), "projects": rows}
 
 
@@ -898,6 +959,7 @@ def get_project(args: IdArgs) -> dict[str, Any]:
         )
         if not project:
             raise ValueError(f"Project not found: {args.id}")
+        project["labels"] = _labels_for_project(db, args.id)
         progress = _project_progress(db, args.id)
         updates = _many(db, "SELECT pu.*, u.full_name AS author_name FROM project_updates pu LEFT JOIN users u ON u.id = pu.author_id WHERE project_id = :id ORDER BY pu.created_at DESC", {"id": args.id})
         milestones = _many(db, "SELECT * FROM project_milestones WHERE project_id = :id ORDER BY sort_order, created_at", {"id": args.id})
@@ -1343,6 +1405,32 @@ def remove_issue_label(args: IssueLabelArgs) -> dict[str, Any]:
         _audit(db, "issue", args.issue_id, "label_removed", {"label_id": args.label_id})
         db.commit()
     return get_issue(GetIssueArgs(id=args.issue_id))["issue"]
+
+
+def add_project_label(args: ProjectLabelArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        _ensure_project_labels_table(db)
+        db.execute(
+            text("INSERT INTO project_labels (project_id, label_id) VALUES (:project_id, :label_id) ON CONFLICT DO NOTHING"),
+            args.model_dump(),
+        )
+        db.execute(text("UPDATE projects SET updated_at = NOW() WHERE id = :project_id"), {"project_id": args.project_id})
+        _audit(db, "project", args.project_id, "label_added", {"label_id": args.label_id})
+        db.commit()
+    return get_project(IdArgs(id=args.project_id))["project"]
+
+
+def remove_project_label(args: ProjectLabelArgs) -> dict[str, Any]:
+    with DBSession(engine) as db:
+        _ensure_project_labels_table(db)
+        db.execute(
+            text("DELETE FROM project_labels WHERE project_id = :project_id AND label_id = :label_id"),
+            args.model_dump(),
+        )
+        db.execute(text("UPDATE projects SET updated_at = NOW() WHERE id = :project_id"), {"project_id": args.project_id})
+        _audit(db, "project", args.project_id, "label_removed", {"label_id": args.label_id})
+        db.commit()
+    return get_project(IdArgs(id=args.project_id))["project"]
 
 
 def bulk_update_issues(args: BulkIssueArgs) -> dict[str, Any]:
@@ -1951,6 +2039,8 @@ TOOL_DEFS: list[tuple[str, str, type[Any], bool]] = [
     ("add_subissue", "Set an issue as a sub-issue.", IssueParentArgs, True),
     ("add_label", "Add label to issue.", IssueLabelArgs, True),
     ("remove_label", "Remove label from issue.", IssueLabelArgs, True),
+    ("add_project_label", "Add label to project.", ProjectLabelArgs, True),
+    ("remove_project_label", "Remove label from project.", ProjectLabelArgs, True),
     ("bulk_update_issues", "Bulk update issues.", BulkIssueArgs, True),
     ("bulk_delete_issues", "Bulk archive/delete issues.", BulkIssueArgs, True),
     ("add_relation", "Add an issue relation.", RelationArgs, True),
@@ -2427,6 +2517,10 @@ def call_tool(name: str, arguments: dict[str, Any]) -> ToolResult:
                 result = _legacy_apply_labels(arguments)
             case "remove_issue_labels":
                 result = _legacy_apply_labels(arguments, remove=True)
+            case "add_project_label":
+                result = add_project_label(ProjectLabelArgs(**arguments))
+            case "remove_project_label":
+                result = remove_project_label(ProjectLabelArgs(**arguments))
             case "bulk_update_issues" | "bulk_delete_issues":
                 result = (
                     _legacy_bulk_update_issues(arguments)
@@ -2643,9 +2737,11 @@ app = FastAPI(title="Linear Clone Tool Server", lifespan=lifespan)
 
 @app.post("/api/login")
 async def login(body: LoginRequest, response: Response) -> dict[str, Any]:
+    username = body.username.strip().lower()
+    password = body.password.strip()
     with DBSession(engine) as db:
-        user = db.query(User).filter(User.username == body.username).first()
-        if not user or user.password != body.password:
+        user = db.query(User).filter(User.username == username).first()
+        if not user or user.password != password:
             response.status_code = 401
             return {"error": "Invalid username or password"}
         user_data = {
@@ -2696,7 +2792,10 @@ async def get_tools() -> dict[str, Any]:
 
 
 @app.post("/step")
-async def step(request: dict[str, Any]) -> dict[str, Any]:
+async def step(request: dict[str, Any], authorization: str | None = Header(default=None)) -> dict[str, Any]:
+    auth_error = _authenticate_api_key(authorization)
+    if auth_error:
+        return observation_from_result(auth_error)
     action = request.get("action", request) or {}
     tool_name = action.get("tool_name") or action.get("kind") or request.get("tool_name")
     parameters = action.get("parameters") or action.get("arguments") or request.get("parameters") or {}

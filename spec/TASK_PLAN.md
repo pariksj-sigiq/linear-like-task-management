@@ -44,6 +44,8 @@ specified final records, not an inferred count from the UI.
 | T14 | `tasks/linear-T14-create-linked-submission-issue` | New submission issue exists under `LIN-170`, assigned to Priya, labeled Submission and Docs, linked to `LIN-171`. | Multi-step stateful | Issues, labels, relations | L3 | No existing issue has the exact submission checklist title. |
 | T15 | `tasks/linear-T15-my-issues-priority-pass` | Alex's three active My Issues are reprioritized, commented, and one inbox notification is marked read. | Multi-step stateful | My Issues, comments, inbox | L3 | The three active Alex issues are fixed seed identifiers. |
 
+The stable submission package includes T01-T15.
+
 ## 4. Build Order Contract
 
 Each task directory contains:

@@ -6,7 +6,7 @@ Entry doc for any new agent landing in this repo. Read this first. Read siblings
 
 Linear-style SaaS clone built for Collinear's rl-gym agent-eval pipeline. Three consumers:
 
-- Agent via `POST /step` tool server (HTTP JSON, 137 tools).
+- Agent via `POST /step` tool server (HTTP JSON, 139 tools).
 - Agent via Playwright on React UI.
 - Verifier via direct Postgres SQL.
 
@@ -18,7 +18,7 @@ Stack: FastAPI + SQLAlchemy + Postgres. React 19 + Vite + Tailwind + shadcn/ui. 
 
 ```
 app/
-  server.py            FastAPI tool server (2700+ LOC, 137 tool defs)
+  server.py            FastAPI tool server (2700+ LOC, 139 tool defs)
   schema.py            Pydantic arg models for every tool
   models.py            SQLAlchemy models (thin)
   postgres/init.sql    DB schema — tables + views (comments, activity_events, saved_views, inbox_notifications)
@@ -87,10 +87,10 @@ On error: `observation.is_error=true`, `text` = message. UI must branch on `is_e
 
 ## Seed contract
 
-Deterministic. Current post-seed counts (per README + demo-plan doc):
+Deterministic. Current post-seed counts:
 
-- Users 16 (older snapshot) / 23 (newer seed). Teams 5 / 7. Issues 116 / 143. Projects 9 / 18. Cycles 12 / 14. Tools 118 / 137.
-- Older counts are in README.md; newer counts in `docs/superpowers/plans/2026-04-30-linear-clone-demo-test-suite.md`. Treat seed counts as reproducible from `make seed`, not as a constant — always re-count after seeding.
+- Users 23. Teams 7. Issues 143. Projects 18. Cycles 14. Tools 139.
+- Treat these counts as reproducible from `make seed`; re-count after seed changes.
 
 Stable identifiers required by tasks (do NOT rename):
 

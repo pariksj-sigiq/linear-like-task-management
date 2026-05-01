@@ -1,0 +1,24 @@
+version = "1.0"
+
+[metadata]
+id = "linear-T24"
+name = "Cycle closeout"
+author_name = "Collinear AI"
+category = "linear-clone"
+tags = ["cua", "linear", "gui-only", "cycles", "issues"]
+difficulty = "L3"
+difficulty_explanation = "Requires creating a future cycle, moving one issue, and closing the current cycle without moving adjacent issues."
+features = ["cycles", "cycle-metrics", "issue-cycle"]
+tools = ["create_cycle", "set_cycle", "close_cycle"]
+failure_modes = ["wrong_cycle", "adjacent_issue_mutation"]
+
+[environment]
+template = "cua-eval-linear-clone"
+allow_internet = false
+cpus = 4
+memory_mb = 6144
+storage_mb = 15360
+
+[verifier]
+timeout_sec = 90
+command = "python tests/verify.py"

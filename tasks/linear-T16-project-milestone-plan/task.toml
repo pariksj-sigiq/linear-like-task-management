@@ -1,0 +1,24 @@
+version = "1.0"
+
+[metadata]
+id = "linear-T16"
+name = "Project milestone plan"
+author_name = "Collinear AI"
+category = "linear-clone"
+tags = ["cua", "linear", "gui-only", "tier1", "projects", "milestones"]
+difficulty = "L2"
+difficulty_explanation = "Requires using the project planning surface to add one milestone and update project metadata."
+features = ["projects", "project-milestones", "project-properties"]
+tools = ["create_milestone", "update_project"]
+failure_modes = ["wrong_project", "date_metadata"]
+
+[environment]
+template = "cua-eval-linear-clone"
+allow_internet = false
+cpus = 4
+memory_mb = 6144
+storage_mb = 15360
+
+[verifier]
+timeout_sec = 90
+command = "python tests/verify.py"

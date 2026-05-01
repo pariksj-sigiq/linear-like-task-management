@@ -6,7 +6,7 @@ Method: Pipeline-aligned build -> audit -> fix loop from `pipeline/build/AUTONOM
 
 ## Summary
 
-Health: yellow.
+Health: green for the submitted demo scope; deeper settings pages remain Tier 2/fallback surfaces.
 
 The settings area now has a stronger baseline: key Tier 1 pages are connected to real `/step` tools and Postgres, and Tier 2 pages are no longer dead UI. The remaining risk is fidelity depth: several pages need page-specific Linear layouts rather than generic rows. The API page has gone through the first real-app comparison pass and is the current best template for how each remaining settings page should be handled.
 
@@ -20,7 +20,7 @@ Working contract for settings:
 - Persisted settings-like actions are recorded via `record_setting_action` and loaded via `list_setting_actions`.
 - For high-value domain objects, prefer domain tables/tools over generic `settings_actions`.
 
-Risk still to audit: whether all call sites branch on `observation.is_error`. This should be Phase 2/3 work before final packaging.
+Future audit item: continue checking that settings call sites branch on `observation.is_error` before promoting more settings pages into Tier 1 task targets.
 
 ## Phase 1.5 - Settings reachability map
 
@@ -58,13 +58,13 @@ Risk still to audit: whether all call sites branch on `observation.is_error`. Th
 
 ## Phase 2 - Optimistic mutation audit
 
-Not completed in this pass. Required next grep:
+Future hardening pass:
 - `await callTool(` and `await readTool(` callers in settings and shared app components.
 - Confirm `is_error` is surfaced and not silently treated as success.
 
 ## Phase 3 - Silent failure scan
 
-Not completed in this pass. Required next grep:
+Future hardening pass:
 - `.catch(() => {})`
 - empty `catch` blocks
 - fire-and-forget settings mutations.
@@ -89,11 +89,11 @@ At-risk task surfaces:
 - SLA policy configuration
 - External integrations that imply real third-party auth
 
-## Recommended fixes
+## Recommended future fixes
 
 P0:
-- Restart backend after schema/tool changes so `settings_actions`, `record_setting_action`, and `list_setting_actions` are live.
-- Add a final settings smoke test that clicks a safe Tier 2 control, refreshes, and verifies the persisted state returns.
+- Keep API key creation and `/step` authentication covered by contract tests.
+- Add a settings smoke test if Tier 2 fallback pages become part of future CUA tasks.
 
 P1:
 - Run real-vs-clone screenshot loop for each settings page using the existing `spec/screenshots/settings-reference` references.

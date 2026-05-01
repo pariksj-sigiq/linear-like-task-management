@@ -1,0 +1,24 @@
+version = "1.0"
+
+[metadata]
+id = "linear-T23"
+name = "Settings agent access"
+author_name = "Collinear AI"
+category = "linear-clone"
+tags = ["cua", "linear", "gui-only", "settings", "api-keys", "preferences"]
+difficulty = "L2"
+difficulty_explanation = "Requires updating account preferences and workspace API access settings."
+features = ["settings", "api-keys", "user-preferences"]
+tools = ["update_user_preferences", "create_api_key", "record_setting_action"]
+failure_modes = ["wrong_user", "wrong_scope"]
+
+[environment]
+template = "cua-eval-linear-clone"
+allow_internet = false
+cpus = 4
+memory_mb = 6144
+storage_mb = 15360
+
+[verifier]
+timeout_sec = 90
+command = "python tests/verify.py"

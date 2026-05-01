@@ -1,0 +1,1 @@
+Set up Alex Rivera's watchlist for the snapshot work. Subscribe Alex to LIN-087 and LIN-104, and make sure Alex is not subscribed to LIN-180. Do not change the assignees or priorities. Please complete this through the application UI only. Do not use browser developer tools, API calls, terminal commands, scripts, or direct database edits.

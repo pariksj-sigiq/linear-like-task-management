@@ -3,6 +3,7 @@ import {
   Box,
   CalendarDays,
   Check,
+  ChevronLeft,
   ChevronRight,
   CircleDashed,
   Link2,
@@ -50,6 +51,9 @@ const PRIORITY_OPTIONS: { label: string; value: string; shortcut: string }[] = [
   { label: "Low", value: "low", shortcut: "4" },
 ];
 
+const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+const DATE_VIEW_MODES = ["Day", "Month", "Quarter", "Half-year", "Year"];
+
 function chipClasses(active?: boolean) {
   return cn(
     "inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full border border-[#e5e5e5] bg-background px-2.5 text-[13px] font-medium text-foreground shadow-[0_1px_2px_rgba(0,0,0,0.03)] transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#5e6ad2] dark:border-[#333333]",
@@ -67,10 +71,72 @@ function userInitials(user: LinearUser) {
     .join("");
 }
 
+function userMatchesQuery(user: LinearUser, query: string) {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return true;
+  return [userName(user), user.username, user.email, user.id]
+    .filter(Boolean)
+    .some((value) => String(value).toLowerCase().includes(normalized));
+}
+
+function parseLocalDate(value: string | null | undefined) {
+  if (!value) return null;
+  const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (iso) {
+    return new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]));
+  }
+  const slash = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(value.trim());
+  if (slash) {
+    return new Date(Number(slash[3]), Number(slash[1]) - 1, Number(slash[2]));
+  }
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function toDateValue(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function sameDay(a: Date | null, b: Date | null) {
+  return Boolean(a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate());
+}
+
+function formatChipDate(value: string) {
+  const date = parseLocalDate(value);
+  if (!date) return value;
+  return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(date);
+}
+
+function formatDateInput(value: string) {
+  const date = parseLocalDate(value);
+  if (!date) return "";
+  return `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${date.getFullYear()}`;
+}
+
+function monthLabel(date: Date) {
+  return new Intl.DateTimeFormat(undefined, { month: "long", year: "numeric" }).format(date);
+}
+
+function buildMonthDays(month: Date) {
+  const first = new Date(month.getFullYear(), month.getMonth(), 1);
+  const start = new Date(first);
+  start.setDate(1 - first.getDay());
+  return Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(start);
+    date.setDate(start.getDate() + index);
+    return date;
+  });
+}
+
 interface MilestoneDraft {
   name: string;
   target_date: string;
 }
+
+type ProjectCreateMenu = "status" | "priority" | "lead" | null;
 
 export function ProjectCreateModal({
   open,
@@ -94,6 +160,8 @@ export function ProjectCreateModal({
   const [users, setUsers] = useState<LinearUser[]>([]);
   const [userQuery, setUserQuery] = useState("");
   const [memberQuery, setMemberQuery] = useState("");
+  const [activeMenu, setActiveMenu] = useState<ProjectCreateMenu>(null);
+  const [membersOpen, setMembersOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
@@ -111,6 +179,8 @@ export function ProjectCreateModal({
     setMilestones([]);
     setUserQuery("");
     setMemberQuery("");
+    setActiveMenu(null);
+    setMembersOpen(false);
     setError(null);
     setWarnings([]);
   };
@@ -126,7 +196,14 @@ export function ProjectCreateModal({
 
   const fetchUsers = async (query: string) => {
     const response = await readTool("search_users", { query: query || "", limit: 20 });
-    setUsers(collectionFrom<LinearUser>(response.data, ["users", "results"]));
+    const fetched = collectionFrom<LinearUser>(response.data, ["users", "results"]);
+    setUsers((current) => {
+      const byId = new Map<string, LinearUser>();
+      [...current, ...fetched].forEach((user) => {
+        if (user.id) byId.set(user.id, user);
+      });
+      return Array.from(byId.values());
+    });
   };
 
   const selectedStatus = useMemo(
@@ -164,6 +241,8 @@ export function ProjectCreateModal({
   };
 
   const handleCancel = () => {
+    setActiveMenu(null);
+    setMembersOpen(false);
     reset();
     onClose();
   };
@@ -254,8 +333,14 @@ export function ProjectCreateModal({
     await onCreated();
   };
 
-  const leadUsers = users;
-  const memberCandidates = users;
+  const leadUsers = useMemo(
+    () => users.filter((user) => userMatchesQuery(user, userQuery)),
+    [userQuery, users],
+  );
+  const memberCandidates = useMemo(
+    () => users.filter((user) => userMatchesQuery(user, memberQuery)),
+    [memberQuery, users],
+  );
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -329,7 +414,16 @@ export function ProjectCreateModal({
             {/* Chips */}
             <div className="mb-3 flex flex-wrap items-center gap-1.5">
               {/* Status */}
-              <DropdownMenu>
+              <DropdownMenu
+                modal={false}
+                open={activeMenu === "status"}
+                onOpenChange={(nextOpen) => {
+                  setActiveMenu((current) => {
+                    if (nextOpen) return "status";
+                    return current === "status" ? null : current;
+                  });
+                }}
+              >
                 <DropdownMenuTrigger asChild>
                   <button type="button" className={chipClasses()} data-testid="status-chip">
                     <ProjectStatusGlyph status={selectedStatus.value} size={14} />
@@ -348,7 +442,10 @@ export function ProjectCreateModal({
                   {STATUS_OPTIONS.map((option) => (
                     <DropdownMenuItem
                       key={option.value}
-                      onSelect={() => setStatus(option.value)}
+                      onClick={() => {
+                        setStatus(option.value);
+                        setActiveMenu(null);
+                      }}
                       className="flex items-center gap-2"
                     >
                       <ProjectStatusGlyph status={option.value} size={14} />
@@ -361,7 +458,16 @@ export function ProjectCreateModal({
               </DropdownMenu>
 
               {/* Priority */}
-              <DropdownMenu>
+              <DropdownMenu
+                modal={false}
+                open={activeMenu === "priority"}
+                onOpenChange={(nextOpen) => {
+                  setActiveMenu((current) => {
+                    if (nextOpen) return "priority";
+                    return current === "priority" ? null : current;
+                  });
+                }}
+              >
                 <DropdownMenuTrigger asChild>
                   <button type="button" className={chipClasses()} data-testid="priority-chip">
                     <PriorityIcon priority={selectedPriority.label} />
@@ -380,7 +486,10 @@ export function ProjectCreateModal({
                   {PRIORITY_OPTIONS.map((option) => (
                     <DropdownMenuItem
                       key={option.value}
-                      onSelect={() => setPriority(option.value)}
+                      onClick={() => {
+                        setPriority(option.value);
+                        setActiveMenu(null);
+                      }}
                       className="flex items-center gap-2"
                     >
                       <PriorityIcon priority={option.label} />
@@ -393,7 +502,16 @@ export function ProjectCreateModal({
               </DropdownMenu>
 
               {/* Lead */}
-              <DropdownMenu>
+              <DropdownMenu
+                modal={false}
+                open={activeMenu === "lead"}
+                onOpenChange={(nextOpen) => {
+                  setActiveMenu((current) => {
+                    if (nextOpen) return "lead";
+                    return current === "lead" ? null : current;
+                  });
+                }}
+              >
                 <DropdownMenuTrigger asChild>
                   <button type="button" className={chipClasses()} data-testid="lead-chip">
                     <span className="grid size-4 place-items-center rounded-full bg-muted text-[9px] font-semibold text-muted-foreground">
@@ -415,7 +533,10 @@ export function ProjectCreateModal({
                     />
                   </div>
                   <DropdownMenuItem
-                    onSelect={() => setLeadId("")}
+                    onClick={() => {
+                      setLeadId("");
+                      setActiveMenu(null);
+                    }}
                     className="flex items-center gap-2"
                   >
                     <span className="grid size-5 place-items-center rounded-full border border-dashed border-border text-muted-foreground">
@@ -424,24 +545,33 @@ export function ProjectCreateModal({
                     <span className="flex-1">No lead</span>
                     {!leadId && <Check size={14} />}
                   </DropdownMenuItem>
-                  {leadUsers.map((user) => (
-                    <DropdownMenuItem
-                      key={user.id}
-                      onSelect={() => setLeadId(user.id || "")}
-                      className="flex items-center gap-2"
-                    >
-                      <span className="grid size-5 place-items-center rounded-full bg-muted text-[10px] font-semibold text-muted-foreground">
-                        {userInitials(user)}
-                      </span>
-                      <span className="flex-1 truncate">{userName(user)}</span>
-                      {user.id === leadId && <Check size={14} />}
-                    </DropdownMenuItem>
-                  ))}
+                  <div className="max-h-[360px] overflow-y-auto">
+                    {leadUsers.length > 0 ? (
+                      leadUsers.map((user) => (
+                        <DropdownMenuItem
+                          key={user.id}
+                          onClick={() => {
+                            setLeadId(user.id || "");
+                            setActiveMenu(null);
+                          }}
+                          className="flex items-center gap-2"
+                        >
+                          <span className="grid size-5 place-items-center rounded-full bg-muted text-[10px] font-semibold text-muted-foreground">
+                            {userInitials(user)}
+                          </span>
+                          <span className="flex-1 truncate">{userName(user)}</span>
+                          {user.id === leadId && <Check size={14} />}
+                        </DropdownMenuItem>
+                      ))
+                    ) : (
+                      <div className="px-3 py-2 text-xs text-muted-foreground">No users found</div>
+                    )}
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
 
               {/* Members */}
-              <DropdownMenu>
+              <DropdownMenu modal={false} open={membersOpen} onOpenChange={setMembersOpen}>
                 <DropdownMenuTrigger asChild>
                   <button type="button" className={chipClasses()} data-testid="members-chip">
                     <Users size={12} />
@@ -452,7 +582,14 @@ export function ProjectCreateModal({
                     </span>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-64 p-1">
+                <DropdownMenuContent
+                  align="start"
+                  className="w-64 p-1"
+                  data-testid="create-project-members-menu"
+                  onEscapeKeyDown={() => setMembersOpen(false)}
+                  onFocusOutside={() => setMembersOpen(false)}
+                  onPointerDownOutside={() => setMembersOpen(false)}
+                >
                   <div className="px-1.5 pt-1 pb-0.5">
                     <Input
                       value={memberQuery}
@@ -462,99 +599,52 @@ export function ProjectCreateModal({
                       }}
                       placeholder="Search users..."
                       className="h-7 text-xs"
+                      data-testid="create-project-members-search"
                     />
                   </div>
-                  {memberCandidates.map((user) => {
-                    const selected = !!user.id && memberIds.includes(user.id);
-                    return (
-                      <DropdownMenuItem
-                        key={user.id}
-                        onSelect={(event) => {
-                          event.preventDefault();
-                          toggleMember(user.id);
-                        }}
-                        className="flex items-center gap-2"
-                      >
-                        <span className="grid size-5 place-items-center rounded-full bg-muted text-[10px] font-semibold text-muted-foreground">
-                          {userInitials(user)}
-                        </span>
-                        <span className="flex-1 truncate">{userName(user)}</span>
-                        {selected && <Check size={14} />}
-                      </DropdownMenuItem>
-                    );
-                  })}
+                  <div className="max-h-[360px] overflow-y-auto">
+                    {memberCandidates.length > 0 ? (
+                      memberCandidates.map((user) => {
+                        const selected = !!user.id && memberIds.includes(user.id);
+                        return (
+                          <DropdownMenuItem
+                            key={user.id}
+                            onClick={() => {
+                              toggleMember(user.id);
+                              setMembersOpen(false);
+                            }}
+                            className="flex items-center gap-2"
+                          >
+                            <span className="grid size-5 place-items-center rounded-full bg-muted text-[10px] font-semibold text-muted-foreground">
+                              {userInitials(user)}
+                            </span>
+                            <span className="flex-1 truncate">{userName(user)}</span>
+                            {selected && <Check size={14} />}
+                          </DropdownMenuItem>
+                        );
+                      })
+                    ) : (
+                      <div className="px-3 py-2 text-xs text-muted-foreground">No users found</div>
+                    )}
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
 
               {/* Start date */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    type="button"
-                    className={chipClasses(!!startDate)}
-                    data-testid="start-date-chip"
-                    aria-label="Start date"
-                  >
-                    <CalendarDays size={12} />
-                    {startDate && <span>{startDate}</span>}
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-56 p-2">
-                  <label className="grid gap-1 text-xs text-muted-foreground">
-                    <span>Start date</span>
-                    <input
-                      type="date"
-                      value={startDate}
-                      onChange={(event) => setStartDate(event.target.value)}
-                      className="h-7 rounded-md border border-border bg-background px-2 text-xs text-foreground"
-                    />
-                  </label>
-                  {startDate && (
-                    <button
-                      type="button"
-                      onClick={() => setStartDate("")}
-                      className="mt-2 w-full rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:bg-muted"
-                    >
-                      Clear
-                    </button>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <ProjectDatePicker
+                label="Start date"
+                value={startDate}
+                onChange={setStartDate}
+                testId="start-date"
+              />
 
               {/* Target date */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    type="button"
-                    className={chipClasses(!!targetDate)}
-                    data-testid="target-date-chip"
-                    aria-label="Target date"
-                  >
-                    <CalendarDays size={12} />
-                    {targetDate && <span>{targetDate}</span>}
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-56 p-2">
-                  <label className="grid gap-1 text-xs text-muted-foreground">
-                    <span>Target date</span>
-                    <input
-                      type="date"
-                      value={targetDate}
-                      onChange={(event) => setTargetDate(event.target.value)}
-                      className="h-7 rounded-md border border-border bg-background px-2 text-xs text-foreground"
-                    />
-                  </label>
-                  {targetDate && (
-                    <button
-                      type="button"
-                      onClick={() => setTargetDate("")}
-                      className="mt-2 w-full rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:bg-muted"
-                    >
-                      Clear
-                    </button>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <ProjectDatePicker
+                label="Target date"
+                value={targetDate}
+                onChange={setTargetDate}
+                testId="target-date"
+              />
 
               {/* Placeholder icons to match visual */}
               <span className={chipClasses()} aria-hidden>
@@ -653,5 +743,172 @@ export function ProjectCreateModal({
         </form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function ProjectDatePicker({
+  label,
+  value,
+  onChange,
+  testId,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  testId: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const selectedDate = parseLocalDate(value);
+  const [visibleMonth, setVisibleMonth] = useState(() => selectedDate || new Date());
+  const [draft, setDraft] = useState(() => formatDateInput(value));
+  const days = buildMonthDays(visibleMonth);
+
+  useEffect(() => {
+    if (!open) return;
+    const nextDate = parseLocalDate(value) || new Date();
+    setVisibleMonth(new Date(nextDate.getFullYear(), nextDate.getMonth(), 1));
+    setDraft(formatDateInput(value));
+  }, [open, value]);
+
+  const commitDate = (date: Date) => {
+    onChange(toDateValue(date));
+    setDraft(formatDateInput(toDateValue(date)));
+    setOpen(false);
+  };
+
+  const commitDraft = () => {
+    const parsed = parseLocalDate(draft);
+    if (!parsed) return;
+    commitDate(parsed);
+  };
+
+  const moveMonth = (delta: number) => {
+    setVisibleMonth((current) => new Date(current.getFullYear(), current.getMonth() + delta, 1));
+  };
+
+  return (
+    <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          className={chipClasses(!!value)}
+          data-testid={`${testId}-chip`}
+          aria-label={label}
+        >
+          <CalendarDays size={12} />
+          <span>{value ? formatChipDate(value) : label}</span>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        sideOffset={8}
+        className="w-[420px] overflow-hidden rounded-[14px] border border-border bg-popover p-0 text-popover-foreground shadow-[0_22px_70px_rgba(0,0,0,0.28)] ring-0"
+        data-testid={`${testId}-calendar-menu`}
+      >
+        <div className="border-b border-border px-5 py-4">
+          <label className="grid gap-2 text-[13px] font-medium text-muted-foreground">
+            <span>{label}</span>
+            <span className="flex h-10 items-center rounded-lg border border-[#5e6ad2] bg-background px-3 text-foreground shadow-[0_0_0_1px_rgba(94,106,210,0.25)]">
+              <input
+                value={draft}
+                onChange={(event) => setDraft(event.target.value)}
+                onBlur={commitDraft}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    commitDraft();
+                  }
+                }}
+                placeholder="MM/DD/YYYY"
+                className="min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground"
+                data-testid={`${testId}-date-input`}
+              />
+              {value && (
+                <button
+                  type="button"
+                  aria-label={`Clear ${label}`}
+                  onClick={() => {
+                    onChange("");
+                    setDraft("");
+                  }}
+                  className="grid size-5 place-items-center rounded-full bg-muted text-muted-foreground hover:text-foreground"
+                  data-testid={`${testId}-clear`}
+                >
+                  <X size={13} />
+                </button>
+              )}
+            </span>
+          </label>
+
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            {DATE_VIEW_MODES.map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                className={cn(
+                  "h-8 rounded-full border border-border px-3 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+                  mode === "Day" && "bg-muted text-foreground",
+                )}
+              >
+                {mode}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="px-5 py-4">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="text-[15px] font-medium text-foreground">{monthLabel(visibleMonth)}</span>
+            <span className="flex items-center gap-1">
+              <button
+                type="button"
+                aria-label="Previous month"
+                className="grid size-7 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                onClick={() => moveMonth(-1)}
+              >
+                <ChevronLeft size={17} />
+              </button>
+              <button
+                type="button"
+                aria-label="Next month"
+                className="grid size-7 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                onClick={() => moveMonth(1)}
+              >
+                <ChevronRight size={17} />
+              </button>
+            </span>
+          </div>
+
+          <div className="grid grid-cols-7 gap-y-2 text-center">
+            {WEEKDAYS.map((day) => (
+              <div key={day} className="text-[13px] font-medium text-muted-foreground">
+                {day}
+              </div>
+            ))}
+            {days.map((day) => {
+              const inMonth = day.getMonth() === visibleMonth.getMonth();
+              const selected = sameDay(day, selectedDate);
+              const today = sameDay(day, new Date());
+              return (
+                <button
+                  key={toDateValue(day)}
+                  type="button"
+                  onClick={() => commitDate(day)}
+                  className={cn(
+                    "mx-auto grid size-8 place-items-center rounded-full text-[14px] transition-colors",
+                    inMonth ? "text-foreground hover:bg-muted" : "text-muted-foreground/35 hover:bg-muted/40",
+                    today && !selected && "ring-1 ring-muted-foreground/60",
+                    selected && "bg-[#5e6ad2] text-white hover:bg-[#5e6ad2]",
+                  )}
+                  data-testid={`${testId}-day-${toDateValue(day)}`}
+                >
+                  {day.getDate()}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

@@ -203,6 +203,7 @@ interface IssueExplorerProps {
   showCreateAction?: boolean;
   defaultMode?: LayoutMode;
   defaultTab?: IssueExplorerTab;
+  issueNavigationState?: (issue: Issue) => Record<string, unknown>;
   headerTabs?: ReactNode;
   boardPreset?: "default" | "my-issues-activity";
 }
@@ -225,6 +226,7 @@ export function IssueExplorer({
   showCreateAction = true,
   defaultMode = "list",
   defaultTab = "active",
+  issueNavigationState,
   headerTabs,
   boardPreset = "default",
 }: IssueExplorerProps) {
@@ -539,7 +541,12 @@ export function IssueExplorer({
           }
         />
       ) : mode === "board" ? (
-        <IssueBoard groups={grouped} boardPreset={boardPreset} />
+        <IssueBoard
+          groups={grouped}
+          boardPreset={boardPreset}
+          params={params}
+          issueNavigationState={issueNavigationState}
+        />
       ) : (
         <IssueGroupedList
           groups={grouped}
@@ -548,7 +555,7 @@ export function IssueExplorer({
           boardPreset={boardPreset}
           params={params}
           onToggleSelected={toggleSelected}
-          onOpenIssue={(issue) => navigate(`/issue/${issueKey(issue)}`)}
+          onOpenIssue={(issue) => navigate(`/issue/${issueKey(issue)}`, { state: issueNavigationState?.(issue) })}
         />
       )}
     </section>
@@ -676,13 +683,18 @@ function issueFilterPanelOptions(panel: string): Array<{ label: string; count?: 
       { label: "Canceled", icon: <StatusIcon status="Canceled" size={12} /> },
     ];
   }
-  if (panel === "Assignee" || panel === "Creator") {
+  if (panel === "Assignee") {
     return [
       { label: "No assignee", count: "2 issues", icon: <UserRound size={13} /> },
       { label: "Current user", icon: <UserRound size={13} /> },
-      { label: "Parikshit Joon", count: "3 issues", icon: <AvatarMini label="PJ" /> },
-      { label: "Sarah Connor", count: "1 issue", icon: <AvatarMini label="SC" /> },
-      { label: "Riley Nguyen", icon: <AvatarMini label="RN" /> },
+    ];
+  }
+  if (panel === "Creator") {
+    return [
+      { label: "Current user", icon: <UserRound size={13} /> },
+      { label: "System Administrator", count: "3 issues", icon: <AvatarMini label="SA" /> },
+      { label: "Maya Patel", count: "1 issue", icon: <AvatarMini label="MP" /> },
+      { label: "Priya Shah", icon: <AvatarMini label="PS" /> },
     ];
   }
   if (panel === "Priority") {
@@ -1042,7 +1054,17 @@ function IssueListTreeRow({
   );
 }
 
-function IssueBoard({ groups, boardPreset }: { groups: Array<[string, Issue[]]>; boardPreset: "default" | "my-issues-activity" }) {
+function IssueBoard({
+  groups,
+  boardPreset,
+  params,
+  issueNavigationState,
+}: {
+  groups: Array<[string, Issue[]]>;
+  boardPreset: "default" | "my-issues-activity";
+  params?: Record<string, unknown>;
+  issueNavigationState?: (issue: Issue) => Record<string, unknown>;
+}) {
   const groupedByState = new Map(groups);
   const activityStates = ["In QA", "QA Passed", "Done", "Canceled"];
   const orderedStates = boardPreset === "my-issues-activity" ? activityStates : [
@@ -1082,7 +1104,7 @@ function IssueBoard({ groups, boardPreset }: { groups: Array<[string, Issue[]]>;
           >
             {issues.map((issue) => (
               <LinearBoardCard key={issueKey(issue)} testId={`issue-board-card-${issueKey(issue)}`} className="p-0">
-                <Link to={`/issue/${issueKey(issue)}`} className="grid gap-2 px-3 py-2.5">
+                <Link to={`/issue/${issueKey(issue)}`} state={issueNavigationState?.(issue)} className="grid gap-2 px-3 py-2.5">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs tabular-nums text-muted-foreground">
                     {issueKey(issue)}

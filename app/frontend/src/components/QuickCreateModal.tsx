@@ -85,6 +85,7 @@ export function QuickCreateModal({
   const [priority, setPriority] = useState("");
   const [projectId, setProjectId] = useState("");
   const [assigneeId, setAssigneeId] = useState("");
+  const [assigneeQuery, setAssigneeQuery] = useState("");
   const [activeMenu, setActiveMenu] = useState<QuickCreateMenu>(null);
   const [selectedLabel, setSelectedLabel] = useState<Label | null>(defaultLabels[1]);
   const [teams, setTeams] = useState<Team[]>([]);
@@ -98,11 +99,13 @@ export function QuickCreateModal({
     if (open && !wasOpen.current) {
       setDismissed(false);
       setActiveMenu(null);
+      setAssigneeQuery("");
       if (initialProjectId) setProjectId(initialProjectId);
     }
     if (!open) {
       setDismissed(false);
       setActiveMenu(null);
+      setAssigneeQuery("");
     }
     wasOpen.current = open;
   }, [open, initialProjectId]);
@@ -136,6 +139,7 @@ export function QuickCreateModal({
     setPriority("");
     setProjectId("");
     setAssigneeId("");
+    setAssigneeQuery("");
     setActiveMenu(null);
     setError(null);
   };
@@ -213,6 +217,13 @@ export function QuickCreateModal({
   const tomorrowLabel = formatDueDate(1);
   const nextWeekLabel = formatDueDate(7);
   const shouldIgnoreMenuClose = () => Date.now() < menuHandoffUntil.current;
+  const filteredAssignees = users.filter((user) => {
+    const query = assigneeQuery.trim().toLowerCase();
+    if (!query) return true;
+    return [userName(user), user.username, user.email, user.id]
+      .filter(Boolean)
+      .some((value) => String(value).toLowerCase().includes(query));
+  });
 
   return (
     <Dialog open={visible} onOpenChange={(nextOpen) => !nextOpen && handleClose()}>
@@ -379,13 +390,24 @@ export function QuickCreateModal({
               setActiveMenu={setActiveMenu}
               shouldIgnoreClose={shouldIgnoreMenuClose}
               contentTestId="quick-create-assignee-menu"
-              contentClassName="w-[304px]"
+              contentClassName="w-[360px] max-h-[min(440px,calc(100vh-8rem))] overflow-hidden"
             >
               <MenuHeader label="Assign to..." shortcut="A" />
+              <div className="border-b border-[#eeeef0] px-2 py-2">
+                <Input
+                  value={assigneeQuery}
+                  onChange={(event) => setAssigneeQuery(event.target.value)}
+                  onKeyDown={(event) => event.stopPropagation()}
+                  placeholder="Search users..."
+                  className="h-8 rounded-lg border-[#dedfe3] bg-[#f7f7f8] px-2.5 text-[13px] shadow-none focus-visible:ring-1 focus-visible:ring-[#5f63d8]"
+                  data-testid="quick-create-assignee-search"
+                />
+              </div>
               <DropdownMenuItem
                 className={linearMenuItemClass(!assigneeId)}
                 onClick={() => {
                   setAssigneeId("");
+                  setAssigneeQuery("");
                   setActiveMenu(null);
                 }}
               >
@@ -394,16 +416,18 @@ export function QuickCreateModal({
                 {!assigneeId && <Check aria-hidden className="ml-auto size-4 text-[#25262b]" />}
                 <MenuShortcut>0</MenuShortcut>
               </DropdownMenuItem>
-              {users.map((user, index) => {
-                const value = user.id || user.username || "";
-                const name = userName(user);
-                return (
-                  <div key={value}>
-                    {index === 1 && <div className="px-3 pb-1 pt-2 text-[12px] font-medium text-[#777a82]">Team members</div>}
+              <div className="max-h-[272px] overflow-y-auto overscroll-contain pr-1" data-testid="quick-create-assignee-scroll">
+                {filteredAssignees.length > 0 && <div className="px-3 pb-1 pt-2 text-[12px] font-medium text-[#777a82]">Team members</div>}
+                {filteredAssignees.map((user, index) => {
+                  const value = user.id || user.username || "";
+                  const name = userName(user);
+                  return (
                     <DropdownMenuItem
+                      key={value}
                       className={linearMenuItemClass(value === assigneeId)}
                       onClick={() => {
                         setAssigneeId(value);
+                        setAssigneeQuery("");
                         setActiveMenu(null);
                       }}
                     >
@@ -412,9 +436,12 @@ export function QuickCreateModal({
                       {value === assigneeId && <Check aria-hidden className="ml-auto size-4 text-[#25262b]" />}
                       <MenuShortcut>{index + 1}</MenuShortcut>
                     </DropdownMenuItem>
-                  </div>
-                );
-              })}
+                  );
+                })}
+                {filteredAssignees.length === 0 && (
+                  <div className="px-3 py-6 text-center text-[13px] text-[#777a82]">No users found</div>
+                )}
+              </div>
             </PropertyMenu>
             <PropertyMenu
               icon={<Folder />}

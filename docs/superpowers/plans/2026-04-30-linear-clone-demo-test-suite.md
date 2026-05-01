@@ -12,17 +12,15 @@
 
 ## Current Baseline
 
-- `make validate`: pass, 118 tools.
+- `make validate`: pass, 139 tools.
 - `make test`: pass, 21 backend tests and 11 Playwright e2e tests.
 - Browser click pass: 94 checks passed, 9 checks flagged as gaps or brittle selectors.
 - Current clean post-seed snapshot after reset/seed in this checkout: 23 users, 7 teams, 143 issues, 18 projects, 14 cycles, 231 audit rows.
 - Console errors during browser pass: 0.
 
-## Gaps Found During Click Pass
+## Original Gaps Found During Click Pass
 
-1. `/inbox` renders, but notification rows are hidden (`notification-row` count is 0) while `list_notifications` returns 9 rows.
-2. Quick create successfully creates an issue, but the modal can remain open after navigation; a demo test should fail until it always closes on successful submit.
-3. Project names are duplicated (`Backend Tool Server Coverage` appears twice), making unscoped UI menu selection and command-palette assertions ambiguous.
+These notes are historical from the first click pass. The final submission pass refreshed demo data, filters, picker behavior, API-key auth, and stable packaging. Re-run the live tests before treating any historical gap as current.
 4. Label names are duplicated across teams (`P0` appeared 3 times), so label picker tests need team scoping or stable option test IDs.
 5. `/settings/workspace` once stayed on `Loading...` on direct navigation, then recovered after reload. Add a direct-route regression test.
 6. Some docs still show the older seed counts (`16/5/116`); update docs after the suite lands.
@@ -429,7 +427,7 @@ Expected:
 
 - `tests/test_tools.py`: pass.
 - `tests/e2e/`: pass.
-- `scripts/validate.sh`: pass with 118 tools.
+- `scripts/validate.sh`: pass with 139 tools.
 
 - [ ] **Step 2: Update docs with current truth**
 

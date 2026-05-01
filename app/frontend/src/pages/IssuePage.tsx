@@ -23,12 +23,6 @@ import { IssueProjectPicker } from "../components/issue/ProjectPicker";
 import { Button, EmptyState, ErrorBanner, PageHeader, Spinner } from "../components/ui";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../components/ui/dropdown-menu";
 import type { Comment, Issue, Label, LinearUser, Project, WorkflowState } from "../linearTypes";
 import {
   assigneeName,
@@ -88,6 +82,7 @@ export function IssuePage() {
   const [subIssueDescription, setSubIssueDescription] = useState("");
   const [subIssueOpen, setSubIssueOpen] = useState(false);
   const [creatingSubIssue, setCreatingSubIssue] = useState(false);
+  const [labelMenuOpen, setLabelMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -133,6 +128,25 @@ export function IssuePage() {
       document.title = title;
     }
   }, [issue]);
+
+  useEffect(() => {
+    if (!labelMenuOpen) return;
+
+    const closeOnOutsidePointer = (event: PointerEvent | MouseEvent) => {
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      if (!target) return;
+      if (target.closest("[data-issue-label-menu='trigger']")) return;
+      if (target.closest("[data-issue-label-menu='content']")) return;
+      setLabelMenuOpen(false);
+    };
+
+    document.addEventListener("pointerdown", closeOnOutsidePointer, true);
+    document.addEventListener("mousedown", closeOnOutsidePointer, true);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsidePointer, true);
+      document.removeEventListener("mousedown", closeOnOutsidePointer, true);
+    };
+  }, [labelMenuOpen]);
 
   const updateIssue = async (changes: Record<string, unknown>, localChanges: Partial<Issue> = changes as Partial<Issue>) => {
     const key = routeIssueKey || (issue ? issueKey(issue) : "");
@@ -516,8 +530,8 @@ export function IssuePage() {
 
             </CardContent>
           </Card>
-          <Card className="rounded-lg border border-border/70 bg-background py-0 shadow-[0_1px_3px_rgb(0_0_0/0.04)] ring-0" size="sm">
-            <CardContent className="space-y-2 p-4">
+          <Card className="overflow-visible rounded-lg border border-border/70 bg-background py-0 shadow-[0_1px_3px_rgb(0_0_0/0.04)] ring-0" size="sm">
+            <CardContent className="space-y-2 overflow-visible p-4">
               <div className="flex items-center justify-between text-[13px] font-medium text-muted-foreground">
                 <span>Labels</span>
                 <ChevronDown size={13} />
@@ -526,31 +540,64 @@ export function IssuePage() {
                 <div className="flex flex-wrap gap-1.5">
                   {issueLabels.map((label) => {
                     const labelName = typeof label === "string" ? label : label.name || label.id || "Label";
+                    const color = labelColor(label, labels);
                     return (
                       <Badge key={labelName} variant="outline" className="max-w-full gap-1.5 rounded-md px-2 text-[12px] font-normal text-muted-foreground">
-                        <span className="size-2 rounded-full bg-muted-foreground/50" />
+                        <span className="size-2 rounded-full" style={{ backgroundColor: color }} />
                         <span className="truncate">{labelName}</span>
                       </Badge>
                     );
                   })}
                 </div>
               ) : null}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="h-8 w-full justify-start gap-2 px-1.5 text-[13px] font-normal text-muted-foreground" type="button" variant="ghost" data-testid="issue-add-label">
-                    <Tag size={14} />
-                    Add label
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-64">
-                  {labels.map((label) => (
-                    <DropdownMenuItem key={label.id || label.name} onClick={() => addLabel(label)}>
-                      <span className="size-2 rounded-full bg-muted-foreground/50" />
-                      {label.name || label.id}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="relative">
+                {labelMenuOpen && (
+                  <button
+                    type="button"
+                    aria-label="Close label menu"
+                    className="fixed inset-0 z-[80] cursor-default bg-transparent"
+                    onClick={() => setLabelMenuOpen(false)}
+                    tabIndex={-1}
+                    data-testid="issue-label-menu-backdrop"
+                  />
+                )}
+                <Button
+                  className="h-8 w-full justify-start gap-2 px-1.5 text-[13px] font-normal text-muted-foreground"
+                  type="button"
+                  variant="ghost"
+                  data-testid="issue-add-label"
+                  aria-expanded={labelMenuOpen}
+                  onClick={() => setLabelMenuOpen((open) => !open)}
+                >
+                  <Tag size={14} />
+                  Add label
+                </Button>
+                {labelMenuOpen && (
+                  <div
+                    role="menu"
+                    aria-label="Add label"
+                    className="absolute bottom-[calc(100%+8px)] right-0 z-[90] max-h-[360px] w-[420px] max-w-[min(420px,calc(100vw-2rem))] overflow-y-auto rounded-xl bg-popover p-2 text-sm text-popover-foreground shadow-xl ring-1 ring-foreground/10"
+                    data-issue-label-menu="content"
+                    data-testid="issue-label-menu-content"
+                  >
+                    {labels.map((label) => (
+                      <button
+                        type="button"
+                        role="menuitem"
+                        key={label.id || label.name}
+                        onClick={() => {
+                          setLabelMenuOpen(false);
+                          void addLabel(label);
+                        }}
+                        className="flex min-h-10 w-full items-center gap-2 rounded-lg px-3 py-2 text-left outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                      >
+                        <span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: labelColor(label, labels) }} />
+                        <span className="min-w-0 truncate">{label.name || label.id}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
           <Card className="rounded-lg border border-border/70 bg-background py-0 shadow-[0_1px_3px_rgb(0_0_0/0.04)] ring-0" size="sm">
@@ -598,6 +645,7 @@ function IssueDetailTopBar({
   navigationState: IssueNavigationState;
 }) {
   const myIssuesReturn = myIssuesReturnTarget(navigationState);
+  const projectReturn = projectReturnTarget(navigationState);
   const fallbackLabel = projectName(issue.project) !== "No project" ? projectName(issue.project) : teamKey(issue);
 
   return (
@@ -607,6 +655,10 @@ function IssueDetailTopBar({
           {myIssuesReturn ? (
             <Link to={myIssuesReturn.href} className="shrink-0 hover:text-foreground">
               My issues
+            </Link>
+          ) : projectReturn ? (
+            <Link to={projectReturn.href} className="shrink-0 hover:text-foreground">
+              {projectReturn.label}
             </Link>
           ) : parentIssue ? (
             <Link to={`/issue/${issueKey(parentIssue)}`} className="shrink-0 hover:text-foreground">
@@ -682,6 +734,16 @@ function myIssuesReturnTarget(state: IssueNavigationState) {
   };
 }
 
+function projectReturnTarget(state: IssueNavigationState) {
+  if (state.source !== "project") return null;
+  const href = typeof state.from === "string" && state.from.startsWith("/project/") ? state.from : null;
+  if (!href) return null;
+  return {
+    href,
+    label: state.fromLabel || "Project",
+  };
+}
+
 function parentIssueFromNavigation(state: IssueNavigationState): Issue | null {
   if (!state.parentKey) return null;
   return {
@@ -692,6 +754,7 @@ function parentIssueFromNavigation(state: IssueNavigationState): Issue | null {
 
 function childIssueNavigationState(state: IssueNavigationState, parent: Issue): IssueNavigationState {
   const myIssuesReturn = myIssuesReturnTarget(state);
+  const projectReturn = projectReturnTarget(state);
   return {
     ...(myIssuesReturn
       ? {
@@ -700,6 +763,12 @@ function childIssueNavigationState(state: IssueNavigationState, parent: Issue): 
           fromLabel: "My issues",
           fromPill: myIssuesReturn.pill,
         }
+      : projectReturn
+        ? {
+            source: "project",
+            from: projectReturn.href,
+            fromLabel: projectReturn.label,
+          }
       : {}),
     parentKey: issueKey(parent),
     parentTitle: issueTitle(parent),
@@ -712,6 +781,16 @@ function AvatarBubble({ children, accent = false }: { children: string; accent?:
       {children}
     </span>
   );
+}
+
+function labelColor(label: Label | string | null | undefined, labels: Label[]) {
+  if (typeof label !== "string" && label?.color) return label.color;
+  const labelName = typeof label === "string" ? label : label?.name || label?.id || "";
+  const match = labels.find((item) => {
+    const name = item.name || item.id || "";
+    return name.toLowerCase() === labelName.toLowerCase();
+  });
+  return match?.color || "#5e6ad2";
 }
 
 function PropertyRow({

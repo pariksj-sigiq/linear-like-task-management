@@ -329,6 +329,7 @@ class TestPlanningAndUtilityPages:
         expect(page.get_by_test_id("projects-page")).to_be_visible()
         expect(page.get_by_role("link", name="All projects")).to_be_visible()
         expect(page.get_by_test_id("projects-kanban-view-button")).to_contain_text("Kanban View")
+        page.get_by_test_id("projects-kanban-view-button").click()
         expect(page.get_by_test_id("projects-board")).to_be_visible()
         expect(page.get_by_test_id("projects-board")).to_contain_text("ELT-5")
 
@@ -352,7 +353,68 @@ class TestPlanningAndUtilityPages:
         expect(page.get_by_test_id("project-summary-input")).to_have_attribute("placeholder", "Add a short summary...")
         expect(page.get_by_test_id("status-chip")).to_contain_text("Backlog")
         expect(page.get_by_test_id("priority-chip")).to_contain_text("No priority")
+        expect(page.get_by_test_id("start-date-chip")).to_contain_text("Start date")
+        expect(page.get_by_test_id("target-date-chip")).to_contain_text("Target date")
+        page.get_by_test_id("start-date-chip").click()
+        expect(page.get_by_test_id("start-date-calendar-menu")).to_be_visible()
+        for label in ["Start date", "Day", "Month", "Quarter", "Half-year", "Year"]:
+            expect(page.get_by_test_id("start-date-calendar-menu")).to_contain_text(label)
+        page.get_by_test_id("start-date-date-input").fill("07/10/2026")
+        page.keyboard.press("Enter")
+        expect(page.get_by_test_id("start-date-calendar-menu")).not_to_be_visible()
+        expect(page.get_by_test_id("start-date-chip")).to_contain_text("Jul 10")
+        expect(page.get_by_test_id("target-date-chip")).to_contain_text("Target date")
+        page.get_by_test_id("members-chip").click()
+        expect(page.get_by_test_id("create-project-members-menu")).to_be_visible()
+        page.get_by_test_id("project-name-input").click()
+        expect(page.get_by_test_id("create-project-members-menu")).not_to_be_visible()
+
+        page.get_by_test_id("members-chip").click()
+        expect(page.get_by_test_id("create-project-members-menu")).to_be_visible()
+        page.keyboard.press("Escape")
+        expect(page.get_by_test_id("create-project-members-menu")).not_to_be_visible()
+        expect(modal).to_be_visible()
         expect(modal).to_contain_text("Milestones")
+
+    def test_project_create_property_menus_release_modal_close(self, page: Page) -> None:
+        login(page)
+        page.goto(f"{BASE_URL}/projects/all")
+        page.wait_for_load_state("networkidle")
+        page.get_by_test_id("create-project-button").click()
+        expect(page.get_by_test_id("create-project-modal")).to_be_visible()
+
+        page.get_by_test_id("status-chip").click()
+        expect(page.get_by_text("Change status...")).to_be_visible()
+        page.get_by_role("menuitem", name=re.compile(r"Planned")).click()
+        expect(page.get_by_text("Change status...")).not_to_be_visible()
+        expect(page.get_by_test_id("status-chip")).to_contain_text("Planned")
+
+        page.get_by_test_id("priority-chip").click()
+        expect(page.get_by_text("Change priority...")).to_be_visible()
+        page.get_by_role("menuitem", name=re.compile(r"High")).click()
+        expect(page.get_by_text("Change priority...")).not_to_be_visible()
+        expect(page.get_by_test_id("priority-chip")).to_contain_text("High")
+
+        page.get_by_test_id("lead-chip").click()
+        expect(page.get_by_placeholder("Search users...")).to_be_visible()
+        page.get_by_role("menuitem", name=re.compile(r"Sarah Connor")).click()
+        expect(page.get_by_placeholder("Search users...")).not_to_be_visible()
+        expect(page.get_by_test_id("lead-chip")).to_contain_text("Sarah Connor")
+
+        page.get_by_test_id("members-chip").click()
+        expect(page.get_by_test_id("create-project-members-menu")).to_be_visible()
+        page.get_by_role("menuitem", name=re.compile(r"Sarah Connor")).click()
+        expect(page.get_by_test_id("create-project-members-menu")).not_to_be_visible()
+
+        page.get_by_test_id("target-date-chip").click()
+        expect(page.get_by_test_id("target-date-calendar-menu")).to_be_visible()
+        page.get_by_test_id("target-date-date-input").fill("08/14/2026")
+        page.keyboard.press("Enter")
+        expect(page.get_by_test_id("target-date-calendar-menu")).not_to_be_visible()
+        expect(page.get_by_test_id("target-date-chip")).to_contain_text("Aug 14")
+
+        page.get_by_label("Close").click()
+        expect(page.get_by_test_id("create-project-modal")).not_to_be_visible()
 
     def test_project_status_picker_matches_linear_project_menu(self, page: Page) -> None:
         login(page)

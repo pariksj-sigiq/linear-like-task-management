@@ -2,7 +2,7 @@
 
 Runner: `pytest` for unit + e2e. `make test` runs both. Playwright is wrapped by `pytest-playwright`.
 
-Per README + QA_REPORT (older snapshot): 16 backend tests + 7 Playwright. Per `docs/superpowers/plans/2026-04-30-linear-clone-demo-test-suite.md` (newer): 21 backend + 11 Playwright. Numbers grow — recount with `pytest --collect-only`.
+Current submitted snapshot: `make test` covers backend unit tests and Playwright UI tests. Recount with `pytest --collect-only` if adding or removing tests.
 
 ## Files
 
@@ -22,6 +22,10 @@ Per README + QA_REPORT (older snapshot): 16 backend tests + 7 Playwright. Per `d
 make test                # unit + e2e
 make test-unit           # just app/tests/test_*.py
 make test-e2e            # just app/tests/e2e/
+
+# Run all CUA task smoke checks
+TASK_SMOKE_RESET_COMMAND='curl -sf -X POST http://localhost:8030/reset >/dev/null && make seed >/dev/null' \
+  .venv/bin/python tasks/smoke_test.py
 
 # Target a single test:
 cd app && .venv/bin/python -m pytest tests/test_tools.py::TestSearch::test_search_issues_returns_seeded_issue_keys -v

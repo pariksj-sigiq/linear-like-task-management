@@ -63,26 +63,26 @@ const teamName = (teamKey?: string) => (teamKey ? teamKey.toUpperCase() : "ENG")
 const PROJECT_COLUMNS = ["Backlog", "Planned", "In Progress", "QA Requested", "In QA", "Changes Requested", "QA Passed", "Completed"];
 const referenceProject = {
   id: "constructing-linear-clone-f2edb81a4bb4",
-  name: "Constructing linear clone",
-  lead: "parikshit.joon@gmail.com",
+  name: "Enterprise onboarding refresh",
+  lead: "Avery Stone",
   state: "Backlog",
   priority: "No priority",
 };
 const referenceProjectIssues: Issue[] = [
-  { key: "ELT-21", title: "Task verifier zero-state scoring gap", state: "In Review", assignee: "parikshit.joon@gmail.com", priority: 1, estimate: 21, project: "Constructing linear clone" },
-  { key: "ELT-27", title: "Inbox split-pane parity", state: "In Review", assignee: "minalgoel99@gmail.com", priority: 2, estimate: 13, project: "Constructing linear clone" },
-  { key: "ELT-7", title: "Classroom and teacher identifiers are unclear in student detail drawers", state: "In Review", assignee: "minalgoel99@gmail.com", priority: 3, estimate: 30, project: "Constructing linear clone" },
-  { key: "ELT-6", title: "Students and Teachers CTAs appear as filters but trigger bulk assignment", state: "In Review", assignee: "vishalsharma.gbpecdelhi@gmail.com", priority: 3, estimate: 30, project: "Constructing linear clone" },
-  { key: "ELT-19", title: "Audit picker keyboard states", state: "In Progress", assignee: "minalgoel99@gmail.com", priority: 2, estimate: 13, project: "Constructing linear clone" },
-  { key: "ELT-18", title: "Polish project update composer", state: "In Progress", assignee: "vishalsharma.gbpecdelhi@gmail.com", priority: 2, estimate: 8, project: "Constructing linear clone" },
-  { key: "ELT-5", title: "Handle transient LLM failures", state: "In Progress", assignee: "parikshit.joon@gmail.com", priority: 2, estimate: 30, project: "Constructing linear clone" },
-  { key: "ELT-25", title: "QA Automation smoke checks need browser screenshots", state: "Todo", assignee: "parikshit.joon@gmail.com", priority: 2, estimate: 8, project: "Constructing linear clone" },
+  { key: "ELT-21", title: "Empty-state scoring gap", state: "In Review", assignee: "Avery Stone", priority: 1, estimate: 21, project: "Enterprise onboarding refresh" },
+  { key: "ELT-27", title: "Inbox split-pane parity", state: "In Review", assignee: "Mia Chen", priority: 2, estimate: 13, project: "Enterprise onboarding refresh" },
+  { key: "ELT-7", title: "Workspace identifiers are unclear in detail drawers", state: "In Review", assignee: "Mia Chen", priority: 3, estimate: 30, project: "Enterprise onboarding refresh" },
+  { key: "ELT-6", title: "Account CTAs trigger the wrong bulk action", state: "In Review", assignee: "Vikram Rao", priority: 3, estimate: 30, project: "Enterprise onboarding refresh" },
+  { key: "ELT-19", title: "Audit picker keyboard states", state: "In Progress", assignee: "Mia Chen", priority: 2, estimate: 13, project: "Enterprise onboarding refresh" },
+  { key: "ELT-18", title: "Polish project update composer", state: "In Progress", assignee: "Vikram Rao", priority: 2, estimate: 8, project: "Enterprise onboarding refresh" },
+  { key: "ELT-5", title: "Handle transient import failures", state: "In Progress", assignee: "Avery Stone", priority: 2, estimate: 30, project: "Enterprise onboarding refresh" },
+  { key: "ELT-25", title: "Smoke checks need browser coverage", state: "Todo", assignee: "Avery Stone", priority: 2, estimate: 8, project: "Enterprise onboarding refresh" },
 ];
 const candidateProjectIssues: Issue[] = [
-  { key: "ELT-28", title: "Activity board density pass", state: "Backlog", assignee: "rohanbojja@icloud.com", priority: 2, estimate: 21 },
-  { key: "ELT-24", title: "Linear UI Fidelity Pass spacing regression", state: "Backlog", assignee: "rohanbojja@icloud.com", priority: 1, estimate: 13 },
-  { key: "ELT-23", title: "Issue Flow Implementation follow-up", state: "Todo", assignee: "minalgoel99@gmail.com", priority: 2, estimate: 8 },
-  { key: "ELT-16", title: "Repair notification read state", state: "Todo", assignee: "rohanbojja@icloud.com", priority: 2, estimate: 5 },
+  { key: "ELT-28", title: "Activity board density pass", state: "Backlog", assignee: "Rowan Brooks", priority: 2, estimate: 21 },
+  { key: "ELT-24", title: "Spacing regression in project sidebar", state: "Backlog", assignee: "Rowan Brooks", priority: 1, estimate: 13 },
+  { key: "ELT-23", title: "Issue flow follow-up", state: "Todo", assignee: "Mia Chen", priority: 2, estimate: 8 },
+  { key: "ELT-16", title: "Repair notification read state", state: "Todo", assignee: "Rowan Brooks", priority: 2, estimate: 5 },
 ];
 const referenceInboxRows: Array<{
   key: string;
@@ -96,70 +96,70 @@ const referenceInboxRows: Array<{
 }> = [
   {
     key: "ENGG-1847",
-    title: "Handle transient LLM failures",
-    actor: "jasper emhoff",
-    body: "jasper emhoff assigned the issue to you",
+    title: "Handle transient import failures",
+    actor: "Jasper Hale",
+    body: "Jasper Hale assigned the issue to you",
     time: "14h",
     state: "In QA",
     issue: {
       key: "ENGG-1847",
-      title: "Handle transient LLM failures",
-      description: "The particular failure was a 500 internal service error from Azure foundry",
+      title: "Handle transient import failures",
+      description: "A transient upstream import failure needs graceful retry handling.",
       state: "In QA",
-      project: "ET Bug Board",
-      assignee: "parikshit.joon@sigiq.ai",
+      project: "Customer issue triage",
+      assignee: "Avery Stone",
       cycle: "Cycle 30",
       created_at: "2026-04-29T03:51:22Z",
     },
   },
   {
     key: "ENGG-1792",
-    title: "“Students” and “Teachers” CTAs appear as filters but trigger bulk...",
-    actor: "Jaikumar A`",
-    body: "Reopened by Jaikumar A`",
+    title: "Account CTAs trigger bulk assignment actions",
+    actor: "Jai Kumar",
+    body: "Jai Kumar reopened the issue after QA review",
     time: "1d",
     state: "In QA",
     issue: {
       key: "ENGG-1792",
-      title: "“Students” and “Teachers” CTAs appear as filters but trigger bulk assignment actions",
-      description: "Reopened while reviewing classroom assignment flows.",
+      title: "Account CTAs trigger bulk assignment actions",
+      description: "Reopened while reviewing account assignment flows.",
       state: "In QA",
-      project: "ET Bug Board",
-      assignee: "Jaikumar A`",
+      project: "Customer issue triage",
+      assignee: "Jai Kumar",
       cycle: "Cycle 30",
     },
   },
   {
     key: "ENGG-1840",
-    title: "Students assignment name mismatch",
-    actor: "Jaikumar A`",
-    body: "Jaikumar A` assigned the issue to you",
+    title: "Assignment name mismatch",
+    actor: "Jai Kumar",
+    body: "Jai Kumar assigned the issue to you",
     time: "1d",
     state: "Backlog",
     issue: {
       key: "ENGG-1840",
-      title: "Students assignment name mismatch",
-      description: "Students assignment name mismatch",
+      title: "Assignment name mismatch",
+      description: "Assignment names are inconsistent between the list and detail views.",
       state: "Backlog",
-      project: "ET Bug Board",
-      assignee: "Jaikumar A`",
+      project: "Customer issue triage",
+      assignee: "Jai Kumar",
       cycle: "Cycle 30",
     },
   },
   {
     key: "ENGG-1795",
-    title: "Classroom and teacher identifiers are unclear, and student details...",
-    actor: "Jaikumar A`",
-    body: "Reopened by Jaikumar A`",
+    title: "Workspace identifiers unclear in admin drawers",
+    actor: "Jai Kumar",
+    body: "Jai Kumar reopened the issue after QA review",
     time: "1d",
     state: "In QA",
     issue: {
       key: "ENGG-1795",
-      title: "Classroom and teacher identifiers are unclear, and student details are not visible",
-      description: "Classroom and teacher identifiers are unclear.",
+      title: "Workspace identifiers unclear in admin drawers",
+      description: "Workspace and owner identifiers are unclear in admin detail drawers.",
       state: "In QA",
-      project: "ET Bug Board",
-      assignee: "Jaikumar A`",
+      project: "Admin dashboard audit",
+      assignee: "Jai Kumar",
       cycle: "Cycle 30",
     },
   },
@@ -167,30 +167,30 @@ const referenceInboxRows: Array<{
     key: `ENGG-${id}`,
     title:
       id === "1839"
-        ? "Published lesson is showing as draft"
+        ? "Published project update is showing as draft"
         : id === "1838"
-          ? "Scratchpad Enable/disable not working properly"
+          ? "Settings toggle does not persist"
           : id === "1837"
-            ? "Lesson Preview - Couldn't scroll"
-            : "Lesson content not visible after cloning",
-    actor: "Jaikumar A`",
-    body: "Jaikumar A` assigned the issue to you",
+            ? "Project preview panel cannot scroll"
+            : "Issue content not visible after duplication",
+    actor: "Jai Kumar",
+    body: "Jai Kumar assigned the issue to you",
     time: "1d",
     state: "Backlog",
     issue: {
       key: `ENGG-${id}`,
       title:
         id === "1839"
-          ? "Published lesson is showing as draft"
+          ? "Published project update is showing as draft"
           : id === "1838"
-            ? "Scratchpad Enable/disable not working properly"
+            ? "Settings toggle does not persist"
             : id === "1837"
-              ? "Lesson Preview - Couldn't scroll"
-              : "Lesson content not visible after cloning",
-      description: "Jaikumar A` assigned the issue to you",
+              ? "Project preview panel cannot scroll"
+              : "Issue content not visible after duplication",
+      description: "Jai Kumar assigned the issue to you",
       state: "Backlog",
-      project: "ET Bug Board",
-      assignee: "Jaikumar A`",
+      project: "Customer issue triage",
+      assignee: "Jai Kumar",
       cycle: "Cycle 30",
     },
   })),
@@ -200,12 +200,12 @@ const referenceInboxRows: Array<{
       id === "1794"
         ? "Password visibility and feedback are inconsistent..."
         : id === "1791"
-          ? "Student import flow is unclear and appears disconnected..."
+          ? "Account import flow is unclear and appears disconnected..."
           : id === "1793"
-            ? "“Student links” metric is ambiguous..."
+            ? "“Linked accounts” metric is ambiguous..."
             : "Account deletion only works from creator account...",
-    actor: "MCP",
-    body: "MCP subscribed you to an issue",
+    actor: "Workspace Bot",
+    body: "Workspace Bot subscribed you to an issue",
     time: "1w",
     state: "Done",
     issue: {
@@ -214,48 +214,48 @@ const referenceInboxRows: Array<{
         id === "1794"
           ? "Password visibility and feedback are inconsistent across login and sign-up flows"
           : id === "1791"
-            ? "Student import flow is unclear and appears disconnected from classroom selection"
+            ? "Account import flow is unclear and appears disconnected from workspace selection"
             : id === "1793"
-              ? "“Student links” metric is ambiguous"
+              ? "“Linked accounts” metric is ambiguous"
               : "Account deletion only works from creator account login",
-      description: "MCP subscribed you to an issue",
+      description: "Workspace Bot subscribed you to an issue",
       state: "Done",
-      project: "ET Bug Board",
-      assignee: "MCP",
+      project: "Customer issue triage",
+      assignee: "Workspace Bot",
       cycle: "Cycle 30",
     },
   })),
   {
     key: "",
-    title: "Internal dashboard product feature QA audit",
-    actor: "jasper emhoff",
-    body: "Added as a project lead by jasper emhoff",
+    title: "Admin dashboard audit",
+    actor: "Jasper Hale",
+    body: "Added as a project lead by Jasper Hale",
     time: "1w",
     state: "Backlog",
     kind: "project",
     issue: {
       key: "PROJECT",
-      title: "Internal dashboard product feature QA audit",
-      description: "Added as a project lead by jasper emhoff",
+      title: "Admin dashboard audit",
+      description: "Added as a project lead by Jasper Hale",
       state: "Backlog",
-      project: "Internal dashboard product feature QA audit",
-      assignee: "jasper emhoff",
+      project: "Admin dashboard audit",
+      assignee: "Jasper Hale",
     },
   },
   {
     key: "ENGG-1802",
-    title: "Network Tab Audit [Keita]",
-    actor: "keita@sigiq.ai",
-    body: "keita@sigiq.ai assigned the issue to you",
+    title: "Network request audit",
+    actor: "Keita Mori",
+    body: "Keita Mori assigned the issue to you",
     time: "8d",
     state: "Backlog",
     issue: {
       key: "ENGG-1802",
-      title: "Network Tab Audit [Keita]",
-      description: "Network Tab Audit [Keita]",
+      title: "Network request audit",
+      description: "Review network requests for missing authorization and noisy retries.",
       state: "Backlog",
-      project: "ET Bug Board",
-      assignee: "keita@sigiq.ai",
+      project: "Customer issue triage",
+      assignee: "Keita Mori",
       cycle: "Cycle 30",
     },
   },
@@ -337,12 +337,12 @@ function MyIssuesTabs() {
   const active = myIssuesTabFromPath(location.pathname);
   const tabClass = ({ isActive }: { isActive: boolean }) =>
     cn(
-      "inline-flex h-7 items-center rounded-full border border-border bg-background px-3 text-[13px] text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground",
+      "inline-flex h-7 shrink-0 items-center rounded-full border border-border bg-background px-3 text-[13px] text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground",
       isActive && "bg-muted text-foreground",
     );
 
   return (
-    <div className="mb-0 flex flex-wrap items-center gap-1.5" aria-label="My issues sections">
+    <div className="flex min-w-0 flex-wrap items-center gap-1.5" aria-label="My issues sections">
       {(["assigned", "created", "subscribed", "activity"] as const).map((item) => (
         <NavLink
           key={item}
@@ -419,9 +419,12 @@ export function MyIssuesPage() {
   return (
     <div className="linear-page" data-testid="my-issues-page">
       <ErrorBanner message={error} />
-      <div className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
-        <div className="flex min-h-12 items-center justify-between gap-3 px-2">
-          <MyIssuesTabs />
+      <div className="sticky top-0 z-20 -mx-2 -mt-2 border-b border-border bg-background/95 backdrop-blur">
+        <div className="flex min-h-[var(--topbar-height)] items-center justify-between gap-3 px-4">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <h1 className="shrink-0 truncate text-[14px] font-medium text-[var(--text-primary)]">My Issues</h1>
+            <MyIssuesTabs />
+          </div>
           <div className="flex items-center gap-1.5">
             <MyIssuesFilterMenu
               open={openControl === "filter"}
@@ -739,17 +742,14 @@ function MyIssuesFilterMenu({
                 <HoverFilterOption key={String(label)} active={filters.status.includes(String(label))} icon={icon} label={String(label)} count={String(count)} onClick={() => toggleArrayFilter("status", String(label))} />
               ))}
             </HoverFilterPanel>
-          ) : panel === "assignee" ? (
-            <HoverFilterPanel>
-              {[
-                ["Unassigned", "2 issues", <UserMiniIcon muted />],
-                ["Current user", "", <UserMiniIcon />],
-                ["Parikshit Joon", "", <AvatarDot label="PJ" color="bg-[#12bfd3]" />],
-                ["Sarah Connor", "1 issue", <AvatarDot label="SC" color="bg-[#12bfd3]" />],
-                ["Riley Nguyen", "", <AvatarDot label="RN" color="bg-[#c5a137]" />],
-              ].map(([label, count, icon]) => (
-                <HoverFilterOption
-                  key={String(label)}
+	          ) : panel === "assignee" ? (
+	            <HoverFilterPanel>
+	              {[
+	                ["Unassigned", "2 issues", <UserMiniIcon muted />],
+	                ["Current user", "", <UserMiniIcon />],
+	              ].map(([label, count, icon]) => (
+	                <HoverFilterOption
+	                  key={String(label)}
                   active={(label === "Unassigned" && filters.assignee === "unassigned") || (label === "Current user" && filters.assignee === "me")}
                   icon={icon}
                   label={String(label)}
@@ -762,16 +762,16 @@ function MyIssuesFilterMenu({
                 />
               ))}
             </HoverFilterPanel>
-          ) : panel === "creator" ? (
-            <HoverFilterPanel>
-              {[
-                ["Current user", "", <UserMiniIcon />],
-                ["Parikshit Joon", "3 issues", <AvatarDot label="PJ" color="bg-[#12bfd3]" />],
-                ["Sarah Connor", "1 issue", <AvatarDot label="SC" color="bg-[#12bfd3]" />],
-                ["Riley Nguyen", "", <AvatarDot label="RN" color="bg-[#c5a137]" />],
-              ].map(([label, count, icon]) => (
-                <HoverFilterOption key={String(label)} active={filters.creator.includes(String(label))} icon={icon} label={String(label)} count={String(count)} onClick={() => toggleArrayFilter("creator", String(label))} />
-              ))}
+	          ) : panel === "creator" ? (
+	            <HoverFilterPanel>
+	              {[
+	                ["Current user", "", <UserMiniIcon />],
+	                ["System Administrator", "3 issues", <AvatarDot label="SA" color="bg-[#12bfd3]" />],
+	                ["Maya Patel", "1 issue", <AvatarDot label="MP" color="bg-[#8b5cf6]" />],
+	                ["Priya Shah", "", <AvatarDot label="PS" color="bg-[#c5a137]" />],
+	              ].map(([label, count, icon]) => (
+	                <HoverFilterOption key={String(label)} active={filters.creator.includes(String(label))} icon={icon} label={String(label)} count={String(count)} onClick={() => toggleArrayFilter("creator", String(label))} />
+	              ))}
             </HoverFilterPanel>
           ) : panel === "priority" ? (
             <HoverFilterPanel>
@@ -800,9 +800,9 @@ function MyIssuesFilterMenu({
             <HoverFilterPanel>
               {[
                 ["No project", "", <ProjectMiniIcon muted />],
-                ["Constructing linear clone", "2 issues", <ProjectMiniIcon />],
-                ["Backend Tool Server Coverage", "1 issue", <ProjectMiniIcon />],
-                ["ET Bug Board", "", <ProjectMiniIcon />],
+                ["Enterprise onboarding refresh", "2 issues", <ProjectMiniIcon />],
+                ["API Reliability", "1 issue", <ProjectMiniIcon />],
+                ["Customer issue triage", "", <ProjectMiniIcon />],
               ].map(([label, count, icon]) => (
                 <HoverFilterOption key={String(label)} active={filters.project.includes(String(label))} icon={icon} label={String(label)} count={String(count)} onClick={() => toggleArrayFilter("project", String(label))} />
               ))}
@@ -1231,9 +1231,9 @@ function matchesMyIssueFilters(issue: Issue, filters: MyIssuesFilters, userId: s
     const creator = issueCreatorName(issue).toLowerCase();
     const matchesCreator = filters.creator.some((value) => {
       const target = value.toLowerCase();
-      if (target === "current user") return creator.includes("parikshit") || creator.includes("pj") || issueAssignedToUser(issue, userId);
-      return creator.includes(target) || target.includes(creator);
-    });
+	      if (target === "current user") return issueCreatedByUser(issue, userId);
+	      return creator.includes(target) || target.includes(creator);
+	    });
     if (!matchesCreator) return false;
   }
   if (filters.project.length) {
@@ -1255,8 +1255,16 @@ function matchesMyIssueFilters(issue: Issue, filters: MyIssuesFilters, userId: s
 function issueAssignedToUser(issue: Issue, userId: string) {
   const raw = issue as Issue & { assignee_id?: string; assignee?: { id?: string; email?: string; name?: string } | string };
   const assigneeId = String(raw.assignee_id || (typeof raw.assignee === "object" ? raw.assignee?.id : "") || "");
-  const assigneeText = assigneeName(issue).toLowerCase();
-  return assigneeId === userId || assigneeText.includes("parikshit") || assigneeText.includes("pj");
+  return assigneeId === userId;
+}
+
+function issueCreatedByUser(issue: Issue, userId: string) {
+  const raw = issue as Issue & {
+    creator_id?: string;
+    creator?: { id?: string } | string;
+  };
+  const creatorId = String(raw.creator_id || (typeof raw.creator === "object" ? raw.creator?.id : "") || "");
+  return creatorId === userId;
 }
 
 function issueCreatorName(issue: Issue) {
@@ -1482,8 +1490,8 @@ export function InboxPage() {
                 const issue = reference?.issue || (typeof notification.issue === "object" ? notification.issue : inboxIssues[index] || selectedIssue);
                 const key = reference?.kind === "project" ? "" : reference?.key || (issue ? issueKey(issue) : String(notification.title || "").match(/[A-Z]+-\d+/)?.[0] || `INBOX-${index + 1}`);
                 const selected = selectedIssue && issueKey(selectedIssue) === key;
-                const actor = reference?.actor || notification.body?.split(" assigned")?.[0] || notification.text?.split(" assigned")?.[0] || assigneeName(issue) || "Jaikumar A";
-                const isMcp = actor === "MCP";
+                const actor = reference?.actor || notification.body?.split(" assigned")?.[0] || notification.text?.split(" assigned")?.[0] || assigneeName(issue) || "Jai Kumar";
+                const isMcp = actor === "Workspace Bot";
                 return (
                   <button
                     key={notification.id || notification.title || notification.text || key}
@@ -1539,14 +1547,14 @@ export function InboxPage() {
 
 function InboxIssuePreview({ issue, onRead, onSnooze }: { issue: Issue; onRead: () => void; onSnooze: () => void }) {
   const reference = referenceInboxRows.find((row) => row.key === issueKey(issue));
-  const creator = reference?.actor || "jasper emhoff";
-  const subscriber = "parikshit.joon@sigiq.ai";
+  const creator = reference?.actor || "Jasper Hale";
+  const subscriber = "Avery Stone";
   return (
     <div className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
       <div className="lg:col-span-2 flex items-center justify-between gap-3 border-b border-border pb-3">
         <div className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
           <Box size={16} />
-          <span>{projectName(issue.project) || "ET Bug Board"}</span>
+          <span>{projectName(issue.project) || "Customer issue triage"}</span>
           <span>›</span>
           <span className="truncate text-foreground">{issueKey(issue)} {issueTitle(issue)}</span>
         </div>
@@ -1562,12 +1570,12 @@ function InboxIssuePreview({ issue, onRead, onSnooze }: { issue: Issue; onRead: 
           <div className="space-y-2">
             <h1 className="text-xl font-semibold tracking-tight text-foreground">{issueTitle(issue)}</h1>
             <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-              {issue.description || "The particular failure was a 500 internal service error from Azure foundry"}
+              {issue.description || "A transient upstream import failure needs graceful retry handling."}
             </p>
           </div>
           <Badge variant="outline" className="w-fit gap-1 text-muted-foreground">
             <CircleDashed size={15} />
-            Handle transient tutor LLM failures
+            Handle transient import failures
           </Badge>
           <div className="flex items-center gap-1">
             <Button variant="ghost" iconOnly aria-label="Reaction"><Smile size={15} /></Button>
@@ -1628,7 +1636,7 @@ function InboxIssuePreview({ issue, onRead, onSnooze }: { issue: Issue; onRead: 
             <span className="text-muted-foreground">▾</span>
           </CardHeader>
           <CardContent>
-            <PropertyLine label={<Box size={16} />} value={projectName(issue.project) || "ET Bug Board"} />
+            <PropertyLine label={<Box size={16} />} value={projectName(issue.project) || "Customer issue triage"} />
           </CardContent>
         </Card>
       </aside>
@@ -2460,16 +2468,16 @@ export function TierTwoPage({ kind }: { kind: string }) {
     const issueCount = Number(snapshot?.issues || 116);
     if (kind.includes("draft")) {
       return [
-        { key: "DRAFT-3", title: "Handle transient tutor LLM failures", meta: "Updated 13h ago", state: "Draft" },
-        { key: "DRAFT-2", title: "Students and Teachers CTA cleanup", meta: "Updated 1d ago", state: "Draft" },
-        { key: "DRAFT-1", title: "Lesson preview scroll investigation", meta: "Updated 1w ago", state: "Draft" },
+        { key: "DRAFT-3", title: "Handle transient import failures", meta: "Updated 13h ago", state: "Draft" },
+        { key: "DRAFT-2", title: "Account CTA cleanup", meta: "Updated 1d ago", state: "Draft" },
+        { key: "DRAFT-1", title: "Project preview scroll investigation", meta: "Updated 1w ago", state: "Draft" },
       ];
     }
     if (kind.includes("initiative")) {
       return [
-        { key: "INIT-4", title: "Linear clone evaluation fidelity", meta: `${issueCount} linked issues`, state: "In Progress" },
-        { key: "INIT-3", title: "Backend tool server coverage", meta: "FastAPI + Postgres", state: "On Track" },
-        { key: "INIT-2", title: "Electron packaging readiness", meta: "Desktop delivery", state: "Planned" },
+        { key: "INIT-4", title: "Improve workflow reliability", meta: `${issueCount} linked issues`, state: "In Progress" },
+        { key: "INIT-3", title: "API reliability coverage", meta: "FastAPI + Postgres", state: "On Track" },
+        { key: "INIT-2", title: "Roadmap planning readiness", meta: "Release delivery", state: "Planned" },
       ];
     }
     if (kind.includes("roadmap")) {

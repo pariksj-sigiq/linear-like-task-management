@@ -15,7 +15,7 @@ import { cn } from "../../lib/utils";
 import {
   PriorityIcon,
 } from "../IssueExplorer";
-import type { Issue, LinearUser, Project } from "../../linearTypes";
+import type { Issue, Label, LinearUser, Project } from "../../linearTypes";
 import {
   avatarColor,
   formatDate,
@@ -161,7 +161,7 @@ export function ProjectPropertiesSidebar({
             />
             <TeamRow project={project} />
             <SlackRow />
-            <LabelsRow />
+            <LabelsRow project={project} onChange={onChange} />
           </div>
         )}
       </section>
@@ -359,7 +359,14 @@ function LeadRow({
             )}
           </button>
         </PopoverTrigger>
-        <PopoverContent align="start" className="w-64 p-1">
+        <PopoverContent
+          align="start"
+          className="w-64 p-1"
+          data-testid="project-lead-menu"
+          onEscapeKeyDown={() => setOpen(false)}
+          onFocusOutside={() => setOpen(false)}
+          onPointerDownOutside={() => setOpen(false)}
+        >
           <div className="flex items-center gap-1 border-b border-border px-2 py-1">
             <Search size={13} className="text-muted-foreground" />
             <Input
@@ -467,7 +474,14 @@ function MembersRow({ project }: { project: ExtendedProject }) {
             )}
           </button>
         </PopoverTrigger>
-        <PopoverContent align="start" className="w-64 p-1">
+        <PopoverContent
+          align="start"
+          className="w-64 p-1"
+          data-testid="project-members-menu"
+          onEscapeKeyDown={() => setOpen(false)}
+          onFocusOutside={() => setOpen(false)}
+          onPointerDownOutside={() => setOpen(false)}
+        >
           <div className="flex items-center gap-1 border-b border-border px-2 py-1">
             <Search size={13} className="text-muted-foreground" />
             <Input
@@ -607,10 +621,113 @@ function SlackRow() {
   );
 }
 
-function LabelsRow() {
+function LabelsRow({ project, onChange }: { project: ExtendedProject; onChange: () => Promise<void> | void }) {
+  const projectId = project.id || "";
+  const [open, setOpen] = useState(false);
+  const [labels, setLabels] = useState<Label[]>([]);
+  const [query, setQuery] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const selectedLabels = project.labels || [];
+  const selectedIds = new Set(selectedLabels.map((label) => label.id).filter(Boolean));
+
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    (async () => {
+      const response = await readTool("search_labels", { query: query || "", limit: 80 });
+      if (cancelled) return;
+      setLabels(collectionFrom<Label>(response.data, ["labels", "results"]));
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [open, query]);
+
+  const toggle = async (label: Label) => {
+    if (!projectId || !label.id) return;
+    const active = selectedIds.has(label.id);
+    setError(null);
+    const response = await readTool(active ? "remove_project_label" : "add_project_label", {
+      project_id: projectId,
+      label_id: label.id,
+    });
+    if (response.error) {
+      setError(response.error);
+      return;
+    }
+    await onChange();
+  };
+
   return (
     <PropertyRow label="Labels">
-      <span className="text-muted-foreground">Add label</span>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            className="flex min-h-8 w-full flex-wrap items-center gap-1.5 rounded-md px-1.5 py-1 text-left text-sm text-foreground hover:bg-muted"
+            data-testid="project-labels-trigger"
+          >
+            {selectedLabels.length ? (
+              selectedLabels.map((label) => (
+                <Badge key={label.id || label.name} variant="outline" className="gap-1.5 rounded-md px-2 text-[12px] font-normal text-muted-foreground">
+                  <span className="size-2 rounded-full" style={{ backgroundColor: label.color || "#5e6ad2" }} />
+                  <span className="max-w-28 truncate">{label.name || label.id}</span>
+                </Badge>
+              ))
+            ) : (
+              <span className="text-muted-foreground">Add label</span>
+            )}
+          </button>
+        </PopoverTrigger>
+        <PopoverContent
+          align="start"
+          className="w-72 p-1"
+          data-testid="project-labels-menu"
+          onEscapeKeyDown={() => setOpen(false)}
+          onFocusOutside={() => setOpen(false)}
+          onPointerDownOutside={() => setOpen(false)}
+        >
+          <div className="flex items-center gap-1 border-b border-border px-2 py-1">
+            <Search size={13} className="text-muted-foreground" />
+            <Input
+              autoFocus
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search labels"
+              className="h-7 border-0 bg-transparent text-xs focus-visible:ring-0"
+            />
+          </div>
+          <div className="max-h-72 overflow-y-auto py-1">
+            {labels.map((label) => {
+              const active = Boolean(label.id && selectedIds.has(label.id));
+              return (
+                <button
+                  key={label.id || label.name}
+                  type="button"
+                  onClick={() => void toggle(label)}
+                  className={cn(
+                    "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted",
+                    active && "bg-muted",
+                  )}
+                  data-testid={`project-label-option-${label.id || label.name}`}
+                >
+                  <span className="size-2 rounded-full" style={{ backgroundColor: label.color || "#5e6ad2" }} />
+                  <span className="min-w-0 flex-1 truncate">{label.name || label.id}</span>
+                  {active && <span className="text-xs text-[#5e6ad2]">✓</span>}
+                </button>
+              );
+            })}
+            {labels.length === 0 && (
+              <div className="px-2 py-2 text-xs text-muted-foreground">No labels found</div>
+            )}
+          </div>
+          {error && (
+            <div className="border-t border-border px-2 py-2 text-xs text-destructive">
+              {error}
+            </div>
+          )}
+        </PopoverContent>
+      </Popover>
     </PropertyRow>
   );
 }

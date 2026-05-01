@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import sys
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -44,3 +45,45 @@ def test_mcp_tools_call_payload_can_passthrough_to_step_contract():
     result = assert_tool_success(client.step(payload["name"], payload["arguments"]))["structured_content"]
 
     assert result["issue"]["key"] == "ENG-1"
+
+
+def test_generated_api_key_authenticates_step_calls():
+    created = assert_tool_success(
+        client.step(
+            "create_api_key",
+            {
+                "name": f"MCP demo smoke key {int(time.time() * 1000)}",
+                "workspace_id": "wks_tasks",
+                "created_by": "usr_alex",
+                "agent_name": "MCP demo",
+                "scopes": ["read", "write"],
+            },
+        )
+    )["structured_content"]
+    token = created.get("token")
+    assert token
+
+    import requests
+
+    invalid = client.step("get_issue", {"id": "ENG-1"})
+    assert_tool_success(invalid)
+
+    response = requests.post(
+        f"{client.base_url}/step",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"action": {"tool_name": "get_issue", "parameters": {"id": "ENG-1"}}},
+        timeout=30,
+    )
+    response.raise_for_status()
+    result = assert_tool_success(response.json())["structured_content"]
+
+    assert result["issue"]["key"] == "ENG-1"
+
+    rejected = requests.post(
+        f"{client.base_url}/step",
+        headers={"Authorization": "Bearer not-a-real-key"},
+        json={"action": {"tool_name": "get_issue", "parameters": {"id": "ENG-1"}}},
+        timeout=30,
+    )
+    rejected.raise_for_status()
+    assert rejected.json()["observation"]["is_error"] is True

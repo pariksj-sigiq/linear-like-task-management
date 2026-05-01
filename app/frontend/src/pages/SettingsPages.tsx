@@ -785,6 +785,12 @@ function AiAgentsContent({ apiKeys, workspaces, mutate }: { apiKeys: ApiKey[]; w
 
 function OneTimeToken({ token }: { token: string }) {
   const [copied, setCopied] = useState(false);
+  const [copiedCurl, setCopiedCurl] = useState(false);
+  const curlCommand = `curl -X POST ${window.location.origin}/step \\
+  -H 'Content-Type: application/json' \\
+  -H 'Authorization: Bearer ${token}' \\
+  -d '{"action":{"tool_name":"global_search","parameters":{"query":"submission","limit":5}}}'`;
+
   const copyToken = async () => {
     try {
       await navigator.clipboard.writeText(token);
@@ -792,6 +798,16 @@ function OneTimeToken({ token }: { token: string }) {
       window.setTimeout(() => setCopied(false), 1800);
     } catch {
       setCopied(false);
+    }
+  };
+
+  const copyCurl = async () => {
+    try {
+      await navigator.clipboard.writeText(curlCommand);
+      setCopiedCurl(true);
+      window.setTimeout(() => setCopiedCurl(false), 1800);
+    } catch {
+      setCopiedCurl(false);
     }
   };
 
@@ -814,6 +830,21 @@ function OneTimeToken({ token }: { token: string }) {
           type="button"
         >
           {copied ? <Check size={15} /> : <Copy size={15} />}
+        </button>
+      </div>
+      <div className="mt-2 flex items-center gap-2">
+        <code className="block min-w-0 flex-1 overflow-auto rounded-lg border border-[#d9e2ff] bg-white px-3 py-2 font-mono text-[11px] leading-5 text-[#24262b]">
+          {curlCommand}
+        </code>
+        <button
+          aria-label="Copy authenticated curl"
+          className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-[#d9e2ff] bg-white px-3 text-[12px] font-medium text-[#34363c] shadow-sm hover:bg-[#f8f9ff]"
+          data-testid="api-token-copy-curl"
+          onClick={copyCurl}
+          type="button"
+        >
+          {copiedCurl ? <Check size={14} /> : <Copy size={14} />}
+          <span>{copiedCurl ? "Copied" : "Copy curl"}</span>
         </button>
       </div>
     </div>

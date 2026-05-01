@@ -49,6 +49,7 @@ export interface Project {
   updated_at?: string | null;
   issues?: Issue[];
   updates?: ProjectUpdate[];
+  labels?: Label[];
 }
 
 export interface Cycle {
